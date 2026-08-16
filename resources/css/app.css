@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-surface-primary: #F8FAFC;
+  --color-surface-secondary: #FFFFFF;
+  --color-border-subtle: #E2E8F0;
+  --color-text-main: #0F172A;
+  --color-text-muted: #64748B;
+  
+  /* Infinity Organic Farming Logo Palette */
+  --color-brand-green: #095B16;
+  --color-brand-light-green: #1E7B26;
+  --color-brand-orange: #E86A1A;
+  --color-brand-yellow: #D4AF37;
+
+  --color-alert-critical: #EF4444;
+  --color-alert-warning: #F59E0B;
+  --color-alert-info: #3B82F6;
+
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
+}
+
+/* Minimal Elegant Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #E2E8F0; /* Matches border-subtle */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #095B16; /* Brand Green */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #E2E8F0 transparent;
+}
