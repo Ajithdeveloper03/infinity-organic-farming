@@ -48,8 +48,8 @@ export default function TaskManagement() {
     }, [tasks, searchQuery, statusFilter, priorityFilter]);
 
     const getStatusStyle = (status) => {
-        if (status === 'Completed') return 'bg-green-100 text-green-700 border-green-200';
-        if (status === 'In Progress') return 'bg-green-100 text-green-700 border-green-200';
+        if (status === 'Completed') return 'bg-slate-100 text-green-700 border-green-200';
+        if (status === 'In Progress') return 'bg-slate-100 text-green-700 border-green-200';
         if (status === 'To Do') return 'bg-gray-100 text-gray-700 border-gray-200';
         return 'bg-yellow-100 text-yellow-700 border-yellow-200';
     };
@@ -57,7 +57,7 @@ export default function TaskManagement() {
     const getPriorityStyle = (priority) => {
         if (priority === 'High') return 'text-red-600 bg-red-50 border border-red-200';
         if (priority === 'Medium') return 'text-yellow-600 bg-yellow-50 border border-yellow-200';
-        return 'text-green-600 bg-green-50 border border-green-200';
+        return 'text-slate-800 bg-slate-50 border border-green-200';
     };
 
     const handleMarkComplete = (taskId) => {
@@ -178,7 +178,7 @@ export default function TaskManagement() {
                                     Cancel
                                 </button>
                                 <button type="submit"
-                                    className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all">
+                                    className="flex-1 py-3 bg-slate-900 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all">
                                     Create & Assign
                                 </button>
                             </div>
@@ -194,14 +194,14 @@ export default function TaskManagement() {
                     <p className="text-gray-500 mt-2 font-medium">Schedule visits, set targets, and monitor daily activities of field officers.</p>
                 </div>
                 <button onClick={() => setShowNewTaskModal(true)}
-                    className="flex items-center px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg shadow-green-500/20 transition-all">
+                    className="flex items-center px-4 py-2 bg-slate-900 text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg shadow-slate-900/10 transition-all">
                     <Plus className="w-4 h-4 mr-2" /> Create New Task
                 </button>
             </div>
 
             {/* KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
+                <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
                     <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
                     <div className="flex items-center justify-between mb-4 relative z-10">
                         <h3 className="font-bold text-green-100">Tasks Completed Today</h3>
@@ -238,7 +238,7 @@ export default function TaskManagement() {
                         { key: 'analytics', label: 'Activity Analytics', icon: BarChart2 },
                     ].map(({ key, label, icon: Icon }) => (
                         <button key={key} onClick={() => setActiveTab(key)}
-                            className={`flex items-center py-5 px-4 font-bold text-sm border-b-2 transition-colors whitespace-nowrap ${activeTab === key ? 'border-green-600 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
+                            className={`flex items-center py-5 px-4 font-bold text-sm border-b-2 transition-colors whitespace-nowrap ${activeTab === key ? 'border-green-600 text-slate-800' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
                             <Icon className="w-4 h-4 mr-2" /> {label}
                         </button>
                     ))}
@@ -259,14 +259,14 @@ export default function TaskManagement() {
                                 {/* Status Dropdown */}
                                 <div className="relative">
                                     <button onClick={() => { setShowStatusDropdown(!showStatusDropdown); setShowPriorityDropdown(false); }}
-                                        className={`flex items-center px-3 py-2.5 border rounded-xl text-sm font-bold transition-colors ${statusFilter !== 'all' ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
+                                        className={`flex items-center px-3 py-2.5 border rounded-xl text-sm font-bold transition-colors ${statusFilter !== 'all' ? 'bg-slate-50 border-green-300 text-green-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
                                         <Filter className="w-4 h-4 mr-1.5" /> {statusFilter === 'all' ? 'Status' : statusFilter}
                                     </button>
                                     {showStatusDropdown && (
                                         <div className="absolute top-full mt-1 left-0 min-w-[150px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
                                             {['all', 'In Progress', 'Pending', 'To Do', 'Completed'].map(s => (
                                                 <button key={s} onClick={() => { setStatusFilter(s); setShowStatusDropdown(false); }}
-                                                    className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${statusFilter === s ? 'text-green-600' : 'text-gray-700'}`}>
+                                                    className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${statusFilter === s ? 'text-slate-800' : 'text-gray-700'}`}>
                                                     {s === 'all' ? 'All Status' : s}
                                                 </button>
                                             ))}
@@ -307,10 +307,10 @@ export default function TaskManagement() {
                                     )}
                                     {filteredTasks.map(task => (
                                         <tr key={task.id} className="hover:bg-gray-50/50 transition-colors">
-                                            <td className="py-4 px-5"><span className="font-mono text-sm font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md">{task.id}</span></td>
+                                            <td className="py-4 px-5"><span className="font-mono text-sm font-bold text-slate-800 bg-slate-50 px-2 py-1 rounded-md">{task.id}</span></td>
                                             <td className="py-4 px-5">
                                                 <div className="flex items-center gap-2">
-                                                    {task.assignee === 'All Field Officers' ? <Users className="w-4 h-4 text-orange-500" /> : <UserPlus className="w-4 h-4 text-gray-400" />}
+                                                    {task.assignee === 'All Field Officers' ? <Users className="w-4 h-4 text-slate-700" /> : <UserPlus className="w-4 h-4 text-gray-400" />}
                                                     <span className="font-bold text-sm text-gray-900">{task.assignee}</span>
                                                 </div>
                                             </td>
@@ -325,7 +325,7 @@ export default function TaskManagement() {
                                                 <div className="flex gap-1">
                                                     {task.status !== 'Completed' && (
                                                         <button onClick={() => handleMarkComplete(task.id)} title="Mark Complete"
-                                                            className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+                                                            className="p-2 text-gray-400 hover:text-slate-800 hover:bg-slate-50 rounded-lg transition-colors">
                                                             <CheckCircle2 className="w-4 h-4" />
                                                         </button>
                                                     )}
@@ -371,7 +371,7 @@ export default function TaskManagement() {
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
                                 </div>
                                 <div className="flex items-end">
-                                    <button type="submit" className="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold hover:shadow-lg transition-all">
+                                    <button type="submit" className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:shadow-lg transition-all">
                                         Generate Route & Schedule
                                     </button>
                                 </div>
@@ -412,7 +412,7 @@ export default function TaskManagement() {
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
                                 </div>
                                 <div className="md:col-span-3">
-                                    <button type="submit" className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold transition-colors">
+                                    <button type="submit" className="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-colors">
                                         Set Target & Notify Team
                                     </button>
                                 </div>

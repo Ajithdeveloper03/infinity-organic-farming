@@ -34,7 +34,7 @@ export default function AdminLayout({ children }) {
                 {/* Toggle Button */}
                 <button 
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                    className="absolute -right-3 top-8 bg-white border border-gray-200 rounded-full p-1 text-gray-500 hover:text-green-600 hover:border-green-200 shadow-sm transition-colors z-50 cursor-pointer"
+                    className="absolute -right-3 top-8 bg-white border border-gray-200 rounded-full p-1 text-gray-500 hover:text-slate-800 hover:border-green-200 shadow-sm transition-colors z-50 cursor-pointer"
                 >
                     {isSidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
                 </button>
@@ -65,9 +65,9 @@ export default function AdminLayout({ children }) {
                     </Link>
                     
                     {/* Live Monitor - highlighted with pulse indicator */}
-                    <Link href="/admin/monitor" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm relative ${isActive('/admin/monitor') ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md' : 'text-green-600 bg-green-50 hover:bg-green-100'}`}>
+                    <Link href="/admin/monitor" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm relative ${isActive('/admin/monitor') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-800 bg-slate-50 hover:bg-slate-100'}`}>
                         <span className={`absolute ${isSidebarCollapsed ? 'top-2 right-2' : 'right-3 top-3.5'} h-2 w-2 rounded-full bg-green-400 ring-2 ring-white animate-pulse`}></span>
-                        <ShieldAlert className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/monitor') ? 'text-white' : 'text-green-500'}`} />
+                        <ShieldAlert className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/monitor') ? 'text-white' : 'text-slate-700'}`} />
                         {!isSidebarCollapsed && <span>{t('Live Monitor')}</span>}
                     </Link>
 
@@ -159,7 +159,7 @@ export default function AdminLayout({ children }) {
 
                         <button 
                             onClick={toggleLanguage}
-                            className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-green-600 hover:border-green-200 hover:bg-green-50 transition"
+                            className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-slate-800 hover:border-green-200 hover:bg-slate-50 transition"
                             title="Toggle Language"
                         >
                             <Globe className="w-5 h-5" />
@@ -172,7 +172,7 @@ export default function AdminLayout({ children }) {
                         
                         <div className="flex items-center pl-2 border-l border-gray-200 cursor-pointer group">
                             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-100 group-hover:border-green-500 transition-all bg-white p-0.5">
-                                <img src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="Profile" className="w-full h-full object-cover rounded-full" />
+                                <img src="/images/logo.png" alt="Profile" className="w-full h-full object-cover rounded-full" />
                             </div>
                             <div className="ml-3 hidden md:block">
                                 <p className="text-sm font-bold text-gray-900 leading-tight">Super Admin</p>

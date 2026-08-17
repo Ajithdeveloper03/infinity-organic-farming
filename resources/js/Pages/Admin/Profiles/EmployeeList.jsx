@@ -8,9 +8,9 @@ export default function EmployeeList() {
     const { t } = useTranslation();
 
     const employees = [
-        { id: 'EMP-001', name: 'Rajesh Kumar', role: 'Field Officer', region: 'Coimbatore South', status: 'Active', img: 'https://ui-avatars.com/api/?name=User&background=f97316&color=fff?auto=format&fit=crop&q=80&w=150&h=150' },
-        { id: 'EMP-002', name: 'Anita Raj', role: 'Field Officer', region: 'Pollachi', status: 'Active', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150' },
-        { id: 'EMP-003', name: 'Suresh Menon', role: 'Regional Manager', region: 'Tirupur', status: 'On Leave', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150' },
+        { id: 'EMP-001', name: 'Rajesh Kumar', role: 'Field Officer', region: 'Coimbatore South', status: 'Active', img: '/images/logo.png' },
+        { id: 'EMP-002', name: 'Anita Raj', role: 'Field Officer', region: 'Pollachi', status: 'Active', img: '/images/logo.png' },
+        { id: 'EMP-003', name: 'Suresh Menon', role: 'Regional Manager', region: 'Tirupur', status: 'On Leave', img: '/images/logo.png' },
     ];
 
     return (
@@ -20,7 +20,7 @@ export default function EmployeeList() {
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Employee Directory')}</h1>
                     <p className="text-gray-500 mt-1 font-medium text-sm">Manage field staff and internal operational teams.</p>
                 </div>
-                <button className="cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-green-500/20">
+                <button className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
                     <Plus className="w-5 h-5 mr-1" /> Register Employee
                 </button>
             </div>
@@ -51,9 +51,9 @@ export default function EmployeeList() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {employees.map((emp) => (
                     <Link key={emp.id} href={`/admin/employees/${emp.id}`} className="cursor-pointer group bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all hover:border-green-200 flex flex-col">
-                        <div className="p-6 border-b border-gray-100 bg-gradient-to-br from-green-50/50 to-transparent relative">
+                        <div className="p-6 border-b border-gray-100 bg-slate-50 relative">
                             <div className="absolute top-4 right-4">
-                                <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${emp.status === 'Active' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-amber-50 text-amber-600 border border-amber-100'}`}>
+                                <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${emp.status === 'Active' ? 'bg-slate-50 text-slate-800 border border-slate-200' : 'bg-amber-50 text-amber-600 border border-amber-100'}`}>
                                     {emp.status}
                                 </span>
                             </div>
@@ -62,7 +62,7 @@ export default function EmployeeList() {
                                     <img src={emp.img} alt={emp.name} className="w-full h-full object-cover" />
                                 </div>
                                 <div>
-                                    <h3 className="font-heading font-bold text-lg text-gray-900 group-hover:text-green-600 transition-colors">{emp.name}</h3>
+                                    <h3 className="font-heading font-bold text-lg text-gray-900 group-hover:text-slate-800 transition-colors">{emp.name}</h3>
                                     <p className="text-[10px] font-bold text-gray-500 font-mono bg-white px-2 py-0.5 rounded-lg inline-block mt-1 border border-gray-200 shadow-sm">{emp.id}</p>
                                 </div>
                             </div>
@@ -70,15 +70,15 @@ export default function EmployeeList() {
                         <div className="p-5 bg-white flex-1 flex flex-col justify-between">
                             <div className="space-y-3 mb-6">
                                 <div className="flex items-center text-sm font-medium text-gray-700">
-                                    <Shield className="w-4 h-4 text-orange-500 mr-2" /> {emp.role}
+                                    <Shield className="w-4 h-4 text-slate-700 mr-2" /> {emp.role}
                                 </div>
                                 <div className="flex items-center text-sm font-medium text-gray-700">
-                                    <MapPin className="w-4 h-4 text-green-500 mr-2" /> {emp.region}
+                                    <MapPin className="w-4 h-4 text-slate-700 mr-2" /> {emp.region}
                                 </div>
                             </div>
                             <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-green-500 transition-colors">View Profile</span>
-                                <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-green-600 transition-colors group-hover:translate-x-1" />
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">View Profile</span>
+                                <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-slate-800 transition-colors group-hover:translate-x-1" />
                             </div>
                         </div>
                     </Link>

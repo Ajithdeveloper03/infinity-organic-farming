@@ -65,13 +65,13 @@ export default function PendingFarmers({ farmers = [] }) {
                 <div className="flex w-full md:w-auto gap-3 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
                     <button onClick={() => setActiveCategory('all')}
                         className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all whitespace-nowrap ${
-                            activeCategory === 'all' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-green-500/30' : 'bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100'
+                            activeCategory === 'all' ? 'bg-slate-900 text-white shadow-slate-900/10' : 'bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100'
                         }`}>
                         Awaiting Review ({mockFarmers.length})
                     </button>
                     <button onClick={() => setActiveCategory('docs')}
                         className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all whitespace-nowrap ${
-                            activeCategory === 'docs' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-green-500/30' : 'bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100'
+                            activeCategory === 'docs' ? 'bg-slate-900 text-white shadow-slate-900/10' : 'bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100'
                         }`}>
                         Missing Documents
                     </button>
@@ -82,7 +82,7 @@ export default function PendingFarmers({ farmers = [] }) {
             <div className="grid grid-cols-1 gap-8">
                 {filteredFarmers.length === 0 && (
                     <div className="bg-white border border-gray-100 rounded-[2rem] p-16 text-center text-gray-400 font-medium shadow-sm">
-                        {searchQuery ? `No farmers match "${searchQuery}".` : 'No pending farmers. All caught up! 🎉'}
+                        {searchQuery ? `No farmers match "${searchQuery}".` : 'No pending farmers. All caught up!'}
                     </div>
                 )}
                 {filteredFarmers.map((farmer) => (
@@ -90,12 +90,12 @@ export default function PendingFarmers({ farmers = [] }) {
                         
                         {/* Data Column */}
                         <div className="p-8 md:w-1/2 flex flex-col justify-between relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-50 to-transparent rounded-bl-full -mr-10 -mt-10 pointer-events-none"></div>
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-full -mr-10 -mt-10 pointer-events-none"></div>
 
                             <div className="relative z-10">
                                 <div className="flex items-start justify-between mb-8 cursor-pointer">
                                     <div className="flex items-center space-x-4">
-                                        <div className="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center shadow-sm text-white group-hover:scale-105 transition-transform">
+                                        <div className="w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center shadow-sm text-white group-hover:scale-105 transition-transform">
                                             <User className="w-6 h-6" />
                                         </div>
                                         <div>
@@ -122,7 +122,7 @@ export default function PendingFarmers({ farmers = [] }) {
                                 </div>
                                 
                                 <div className="mt-4 bg-gray-50 p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer hover:border-green-200 transition-colors">
-                                    <p className="text-[10px] text-green-500 font-bold uppercase mb-1.5 flex items-center tracking-wider">
+                                    <p className="text-[10px] text-slate-700 font-bold uppercase mb-1.5 flex items-center tracking-wider">
                                         <MapPin className="w-3 h-3 mr-1.5" /> Registered Address
                                     </p>
                                     <p className="text-sm font-medium text-gray-700 leading-relaxed">{farmer.land_address}</p>
@@ -132,7 +132,7 @@ export default function PendingFarmers({ farmers = [] }) {
                             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-8 pt-6 border-t border-gray-100 relative z-10">
                                 <button 
                                     onClick={() => handleApprove(farmer.id, farmer.user.name)}
-                                    className="cursor-pointer flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white py-3 rounded-xl font-bold flex items-center justify-center transition-colors shadow-md shadow-green-500/20"
+                                    className="cursor-pointer flex-1 bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-bold flex items-center justify-center transition-colors shadow-md shadow-slate-900/10"
                                 >
                                     <ShieldCheck className="w-5 h-5 mr-2" /> Approve
                                 </button>
@@ -147,16 +147,16 @@ export default function PendingFarmers({ farmers = [] }) {
                         {/* Map Verification Column */}
                         <div className="md:w-1/2 bg-gray-50 relative border-l border-gray-100 min-h-[300px] cursor-pointer">
                             <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-100 mb-4 transition-transform hover:scale-110 text-green-200 hover:text-green-500">
+                                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-100 mb-4 transition-transform hover:scale-110 text-green-200 hover:text-slate-700">
                                     <Map className="w-8 h-8" />
                                 </div>
                                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Map Verification Required</span>
                                 <div className="flex space-x-4 mt-5">
                                     <div className="flex items-center font-bold text-[10px] bg-white px-3 py-1.5 rounded-full text-gray-600 border border-gray-200 shadow-sm">
-                                        <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div> Capture Loc
+                                        <div className="w-2 h-2 rounded-full bg-slate-800 mr-2"></div> Capture Loc
                                     </div>
                                     <div className="flex items-center font-bold text-[10px] bg-white px-3 py-1.5 rounded-full text-gray-600 border border-gray-200 shadow-sm">
-                                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 mr-2"></div> Address Loc
+                                        <div className="w-2 h-2 rounded-full bg-slate-700 mr-2"></div> Address Loc
                                     </div>
                                 </div>
                             </div>
@@ -164,8 +164,8 @@ export default function PendingFarmers({ farmers = [] }) {
                             <div className="absolute top-6 right-6 bg-white/95 backdrop-blur border border-gray-100 p-4 rounded-2xl shadow-sm max-w-xs z-20 hover:shadow-md transition-shadow">
                                 <p className="text-[10px] text-gray-400 font-bold mb-1.5 uppercase tracking-widest">Geographic Match</p>
                                 <div className="flex items-end justify-between">
-                                    <span className="text-3xl font-heading font-bold text-green-600">98%</span>
-                                    <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-md border border-green-100">High Confidence</span>
+                                    <span className="text-3xl font-heading font-bold text-slate-800">98%</span>
+                                    <span className="text-[10px] font-bold text-slate-800 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200">High Confidence</span>
                                 </div>
                                 <p className="text-[10px] font-medium text-gray-500 mt-2">Captured within 50m of farm bounds.</p>
                             </div>

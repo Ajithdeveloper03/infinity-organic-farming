@@ -70,7 +70,7 @@ export default function Visits({ visits = [] }) {
                     <div className="relative">
                         <button onClick={() => setShowDateDropdown(!showDateDropdown)}
                             className={`flex items-center px-4 py-2 border rounded-xl text-sm font-bold transition-colors ${
-                                dateRange !== '30' ? 'bg-green-50 border-green-300 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                                dateRange !== '30' ? 'bg-slate-50 border-green-300 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
                             } whitespace-nowrap`}>
                             {dateRangeOptions.find(o => o.value === dateRange)?.label} <ChevronDown className="w-3 h-3 ml-2" />
                         </button>
@@ -78,7 +78,7 @@ export default function Visits({ visits = [] }) {
                             <div className="absolute top-full mt-1 left-0 min-w-[150px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
                                 {dateRangeOptions.map(opt => (
                                     <button key={opt.value} onClick={() => { setDateRange(opt.value); setShowDateDropdown(false); }}
-                                        className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${dateRange === opt.value ? 'text-green-600' : 'text-gray-700'}`}>
+                                        className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${dateRange === opt.value ? 'text-slate-800' : 'text-gray-700'}`}>
                                         {opt.label}
                                     </button>
                                 ))}
@@ -86,7 +86,7 @@ export default function Visits({ visits = [] }) {
                         )}
                     </div>
                     <button onClick={() => setSearchQuery('')}
-                        className="px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-green-500/30 transition-all whitespace-nowrap">
+                        className="px-5 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-slate-900/10 transition-all whitespace-nowrap">
                         Apply Filters
                     </button>
                 </div>
@@ -103,18 +103,18 @@ export default function Visits({ visits = [] }) {
                     <div key={visit.id} className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
                         
                         {/* Elegant Header with Gradient Background */}
-                        <div className="bg-gradient-to-r from-green-50 to-white p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between md:items-center">
+                        <div className="bg-slate-50 p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between md:items-center">
                             <div className="flex items-center space-x-4 mb-4 md:mb-0">
-                                <div className="bg-white p-3 rounded-2xl border border-green-100 shadow-sm group-hover:scale-105 transition-transform text-green-600">
+                                <div className="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm group-hover:scale-105 transition-transform text-slate-800">
                                     <Leaf className="w-6 h-6" />
                                 </div>
                                 <div>
                                     <h3 className="font-heading font-bold text-gray-900 text-xl leading-tight">Farm: {visit.farmer.user.name}</h3>
-                                    <p className="text-xs font-bold text-gray-500 mt-1">Inspected by <span className="text-green-600">{visit.employee.name}</span> on {visit.date}</p>
+                                    <p className="text-xs font-bold text-gray-500 mt-1">Inspected by <span className="text-slate-800">{visit.employee.name}</span> on {visit.date}</p>
                                 </div>
                             </div>
                             <div className="flex flex-col items-start md:items-end gap-2">
-                                <div className="inline-flex items-center text-xs font-bold bg-green-50 text-green-600 px-3 py-1.5 rounded-lg border border-green-100 shadow-sm">
+                                <div className="inline-flex items-center text-xs font-bold bg-slate-50 text-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
                                     <Navigation className="w-3 h-3 mr-1.5" /> Travel: {visit.distance_from_previous_farmer_km} km
                                 </div>
                                 <div className="text-xs font-bold text-gray-400 flex items-center">
@@ -129,7 +129,7 @@ export default function Visits({ visits = [] }) {
                             {/* Timing & Logs Column */}
                             <div className="col-span-1 space-y-6">
                                 <div>
-                                    <h4 className="text-[10px] font-bold text-green-500 uppercase mb-3 flex items-center tracking-wider">
+                                    <h4 className="text-[10px] font-bold text-slate-700 uppercase mb-3 flex items-center tracking-wider">
                                         <Clock className="w-4 h-4 mr-2" /> Visit Timeline
                                     </h4>
                                     <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 space-y-3 hover:border-green-200 transition-colors cursor-pointer">
@@ -145,7 +145,7 @@ export default function Visits({ visits = [] }) {
                                 </div>
 
                                 <div>
-                                    <h4 className="text-[10px] font-bold text-green-500 uppercase mb-3 flex items-center tracking-wider">
+                                    <h4 className="text-[10px] font-bold text-slate-700 uppercase mb-3 flex items-center tracking-wider">
                                         <FileText className="w-4 h-4 mr-2" /> Agronomy Log
                                     </h4>
                                     <div className="bg-gray-50 border border-gray-100 rounded-2xl p-5 text-sm shadow-inner hover:border-green-200 transition-colors">
@@ -154,7 +154,7 @@ export default function Visits({ visits = [] }) {
                                             <p className="font-medium text-gray-700 leading-relaxed text-xs">{visit.farm_condition_notes}</p>
                                         </div>
                                         <div className="pt-4 border-t border-gray-200">
-                                            <span className="text-[10px] font-bold text-orange-500 uppercase tracking-wider block mb-1.5">Recommendations</span>
+                                            <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Recommendations</span>
                                             <p className="font-medium text-gray-700 leading-relaxed text-xs">{visit.recommendations}</p>
                                         </div>
                                     </div>
@@ -163,7 +163,7 @@ export default function Visits({ visits = [] }) {
 
                             {/* Media Confirmation Grid */}
                             <div className="col-span-1 lg:col-span-2">
-                                <h4 className="text-[10px] font-bold text-green-500 uppercase mb-3 flex items-center tracking-wider">
+                                <h4 className="text-[10px] font-bold text-slate-700 uppercase mb-3 flex items-center tracking-wider">
                                     <Camera className="w-4 h-4 mr-2" /> Media Confirmation & Metadata
                                 </h4>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -171,7 +171,7 @@ export default function Visits({ visits = [] }) {
                                         <div key={index} className="bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden flex flex-col hover:border-green-200 transition-colors group/media">
                                             <div className="relative overflow-hidden h-40">
                                                 <img src={media.url} alt="Farm" className="w-full h-full object-cover transition-transform duration-700 group-hover/media:scale-105" />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
+                                                <div className="absolute inset-0 bg-slate-900/80"></div>
                                                 <div className="absolute bottom-3 left-3 text-white">
                                                     <p className="text-[10px] font-bold tracking-wider uppercase text-gray-300">Capture Time</p>
                                                     <p className="font-heading font-bold text-sm">{media.exif_time}</p>
@@ -181,7 +181,7 @@ export default function Visits({ visits = [] }) {
                                                 <div className="flex justify-between items-start mb-3">
                                                     <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">GPS Data</span>
                                                     {media.verified ? (
-                                                        <span className="flex items-center text-[10px] font-bold bg-green-50 text-green-600 px-2 py-1 rounded-full border border-green-100">
+                                                        <span className="flex items-center text-[10px] font-bold bg-slate-50 text-slate-800 px-2 py-1 rounded-full border border-slate-200">
                                                             <CheckCircle2 className="w-3 h-3 mr-1" /> Verified
                                                         </span>
                                                     ) : (

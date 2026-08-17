@@ -20,7 +20,7 @@ export default function FarmerList() {
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Farmer Directory')}</h1>
                     <p className="text-gray-500 mt-1 font-medium text-sm">Verified farm properties and agricultural profiles.</p>
                 </div>
-                <Link href="/admin/farmers/register" className="cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-green-500/20">
+                <Link href="/admin/farmers/register" className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
                     <Plus className="w-5 h-5 mr-1" /> Register Farmer
                 </Link>
             </div>
@@ -53,7 +53,7 @@ export default function FarmerList() {
                     <Link key={farm.id} href={`/admin/farmers/${farm.id}`} className="cursor-pointer group bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all hover:border-green-200 flex flex-col">
                         <div className="relative h-40">
                             <img src={farm.img} alt={farm.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent"></div>
+                            <div className="absolute inset-0 bg-slate-900/80"></div>
                             <div className="absolute bottom-4 left-4 text-white">
                                 <h3 className="font-heading font-bold text-xl">{farm.name}</h3>
                                 <p className="text-xs font-mono font-bold text-green-300 tracking-wider mt-1">{farm.id}</p>
@@ -61,7 +61,7 @@ export default function FarmerList() {
                         </div>
                         <div className="p-5 bg-white flex-1 flex flex-col justify-between relative">
                             {/* Floating icon */}
-                            <div className="absolute -top-6 right-4 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-gray-100 text-green-500">
+                            <div className="absolute -top-6 right-4 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-gray-100 text-slate-700">
                                 <Leaf className="w-6 h-6" />
                             </div>
                             
@@ -75,12 +75,12 @@ export default function FarmerList() {
                                     <span className="font-heading font-bold text-gray-900">{farm.crop}</span>
                                 </div>
                                 <div className="flex items-center text-sm font-medium text-gray-700 mt-4 pt-3 border-t border-gray-100">
-                                    <Map className="w-4 h-4 text-orange-500 mr-2" /> {farm.location}
+                                    <Map className="w-4 h-4 text-slate-700 mr-2" /> {farm.location}
                                 </div>
                             </div>
                             <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-green-500 transition-colors">View Farm Profile</span>
-                                <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-green-600 transition-colors group-hover:translate-x-1" />
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">View Farm Profile</span>
+                                <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-slate-800 transition-colors group-hover:translate-x-1" />
                             </div>
                         </div>
                     </Link>

@@ -33,13 +33,13 @@ export default function Payments() {
     ];
 
     const getStatusIcon = (status) => {
-        if (status === 'Paid') return <CheckCircle2 className="w-4 h-4 text-green-500 mr-1" />;
+        if (status === 'Paid') return <CheckCircle2 className="w-4 h-4 text-slate-700 mr-1" />;
         if (status === 'Pending') return <Clock className="w-4 h-4 text-yellow-500 mr-1" />;
         return <XCircle className="w-4 h-4 text-red-500 mr-1" />;
     };
 
     const getStatusStyle = (status) => {
-        if (status === 'Paid') return 'bg-green-100 text-green-700 border-green-200';
+        if (status === 'Paid') return 'bg-slate-100 text-green-700 border-green-200';
         if (status === 'Pending') return 'bg-yellow-100 text-yellow-700 border-yellow-200';
         return 'bg-red-100 text-red-700 border-red-200';
     };
@@ -87,7 +87,7 @@ export default function Payments() {
                         <Download className="w-4 h-4 mr-2" />
                         Export Ledger
                     </button>
-                    <button onClick={handleInitiatePayment} className="flex items-center px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg shadow-green-500/20 transition-all">
+                    <button onClick={handleInitiatePayment} className="flex items-center px-4 py-2 bg-slate-900 text-white rounded-xl font-bold text-sm shadow-md hover:shadow-lg shadow-slate-900/10 transition-all">
                         <CreditCard className="w-4 h-4 mr-2" />
                         Initiate Payment
                     </button>
@@ -96,7 +96,7 @@ export default function Payments() {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-[2xl] p-6 text-white shadow-lg relative overflow-hidden group">
+                <div className="bg-slate-900 rounded-[2xl] p-6 text-white shadow-lg relative overflow-hidden group">
                     <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
                     <div className="flex items-center justify-between mb-4 relative z-10">
                         <h3 className="font-bold text-green-100">Total Disbursed (MTD)</h3>
@@ -125,11 +125,11 @@ export default function Payments() {
                 </div>
 
                 <div className="bg-white border border-gray-100 rounded-[2xl] p-6 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
-                    <div className="absolute -right-6 -top-6 w-32 h-32 bg-green-500/5 rounded-full blur-2xl group-hover:bg-green-500/10 transition-colors duration-700"></div>
+                    <div className="absolute -right-6 -top-6 w-32 h-32 bg-slate-800/5 rounded-full blur-2xl group-hover:bg-slate-800/10 transition-colors duration-700"></div>
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-bold text-gray-500">Monthly Expenses</h3>
-                        <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center border border-green-100 group-hover:scale-110 transition-transform">
-                            <IndianRupee className="w-5 h-5 text-green-600" />
+                        <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center border border-slate-200 group-hover:scale-110 transition-transform">
+                            <IndianRupee className="w-5 h-5 text-slate-800" />
                         </div>
                     </div>
                     <p className="text-3xl font-extrabold text-gray-900 tracking-tight">₹3.8L</p>
@@ -144,7 +144,7 @@ export default function Payments() {
                 <div className="flex border-b border-gray-100 px-6">
                     <button 
                         onClick={() => setActiveTab('farmers')}
-                        className={`flex items-center py-5 px-4 font-bold text-sm border-b-2 transition-colors ${activeTab === 'farmers' ? 'border-green-600 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                        className={`flex items-center py-5 px-4 font-bold text-sm border-b-2 transition-colors ${activeTab === 'farmers' ? 'border-green-600 text-slate-800' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
                     >
                         <Users className="w-4 h-4 mr-2" /> Farmer Payouts
                     </button>
@@ -178,7 +178,7 @@ export default function Payments() {
                             <button
                                 onClick={() => setShowStatusDropdown(!showStatusDropdown)}
                                 className={`flex-1 md:flex-none flex items-center justify-center px-4 py-2.5 border rounded-xl text-sm font-bold transition-colors ${
-                                    statusFilter !== 'all' ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                                    statusFilter !== 'all' ? 'bg-slate-50 border-green-300 text-green-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
                                 }`}
                             >
                                 <Filter className="w-4 h-4 mr-2" />
@@ -189,7 +189,7 @@ export default function Payments() {
                                     {['all', 'Paid', 'Pending', 'Failed'].map(s => (
                                         <button key={s} onClick={() => { setStatusFilter(s); setShowStatusDropdown(false); }}
                                             className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 transition-colors ${
-                                                statusFilter === s ? 'text-green-600' : 'text-gray-700'
+                                                statusFilter === s ? 'text-slate-800' : 'text-gray-700'
                                             }`}>
                                             {s === 'all' ? 'All Status' : s}
                                         </button>
@@ -221,7 +221,7 @@ export default function Payments() {
                             {activeTab === 'farmers' && filteredFarmerPayments.map((payment) => (
                                 <tr key={payment.id} className="hover:bg-gray-50/50 transition-colors group">
                                     <td className="py-4 px-6">
-                                        <span className="font-mono text-sm font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md">{payment.id}</span>
+                                        <span className="font-mono text-sm font-bold text-slate-800 bg-slate-50 px-2 py-1 rounded-md">{payment.id}</span>
                                     </td>
                                     <td className="py-4 px-6">
                                         <p className="font-bold text-sm text-gray-900">{payment.farmer}</p>
@@ -241,7 +241,7 @@ export default function Payments() {
                                         </div>
                                     </td>
                                     <td className="py-4 px-6 text-right">
-                                        <button className="text-gray-400 hover:text-green-600 transition-colors p-2 hover:bg-green-50 rounded-lg">
+                                        <button className="text-gray-400 hover:text-slate-800 transition-colors p-2 hover:bg-slate-50 rounded-lg">
                                             <FileText className="w-5 h-5" />
                                         </button>
                                     </td>

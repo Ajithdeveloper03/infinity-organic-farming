@@ -54,7 +54,7 @@ export default function FarmerRegistrationForm() {
     const StepIndicator = () => (
         <div className="flex items-center justify-between mb-8 relative">
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 rounded-full -z-10"></div>
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-full -z-10 transition-all duration-500" style={{ width: `${((step - 1) / 3) * 100}%` }}></div>
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-slate-900 rounded-full -z-10 transition-all duration-500" style={{ width: `${((step - 1) / 3) * 100}%` }}></div>
             
             {[
                 { num: 1, icon: User, label: 'Personal' },
@@ -63,10 +63,10 @@ export default function FarmerRegistrationForm() {
                 { num: 4, icon: Sprout, label: 'Agriculture' }
             ].map((s) => (
                 <div key={s.num} className="flex flex-col items-center">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 border-white shadow-md transition-colors duration-300 ${step >= s.num ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white' : 'bg-gray-50 text-gray-400 border-gray-200'}`}>
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border-4 border-white shadow-md transition-colors duration-300 ${step >= s.num ? 'bg-slate-900 text-white' : 'bg-gray-50 text-gray-400 border-gray-200'}`}>
                         <s.icon className="w-5 h-5" />
                     </div>
-                    <span className={`text-[10px] font-bold mt-2 uppercase tracking-wider ${step >= s.num ? 'text-green-600' : 'text-gray-400'}`}>{s.label}</span>
+                    <span className={`text-[10px] font-bold mt-2 uppercase tracking-wider ${step >= s.num ? 'text-slate-800' : 'text-gray-400'}`}>{s.label}</span>
                 </div>
             ))}
         </div>
@@ -103,7 +103,7 @@ export default function FarmerRegistrationForm() {
                                             <Smartphone className="w-5 h-5 text-gray-400" />
                                         </div>
                                         <input type="tel" className="flex-1 pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-l-xl text-gray-900 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-sm" placeholder="+91 9876543210" value={formData.mobile_number} onChange={e => updateForm('mobile_number', e.target.value)} required />
-                                        <button type="button" className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-4 font-bold rounded-r-xl transition-colors text-sm">Send OTP</button>
+                                        <button type="button" className="bg-slate-900 hover:bg-slate-800 text-white px-4 font-bold rounded-r-xl transition-colors text-sm">Send OTP</button>
                                     </div>
                                 </div>
                                 <div className="md:col-span-2">
@@ -129,16 +129,16 @@ export default function FarmerRegistrationForm() {
                                 </div>
 
                                 {/* File Upload Mocks */}
-                                <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-green-50/50 hover:border-green-200 cursor-pointer transition-colors group">
+                                <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-slate-50/50 hover:border-green-200 cursor-pointer transition-colors group">
                                     <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                        <UploadCloud className="w-6 h-6 text-green-500" />
+                                        <UploadCloud className="w-6 h-6 text-slate-700" />
                                     </div>
                                     <p className="font-bold text-gray-900 text-sm">Upload Aadhaar Card</p>
                                     <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">JPEG, PNG, PDF up to 5MB</p>
                                 </div>
-                                <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-green-50/50 hover:border-green-200 cursor-pointer transition-colors group">
+                                <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-slate-50/50 hover:border-green-200 cursor-pointer transition-colors group">
                                     <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                        <User className="w-6 h-6 text-orange-500" />
+                                        <User className="w-6 h-6 text-slate-700" />
                                     </div>
                                     <p className="font-bold text-gray-900 text-sm">Upload Farmer Photo</p>
                                     <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Clear passport size photograph</p>
@@ -169,7 +169,7 @@ export default function FarmerRegistrationForm() {
                                 </div>
                                 <div>
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Allocated for Vetiver (Acres)</label>
-                                    <input type="number" className="w-full px-4 py-3 bg-green-50/50 border-green-200 border-2 rounded-xl text-green-700 font-bold focus:ring-2 focus:ring-green-500/30 transition-all text-sm" placeholder="e.g. 4.0" value={formData.vetiver_land_allocated} onChange={e => updateForm('vetiver_land_allocated', e.target.value)} />
+                                    <input type="number" className="w-full px-4 py-3 bg-slate-50/50 border-green-200 border-2 rounded-xl text-green-700 font-bold focus:ring-2 focus:ring-green-500/30 transition-all text-sm" placeholder="e.g. 4.0" value={formData.vetiver_land_allocated} onChange={e => updateForm('vetiver_land_allocated', e.target.value)} />
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Survey Number(s)</label>
@@ -179,8 +179,8 @@ export default function FarmerRegistrationForm() {
 
                             <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4">
                                 <div className="flex justify-between items-center mb-4">
-                                    <label className="text-sm font-bold text-gray-900 flex items-center"><MapPin className="w-4 h-4 text-orange-500 mr-2"/> GPS Coordinates</label>
-                                    <button type="button" className="text-[10px] uppercase tracking-wider font-bold bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm flex items-center hover:text-green-600 transition-colors">
+                                    <label className="text-sm font-bold text-gray-900 flex items-center"><MapPin className="w-4 h-4 text-slate-700 mr-2"/> GPS Coordinates</label>
+                                    <button type="button" className="text-[10px] uppercase tracking-wider font-bold bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm flex items-center hover:text-slate-800 transition-colors">
                                         <Search className="w-3 h-3 mr-1"/> Auto-Detect Location
                                     </button>
                                 </div>
@@ -190,7 +190,7 @@ export default function FarmerRegistrationForm() {
                                 </div>
                             </div>
 
-                            <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-green-50/50 hover:border-green-200 cursor-pointer transition-colors group">
+                            <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-slate-50/50 hover:border-green-200 cursor-pointer transition-colors group">
                                 <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                                     <Map className="w-6 h-6 text-amber-500" />
                                 </div>
@@ -246,11 +246,11 @@ export default function FarmerRegistrationForm() {
                             ) : <div></div>}
 
                             {step < 4 ? (
-                                <button type="submit" className="cursor-pointer flex items-center px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg shadow-green-500/20 text-sm">
+                                <button type="submit" className="cursor-pointer flex items-center px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg shadow-slate-900/10 text-sm">
                                     Continue <ArrowRight className="w-5 h-5 ml-2" />
                                 </button>
                             ) : (
-                                <button type="submit" disabled={loading} className="cursor-pointer flex items-center px-8 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg shadow-green-500/20 disabled:opacity-70 text-sm">
+                                <button type="submit" disabled={loading} className="cursor-pointer flex items-center px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg shadow-slate-900/10 disabled:opacity-70 text-sm">
                                     {loading ? (
                                         <div className="flex items-center">
                                             <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

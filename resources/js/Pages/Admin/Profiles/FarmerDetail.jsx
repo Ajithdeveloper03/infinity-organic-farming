@@ -24,7 +24,7 @@ export default function FarmerDetail({ id }) {
     return (
         <AdminLayout>
             <div className="mb-6">
-                <Link href="/admin/farmers" className="cursor-pointer inline-flex items-center text-sm font-bold text-gray-500 hover:text-green-600 transition-colors">
+                <Link href="/admin/farmers" className="cursor-pointer inline-flex items-center text-sm font-bold text-gray-500 hover:text-slate-800 transition-colors">
                     <ArrowLeft className="w-4 h-4 mr-1" /> Back to Directory
                 </Link>
             </div>
@@ -33,13 +33,13 @@ export default function FarmerDetail({ id }) {
             <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 group cursor-pointer">
                 <div className="relative h-64 w-full">
                     <img src={farm.img} alt="Farm Landscape" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent"></div>
+                    <div className="absolute inset-0 bg-slate-900/90"></div>
                     <div className="absolute bottom-6 left-8 text-white">
                         <div className="flex items-center space-x-3 mb-2">
-                            <span className="bg-gradient-to-r from-emerald-600 to-teal-600/90 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-lg border border-green-500/50 shadow-sm uppercase tracking-wider">
+                            <span className="bg-slate-900/90 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-lg border border-slate-700/50 shadow-sm uppercase tracking-wider">
                                 {farm.id}
                             </span>
-                            <span className="bg-orange-600/90 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-lg border border-orange-500/50 shadow-sm uppercase tracking-wider flex items-center">
+                            <span className="bg-orange-600/90 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-lg border border-slate-1000/50 shadow-sm uppercase tracking-wider flex items-center">
                                 <CheckCircle2 className="w-3 h-3 mr-1" /> Verified Property
                             </span>
                         </div>
@@ -56,7 +56,7 @@ export default function FarmerDetail({ id }) {
                     </div>
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Primary Crop</p>
-                        <p className="font-heading font-bold text-2xl text-green-600">{farm.crop}</p>
+                        <p className="font-heading font-bold text-2xl text-slate-800">{farm.crop}</p>
                     </div>
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Current Stage</p>
@@ -64,7 +64,7 @@ export default function FarmerDetail({ id }) {
                     </div>
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Contact</p>
-                        <p className="font-bold text-sm text-gray-900 flex items-center justify-center mt-2"><Smartphone className="w-4 h-4 mr-1 text-orange-500" /> {farm.phone}</p>
+                        <p className="font-bold text-sm text-gray-900 flex items-center justify-center mt-2"><Smartphone className="w-4 h-4 mr-1 text-slate-700" /> {farm.phone}</p>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@ export default function FarmerDetail({ id }) {
                 <div className="col-span-1 space-y-8">
                     <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm cursor-pointer hover:shadow-md transition-shadow">
                         <h3 className="text-sm font-heading font-bold text-gray-900 flex items-center mb-6">
-                            <Navigation className="w-5 h-5 text-green-500 mr-2" /> Registered Coordinates
+                            <Navigation className="w-5 h-5 text-slate-700 mr-2" /> Registered Coordinates
                         </h3>
                         <div className="relative h-48 rounded-2xl overflow-hidden mb-6 border border-gray-100 bg-gray-50 flex items-center justify-center">
                             {/* Abstract map representation */}
@@ -113,7 +113,7 @@ export default function FarmerDetail({ id }) {
                             {/* Mock Visit Item */}
                             <div className="flex items-start group">
                                 <div className="flex flex-col items-center mr-4">
-                                    <div className="w-10 h-10 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center text-green-600 group-hover:bg-gradient-to-r from-emerald-600 to-teal-600 group-hover:text-white transition-colors">
+                                    <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-800 group-hover:bg-slate-900 group-hover:text-white transition-colors">
                                         <Leaf className="w-5 h-5" />
                                     </div>
                                     <div className="w-px h-full bg-gray-200 mt-2 group-last:hidden"></div>
@@ -137,7 +137,7 @@ export default function FarmerDetail({ id }) {
                             {/* Older Mock Visit Item */}
                             <div className="flex items-start group">
                                 <div className="flex flex-col items-center mr-4">
-                                    <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-orange-300 group-hover:text-orange-500 transition-colors">
+                                    <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-orange-300 group-hover:text-slate-700 transition-colors">
                                         <Leaf className="w-5 h-5" />
                                     </div>
                                     <div className="w-px h-full bg-gray-200 mt-2 group-last:hidden"></div>

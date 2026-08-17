@@ -63,20 +63,20 @@ const EMPLOYEES = [
 ];
 
 const getStatusStyle = (status) => {
-    if (status === 'active') return { badge: 'bg-green-100 text-green-700', dot: 'bg-green-400' };
+    if (status === 'active') return { badge: 'bg-slate-100 text-green-700', dot: 'bg-green-400' };
     if (status === 'idle') return { badge: 'bg-yellow-100 text-yellow-700', dot: 'bg-yellow-400' };
     return { badge: 'bg-gray-100 text-gray-500', dot: 'bg-gray-300' };
 };
 
 const getActivityStyle = (type) => {
-    if (type === 'checkin') return 'text-green-600 bg-green-50';
-    if (type === 'visit') return 'text-green-600 bg-green-50';
+    if (type === 'checkin') return 'text-slate-800 bg-slate-50';
+    if (type === 'visit') return 'text-slate-800 bg-slate-50';
     if (type === 'form') return 'text-orange-600 bg-orange-50';
     return 'text-gray-500 bg-gray-50';
 };
 
 const getBatteryColor = (level) => {
-    if (level > 50) return 'text-green-600';
+    if (level > 50) return 'text-slate-800';
     if (level > 20) return 'text-yellow-600';
     return 'text-red-600';
 };
@@ -121,8 +121,8 @@ export default function LiveMonitor() {
                 <div>
                     <div className="flex items-center gap-3 mb-1">
                         <h1 className="text-3xl font-extrabold text-gray-900">{t('Live Employee Monitor')}</h1>
-                        <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold">
-                            <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span> LIVE
+                        <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-green-700 text-xs font-bold">
+                            <span className="h-2 w-2 rounded-full bg-slate-800 animate-pulse"></span> LIVE
                         </span>
                     </div>
                     <p className="text-gray-500 font-medium">Real-time activity tracking for all field officers. Last refreshed: <strong>{lastRefreshed}</strong></p>
@@ -137,7 +137,7 @@ export default function LiveMonitor() {
 
             {/* Summary KPI Strip */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-5 text-white shadow-lg">
+                <div className="bg-slate-900 rounded-2xl p-5 text-white shadow-lg">
                     <p className="text-green-200 text-xs font-bold uppercase tracking-wider">Active Officers</p>
                     <p className="text-4xl font-extrabold mt-1">{activeCount}<span className="text-green-300 text-lg font-bold">/{EMPLOYEES.length}</span></p>
                 </div>
@@ -193,7 +193,7 @@ export default function LiveMonitor() {
                                     <div className="absolute top-full mt-1 left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
                                         {['all', 'active', 'idle', 'offline'].map(s => (
                                             <button key={s} onClick={() => { setStatusFilter(s); setShowStatusDropdown(false); }}
-                                                className={`w-full text-left px-4 py-2 text-xs font-bold capitalize hover:bg-gray-50 transition-colors ${statusFilter === s ? 'text-green-600' : 'text-gray-700'}`}>
+                                                className={`w-full text-left px-4 py-2 text-xs font-bold capitalize hover:bg-gray-50 transition-colors ${statusFilter === s ? 'text-slate-800' : 'text-gray-700'}`}>
                                                 {s === 'all' ? 'All Status' : s.charAt(0).toUpperCase() + s.slice(1)}
                                             </button>
                                         ))}
@@ -213,7 +213,7 @@ export default function LiveMonitor() {
                                     <div className="absolute top-full mt-1 left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
                                         {regions.map(r => (
                                             <button key={r} onClick={() => { setRegionFilter(r); setShowRegionDropdown(false); }}
-                                                className={`w-full text-left px-4 py-2 text-xs font-bold capitalize hover:bg-gray-50 transition-colors ${regionFilter === r ? 'text-green-600' : 'text-gray-700'}`}>
+                                                className={`w-full text-left px-4 py-2 text-xs font-bold capitalize hover:bg-gray-50 transition-colors ${regionFilter === r ? 'text-slate-800' : 'text-gray-700'}`}>
                                                 {r === 'all' ? 'All Regions' : r}
                                             </button>
                                         ))}
@@ -235,10 +235,10 @@ export default function LiveMonitor() {
                                 <button
                                     key={emp.id}
                                     onClick={() => setSelectedEmployee(emp)}
-                                    className={`w-full text-left p-4 transition-colors ${isSelected ? 'bg-green-50' : 'hover:bg-gray-50'}`}
+                                    className={`w-full text-left p-4 transition-colors ${isSelected ? 'bg-slate-50' : 'hover:bg-gray-50'}`}
                                 >
                                     <div className="flex items-start gap-3">
-                                        <div className={`relative w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-sm bg-gradient-to-br ${emp.status === 'active' ? 'bg-green-500' : 'from-gray-400 to-gray-500'}`}>
+                                        <div className={`relative w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-sm bg-gradient-to-br ${emp.status === 'active' ? 'bg-slate-800' : 'from-gray-400 to-gray-500'}`}>
                                             {emp.name.charAt(0)}
                                             <span className={`absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white ${style.dot}`}></span>
                                         </div>
@@ -258,7 +258,7 @@ export default function LiveMonitor() {
                                                     <Battery className="w-3 h-3 mr-1" />{emp.battery}%
                                                 </span>
                                                 <span className="flex items-center text-[10px] font-bold text-gray-400">
-                                                    {emp.gps === 'enabled' ? <Wifi className="w-3 h-3 mr-1 text-green-500" /> : <WifiOff className="w-3 h-3 mr-1 text-red-500" />}
+                                                    {emp.gps === 'enabled' ? <Wifi className="w-3 h-3 mr-1 text-slate-700" /> : <WifiOff className="w-3 h-3 mr-1 text-red-500" />}
                                                     GPS
                                                 </span>
                                             </div>
@@ -277,7 +277,7 @@ export default function LiveMonitor() {
                         {/* Profile Header */}
                         <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                <div className={`w-16 h-16 rounded-2xl flex-shrink-0 flex items-center justify-center text-white font-extrabold text-xl bg-gradient-to-br ${selectedEmployee.status === 'active' ? 'bg-green-500 shadow-lg shadow-green-500/20' : 'from-gray-400 to-gray-500'}`}>
+                                <div className={`w-16 h-16 rounded-2xl flex-shrink-0 flex items-center justify-center text-white font-extrabold text-xl bg-gradient-to-br ${selectedEmployee.status === 'active' ? 'bg-slate-800 shadow-lg shadow-slate-900/10' : 'from-gray-400 to-gray-500'}`}>
                                     {selectedEmployee.name.charAt(0)}
                                 </div>
                                 <div className="flex-1">
@@ -298,13 +298,13 @@ export default function LiveMonitor() {
                                     </div>
                                 </div>
                                 <div className="flex gap-2 flex-shrink-0">
-                                    <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors" title="Call">
+                                    <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-slate-800 hover:bg-slate-50 transition-colors" title="Call">
                                         <Phone className="w-5 h-5" />
                                     </button>
                                     <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-orange-600 hover:bg-orange-50 transition-colors" title="Message">
                                         <MessageSquare className="w-5 h-5" />
                                     </button>
-                                    <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-green-600 hover:bg-green-50 transition-colors" title="Track on Map">
+                                    <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-slate-800 hover:bg-slate-50 transition-colors" title="Track on Map">
                                         <Navigation className="w-5 h-5" />
                                     </button>
                                 </div>
@@ -314,11 +314,11 @@ export default function LiveMonitor() {
                             <div className="mt-5 pt-5 border-t border-gray-100">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Today's Visit Progress</span>
-                                    <span className="text-sm font-extrabold text-green-600">{selectedEmployee.visitsDone} / {selectedEmployee.visitsTarget}</span>
+                                    <span className="text-sm font-extrabold text-slate-800">{selectedEmployee.visitsDone} / {selectedEmployee.visitsTarget}</span>
                                 </div>
                                 <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                                     <div
-                                        className="h-2.5 rounded-full bg-green-500 transition-all duration-700"
+                                        className="h-2.5 rounded-full bg-slate-800 transition-all duration-700"
                                         style={{ width: `${(selectedEmployee.visitsDone / selectedEmployee.visitsTarget) * 100}%` }}
                                     ></div>
                                 </div>
@@ -333,7 +333,7 @@ export default function LiveMonitor() {
                         <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm">
                             <div className="flex items-center justify-between mb-5">
                                 <h3 className="font-extrabold text-gray-900 flex items-center gap-2">
-                                    <Activity className="w-5 h-5 text-green-500" /> Today's Activity Log
+                                    <Activity className="w-5 h-5 text-slate-700" /> Today's Activity Log
                                 </h3>
                                 <span className="text-xs font-bold text-gray-400">{new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}</span>
                             </div>

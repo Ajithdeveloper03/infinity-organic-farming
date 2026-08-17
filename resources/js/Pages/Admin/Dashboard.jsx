@@ -21,14 +21,14 @@ export default function Dashboard({ locationLogs = [] }) {
                     e.stopPropagation();
                     setIsMapFullscreen(!isMapFullscreen);
                 }}
-                className="absolute top-4 right-4 z-50 bg-white/90 backdrop-blur-md border border-gray-200 p-2.5 rounded-xl shadow-sm hover:text-green-600 transition-colors"
+                className="absolute top-4 right-4 z-50 bg-white/90 backdrop-blur-md border border-gray-200 p-2.5 rounded-xl shadow-sm hover:text-slate-800 transition-colors"
             >
                 {isMapFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
             </button>
 
             <div className="absolute inset-0 bg-gray-50 flex flex-col items-center justify-center bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-80">
                 <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-green-500/20 mb-4 animate-bounce">
-                    <MapPin className="w-8 h-8 text-green-600" />
+                    <MapPin className="w-8 h-8 text-slate-800" />
                 </div>
                 <h2 className="text-xl font-heading font-bold text-gray-900 mb-2">{t('Live Map Canvas')}</h2>
                 <p className="text-gray-500 font-medium text-xs max-w-sm text-center px-4">
@@ -53,10 +53,9 @@ export default function Dashboard({ locationLogs = [] }) {
     return (
         <AdminLayout>
 
-            {/* ══════════ HERO OVERVIEW BANNER ══════════ */}
             <div className="relative rounded-[2.5rem] overflow-hidden mb-8 shadow-xl shadow-green-900/20">
 
-                {/* === Background: Real farm/nature photo from Unsplash (free) === */}
+                
                 <img
                     src="https://images.pexels.com/photos/8703371/pexels-photo-8703371.jpeg"
                     alt="Organic farm background"
@@ -64,10 +63,9 @@ export default function Dashboard({ locationLogs = [] }) {
                     style={{ filter: 'brightness(0.90) saturate(1.3)' }}
                 />
 
-                {/* Solid overlay for text readability (no gradients) */}
+              
                 <div className="absolute inset-0 bg-green-900/30"></div>
 
-                {/* Grid dot overlay */}
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.15) 1px,transparent 1px)', backgroundSize: '40px 40px' }}></div>
 
                 {/* Leaf watermarks */}
@@ -87,7 +85,7 @@ export default function Dashboard({ locationLogs = [] }) {
                                 <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/30 shadow-lg bg-white p-1">
                                     <img src="/images/logo.png" alt="Logo" className="w-full h-full object-contain" />
                                 </div>
-                                <span className="text-green-200 text-sm font-bold tracking-wide">{t('Good morning, Super Admin')} 👋</span>
+                                <span className="text-green-200 text-sm font-bold tracking-wide">{t('Good morning, Super Admin')}</span>
                             </div>
                             <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
                                 {t('Overview')}
@@ -99,7 +97,7 @@ export default function Dashboard({ locationLogs = [] }) {
                             <button className="flex items-center px-5 py-2.5 bg-white/10 border border-white/20 backdrop-blur-md rounded-2xl text-sm font-bold text-white hover:bg-white/20 transition-colors">
                                 {t('This Month')} <ChevronRight className="w-4 h-4 ml-2 rotate-90" />
                             </button>
-                            <button className="flex items-center px-5 py-2.5 bg-white text-green-900 rounded-2xl text-sm font-bold hover:bg-green-50 transition-colors shadow-lg">
+                            <button className="flex items-center px-5 py-2.5 bg-white text-green-900 rounded-2xl text-sm font-bold hover:bg-slate-50 transition-colors shadow-lg">
                                 <Activity className="w-4 h-4 mr-2" /> {t('Export Report')}
                             </button>
                         </div>
@@ -113,7 +111,7 @@ export default function Dashboard({ locationLogs = [] }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-6">
 
                 {/* Card 1: Farmers */}
-                <div className="group relative bg-gradient-to-br from-emerald-100 via-white to-white border border-emerald-50 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-emerald-100/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
+                <div className="group relative bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
                     <div className="flex flex-col mb-4">
                         <div className="w-10 h-10 bg-emerald-700 rounded-full flex items-center justify-center shadow-lg shadow-emerald-700/30 group-hover:scale-110 transition-transform mb-4">
                             <Users className="w-5 h-5 text-white" />
@@ -133,14 +131,14 @@ export default function Dashboard({ locationLogs = [] }) {
                         <div className="w-full bg-emerald-50 rounded-full h-1.5 overflow-hidden">
                             <div className="h-1.5 rounded-full bg-emerald-600" style={{ width: '72%' }}></div>
                         </div>
-                        <span className="text-xs font-bold text-emerald-600 ml-3 flex-shrink-0">72%</span>
+                        <span className="text-xs font-bold text-slate-800 ml-3 flex-shrink-0">72%</span>
                     </div>
                 </div>
 
                 {/* Card 2: Active Officers */}
-                <div className="group relative bg-gradient-to-br from-orange-100 via-white to-white border border-orange-50 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-orange-100/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
+                <div className="group relative bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
                     <div className="flex flex-col mb-4">
-                        <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center shadow-lg shadow-orange-500/30 group-hover:scale-110 transition-transform mb-4">
+                        <div className="w-10 h-10 bg-slate-700 rounded-full flex items-center justify-center shadow-lg shadow-slate-900/10 group-hover:scale-110 transition-transform mb-4">
                             <Briefcase className="w-5 h-5 text-white" />
                         </div>
                         <p className="text-xl font-bold text-gray-900 tracking-tight">{t('Active Officers')}</p>
@@ -156,14 +154,14 @@ export default function Dashboard({ locationLogs = [] }) {
 
                     <div className="mt-4 pt-4 border-t border-gray-100/50 flex items-center justify-between">
                         <div className="w-full bg-orange-50 rounded-full h-1.5 overflow-hidden">
-                            <div className="h-1.5 rounded-full bg-orange-500" style={{ width: '88%' }}></div>
+                            <div className="h-1.5 rounded-full bg-slate-700" style={{ width: '88%' }}></div>
                         </div>
-                        <span className="text-xs font-bold text-orange-500 ml-3 flex-shrink-0">88%</span>
+                        <span className="text-xs font-bold text-slate-700 ml-3 flex-shrink-0">88%</span>
                     </div>
                 </div>
 
                 {/* Card 3: Visits Logged */}
-                <div className="group relative bg-gradient-to-br from-sky-100 via-white to-white border border-sky-50 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-sky-100/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
+                <div className="group relative bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
                     <div className="flex flex-col mb-4">
                         <div className="w-10 h-10 bg-sky-600 rounded-full flex items-center justify-center shadow-lg shadow-sky-600/30 group-hover:scale-110 transition-transform mb-4">
                             <MapPin className="w-5 h-5 text-white" />
@@ -201,7 +199,7 @@ export default function Dashboard({ locationLogs = [] }) {
                         </div>
                         <div className="flex bg-gray-50 p-1 rounded-xl border border-gray-100">
                             <button className="px-4 py-1.5 text-xs font-bold rounded-lg text-gray-500 hover:text-gray-900 transition-colors">{t('Daily')}</button>
-                            <button className="px-4 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm shadow-green-600/30">{t('Weekly')}</button>
+                            <button className="px-4 py-1.5 text-xs font-bold rounded-lg bg-slate-900 text-white shadow-sm shadow-slate-900/10">{t('Weekly')}</button>
                         </div>
                     </div>
                     
@@ -249,7 +247,7 @@ export default function Dashboard({ locationLogs = [] }) {
                                 
                                 {/* The Bar */}
                                 <div 
-                                    className={`w-full rounded-t-xl transition-all duration-500 ease-out group-hover:opacity-80 ${bar.active ? 'bg-orange-400 shadow-lg shadow-orange-500/20' : 'bg-green-50'}`} 
+                                    className={`w-full rounded-t-xl transition-all duration-500 ease-out group-hover:opacity-80 ${bar.active ? 'bg-slate-600 shadow-lg shadow-slate-900/10' : 'bg-slate-50'}`} 
                                     style={{ height: bar.height }}
                                 >
                                     {bar.active && (
@@ -267,8 +265,8 @@ export default function Dashboard({ locationLogs = [] }) {
                     <div className="p-6 border-b border-gray-50 flex justify-between items-center">
                         <div className="flex items-center">
                             <span className="relative flex h-2 w-2 mr-3">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-gradient-to-r from-orange-500 to-amber-500"></span>
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-600 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-slate-700"></span>
                             </span>
                             <h2 className="text-lg font-bold text-gray-900 leading-none">{t('Live Logs')}</h2>
                         </div>
@@ -284,7 +282,7 @@ export default function Dashboard({ locationLogs = [] }) {
                             { time: '09:30 AM', user: 'John Doe', event: t('System booted successfully.'), type: 'info', icon: ActivityIcon },
                         ].map((log, i) => (
                             <div key={i} className="flex items-start p-3 rounded-2xl hover:bg-gray-50 transition-colors cursor-pointer group">
-                                <div className={`p-2.5 rounded-xl mr-3 shadow-sm ${log.type === 'success' ? 'bg-green-50 text-green-600' : log.type === 'critical' ? 'bg-red-50 text-red-500' : 'bg-gray-50 text-gray-500 border border-gray-100 group-hover:border-gray-200'}`}>
+                                <div className={`p-2.5 rounded-xl mr-3 shadow-sm ${log.type === 'success' ? 'bg-slate-50 text-slate-800' : log.type === 'critical' ? 'bg-red-50 text-red-500' : 'bg-gray-50 text-gray-500 border border-gray-100 group-hover:border-gray-200'}`}>
                                     <log.icon className="w-4 h-4" />
                                 </div>
                                 <div className="flex-1 pt-1">
@@ -321,7 +319,7 @@ export default function Dashboard({ locationLogs = [] }) {
                             <div className="absolute inset-2 rounded-full bg-white flex flex-col items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.05)] z-10">
                                 <span className="text-xs font-bold text-gray-400 mb-1">{t('AI Insight')}</span>
                                 <span className="text-2xl font-heading font-extrabold text-gray-900">92%</span>
-                                <span className="text-[10px] font-bold text-green-500">{t('Confidence')}</span>
+                                <span className="text-[10px] font-bold text-slate-700">{t('Confidence')}</span>
                             </div>
                             
                             {/* Decorative Wheel Spokes */}
@@ -342,23 +340,23 @@ export default function Dashboard({ locationLogs = [] }) {
                         </div>
                         <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
                             <div className="flex items-center">
-                                <span className="w-3 h-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 mr-3 shadow-sm shadow-orange-500/50"></span>
+                                <span className="w-3 h-3 rounded-full bg-slate-700 mr-3 shadow-sm shadow-slate-900/10"></span>
                                 <div>
                                     <p className="text-sm font-bold text-gray-900">25 {t('Officers')}</p>
                                     <p className="text-[10px] font-bold text-gray-400">{t('Moderate Performance')}</p>
                                 </div>
                             </div>
-                            <span className="text-xs font-bold text-orange-500 bg-orange-50 px-2 py-1 rounded-md">-2</span>
+                            <span className="text-xs font-bold text-slate-700 bg-orange-50 px-2 py-1 rounded-md">-2</span>
                         </div>
                         <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
                             <div className="flex items-center">
-                                <span className="w-3 h-3 rounded-full bg-green-500 mr-3 shadow-sm shadow-green-500/50"></span>
+                                <span className="w-3 h-3 rounded-full bg-slate-800 mr-3 shadow-sm shadow-slate-900/10"></span>
                                 <div>
                                     <p className="text-sm font-bold text-gray-900">78 {t('Visits')}</p>
                                     <p className="text-[10px] font-bold text-gray-400">{t('Low Risk / Healthy')}</p>
                                 </div>
                             </div>
-                            <span className="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded-md">+87%</span>
+                            <span className="text-xs font-bold text-slate-700 bg-slate-50 px-2 py-1 rounded-md">+87%</span>
                         </div>
                     </div>
                 </div>
@@ -377,10 +375,10 @@ export default function Dashboard({ locationLogs = [] }) {
                         <div className="flex flex-col items-center w-20">
                             <span className="text-2xl font-bold text-gray-900 mb-2">56%</span>
                             <div className="w-full h-48 bg-orange-50 rounded-xl relative overflow-hidden group cursor-pointer border border-orange-100">
-                                <div className="absolute bottom-0 w-full bg-orange-400 rounded-xl transition-all duration-500 group-hover:bg-gradient-to-r from-orange-500 to-amber-500" style={{ height: '56%' }}></div>
+                                <div className="absolute bottom-0 w-full bg-slate-600 rounded-xl transition-all duration-500 group-hover:bg-slate-700" style={{ height: '56%' }}></div>
                             </div>
                             <div className="mt-4 flex flex-col items-center">
-                                <span className="text-[10px] font-bold bg-orange-50 text-orange-500 px-2 py-1 rounded mb-1">+37%</span>
+                                <span className="text-[10px] font-bold bg-orange-50 text-slate-700 px-2 py-1 rounded mb-1">+37%</span>
                                 <span className="text-xs font-bold text-gray-500 text-center">{t('New Registrations')}</span>
                             </div>
                         </div>
@@ -432,22 +430,22 @@ export default function Dashboard({ locationLogs = [] }) {
                         
                         <div className="relative flex items-center justify-between">
                             <div className="text-xs font-bold text-gray-500 w-16 text-right mr-4 z-10 bg-white py-1">7:28 AM</div>
-                            <div className="w-2 h-2 rounded-full bg-green-500 z-10 absolute left-[3.25rem] -translate-x-1/2 outline outline-4 outline-white"></div>
+                            <div className="w-2 h-2 rounded-full bg-slate-800 z-10 absolute left-[3.25rem] -translate-x-1/2 outline outline-4 outline-white"></div>
                             <div className="flex-1 flex items-center ml-6 bg-white p-2 rounded-xl hover:bg-gray-50 cursor-pointer">
-                                <div className="w-8 h-8 rounded-full overflow-hidden mr-3"><img src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="user" className="w-full h-full object-cover"/></div>
+                                <div className="w-8 h-8 rounded-full overflow-hidden mr-3"><img src="/images/logo.png" alt="user" className="w-full h-full object-cover"/></div>
                                 <div>
                                     <p className="text-sm font-bold text-gray-900">Jordan Rivers</p>
                                     <p className="text-[10px] font-bold text-gray-400">Farm Audit #201</p>
                                 </div>
                             </div>
-                            <div className="w-6 h-6 rounded bg-green-50 text-green-500 flex items-center justify-center z-10"><CheckCircle2 className="w-4 h-4"/></div>
+                            <div className="w-6 h-6 rounded bg-slate-50 text-slate-700 flex items-center justify-center z-10"><CheckCircle2 className="w-4 h-4"/></div>
                         </div>
                         
                         <div className="relative flex items-center justify-between">
                             <div className="text-xs font-bold text-gray-500 w-16 text-right mr-4 z-10 bg-white py-1">1:12 PM</div>
                             <div className="w-2 h-2 rounded-full bg-red-500 z-10 absolute left-[3.25rem] -translate-x-1/2 outline outline-4 outline-white"></div>
                             <div className="flex-1 flex items-center ml-6 bg-white p-2 rounded-xl hover:bg-gray-50 cursor-pointer shadow-[0_0_15px_rgba(239,68,68,0.1)] border border-red-100 relative group">
-                                <div className="w-8 h-8 rounded-full overflow-hidden mr-3"><img src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="user" className="w-full h-full object-cover"/></div>
+                                <div className="w-8 h-8 rounded-full overflow-hidden mr-3"><img src="/images/logo.png" alt="user" className="w-full h-full object-cover"/></div>
                                 <div>
                                     <p className="text-sm font-bold text-gray-900">Taylor Green</p>
                                     <p className="text-[10px] font-bold text-gray-400">Missed Check-in</p>
@@ -457,7 +455,7 @@ export default function Dashboard({ locationLogs = [] }) {
                                     <p className="text-xs font-bold text-red-500 mb-1">Emergency Alert</p>
                                     <p className="text-xs text-gray-900 mb-2">Location tracking lost at 1:12 PM</p>
                                     <div className="flex items-center">
-                                        <div className="w-6 h-6 rounded-full overflow-hidden mr-2"><img src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="user" className="w-full h-full object-cover"/></div>
+                                        <div className="w-6 h-6 rounded-full overflow-hidden mr-2"><img src="/images/logo.png" alt="user" className="w-full h-full object-cover"/></div>
                                         <p className="text-[10px] font-bold text-gray-500">Taylor Green</p>
                                     </div>
                                 </div>
@@ -533,8 +531,8 @@ export default function Dashboard({ locationLogs = [] }) {
                                         <td className="py-4 px-6 text-xs font-medium text-gray-500">{row.id}</td>
                                         <td className="py-4 px-6 text-xs font-medium text-gray-500">{row.date}</td>
                                         <td className="py-4 px-6">
-                                            <span className={`flex items-center text-xs font-bold ${row.color === 'green' ? 'text-green-600' : row.color === 'red' ? 'text-red-500' : 'text-orange-500'}`}>
-                                                <span className={`w-1.5 h-1.5 rounded-full mr-2 ${row.color === 'green' ? 'bg-green-500' : row.color === 'red' ? 'bg-red-500' : 'bg-gradient-to-r from-orange-500 to-amber-500'}`}></span>
+                                            <span className={`flex items-center text-xs font-bold ${row.color === 'green' ? 'text-slate-800' : row.color === 'red' ? 'text-red-500' : 'text-slate-700'}`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full mr-2 ${row.color === 'green' ? 'bg-slate-800' : row.color === 'red' ? 'bg-red-500' : 'bg-slate-700'}`}></span>
                                                 {row.status}
                                             </span>
                                         </td>
