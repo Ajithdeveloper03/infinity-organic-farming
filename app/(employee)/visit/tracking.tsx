@@ -172,10 +172,11 @@ export default function TrackingScreen() {
             anchor={{ x: 0.5, y: 0.5 }}
           >
              <View className="items-center">
-               <View className="bg-white p-1 rounded-full shadow-lg border-2 border-green-500 mb-1">
+               <View className="bg-white p-2 rounded-full shadow-lg border-2 border-green-500 mb-1 items-center justify-center" style={{ width: 44, height: 44 }}>
                  <Image 
-                   source={{ uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(employeeProfile.name)}&background=15803d&color=fff&size=100` }}
-                   style={{ width: 40, height: 40, borderRadius: 20 }}
+                   source={require('../../../assets/images/logo.png')}
+                   style={{ width: 24, height: 24 }}
+                   resizeMode="contain"
                  />
                </View>
                <View className="bg-white/90 px-2 py-0.5 rounded-md shadow-sm border border-gray-200">

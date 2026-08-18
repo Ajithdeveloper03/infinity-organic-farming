@@ -28,29 +28,6 @@ export default function FarmerDashboardScreen() {
 
         <View className="px-6">
           
-          {/* Weather Widget */}
-          <View className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-8 flex-row justify-between items-center">
-             <View>
-               <View className="flex-row items-center mb-1">
-                 <CloudSun size={16} color="#ea580c" />
-                 <Text className="text-gray-500 text-sm font-brandon-medium ml-2">Sunny Day</Text>
-               </View>
-               <Text className="text-gray-900 font-gotham-bold text-5xl">30°C</Text>
-               <Text className="text-gray-400 text-xs mt-1">Somanur, Tamil Nadu</Text>
-             </View>
-             <View className="items-end space-y-2">
-               <View className="bg-green-50 px-3 py-1.5 rounded-full flex-row items-center border border-green-100">
-                 <Droplets size={12} color="#15803d" />
-                 <Text className="text-gray-500 text-xs font-gotham-bold mx-2">Humidity</Text>
-                 <Text className="text-gray-900 text-xs">68%</Text>
-               </View>
-               <View className="bg-orange-50 px-3 py-1.5 rounded-full flex-row items-center border border-orange-100">
-                 <Wind size={12} color="#ea580c" />
-                 <Text className="text-gray-500 text-xs font-gotham-bold mx-2">Wind</Text>
-                 <Text className="text-gray-900 text-xs">12 km/h</Text>
-               </View>
-             </View>
-          </View>
 
           {/* Farm Overview Card */}
           <Text className="text-lg font-gotham-bold text-gray-900 mb-4">Farm Overview</Text>
@@ -109,15 +86,15 @@ export default function FarmerDashboardScreen() {
           <Text className="text-lg font-gotham-bold text-gray-900 mb-4">Quick Actions</Text>
           <View className="flex-row justify-between mb-8">
              {[
-               { icon: History, label: 'Visits', route: '/(farmer)/history', color: '#15803d', bg: 'bg-green-50' },
-               { icon: Leaf, label: 'Reports', route: '/(farmer)/recommendations', color: '#ea580c', bg: 'bg-orange-50' },
-               { icon: Star, label: 'Rate FO', route: '/(farmer)/rate/v1', color: '#eab308', bg: 'bg-yellow-50' },
-               { icon: HeadphonesIcon, label: 'Support', route: '/(farmer)/support', color: '#374151', bg: 'bg-gray-100' }
+               { icon: History, label: 'Visits', route: '/(farmer)/history', color: '#15803d', bgHex: '#f0fdf4' },
+               { icon: Leaf, label: 'Reports', route: '/(farmer)/recommendations', color: '#ea580c', bgHex: '#fff7ed' },
+               { icon: Star, label: 'Rate FO', route: '/(farmer)/rate/v1', color: '#eab308', bgHex: '#fefce8' },
+               { icon: HeadphonesIcon, label: 'Support', route: '/(farmer)/support', color: '#374151', bgHex: '#f3f4f6' }
              ].map((action, idx) => {
                const Icon = action.icon;
                return (
                  <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => router.push(action.route as any)} className="items-center w-1/4">
-                    <View className={`w-14 h-14 ${action.bg} rounded-2xl items-center justify-center mb-2`}>
+                    <View className="w-14 h-14 rounded-2xl items-center justify-center mb-2" style={{ backgroundColor: action.bgHex }}>
                        <Icon size={24} color={action.color} />
                     </View>
                     <Text className="text-gray-600 text-xs font-brandon-medium">{action.label}</Text>

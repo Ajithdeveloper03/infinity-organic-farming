@@ -6,7 +6,7 @@ import { Home, CalendarDays, Plus, FileText, User } from 'lucide-react-native';
 function CustomTabBar({ state, descriptors, navigation }: any) {
   // We want to insert our FAB in the middle (index 2) of the visible tabs
   const visibleRoutes = state.routes.filter((route: any) => 
-    !['visit', 'map', 'edit-profile', 'attendance', 'menu', 'register-farmer'].includes(route.name)
+    !['visit', 'map', 'edit-profile', 'menu', 'register-farmer', 'attendance/clock-in', 'attendance/clock-out'].includes(route.name) && !route.name.startsWith('visit/') && !route.name.startsWith('register-farmer/')
   );
 
   return (

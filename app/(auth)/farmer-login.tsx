@@ -102,7 +102,7 @@ export default function FarmerLoginScreen() {
               
               {/* Step 1: Mobile Number */}
               {step === 1 && (
-                <Animated.View style={{ opacity: slideAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }) }} className="w-full">
+                <Animated.View style={{ opacity: slideAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 0] }), width: '100%' }}>
                   <View className="w-full mb-8">
                     <Text className="text-3xl font-gotham-bold text-gray-900 mb-2 text-center">Farmer Login</Text>
                     <Text className="text-gray-500 font-brandon text-base text-center">Enter your registered mobile number</Text>
@@ -137,7 +137,7 @@ export default function FarmerLoginScreen() {
 
               {/* Step 2: OTP Verification */}
               {step === 2 && (
-                <Animated.View style={{ opacity: slideAnim }} className="w-full">
+                <Animated.View style={{ opacity: slideAnim, width: '100%' }}>
                   <View className="w-full mb-8">
                     <Text className="text-3xl font-gotham-bold text-gray-900 mb-2 text-center">Verify OTP</Text>
                     <Text className="text-gray-500 font-brandon text-base text-center">We've sent a 4-digit code to</Text>
@@ -149,9 +149,18 @@ export default function FarmerLoginScreen() {
                       <TextInput
                         key={index}
                         ref={(ref) => { otpInputs.current[index] = ref; }}
-                        className={`w-14 h-14 border-2 rounded-2xl text-center text-2xl font-gotham-bold ${
-                          otp[index] ? 'border-[#15803d] bg-green-50 text-[#15803d]' : 'border-gray-200 bg-gray-50 text-gray-900'
-                        }`}
+                        style={{
+                          width: 56,
+                          height: 56,
+                          borderWidth: 2,
+                          borderRadius: 16,
+                          textAlign: 'center',
+                          fontSize: 24,
+                          fontFamily: 'Gotham-Bold', // Ensure you use the correct fontFamily string defined in your project
+                          borderColor: otp[index] ? '#15803d' : '#e5e7eb',
+                          backgroundColor: otp[index] ? '#f0fdf4' : '#f9fafb',
+                          color: otp[index] ? '#15803d' : '#111827'
+                        }}
                         maxLength={1}
                         keyboardType="number-pad"
                         value={otp[index]}

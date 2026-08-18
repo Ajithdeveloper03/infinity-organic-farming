@@ -10,7 +10,7 @@ function FarmerTabBar({ state, descriptors, navigation }: any) {
   );
 
   return (
-    <View className="absolute bottom-0 w-full flex-row bg-black/50 backdrop-blur-xl h-24 px-2 pt-4 pb-8 items-center border-t border-white/10 shadow-2xl">
+    <View className="flex-row bg-[#113d11] h-20 px-4 pt-2 pb-6 items-center justify-between rounded-t-3xl border-t border-[#113d11]">
       {visibleRoutes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel !== undefined ? options.tabBarLabel : options.title !== undefined ? options.title : route.name;
@@ -30,7 +30,7 @@ function FarmerTabBar({ state, descriptors, navigation }: any) {
         };
 
         const getIcon = () => {
-          const color = isFocused ? '#fff' : 'rgba(255,255,255,0.4)'; 
+          const color = isFocused ? '#ea580c' : '#ffffff'; 
           switch (route.name) {
             case 'dashboard': return <Home size={24} color={color} />;
             case 'farm': return <Leaf size={24} color={color} />;
@@ -52,7 +52,7 @@ function FarmerTabBar({ state, descriptors, navigation }: any) {
             className="flex-1 items-center justify-center pt-2"
           >
             {getIcon()}
-            <Text className={`text-[10px] mt-1 font-gotham-bold ${isFocused ? 'text-white drop-shadow-md' : 'text-white/40'}`}>
+            <Text className={`text-[10px] mt-1 font-brandon-medium ${isFocused ? 'text-[#ea580c]' : 'text-white'}`}>
               {label}
             </Text>
           </TouchableOpacity>
@@ -80,7 +80,7 @@ export default function FarmerLayout() {
       <Tabs.Screen name="documents" options={{ href: null }} />
       <Tabs.Screen name="notifications" options={{ href: null }} />
       <Tabs.Screen name="visit" options={{ href: null }} />
-      <Tabs.Screen name="rate" options={{ href: null }} />
+      <Tabs.Screen name="rate/[id]" options={{ href: null }} />
     </Tabs>
   );
 }

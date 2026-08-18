@@ -150,47 +150,47 @@ export default function DashboardScreen() {
             <TouchableOpacity 
               activeOpacity={0.7}
               onPress={() => router.push('/(employee)/register-farmer/step1' as any)}
-              className="w-[48%] bg-white p-4 rounded-[20px] mb-4 shadow-sm border border-gray-100 items-center justify-center"
+              className="w-[48%] bg-green-50 p-4 rounded-[20px] mb-4 shadow-sm border border-green-100 items-center justify-center"
             >
-              <View className="w-12 h-12 bg-green-50 rounded-full items-center justify-center mb-3">
+              <View className="w-12 h-12 bg-white rounded-full items-center justify-center mb-3 shadow-sm">
                 <UserPlus size={24} color="#15803d" />
               </View>
-              <Text className="text-gray-900 font-gotham-bold text-sm text-center">Register{'\n'}New Farmer</Text>
+              <Text className="text-green-900 font-gotham-bold text-sm text-center">Register{'\n'}New Farmer</Text>
             </TouchableOpacity>
 
             {/* Visit History */}
             <TouchableOpacity 
               activeOpacity={0.7}
               onPress={() => router.push('/(employee)/visits' as any)}
-              className="w-[48%] bg-white p-4 rounded-[20px] mb-4 shadow-sm border border-gray-100 items-center justify-center"
+              className="w-[48%] bg-blue-50 p-4 rounded-[20px] mb-4 shadow-sm border border-blue-100 items-center justify-center"
             >
-              <View className="w-12 h-12 bg-blue-50 rounded-full items-center justify-center mb-3">
+              <View className="w-12 h-12 bg-white rounded-full items-center justify-center mb-3 shadow-sm">
                 <ClipboardList size={24} color="#3b82f6" />
               </View>
-              <Text className="text-gray-900 font-gotham-bold text-sm text-center">Visit{'\n'}History</Text>
+              <Text className="text-blue-900 font-gotham-bold text-sm text-center">Visit{'\n'}History</Text>
             </TouchableOpacity>
 
             {/* Performance/Target */}
             <TouchableOpacity 
               activeOpacity={0.7}
-              className="w-[48%] bg-white p-4 rounded-[20px] shadow-sm border border-gray-100 items-center justify-center"
+              className="w-[48%] bg-orange-50 p-4 rounded-[20px] mb-4 shadow-sm border border-orange-100 items-center justify-center"
             >
-              <View className="w-12 h-12 bg-orange-50 rounded-full items-center justify-center mb-3">
+              <View className="w-12 h-12 bg-white rounded-full items-center justify-center mb-3 shadow-sm">
                 <Target size={24} color="#ea580c" />
               </View>
-              <Text className="text-gray-900 font-gotham-bold text-sm text-center">Monthly{'\n'}Target</Text>
+              <Text className="text-orange-900 font-gotham-bold text-sm text-center">Monthly{'\n'}Target</Text>
             </TouchableOpacity>
 
             {/* My Reports */}
             <TouchableOpacity 
               activeOpacity={0.7}
               onPress={() => router.push('/(employee)/reports' as any)}
-              className="w-[48%] bg-white p-4 rounded-[20px] shadow-sm border border-gray-100 items-center justify-center"
+              className="w-[48%] bg-purple-50 p-4 rounded-[20px] mb-4 shadow-sm border border-purple-100 items-center justify-center"
             >
-              <View className="w-12 h-12 bg-purple-50 rounded-full items-center justify-center mb-3">
+              <View className="w-12 h-12 bg-white rounded-full items-center justify-center mb-3 shadow-sm">
                 <FileText size={24} color="#a855f7" />
               </View>
-              <Text className="text-gray-900 font-gotham-bold text-sm text-center">My{'\n'}Reports</Text>
+              <Text className="text-purple-900 font-gotham-bold text-sm text-center">My{'\n'}Reports</Text>
             </TouchableOpacity>
           </View>
         </View>
