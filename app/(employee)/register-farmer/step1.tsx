@@ -31,7 +31,7 @@ export default function Step1Mobile() {
         <View className="flex-row items-center justify-between mb-10 px-2">
           {[1, 2, 3, 4, 5].map((step, index) => (
             <React.Fragment key={step}>
-              <View className={`w-8 h-8 rounded-full items-center justify-center ${step === 1 ? 'bg-[#396216]' : 'bg-white border border-gray-300'}`}>
+              <View className={`w-8 h-8 rounded-full items-center justify-center ${step === 1 ? 'bg-[#15803d]' : 'bg-white border border-gray-300'}`}>
                 <Text className={step === 1 ? 'text-white font-gotham-bold' : 'text-gray-400 font-gotham-bold'}>{step}</Text>
               </View>
               {index < 4 && <View className="flex-1 h-[1px] bg-gray-300" />}
@@ -71,7 +71,7 @@ export default function Step1Mobile() {
         <Button 
           title="Send OTP" 
           onPress={handleNext}
-          className="bg-[#396216]"
+          className="bg-[#15803d]"
         />
       </View>
     </SafeAreaView>

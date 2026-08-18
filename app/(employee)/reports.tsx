@@ -7,7 +7,7 @@ const reports = [
   { id: '1', name: 'Kuppusamy', date: 'Aug 12, 2025', location: 'Block A', status: 'Completed', statusColor: 'text-green-700', image: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=200&auto=format&fit=crop' },
   { id: '2', name: 'Subramani', date: 'Aug 10, 2025', location: 'Block D', status: 'Completed', statusColor: 'text-green-700', image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=200&auto=format&fit=crop' },
   { id: '3', name: 'Muthuvel', date: 'Aug 08, 2025', location: 'Block C', status: 'Completed', statusColor: 'text-green-700', image: 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?q=80&w=200&auto=format&fit=crop' },
-  { id: '4', name: 'Perumal', date: 'Aug 05, 2025', location: 'Block B', status: 'Pending', statusColor: 'text-[#e87111]', image: 'https://images.unsplash.com/photo-1599427301097-6a4a11b6d176?q=80&w=200&auto=format&fit=crop' },
+  { id: '4', name: 'Perumal', date: 'Aug 05, 2025', location: 'Block B', status: 'Pending', statusColor: 'text-[#ea580c]', image: 'https://images.unsplash.com/photo-1599427301097-6a4a11b6d176?q=80&w=200&auto=format&fit=crop' },
 ];
 
 export default function ReportsScreen() {
@@ -32,7 +32,7 @@ export default function ReportsScreen() {
             <TouchableOpacity 
               key={tab}
               onPress={() => setActiveTab(tab)}
-              className={`py-2 px-6 rounded-full ${activeTab === tab ? 'bg-[#396216]' : 'bg-gray-100'}`}
+              className={`py-2 px-6 rounded-full ${activeTab === tab ? 'bg-[#15803d]' : 'bg-gray-100'}`}
             >
               <Text className={`font-gotham-bold text-sm ${activeTab === tab ? 'text-white' : 'text-gray-500'}`}>{tab}</Text>
             </TouchableOpacity>

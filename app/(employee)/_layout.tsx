@@ -30,7 +30,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
         };
 
         const getIcon = () => {
-          const color = isFocused ? '#e87111' : '#ffffff';
+          const color = isFocused ? '#ea580c' : '#ffffff';
           switch (route.name) {
             case 'dashboard': return <Home size={24} color={color} />;
             case 'visits': return <CalendarDays size={24} color={color} />;
@@ -51,7 +51,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
             className="flex-1 items-center justify-center pt-2"
           >
             {getIcon()}
-            <Text className={`text-[10px] mt-1 font-brandon-medium ${isFocused ? 'text-[#e87111]' : 'text-white'}`}>
+            <Text className={`text-[10px] mt-1 font-brandon-medium ${isFocused ? 'text-[#ea580c]' : 'text-white'}`}>
               {label}
             </Text>
           </TouchableOpacity>
@@ -64,8 +64,8 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
               {TabItem}
               <View key="fab" className="flex-1 items-center justify-center -mt-8">
                 <TouchableOpacity 
-                  onPress={() => router.push('/(employee)/map')}
-                  className="w-16 h-16 bg-[#396216] rounded-full items-center justify-center border-4 border-white shadow-xl"
+                  onPress={() => router.push('/(employee)/register-farmer/step1' as any)}
+                  className="w-16 h-16 bg-[#15803d] rounded-full items-center justify-center border-4 border-white shadow-xl"
                 >
                   <Plus size={32} color="#fff" />
                 </TouchableOpacity>

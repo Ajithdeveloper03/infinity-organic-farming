@@ -29,16 +29,16 @@ export const Button = ({
 
   switch (variant) {
     case 'primary':
-      variantStyle = 'bg-[#8b8df2] active:bg-[#7a7ce0]';
+      variantStyle = 'bg-[#15803d] active:bg-[#7a7ce0]';
       textStyle += ' text-white';
       break;
     case 'secondary':
       variantStyle = 'bg-[#e8e8fc] active:bg-[#d1d1f8]';
-      textStyle += ' text-[#8b8df2]';
+      textStyle += ' text-[#15803d]';
       break;
     case 'outline':
-      variantStyle = 'border-2 border-[#8b8df2] bg-transparent active:bg-[#e8e8fc]';
-      textStyle += ' text-[#8b8df2]';
+      variantStyle = 'border-2 border-[#15803d] bg-transparent active:bg-[#e8e8fc]';
+      textStyle += ' text-[#15803d]';
       break;
   }
 
@@ -51,7 +51,7 @@ export const Button = ({
       className={`${baseStyle} ${variantStyle} ${disabledStyle} ${className}`}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'primary' ? 'white' : '#8b8df2'} />
+        <ActivityIndicator color={variant === 'primary' ? 'white' : '#15803d'} />
       ) : (
         <>
           {icon && icon}

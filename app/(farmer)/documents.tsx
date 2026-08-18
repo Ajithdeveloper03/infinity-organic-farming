@@ -22,7 +22,7 @@ export default function FarmerDocumentsScreen() {
         <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 mr-2">
            <ChevronLeft size={24} color="#000" />
         </TouchableOpacity>
-        <Text className="text-gray-900 text-lg font-bold">Documents</Text>
+        <Text className="text-gray-900 text-lg font-gotham-bold">Documents</Text>
       </View>
 
       <ScrollView className="flex-1 pb-24">
@@ -35,7 +35,7 @@ export default function FarmerDocumentsScreen() {
                onPress={() => setActiveTab(tab)}
                className={`flex-1 items-center py-2 rounded-full ${activeTab === tab ? 'bg-[#15803d]' : 'bg-gray-100'} mx-1`}
              >
-               <Text className={`font-bold text-[11px] ${activeTab === tab ? 'text-white' : 'text-gray-500'}`}>{tab}</Text>
+               <Text className={`font-gotham-bold text-[11px] ${activeTab === tab ? 'text-white' : 'text-gray-500'}`}>{tab}</Text>
              </TouchableOpacity>
           ))}
         </View>
@@ -48,7 +48,7 @@ export default function FarmerDocumentsScreen() {
                    <FileText size={24} color={doc.color} />
                 </View>
                 <View className="flex-1 pr-2">
-                   <Text className="text-gray-900 font-bold text-base mb-1">{doc.title}</Text>
+                   <Text className="text-gray-900 font-gotham-bold text-base mb-1">{doc.title}</Text>
                    <Text className="text-gray-500 text-xs mb-1">{doc.size}</Text>
                    <Text className="text-gray-400 text-[10px]">{doc.date}</Text>
                 </View>

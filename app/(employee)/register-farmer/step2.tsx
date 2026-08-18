@@ -6,7 +6,7 @@ import { Button } from '../../../components/ui/Button';
 
 export default function Step2OTP() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const inputs = useRef<Array<Text className="font-brandon"Input | null>>([]);
+  const inputs = useRef<Array<TextInput | null>>([]);
 
   const handleChangeText = (text: string, index: number) => {
     const newOtp = [...otp];
@@ -49,7 +49,7 @@ export default function Step2OTP() {
         {/* OTP Inputs */}
         <View className="flex-row justify-between mb-8 px-2">
           {otp.map((digit, index) => (
-            <Text className="font-brandon"Input
+            <TextInput
               key={index}
               ref={(ref) => { inputs.current[index] = ref; }}
               className="w-12 h-14 border border-gray-300 rounded-xl text-center text-xl font-gotham-bold text-gray-900"
@@ -64,7 +64,7 @@ export default function Step2OTP() {
 
         <View className="flex-row justify-center mb-12">
           <Text className="text-gray-500 font-brandon-medium">Resend OTP in </Text>
-          <Text className="text-[#396216] font-gotham-bold">00:25</Text>
+          <Text className="text-[#15803d] font-gotham-bold">00:25</Text>
         </View>
 
         {/* Real Image */}
@@ -80,7 +80,7 @@ export default function Step2OTP() {
           <Button 
             title="Verify & Continue" 
             onPress={handleNext}
-            className="bg-[#396216]"
+            className="bg-[#15803d]"
           />
         </View>
       </View>

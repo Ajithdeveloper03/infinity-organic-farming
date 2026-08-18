@@ -3,11 +3,13 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image, TextInpu
 import { router, useLocalSearchParams } from 'expo-router';
 import { ChevronLeft, Star } from 'lucide-react-native';
 import { Button } from '../../../components/ui/Button';
+import { showToast } from '../../../components/ui/ToastMessage';
 
 export default function FarmerRateOfficerScreen() {
   const { id } = useLocalSearchParams();
   const [rating, setRating] = useState(4);
   const [feedback, setFeedback] = useState('');
+  const [loading, setLoading] = useState(false);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
@@ -18,7 +20,7 @@ export default function FarmerRateOfficerScreen() {
           <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 mr-2">
              <ChevronLeft size={24} color="#000" />
           </TouchableOpacity>
-          <Text className="text-gray-900 text-lg font-bold">Rate Field Officer</Text>
+          <Text className="text-gray-900 text-lg font-gotham-bold">Rate Field Officer</Text>
         </View>
 
         <ScrollView className="flex-1 px-6 pt-12 pb-24 items-center">
@@ -30,11 +32,11 @@ export default function FarmerRateOfficerScreen() {
                   className="w-full h-full rounded-full"
                />
              </View>
-             <Text className="text-gray-900 text-2xl font-bold mb-1">Arun Kumar</Text>
-             <Text className="text-gray-500 font-medium">Field Officer</Text>
+             <Text className="text-gray-900 text-2xl font-gotham-bold mb-1">Arun Kumar</Text>
+             <Text className="text-gray-500 font-brandon-medium">Field Officer</Text>
           </View>
 
-          <Text className="text-gray-900 font-bold text-lg mb-6">How was your experience?</Text>
+          <Text className="text-gray-900 font-gotham-bold text-lg mb-6">How was your experience?</Text>
 
           <View className="flex-row items-center justify-center space-x-2 mb-10 w-full px-4">
              {[1, 2, 3, 4, 5].map((star) => (
@@ -53,7 +55,7 @@ export default function FarmerRateOfficerScreen() {
           </View>
 
           <View className="w-full mb-8">
-            <Text className="text-gray-900 font-bold mb-3 text-left">Write a feedback (optional)</Text>
+            <Text className="text-gray-900 font-gotham-bold mb-3 text-left">Write a feedback (optional)</Text>
             <View className="border border-gray-200 rounded-xl px-4 py-3 bg-white h-32 w-full">
               <TextInput 
                  className="flex-1 text-gray-900"
@@ -70,9 +72,14 @@ export default function FarmerRateOfficerScreen() {
           <View className="w-full">
             <Button 
               title="Submit Rating" 
+              loading={loading}
               onPress={() => {
-                alert('Rating Submitted!');
-                router.back();
+                setLoading(true);
+                setTimeout(() => {
+                  setLoading(false);
+                  showToast({ title: 'Feedback Submitted', message: 'Thank you for rating your Field Officer.', type: 'success' });
+                  router.back();
+                }, 1000);
               }}
               className="bg-[#15803d]"
             />

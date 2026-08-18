@@ -54,7 +54,7 @@ export default function AttendanceScreen() {
               <Text className="text-gray-900 font-brandon-medium w-8 text-center">11</Text>
               
               {/* Highlighted Today */}
-              <View className="w-8 h-8 rounded-full bg-[#396216] items-center justify-center">
+              <View className="w-8 h-8 rounded-full bg-[#15803d] items-center justify-center">
                  <Text className="text-white font-gotham-bold">12</Text>
               </View>
 
@@ -80,7 +80,7 @@ export default function AttendanceScreen() {
            
            <View className="flex-row items-center mb-6">
              <View className="w-8 h-8 rounded-full bg-green-100 items-center justify-center mr-4">
-                <View className="w-3 h-3 bg-[#396216] rounded-full" />
+                <View className="w-3 h-3 bg-[#15803d] rounded-full" />
              </View>
              <View className="flex-1">
                <Text className="text-gray-900 font-gotham-bold">Check In</Text>

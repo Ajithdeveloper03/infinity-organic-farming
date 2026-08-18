@@ -52,7 +52,7 @@ function FarmerTabBar({ state, descriptors, navigation }: any) {
             className="flex-1 items-center justify-center pt-2"
           >
             {getIcon()}
-            <Text className={`text-[10px] mt-1 font-bold ${isFocused ? 'text-white drop-shadow-md' : 'text-white/40'}`}>
+            <Text className={`text-[10px] mt-1 font-gotham-bold ${isFocused ? 'text-white drop-shadow-md' : 'text-white/40'}`}>
               {label}
             </Text>
           </TouchableOpacity>

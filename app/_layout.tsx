@@ -8,6 +8,7 @@ import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold, Poppi
 import { Lora_400Regular, Lora_500Medium, Lora_700Bold } from '@expo-google-fonts/lora';
 import { Montserrat_400Regular, Montserrat_500Medium, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_800ExtraBold } from '@expo-google-fonts/montserrat';
 import { JosefinSans_400Regular, JosefinSans_500Medium, JosefinSans_600SemiBold, JosefinSans_700Bold } from '@expo-google-fonts/josefin-sans';
+import { ToastMessage } from '../components/ui/ToastMessage';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -45,6 +46,7 @@ export default function RootLayout() {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }} />
+      <ToastMessage />
       <StatusBar style="auto" />
     </>
   );

@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { ChevronLeft, Check } from 'lucide-react-native';
 import { Button } from '../../../components/ui/Button';
+import { showToast } from '../../../components/ui/ToastMessage';
 
 export default function SuccessScreen() {
+  
+  useEffect(() => {
+    // Show reminder toast for next visit
+    setTimeout(() => {
+      showToast({
+        title: 'Reminder',
+        message: 'Next visit for this farmer is in 5 days. Please be prepared.',
+        type: 'info',
+        duration: 5000
+      });
+    }, 500);
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       
@@ -17,7 +31,7 @@ export default function SuccessScreen() {
 
       <View className="flex-1 items-center justify-center px-6">
          
-         <View className="w-24 h-24 bg-[#396216] rounded-full items-center justify-center mb-8 shadow-md">
+         <View className="w-24 h-24 bg-[#15803d] rounded-full items-center justify-center mb-8 shadow-md">
             <Check size={48} color="#fff" strokeWidth={3} />
          </View>
 
@@ -35,7 +49,7 @@ export default function SuccessScreen() {
            <Button 
              title="View Report" 
              onPress={() => router.push('/(employee)/reports')}
-             className="bg-[#396216] mb-4"
+             className="bg-[#15803d] mb-4"
            />
            <TouchableOpacity 
              onPress={() => router.replace('/(employee)/dashboard')}

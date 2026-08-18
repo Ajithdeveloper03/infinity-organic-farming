@@ -1,153 +1,171 @@
 import React from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
-import { Bell, Calendar, Leaf, FileText, HeadphonesIcon, History, ChevronRight } from 'lucide-react-native';
+import { Bell, Calendar, Leaf, FileText, HeadphonesIcon, History, ChevronRight, CloudSun, Wind, Droplets, Star } from 'lucide-react-native';
 
 export default function FarmerDashboardScreen() {
   return (
-    <SafeAreaView className="flex-1 bg-black">
-      <ImageBackground 
-        source={{uri: 'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=1200&auto=format&fit=crop'}}
-        className="flex-1 w-full h-full"
-      >
-        {/* Subtle dark gradient for legibility */}
-        <View className="absolute inset-0 bg-black/30" />
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <ScrollView className="flex-1 pb-24" showsVerticalScrollIndicator={false}>
         
-        <ScrollView className="flex-1 pb-24 z-10">
+        {/* Header */}
+        <View className="px-6 pt-12 pb-6 flex-row justify-between items-center bg-white shadow-sm mb-6 rounded-b-3xl">
+          <View className="flex-row items-center">
+             <Image 
+                source={{uri: 'https://ui-avatars.com/api/?name=Kuppusamy&background=15803d&color=fff'}}
+                className="w-14 h-14 rounded-full mr-4 border-2 border-green-100"
+             />
+             <View>
+                <Text className="text-gray-500 text-sm font-brandon-medium">Good Morning,</Text>
+                <Text className="text-gray-900 text-xl font-gotham-bold tracking-tight">Kuppusamy 👋</Text>
+             </View>
+          </View>
+          <TouchableOpacity onPress={() => router.push('/(farmer)/notifications')} className="relative p-3 bg-gray-50 rounded-full">
+            <Bell size={20} color="#374151" />
+            <View className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full border-2 border-white" />
+          </TouchableOpacity>
+        </View>
+
+        <View className="px-6">
           
-          {/* Header */}
-          <View className="px-6 pt-12 pb-6 flex-row justify-between items-center">
-            <View className="flex-row items-center">
-               <Image 
-                  source={{uri: 'https://ui-avatars.com/api/?name=Kuppusamy&background=15803d&color=fff'}}
-                  className="w-12 h-12 rounded-full mr-3 border-2 border-white/50 shadow-sm"
-               />
-               <View>
-                  <Text className="text-white/80 text-sm font-medium">Good Morning,</Text>
-                  <Text className="text-white text-xl font-bold tracking-tight">Kuppusamy <Text>👋</Text></Text>
+          {/* Weather Widget */}
+          <View className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-8 flex-row justify-between items-center">
+             <View>
+               <View className="flex-row items-center mb-1">
+                 <CloudSun size={16} color="#ea580c" />
+                 <Text className="text-gray-500 text-sm font-brandon-medium ml-2">Sunny Day</Text>
                </View>
-            </View>
-            <TouchableOpacity onPress={() => router.push('/(farmer)/notifications')} className="relative p-3 bg-white/20 backdrop-blur-md rounded-full border border-white/20 shadow-sm">
-              <Bell size={20} color="#fff" />
-              <View className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-transparent" />
-            </TouchableOpacity>
+               <Text className="text-gray-900 font-gotham-bold text-5xl">30°C</Text>
+               <Text className="text-gray-400 text-xs mt-1">Somanur, Tamil Nadu</Text>
+             </View>
+             <View className="items-end space-y-2">
+               <View className="bg-green-50 px-3 py-1.5 rounded-full flex-row items-center border border-green-100">
+                 <Droplets size={12} color="#15803d" />
+                 <Text className="text-gray-500 text-xs font-gotham-bold mx-2">Humidity</Text>
+                 <Text className="text-gray-900 text-xs">68%</Text>
+               </View>
+               <View className="bg-orange-50 px-3 py-1.5 rounded-full flex-row items-center border border-orange-100">
+                 <Wind size={12} color="#ea580c" />
+                 <Text className="text-gray-500 text-xs font-gotham-bold mx-2">Wind</Text>
+                 <Text className="text-gray-900 text-xs">12 km/h</Text>
+               </View>
+             </View>
           </View>
 
-          <View className="px-6 pt-2">
-            
-            {/* New Glass Weather Widget */}
-            <View className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 mb-8 flex-row justify-between items-center">
-               <View>
-                 <Text className="text-white/80 text-sm font-medium mb-1 flex-row items-center">
-                   <Text>☀️ Sunny Day</Text>
-                 </Text>
-                 <Text className="text-white font-extrabold text-5xl">30°C</Text>
-                 <Text className="text-white/60 text-xs mt-1">Somanur, Tamil Nadu</Text>
-               </View>
-               <View className="items-end space-y-2">
-                 <View className="bg-white/10 px-3 py-1.5 rounded-full flex-row items-center border border-white/10">
-                   <Text className="text-white text-xs font-bold mr-2">Humidity</Text>
-                   <Text className="text-white/80 text-xs">68%</Text>
-                 </View>
-                 <View className="bg-white/10 px-3 py-1.5 rounded-full flex-row items-center border border-white/10">
-                   <Text className="text-white text-xs font-bold mr-2">Wind</Text>
-                   <Text className="text-white/80 text-xs">12 km/h</Text>
-                 </View>
-               </View>
-            </View>
-
-            {/* Farm Overview Card (Glass) */}
-            <Text className="text-lg font-bold text-white mb-4 drop-shadow-md">Farm Overview</Text>
-            <TouchableOpacity 
-              onPress={() => router.push('/(farmer)/farm')}
-              className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/20 mb-8"
-            >
-              <View className="flex-row justify-between mb-2">
-                <View>
-                  <Text className="text-white font-bold text-3xl">2.5</Text>
-                  <Text className="text-white/70 text-xs uppercase tracking-wider mt-1">Acres</Text>
-                </View>
-                <View className="w-px h-12 bg-white/20" />
-                <View>
-                  <Text className="text-white font-bold text-xl mt-2">Vetiver</Text>
-                  <Text className="text-white/70 text-xs uppercase tracking-wider mt-1">Crop Type</Text>
-                </View>
-                <View className="w-px h-12 bg-white/20" />
-                <View>
-                  <Text className="text-[#a3e635] font-bold text-xl mt-2">Good</Text>
-                  <Text className="text-white/70 text-xs uppercase tracking-wider mt-1">Crop Health</Text>
-                </View>
+          {/* Farm Overview Card */}
+          <Text className="text-lg font-gotham-bold text-gray-900 mb-4">Farm Overview</Text>
+          <TouchableOpacity 
+            activeOpacity={0.9}
+            onPress={() => router.push('/(farmer)/profile')}
+            className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-8"
+          >
+            <View className="flex-row justify-between mb-2">
+              <View className="items-center">
+                <Text className="text-gray-900 font-gotham-bold text-3xl">2.5</Text>
+                <Text className="text-gray-400 text-xs uppercase tracking-wider mt-1">Acres</Text>
               </View>
-            </TouchableOpacity>
-
-            {/* Upcoming Visit (Glass) */}
-            <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-lg font-bold text-white drop-shadow-md">Upcoming Visit</Text>
+              <View className="w-px h-12 bg-gray-200" />
+              <View className="items-center">
+                <Text className="text-gray-900 font-gotham-bold text-xl mt-2">Vetiver</Text>
+                <Text className="text-gray-400 text-xs uppercase tracking-wider mt-1">Crop Type</Text>
+              </View>
+              <View className="w-px h-12 bg-gray-200" />
+              <View className="items-center">
+                <Text className="text-[#15803d] font-gotham-bold text-xl mt-2">Good</Text>
+                <Text className="text-gray-400 text-xs uppercase tracking-wider mt-1">Crop Health</Text>
+              </View>
             </View>
-            <View className="bg-white/10 backdrop-blur-xl rounded-3xl p-5 shadow-xl border border-white/20 mb-8 flex-row items-center justify-between">
+          </TouchableOpacity>
+
+          {/* Upcoming Visit */}
+          <Text className="text-lg font-gotham-bold text-gray-900 mb-4">Upcoming Visit</Text>
+          <View className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 mb-8">
+             <View className="flex-row justify-between items-start mb-4">
                <View className="flex-row items-center flex-1">
                  <Image 
-                    source={{uri: 'https://ui-avatars.com/api/?name=Arun+Kumar&background=e87111&color=fff'}}
-                    className="w-12 h-12 rounded-full mr-4 border border-white/30"
+                    source={{uri: 'https://ui-avatars.com/api/?name=Arun+Kumar&background=ea580c&color=fff'}}
+                    className="w-12 h-12 rounded-full mr-4"
                  />
                  <View>
-                   <Text className="text-white font-bold text-base">Arun Kumar</Text>
-                   <Text className="text-white/70 text-xs mt-0.5">May 28, 2025 • 10:30 AM</Text>
-                   <Text className="text-white/50 text-[10px] uppercase mt-1 tracking-wider">Vetiver Farm - Block A</Text>
+                   <Text className="text-gray-900 font-gotham-bold text-base">Arun Kumar</Text>
+                   <Text className="text-gray-500 text-xs mt-0.5">May 28, 2025 • 10:30 AM</Text>
+                   <Text className="text-gray-400 text-[10px] uppercase mt-1 tracking-wider">Vetiver Farm - Block A</Text>
                  </View>
                </View>
-               <View className="items-center bg-[#15803d]/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20">
-                  <Text className="text-white font-bold text-xl">15</Text>
-                  <Text className="text-white/90 text-[10px] uppercase font-bold tracking-wider mt-0.5">Days</Text>
+               <View className="items-center bg-green-50 px-4 py-2 rounded-2xl">
+                  <Text className="text-[#15803d] font-gotham-bold text-xl">15</Text>
+                  <Text className="text-[#15803d] text-[10px] uppercase font-gotham-bold tracking-wider mt-0.5">Days</Text>
                </View>
-            </View>
+             </View>
+             <TouchableOpacity 
+               activeOpacity={0.9}
+               className="w-full bg-[#15803d] py-3 rounded-xl items-center"
+             >
+               <Text className="text-white font-gotham-bold">View Visit Details</Text>
+             </TouchableOpacity>
+          </View>
 
-            {/* Quick Actions (Glass) */}
-            <Text className="text-lg font-bold text-white mb-4 drop-shadow-md">Quick Actions</Text>
-            <View className="flex-row justify-between mb-8">
-               {[
-                 { icon: History, label: 'Visits', route: '/(farmer)/history' },
-                 { icon: Leaf, label: 'Tips', route: '/(farmer)/recommendations' },
-                 { icon: FileText, label: 'Docs', route: '/(farmer)/documents' },
-                 { icon: HeadphonesIcon, label: 'Support', route: '/(farmer)/support' }
-               ].map((action, idx) => {
-                 const Icon = action.icon;
-                 return (
-                   <TouchableOpacity key={idx} onPress={() => router.push(action.route as any)} className="items-center w-1/4">
-                      <View className="w-16 h-16 bg-white/10 backdrop-blur-xl rounded-2xl items-center justify-center shadow-lg border border-white/20 mb-3">
-                         <Icon size={28} color="#fff" />
-                      </View>
-                      <Text className="text-white/90 text-xs font-medium tracking-wide">{action.label}</Text>
-                   </TouchableOpacity>
-                 );
-               })}
-            </View>
+          {/* Quick Actions */}
+          <Text className="text-lg font-gotham-bold text-gray-900 mb-4">Quick Actions</Text>
+          <View className="flex-row justify-between mb-8">
+             {[
+               { icon: History, label: 'Visits', route: '/(farmer)/history', color: '#15803d', bg: 'bg-green-50' },
+               { icon: Leaf, label: 'Reports', route: '/(farmer)/recommendations', color: '#ea580c', bg: 'bg-orange-50' },
+               { icon: Star, label: 'Rate FO', route: '/(farmer)/rate/v1', color: '#eab308', bg: 'bg-yellow-50' },
+               { icon: HeadphonesIcon, label: 'Support', route: '/(farmer)/support', color: '#374151', bg: 'bg-gray-100' }
+             ].map((action, idx) => {
+               const Icon = action.icon;
+               return (
+                 <TouchableOpacity key={idx} activeOpacity={0.8} onPress={() => router.push(action.route as any)} className="items-center w-1/4">
+                    <View className={`w-14 h-14 ${action.bg} rounded-2xl items-center justify-center mb-2`}>
+                       <Icon size={24} color={action.color} />
+                    </View>
+                    <Text className="text-gray-600 text-xs font-brandon-medium">{action.label}</Text>
+                 </TouchableOpacity>
+               );
+             })}
+          </View>
 
-            {/* Recent Updates (Glass) */}
-            <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-lg font-bold text-white drop-shadow-md">Recent Updates</Text>
-              <TouchableOpacity onPress={() => router.push('/(farmer)/notifications')} className="bg-white/10 px-3 py-1 rounded-full border border-white/10">
-                 <Text className="text-white text-xs font-bold">View All</Text>
-              </TouchableOpacity>
-            </View>
-            
-            <TouchableOpacity 
-              onPress={() => router.push('/(farmer)/history')}
-              className="bg-white/10 backdrop-blur-xl rounded-3xl p-5 shadow-xl border border-white/20 mb-4 flex-row items-center"
-            >
-               <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center mr-4 border border-white/10">
-                 <FileText size={20} color="#fff" />
+          {/* Recent Updates */}
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-lg font-gotham-bold text-gray-900">Recent Updates</Text>
+            <TouchableOpacity onPress={() => router.push('/(farmer)/history')} className="bg-gray-100 px-3 py-1 rounded-full">
+               <Text className="text-gray-600 text-xs font-gotham-bold">View All</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <View className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 mb-4">
+             <View className="flex-row items-center mb-3">
+               <View className="w-12 h-12 bg-green-50 rounded-full items-center justify-center mr-4">
+                 <FileText size={20} color="#15803d" />
                </View>
                <View className="flex-1">
-                 <Text className="text-white font-bold text-base mb-1">Visit Report Submitted</Text>
-                 <Text className="text-white/70 text-xs leading-4">Arun Kumar has submitted a report for your last visit.</Text>
+                 <Text className="text-gray-900 font-gotham-bold text-base mb-1">Visit Report Submitted</Text>
+                 <Text className="text-gray-500 text-xs leading-4">Arun Kumar has submitted a report for your last visit.</Text>
                </View>
-               <Text className="text-white/50 text-[10px] uppercase font-bold tracking-wider ml-2">Aug 12</Text>
-            </TouchableOpacity>
-
+               <Text className="text-gray-400 text-[10px] uppercase font-gotham-bold tracking-wider ml-2">Aug 12</Text>
+             </View>
+             
+             <View className="flex-row space-x-3 mt-2">
+               <TouchableOpacity 
+                 activeOpacity={0.8}
+                 onPress={() => router.push('/(farmer)/recommendations')}
+                 className="flex-1 bg-green-50 py-3 rounded-xl items-center border border-green-100"
+               >
+                 <Text className="text-[#15803d] font-gotham-bold text-xs">View Report</Text>
+               </TouchableOpacity>
+               <TouchableOpacity 
+                 activeOpacity={0.8}
+                 onPress={() => router.push('/(farmer)/rate/v1')}
+                 className="flex-1 bg-orange-50 py-3 rounded-xl items-center border border-orange-100"
+               >
+                 <Text className="text-[#ea580c] font-gotham-bold text-xs">Rate Visit</Text>
+               </TouchableOpacity>
+             </View>
           </View>
-        </ScrollView>
-      </ImageBackground>
+
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

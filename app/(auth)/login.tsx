@@ -72,7 +72,7 @@ export default function LoginScreen() {
       if (role === 'farmer') {
         router.replace('/(farmer)/dashboard');
       } else {
-        router.replace('/(employee)/dashboard');
+        router.replace('/(employee)/attendance/clock-in');
       }
     }, 1000);
   };
@@ -91,10 +91,10 @@ export default function LoginScreen() {
                   style={{ width: 140, height: 140 }}
                   resizeMode="contain"
                />
-               <Text className="text-[#396216] text-xl font-gotham-bold mt-2 text-center tracking-widest">
+               <Text className="text-[#15803d] text-xl font-gotham-bold mt-2 text-center tracking-widest">
                  INFINITY
                </Text>
-               <Text className="text-[#e87111] font-brandon text-sm mt-1">
+               <Text className="text-[#ea580c] font-brandon text-sm mt-1">
                  —Organic Farming—
                </Text>
                <Text className="text-gray-500 font-brandon text-xs mt-1">
@@ -139,23 +139,10 @@ export default function LoginScreen() {
                 )}
               />
               
-              {/* Remember Me & Forgot Password */}
-              <View className="flex-row justify-between items-center mb-8 mt-2">
-                <TouchableOpacity 
-                  className="flex-row items-center" 
-                  onPress={() => setRememberMe(!rememberMe)}
-                  activeOpacity={0.7}
-                >
-                  {rememberMe ? (
-                    <CheckSquare size={20} color="#396216" />
-                  ) : (
-                    <Square size={20} color="#6b7280" />
-                  )}
-                  <Text className="text-gray-600 ml-2 font-brandon text-base">Remember Me</Text>
-                </TouchableOpacity>
-
+              {/* Forgot Password */}
+              <View className="items-end mb-8 mt-2">
                 <TouchableOpacity>
-                  <Text className="text-[#396216] font-gotham-bold">Forgot Password?</Text>
+                  <Text className="text-[#15803d] font-gotham-bold">Forgot Password?</Text>
                 </TouchableOpacity>
               </View>
 
@@ -163,23 +150,15 @@ export default function LoginScreen() {
                 title="Login" 
                 onPress={handleSubmit(onSubmit)} 
                 loading={loading}
-                className="bg-[#396216] py-4 rounded-xl shadow-md w-full"
+                className="bg-[#15803d] py-4 rounded-xl shadow-md w-full"
               />
               
-              <View className="flex-row items-center w-full my-8">
-                <View className="flex-1 h-[1px] bg-gray-200" />
-                <Text className="px-4 text-gray-500 font-brandon text-sm">or continue with</Text>
-                <View className="flex-1 h-[1px] bg-gray-200" />
-              </View>
-
-              <TouchableOpacity className="w-14 h-14 rounded-full border border-gray-200 items-center justify-center self-center mb-12 shadow-sm bg-white">
-                <Text className="font-gotham-bold text-xl text-gray-700">G</Text>
-              </TouchableOpacity>
+              <View className="mb-12" />
               
               <View className="flex-row justify-center pb-6">
                 <Text className="text-gray-500 font-brandon text-sm">Don&apos;t have an account? </Text>
                 <TouchableOpacity>
-                  <Text className="text-[#396216] font-gotham-bold text-sm">Contact Admin</Text>
+                  <Text className="text-[#15803d] font-gotham-bold text-sm">Contact Admin</Text>
                 </TouchableOpacity>
               </View>
             </View>

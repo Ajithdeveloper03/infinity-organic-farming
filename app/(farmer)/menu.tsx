@@ -21,7 +21,7 @@ export default function FarmerMenuScreen() {
       
       {/* Header */}
       <View className="px-6 pt-12 pb-4 bg-white flex-row items-center border-b border-gray-100 justify-center">
-        <Text className="text-gray-900 text-lg font-bold">Menu</Text>
+        <Text className="text-gray-900 text-lg font-gotham-bold">Menu</Text>
       </View>
 
       <ScrollView className="flex-1 pb-24">
@@ -39,7 +39,7 @@ export default function FarmerMenuScreen() {
                  className="flex-row items-center p-4 border-b border-gray-50"
                >
                   <Icon size={20} color="#374151" className="mr-4" />
-                  <Text className="flex-1 text-gray-900 font-medium">{item.title}</Text>
+                  <Text className="flex-1 text-gray-900 font-brandon-medium">{item.title}</Text>
                   <ChevronRight size={20} color="#d1d5db" />
                </TouchableOpacity>
              );
@@ -47,7 +47,7 @@ export default function FarmerMenuScreen() {
 
            <TouchableOpacity onPress={() => router.replace('/intro')} className="flex-row items-center p-4">
               <LogOut size={20} color="#dc2626" className="mr-4" />
-              <Text className="flex-1 text-red-600 font-bold">Logout</Text>
+              <Text className="flex-1 text-red-600 font-gotham-bold">Logout</Text>
            </TouchableOpacity>
 
         </View>
@@ -60,7 +60,7 @@ export default function FarmerMenuScreen() {
                 className="w-full h-full justify-end p-5"
              >
                 <View className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <Text className="text-white font-bold text-lg relative z-10">Healthy Vetiver</Text>
+                <Text className="text-white font-gotham-bold text-lg relative z-10">Healthy Vetiver</Text>
                 <Text className="text-green-300 text-sm relative z-10">Better Soil. Better Future.</Text>
              </ImageBackground>
           </TouchableOpacity>

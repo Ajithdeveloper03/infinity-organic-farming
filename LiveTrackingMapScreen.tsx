@@ -16,8 +16,9 @@ import MapView, {
   Circle,
   PROVIDER_GOOGLE,
   Region,
-} from 'react-native-maps';
+} from './components/MapView';
 import * as Haptics from 'expo-haptics';
+import * as Location from 'expo-location';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 // --- Constants & Types ---
@@ -227,41 +228,66 @@ export default function LiveTrackingMapScreen() {
   const [is3D, setIs3D] = useState(true);
   const [showTraffic, setShowTraffic] = useState(false);
 
-  const breadcrumbRoute = useMemo(
-    () => [initialLocation, currentLocation],
-    [currentLocation]
-  );
+  const [breadcrumbRoute, setBreadcrumbRoute] = useState<Coordinate[]>([]);
 
-  // Simulate GPS updates
+  // Real GPS tracking
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentLocation((prev) => {
-        // Move towards farm
-        const latStep = (farmLocation.latitude - initialLocation.latitude) / 10;
-        const lngStep =
-          (farmLocation.longitude - initialLocation.longitude) / 10;
-        
-        const newLat = prev.latitude + latStep * 0.1; // Slow movement
-        const newLng = prev.longitude + lngStep * 0.1;
+    let subscription: Location.LocationSubscription;
 
-        // Check geofence (simplified distance check)
-        const latDiff = Math.abs(farmLocation.latitude - newLat);
-        const lngDiff = Math.abs(farmLocation.longitude - newLng);
-        const approxDistance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 111000; // rough meters
+    const startTracking = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.warn('Permission to access location was denied');
+        return;
+      }
 
-        if (approxDistance < GEOFENCE_RADIUS && !inGeofence) {
-          setInGeofence(true);
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        } else if (approxDistance >= GEOFENCE_RADIUS && inGeofence) {
-          setInGeofence(false);
+      subscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 1000,
+          distanceInterval: 1,
+        },
+        (location) => {
+          const newCoord = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          };
+
+          setCurrentLocation(newCoord);
+          setBreadcrumbRoute((prev) => [...prev, newCoord]);
+          
+          setTelemetry((prev) => ({
+            ...prev,
+            speed: location.coords.speed ? Math.round(location.coords.speed * 3.6) : 0,
+            accuracy: Math.round(location.coords.accuracy || 0),
+          }));
+
+          // Geofence check
+          const latDiff = Math.abs(farmLocation.latitude - newCoord.latitude);
+          const lngDiff = Math.abs(farmLocation.longitude - newCoord.longitude);
+          const approxDistance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 111000;
+
+          setInGeofence((prevInGeofence) => {
+            if (approxDistance < GEOFENCE_RADIUS && !prevInGeofence) {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+              return true;
+            } else if (approxDistance >= GEOFENCE_RADIUS && prevInGeofence) {
+              return false;
+            }
+            return prevInGeofence;
+          });
         }
+      );
+    };
 
-        return { latitude: newLat, longitude: newLng };
-      });
-    }, 2000); // 2 second GPS ping
+    startTracking();
 
-    return () => clearInterval(interval);
-  }, [inGeofence]);
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
+  }, []);
 
   const recenterCamera = () => {
     mapRef.current?.animateCamera(
