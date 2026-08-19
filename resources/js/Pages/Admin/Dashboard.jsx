@@ -6,15 +6,35 @@ import {
     TrendingUp, TrendingDown, Clock, ChevronRight, CheckCircle2, ShieldAlert, Maximize, Minimize,
     Wallet, PiggyBank, Briefcase, ArrowRight, MoreHorizontal, Filter, Search, FileText, PieChart, Activity as ActivityIcon
 } from 'lucide-react';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { useTranslation } from 'react-i18next';
 
-export default function Dashboard({ locationLogs = [] }) {
+const mapContainerStyle = {
+  width: '100%',
+  height: '100%',
+  borderRadius: '1.5rem'
+};
+
+const midnightMapStyle = [
+  { elementType: 'geometry', stylers: [{ color: '#0F172A' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+  // ... omitting all the styles for brevity as we already have it in LiveMonitor, or let's include a few basics
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0B1120' }] },
+];
+
+export default function Dashboard({ locationLogs = [], stats = {} }) {
     const [drawerOpen, setDrawerOpen] = useState(true);
     const [isMapFullscreen, setIsMapFullscreen] = useState(false);
     const { t } = useTranslation();
 
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
+    });
+
     const mapContent = (
-        <div className={`transition-all duration-300 ease-in-out bg-white overflow-hidden shadow-sm cursor-pointer ${isMapFullscreen ? 'fixed top-0 left-0 right-0 bottom-0 z-[99999] w-[100vw] h-[100vh] m-0 p-0 rounded-none' : (drawerOpen ? 'relative lg:w-1/2 rounded-3xl border border-gray-100 h-[500px]' : 'relative w-full rounded-3xl border border-gray-100 h-[500px]')}`}>
+        <div className={`transition-all duration-300 ease-in-out bg-white overflow-hidden shadow-sm ${isMapFullscreen ? 'fixed top-0 left-0 right-0 bottom-0 z-[99999] w-[100vw] h-[100vh] m-0 p-0 rounded-none' : (drawerOpen ? 'relative lg:w-1/2 rounded-3xl border border-gray-100 h-[500px]' : 'relative w-full rounded-3xl border border-gray-100 h-[500px]')}`}>
             
             <button 
                 onClick={(e) => {
@@ -26,14 +46,38 @@ export default function Dashboard({ locationLogs = [] }) {
                 {isMapFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
             </button>
 
-            <div className="absolute inset-0 bg-gray-50 flex flex-col items-center justify-center bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-80">
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-green-500/20 mb-4 animate-bounce">
-                    <MapPin className="w-8 h-8 text-slate-800" />
-                </div>
-                <h2 className="text-xl font-heading font-bold text-gray-900 mb-2">{t('Live Map Canvas')}</h2>
-                <p className="text-gray-500 font-medium text-xs max-w-sm text-center px-4">
-                    {t('Real-time SVG markers for field officers via minute-by-minute API coordinates.')}
-                </p>
+            <div className="absolute inset-0 bg-gray-50 flex flex-col items-center justify-center">
+                {isLoaded ? (
+                    <GoogleMap
+                        mapContainerStyle={mapContainerStyle}
+                        center={locationLogs.length > 0 ? { lat: parseFloat(locationLogs[0].latitude), lng: parseFloat(locationLogs[0].longitude) } : { lat: 12.9716, lng: 77.5946 }}
+                        zoom={10}
+                        options={{
+                            styles: midnightMapStyle,
+                            disableDefaultUI: true,
+                            zoomControl: true,
+                        }}
+                    >
+                        {locationLogs.map((log) => (
+                            <Marker
+                                key={log.id}
+                                position={{ lat: parseFloat(log.latitude), lng: parseFloat(log.longitude) }}
+                                title={log.employee?.name || 'Officer'}
+                                icon={{
+                                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white"/><circle cx="12" cy="12" r="8" fill="#10B981"/></svg>'),
+                                    scaledSize: { width: 32, height: 32, equals: () => false }
+                                }}
+                            />
+                        ))}
+                    </GoogleMap>
+                ) : (
+                    <div className="flex flex-col items-center justify-center h-full">
+                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-green-500/20 mb-4 animate-bounce">
+                            <MapPin className="w-8 h-8 text-slate-800" />
+                        </div>
+                        <h2 className="text-xl font-heading font-bold text-gray-900 mb-2">{t('Loading Map...')}</h2>
+                    </div>
+                )}
             </div>
             
             {!drawerOpen && !isMapFullscreen && (
@@ -121,7 +165,7 @@ export default function Dashboard({ locationLogs = [] }) {
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
-                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">1,284</p>
+                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats.totalFarmers || 0}</p>
                         <span className="flex items-center text-xs font-bold text-emerald-700 bg-white border border-emerald-100 px-2.5 py-1 rounded-full shadow-sm">
                             <TrendingUp className="w-3 h-3 mr-1" /> +23%
                         </span>
@@ -146,7 +190,7 @@ export default function Dashboard({ locationLogs = [] }) {
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
-                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">24</p>
+                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats.activeEmployees || 0}</p>
                         <span className="flex items-center text-xs font-bold text-orange-600 bg-white border border-orange-100 px-2.5 py-1 rounded-full shadow-sm">
                             <TrendingUp className="w-3 h-3 mr-1" /> +15%
                         </span>
@@ -171,7 +215,7 @@ export default function Dashboard({ locationLogs = [] }) {
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
-                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">142</p>
+                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats.totalVisits || 0}</p>
                         <span className="flex items-center text-xs font-bold text-sky-700 bg-white border border-sky-100 px-2.5 py-1 rounded-full shadow-sm">
                             <TrendingUp className="w-3 h-3 mr-1" /> +3.2%
                         </span>

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import AdminLayout from './AdminLayout';
 import { Head } from '@inertiajs/react';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import {
     ShieldAlert, MapPin, Clock, Activity, Search,
     CheckCircle2, AlertTriangle, Wifi, WifiOff, Phone,
@@ -8,59 +9,6 @@ import {
     TrendingUp, Filter, RefreshCw, Eye, MessageSquare
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
-const EMPLOYEES = [
-    {
-        id: 1, name: 'Rajesh Kumar', role: 'Senior Field Officer', region: 'Coimbatore',
-        status: 'active', gps: 'enabled', battery: 87, lastSeen: '2 min ago',
-        visitsDone: 4, visitsTarget: 6, currentLocation: 'Pollachi - Farm #14',
-        checkInTime: '08:30 AM', activities: [
-            { time: '08:30 AM', action: 'Check-In', location: 'Office HQ', type: 'checkin' },
-            { time: '09:15 AM', action: 'Farm Visit', location: 'Muthusamy K. - Pollachi', type: 'visit' },
-            { time: '10:40 AM', action: 'Form Submitted', location: 'Soil Report Filed', type: 'form' },
-            { time: '11:20 AM', action: 'Farm Visit', location: 'Lakshmi S. - Thudiyalur', type: 'visit' },
-            { time: '12:00 PM', action: 'Break', location: 'Lunch Break Logged', type: 'break' },
-            { time: '01:15 PM', action: 'Farm Visit', location: 'Perumal R. - Kinathukadavu', type: 'visit' },
-        ]
-    },
-    {
-        id: 2, name: 'Priya Dharshini', role: 'Field Officer', region: 'Salem',
-        status: 'active', gps: 'enabled', battery: 54, lastSeen: '8 min ago',
-        visitsDone: 2, visitsTarget: 5, currentLocation: 'Salem - Farm #7',
-        checkInTime: '08:45 AM', activities: [
-            { time: '08:45 AM', action: 'Check-In', location: 'Office HQ', type: 'checkin' },
-            { time: '09:30 AM', action: 'Farm Visit', location: 'Kandasamy M. - Mettur', type: 'visit' },
-            { time: '11:00 AM', action: 'Payment Collected', location: 'Seed Payment Receipt', type: 'form' },
-        ]
-    },
-    {
-        id: 3, name: 'Suresh Velayutham', role: 'Lead Agronomist', region: 'Erode',
-        status: 'idle', gps: 'enabled', battery: 23, lastSeen: '34 min ago',
-        visitsDone: 1, visitsTarget: 4, currentLocation: 'En-route to Farm #3',
-        checkInTime: '09:10 AM', activities: [
-            { time: '09:10 AM', action: 'Check-In', location: 'Office HQ', type: 'checkin' },
-            { time: '10:00 AM', action: 'Farm Visit', location: 'Arumugam P. - Gobichettipalayam', type: 'visit' },
-        ]
-    },
-    {
-        id: 4, name: 'Kavitha Sundaram', role: 'Field Officer', region: 'Madurai',
-        status: 'offline', gps: 'disabled', battery: 5, lastSeen: '2 hrs ago',
-        visitsDone: 0, visitsTarget: 4, currentLocation: 'Unknown',
-        checkInTime: '—', activities: []
-    },
-    {
-        id: 5, name: 'Murugan Pillai', role: 'Field Officer', region: 'Trichy',
-        status: 'active', gps: 'enabled', battery: 71, lastSeen: '5 min ago',
-        visitsDone: 3, visitsTarget: 5, currentLocation: 'Trichy - Farm #9',
-        checkInTime: '08:20 AM', activities: [
-            { time: '08:20 AM', action: 'Check-In', location: 'Office HQ', type: 'checkin' },
-            { time: '09:00 AM', action: 'Farm Visit', location: 'Selvam R. - Srirangam', type: 'visit' },
-            { time: '10:30 AM', action: 'Farm Visit', location: 'Annamalai K. - Lalgudi', type: 'visit' },
-            { time: '12:00 PM', action: 'Form Submitted', location: 'Crop Health Report', type: 'form' },
-            { time: '01:00 PM', action: 'Farm Visit', location: 'Durai S. - Thottiyam', type: 'visit' },
-        ]
-    },
-];
 
 const getStatusStyle = (status) => {
     if (status === 'active') return { badge: 'bg-slate-100 text-green-700', dot: 'bg-green-400' };
@@ -81,20 +29,77 @@ const getBatteryColor = (level) => {
     return 'text-red-600';
 };
 
-export default function LiveMonitor() {
+const mapContainerStyle = {
+  width: '100%',
+  height: '100%',
+  borderRadius: '2rem'
+};
+
+const midnightMapStyle = [
+  { elementType: 'geometry', stylers: [{ color: '#0F172A' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d59563' }],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#d59563' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry',
+    stylers: [{ color: '#1E293B' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#212a37' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#9ca5b3' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry',
+    stylers: [{ color: '#334155' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [{ color: '#0B1120' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#515c6d' }],
+  },
+];
+
+export default function LiveMonitor({ employees = [] }) {
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [regionFilter, setRegionFilter] = useState('all');
-    const [selectedEmployee, setSelectedEmployee] = useState(EMPLOYEES[0]);
+    const [selectedEmployee, setSelectedEmployee] = useState(employees[0] || null);
     const [showStatusDropdown, setShowStatusDropdown] = useState(false);
     const [showRegionDropdown, setShowRegionDropdown] = useState(false);
     const [lastRefreshed, setLastRefreshed] = useState(new Date().toLocaleTimeString());
 
-    const regions = ['all', ...Array.from(new Set(EMPLOYEES.map(e => e.region)))];
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
+    });
+
+    const regions = ['all', ...Array.from(new Set(employees.map(e => e.region)))];
 
     const filteredEmployees = useMemo(() => {
-        return EMPLOYEES.filter(emp => {
+        return employees.filter(emp => {
             const matchesSearch = emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 emp.region.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 emp.currentLocation.toLowerCase().includes(searchQuery.toLowerCase());
@@ -102,14 +107,15 @@ export default function LiveMonitor() {
             const matchesRegion = regionFilter === 'all' || emp.region === regionFilter;
             return matchesSearch && matchesStatus && matchesRegion;
         });
-    }, [searchQuery, statusFilter, regionFilter]);
+    }, [searchQuery, statusFilter, regionFilter, employees]);
 
-    const activeCount = EMPLOYEES.filter(e => e.status === 'active').length;
-    const offlineCount = EMPLOYEES.filter(e => e.status === 'offline').length;
-    const totalVisits = EMPLOYEES.reduce((sum, e) => sum + e.visitsDone, 0);
+    const activeCount = employees.filter(e => e.status === 'active').length;
+    const offlineCount = employees.filter(e => e.status === 'offline').length;
+    const totalVisits = employees.reduce((sum, e) => sum + e.visitsDone, 0);
 
     const handleRefresh = () => {
         setLastRefreshed(new Date().toLocaleTimeString());
+        // Since we are using Inertia, we could also do router.reload({ only: ['employees'] })
     };
 
     return (
@@ -274,6 +280,42 @@ export default function LiveMonitor() {
                 {selectedEmployee && (
                     <div className="lg:col-span-2 space-y-6">
 
+                        {/* Map View */}
+                        <div className="bg-white border border-gray-100 rounded-[2rem] p-4 shadow-sm h-[400px]">
+                            {isLoaded ? (
+                                <GoogleMap
+                                    mapContainerStyle={mapContainerStyle}
+                                    center={{
+                                        lat: parseFloat(selectedEmployee.latitude) || 12.9716,
+                                        lng: parseFloat(selectedEmployee.longitude) || 77.5946
+                                    }}
+                                    zoom={14}
+                                    options={{
+                                        styles: midnightMapStyle,
+                                        disableDefaultUI: true,
+                                        zoomControl: true,
+                                    }}
+                                >
+                                    {selectedEmployee.latitude && selectedEmployee.longitude && (
+                                        <Marker
+                                            position={{
+                                                lat: parseFloat(selectedEmployee.latitude),
+                                                lng: parseFloat(selectedEmployee.longitude)
+                                            }}
+                                            icon={{
+                                                url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white"/><circle cx="12" cy="12" r="8" fill="#10B981"/></svg>'),
+                                                scaledSize: { width: 32, height: 32, equals: () => false }
+                                            }}
+                                        />
+                                    )}
+                                </GoogleMap>
+                            ) : (
+                                <div className="w-full h-full bg-slate-900 rounded-[1.5rem] flex items-center justify-center">
+                                    <p className="text-gray-400 font-medium">Loading Map...</p>
+                                </div>
+                            )}
+                        </div>
+
                         {/* Profile Header */}
                         <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -304,11 +346,9 @@ export default function LiveMonitor() {
                                     <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-orange-600 hover:bg-orange-50 transition-colors" title="Message">
                                         <MessageSquare className="w-5 h-5" />
                                     </button>
-                                    <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-slate-800 hover:bg-slate-50 transition-colors" title="Track on Map">
-                                        <Navigation className="w-5 h-5" />
-                                    </button>
                                 </div>
                             </div>
+
 
                             {/* Progress Bar */}
                             <div className="mt-5 pt-5 border-t border-gray-100">
