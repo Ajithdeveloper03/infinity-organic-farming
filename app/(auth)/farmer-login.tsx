@@ -148,7 +148,7 @@ export default function FarmerLoginScreen() {
                     {[0, 1, 2, 3].map((index) => (
                       <TextInput
                         key={index}
-                        ref={(ref) => { otpInputs.current[index] = ref; }}
+                        ref={(ref: any) => { otpInputs.current[index] = ref; }}
                         style={{
                           width: 56,
                           height: 56,
