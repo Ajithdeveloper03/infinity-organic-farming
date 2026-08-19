@@ -34,7 +34,7 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
     });
 
     const mapContent = (
-        <div className={`transition-all duration-300 ease-in-out bg-white overflow-hidden shadow-sm ${isMapFullscreen ? 'fixed top-0 left-0 right-0 bottom-0 z-[99999] w-[100vw] h-[100vh] m-0 p-0 rounded-none' : (drawerOpen ? 'relative lg:w-1/2 rounded-3xl border border-gray-100 h-[500px]' : 'relative w-full rounded-3xl border border-gray-100 h-[500px]')}`}>
+        <div className={`transition-all duration-300 ease-in-out bg-white overflow-hidden shadow-sm ${isMapFullscreen ? 'fixed top-0 left-0 right-0 bottom-0 z-[99999] w-[100vw] h-[100vh] m-0 p-0 rounded-none' : 'relative w-full h-full rounded-[2rem]'}`}>
             
             <button 
                 onClick={(e) => {
@@ -80,17 +80,6 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
                 )}
             </div>
             
-            {!drawerOpen && !isMapFullscreen && (
-                <button 
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setDrawerOpen(true);
-                    }}
-                    className="absolute top-4 left-4 bg-gray-900 text-white px-4 py-2 rounded-xl shadow-md flex items-center text-xs font-bold hover:bg-gray-800 transition-colors z-20"
-                >
-                    {t('Open Stream')} <ChevronRight className="w-4 h-4 ml-1" />
-                </button>
-            )}
         </div>
     );
 
@@ -101,7 +90,7 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
 
                 
                 <img
-                    src="https://images.pexels.com/photos/8703371/pexels-photo-8703371.jpeg"
+                    src="/images/image1.jpg"
                     alt="Organic farm background"
                     className="absolute inset-0 w-full h-full object-cover object-center scale-105"
                     style={{ filter: 'brightness(0.90) saturate(1.3)' }}
@@ -165,7 +154,7 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
-                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats.totalFarmers || 0}</p>
+                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats?.totalFarmers || 150}</p>
                         <span className="flex items-center text-xs font-bold text-emerald-700 bg-white border border-emerald-100 px-2.5 py-1 rounded-full shadow-sm">
                             <TrendingUp className="w-3 h-3 mr-1" /> +23%
                         </span>
@@ -190,7 +179,7 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
-                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats.activeEmployees || 0}</p>
+                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats?.activeEmployees || 45}</p>
                         <span className="flex items-center text-xs font-bold text-orange-600 bg-white border border-orange-100 px-2.5 py-1 rounded-full shadow-sm">
                             <TrendingUp className="w-3 h-3 mr-1" /> +15%
                         </span>
@@ -215,7 +204,7 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
-                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats.totalVisits || 0}</p>
+                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats?.totalVisits || 320}</p>
                         <span className="flex items-center text-xs font-bold text-sky-700 bg-white border border-sky-100 px-2.5 py-1 rounded-full shadow-sm">
                             <TrendingUp className="w-3 h-3 mr-1" /> +3.2%
                         </span>
@@ -234,74 +223,13 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
             {/* Middle Tier: Analytical Chart & Stream */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                 
-                {/* CSS Based Bar Chart mimicking "Cash Flow" */}
-                <div className="lg:col-span-2 bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 flex flex-col">
-                    <div className="flex justify-between items-start mb-8">
-                        <div>
-                            <h3 className="text-gray-500 font-medium text-sm mb-1">{t('Weekly Activity Level')}</h3>
-                            <div className="text-3xl font-heading font-extrabold text-gray-900">1,245 <span className="text-sm font-medium text-gray-400 tracking-normal ml-1">{t('Logs')}</span></div>
-                        </div>
-                        <div className="flex bg-gray-50 p-1 rounded-xl border border-gray-100">
-                            <button className="px-4 py-1.5 text-xs font-bold rounded-lg text-gray-500 hover:text-gray-900 transition-colors">{t('Daily')}</button>
-                            <button className="px-4 py-1.5 text-xs font-bold rounded-lg bg-slate-900 text-white shadow-sm shadow-slate-900/10">{t('Weekly')}</button>
-                        </div>
-                    </div>
-                    
-                    {/* Custom CSS Bar Chart */}
-                    <div className="flex-1 flex items-end justify-between relative pt-10 pb-6 px-4 min-h-[250px]">
-                        {/* Grid lines */}
-                        <div className="absolute inset-0 flex flex-col justify-between pb-6 pt-10 z-0">
-                            {[0, 1, 2, 3].map(i => (
-                                <div key={i} className="w-full h-px bg-gray-100 flex items-center">
-                                    <span className="text-[10px] text-gray-400 -ml-6 w-5 text-right">{40 - (i * 10)}k</span>
-                                </div>
-                            ))}
-                            <div className="w-full h-px bg-gray-200">
-                                <span className="text-[10px] text-gray-400 -ml-6 w-5 text-right">0</span>
-                            </div>
-                        </div>
-                        
-                        {/* Bars */}
-                        {[
-                            { label: 'Mon', height: '40%', active: false },
-                            { label: 'Tue', height: '55%', active: false },
-                            { label: 'Wed', height: '90%', active: true, tooltip: { total: '2,450', new: '+450' } },
-                            { label: 'Thu', height: '60%', active: false },
-                            { label: 'Fri', height: '75%', active: false },
-                            { label: 'Sat', height: '30%', active: false },
-                            { label: 'Sun', height: '45%', active: false },
-                        ].map((bar, i) => (
-                            <div key={i} className="relative flex flex-col items-center group z-10 w-1/12 h-full justify-end cursor-pointer">
-                                {/* Tooltip */}
-                                {bar.active && (
-                                    <div className="absolute -top-14 bg-gray-900 text-white text-xs rounded-xl py-2 px-3 whitespace-nowrap shadow-xl z-20">
-                                        <div className="font-bold mb-0.5">Wed, Activity</div>
-                                        <div className="flex justify-between space-x-4">
-                                            <span className="text-gray-400">{t('Total')}</span>
-                                            <span>{bar.tooltip.total}</span>
-                                        </div>
-                                        <div className="flex justify-between space-x-4">
-                                            <span className="text-gray-400">{t('New')}</span>
-                                            <span className="text-green-400">{bar.tooltip.new}</span>
-                                        </div>
-                                        {/* Tooltip caret */}
-                                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
-                                    </div>
-                                )}
-                                
-                                {/* The Bar */}
-                                <div 
-                                    className={`w-full rounded-t-xl transition-all duration-500 ease-out group-hover:opacity-80 ${bar.active ? 'bg-slate-600 shadow-lg shadow-slate-900/10' : 'bg-slate-50'}`} 
-                                    style={{ height: bar.height }}
-                                >
-                                    {bar.active && (
-                                        <div className="w-2 h-2 rounded-full bg-white absolute top-2 left-1/2 -translate-x-1/2 shadow-sm"></div>
-                                    )}
-                                </div>
-                                <span className="absolute -bottom-6 text-[11px] font-bold text-gray-500 group-hover:text-gray-900 transition-colors">{bar.label}</span>
-                            </div>
-                        ))}
-                    </div>
+                {/* Interactive Map (Replaces Bar Chart) */}
+                <div className="lg:col-span-2 shadow-sm border border-gray-100 flex flex-col relative rounded-[2rem] h-[500px]">
+                    {isMapFullscreen ? (
+                        createPortal(mapContent, document.body)
+                    ) : (
+                        mapContent
+                    )}
                 </div>
 
                 {/* Event Stream Drawer Widget */}
@@ -319,11 +247,11 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
                     
                     <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
                         {[
-                            { time: '09:42 AM', user: 'Ravi Kumar', event: t('Turned OFF GPS. Red Alert Triggered.'), type: 'critical', icon: ShieldAlert },
-                            { time: '09:40 AM', user: 'Anita Raj', event: t('Checked in at Farm #294 (Muthusamy)'), type: 'success', icon: CheckCircle2 },
-                            { time: '09:39 AM', user: 'Anita Raj', event: t('Travel Distance Logged: 12.4 km'), type: 'info', icon: MapPin },
-                            { time: '09:35 AM', user: 'Suresh Menon', event: t('Marked Morning Attendance. GPS Started.'), type: 'info', icon: Clock },
-                            { time: '09:30 AM', user: 'John Doe', event: t('System booted successfully.'), type: 'info', icon: ActivityIcon },
+                            { time: '09:42 AM', user: 'Senthil Vel', event: t('Turned OFF GPS. Red Alert Triggered.'), type: 'critical', icon: ShieldAlert },
+                            { time: '09:40 AM', user: 'Anitha R', event: t('Checked in at Farm #294 (Muthusamy)'), type: 'success', icon: CheckCircle2 },
+                            { time: '09:39 AM', user: 'Anitha R', event: t('Travel Distance Logged: 12.4 km'), type: 'info', icon: MapPin },
+                            { time: '09:35 AM', user: 'Karthikeyan', event: t('Marked Morning Attendance. GPS Started.'), type: 'info', icon: Clock },
+                            { time: '09:30 AM', user: 'Palanisamy', event: t('System booted successfully.'), type: 'info', icon: ActivityIcon },
                         ].map((log, i) => (
                             <div key={i} className="flex items-start p-3 rounded-2xl hover:bg-gray-50 transition-colors cursor-pointer group">
                                 <div className={`p-2.5 rounded-xl mr-3 shadow-sm ${log.type === 'success' ? 'bg-slate-50 text-slate-800' : log.type === 'critical' ? 'bg-red-50 text-red-500' : 'bg-gray-50 text-gray-500 border border-gray-100 group-hover:border-gray-200'}`}>
@@ -478,7 +406,7 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
                             <div className="flex-1 flex items-center ml-6 bg-white p-2 rounded-xl hover:bg-gray-50 cursor-pointer">
                                 <div className="w-8 h-8 rounded-full overflow-hidden mr-3"><img src="/images/logo.png" alt="user" className="w-full h-full object-cover"/></div>
                                 <div>
-                                    <p className="text-sm font-bold text-gray-900">Jordan Rivers</p>
+                                    <p className="text-sm font-bold text-gray-900">Arumugam</p>
                                     <p className="text-[10px] font-bold text-gray-400">Farm Audit #201</p>
                                 </div>
                             </div>
@@ -491,7 +419,7 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
                             <div className="flex-1 flex items-center ml-6 bg-white p-2 rounded-xl hover:bg-gray-50 cursor-pointer shadow-[0_0_15px_rgba(239,68,68,0.1)] border border-red-100 relative group">
                                 <div className="w-8 h-8 rounded-full overflow-hidden mr-3"><img src="/images/logo.png" alt="user" className="w-full h-full object-cover"/></div>
                                 <div>
-                                    <p className="text-sm font-bold text-gray-900">Taylor Green</p>
+                                    <p className="text-sm font-bold text-gray-900">Murugan</p>
                                     <p className="text-[10px] font-bold text-gray-400">Missed Check-in</p>
                                 </div>
                                 {/* Hover Tooltip */}
@@ -500,7 +428,7 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
                                     <p className="text-xs text-gray-900 mb-2">Location tracking lost at 1:12 PM</p>
                                     <div className="flex items-center">
                                         <div className="w-6 h-6 rounded-full overflow-hidden mr-2"><img src="/images/logo.png" alt="user" className="w-full h-full object-cover"/></div>
-                                        <p className="text-[10px] font-bold text-gray-500">Taylor Green</p>
+                                        <p className="text-[10px] font-bold text-gray-500">Murugan</p>
                                     </div>
                                 </div>
                             </div>
@@ -513,7 +441,7 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
                             <div className="flex-1 flex items-center ml-6 bg-white p-2 rounded-xl hover:bg-gray-50 cursor-pointer">
                                 <div className="w-8 h-8 rounded-full overflow-hidden mr-3 bg-gray-100"></div>
                                 <div>
-                                    <p className="text-sm font-bold text-gray-900">Casey Blue</p>
+                                    <p className="text-sm font-bold text-gray-900">Kannan</p>
                                     <p className="text-[10px] font-bold text-gray-400">Registration Review</p>
                                 </div>
                             </div>
@@ -527,15 +455,10 @@ export default function Dashboard({ locationLogs = [], stats = {} }) {
             {/* Bottom Tier: Map & Recent Activities */}
             <div className={`flex flex-col lg:flex-row gap-6 ${isMapFullscreen ? 'h-0 overflow-hidden' : ''}`}>
                 
-                {/* Interactive Map */}
-                {isMapFullscreen ? (
-                    createPortal(mapContent, document.body)
-                ) : (
-                    mapContent
-                )}
+
 
                 {/* Recent Activities Table Widget */}
-                <div className={`bg-white rounded-[2rem] border border-gray-100 shadow-sm flex flex-col ${drawerOpen ? 'lg:w-1/2' : 'w-full'}`}>
+                <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm flex flex-col w-full">
                     <div className="p-6 border-b border-gray-50 flex justify-between items-center">
                         <h2 className="text-lg font-bold text-gray-900 leading-none">{t('Recent Activities')}</h2>
                         <div className="flex space-x-2">

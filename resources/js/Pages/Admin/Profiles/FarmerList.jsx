@@ -8,9 +8,9 @@ export default function FarmerList() {
     const { t } = useTranslation();
 
     const farmers = [
-        { id: 'FAR-001', name: 'Muthusamy', size: '4.5 Acres', crop: 'Vetiver', location: 'Coimbatore South', img: 'https://images.unsplash.com/photo-1599423631163-fdf6dafb2d98?auto=format&fit=crop&q=80&w=300&h=300' },
-        { id: 'FAR-002', name: 'Kandasamy', size: '2.0 Acres', crop: 'Vetiver', location: 'Pollachi', img: 'https://images.unsplash.com/photo-1592982537447-6f2c6a0c5c4e?auto=format&fit=crop&q=80&w=300&h=300' },
-        { id: 'FAR-003', name: 'Velusamy', size: '6.2 Acres', crop: 'Vetiver', location: 'Tirupur', img: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=300&h=300' },
+        { id: 'FAR-001', name: 'Muthusamy', size: '4.5 Acres', crop: 'Vetiver', location: 'Coimbatore South', img: '/images/image4.jpg' },
+        { id: 'FAR-002', name: 'Kandasamy', size: '2.0 Acres', crop: 'Vetiver', location: 'Pollachi', img: '/images/image5.jpg' },
+        { id: 'FAR-003', name: 'Velusamy', size: '6.2 Acres', crop: 'Vetiver', location: 'Tirupur', img: '/images/image6.jpg' },
     ];
 
     return (

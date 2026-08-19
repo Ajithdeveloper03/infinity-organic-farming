@@ -47,4 +47,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the location logs for the user.
+     */
+    public function locationLogs()
+    {
+        return $this->hasMany(LocationLog::class, 'employee_id');
+    }
 }

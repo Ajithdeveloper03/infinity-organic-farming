@@ -45,7 +45,7 @@ export default function EmployeeDetail({ id }) {
                 </div>
             </div>
             
-            <div className="flex-1 relative bg-gray-50 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] flex items-center justify-center overflow-hidden">
+            <div className="flex-1 relative bg-gray-50 flex items-center justify-center overflow-hidden">
                 
                 {/* Decorative Map overlay elements */}
                 <div className="absolute inset-0 opacity-40 group-hover:scale-105 transition-transform duration-1000">

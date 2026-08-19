@@ -13,6 +13,23 @@ export default function AdminLayout({ children }) {
     const { triggerCritical } = useAlert();
     const { t, i18n } = useTranslation();
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
+    
+    const dummySearchData = [
+        { name: "Muthusamy", type: "Farmer" },
+        { name: "Anitha R", type: "Employee" },
+        { name: "Senthil Vel", type: "Employee" },
+        { name: "Karthikeyan", type: "Farmer" },
+        { name: "Palanisamy", type: "Employee" },
+        { name: "Arumugam", type: "Farmer" },
+        { name: "Murugan", type: "Farmer" },
+        { name: "Kannan", type: "Employee" }
+    ];
+
+    const filteredSearch = dummySearchData.filter(item => 
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const isActive = (path) => url.startsWith(path);
 
@@ -94,10 +111,10 @@ export default function AdminLayout({ children }) {
                         {isSidebarCollapsed && <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>}
                     </Link>
 
-                    <Link href="/admin/payments" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/payments') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
+                    {/* <Link href="/admin/payments" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/payments') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                         <Wallet className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/payments') ? 'text-white' : 'text-gray-400'}`} />
                         {!isSidebarCollapsed && <span>{t('Payments')}</span>}
-                    </Link>
+                    </Link> */}
 
                     <Link href="/admin/tasks" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/tasks') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                         <ClipboardList className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/tasks') ? 'text-white' : 'text-gray-400'}`} />
@@ -108,10 +125,10 @@ export default function AdminLayout({ children }) {
                         {isSidebarCollapsed ? '•' : t('General')}
                     </div>
                     
-                    <Link href="/admin/settings" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/settings') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
+                    {/* <Link href="/admin/settings" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/settings') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                         <Settings className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/settings') ? 'text-white' : 'text-gray-400'}`} />
                         {!isSidebarCollapsed && <span>{t('Settings')}</span>}
-                    </Link>
+                    </Link> */}
                     
                     <Link href="/admin/performance" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/performance') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                         <MapPin className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/performance') ? 'text-white' : 'text-gray-400'}`} />
@@ -142,11 +159,32 @@ export default function AdminLayout({ children }) {
                             <input 
                                 type="text" 
                                 placeholder="Search..." 
-                                className="block w-64 pl-10 pr-4 py-2 border border-gray-200 bg-gray-50 rounded-full text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-sm font-medium"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onFocus={() => setIsSearchFocused(true)}
+                                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                                className="block w-64 pl-10 pr-10 py-2 border border-gray-200 bg-gray-50 rounded-full text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-sm font-medium"
                             />
-                            <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
-                                <span className="text-[10px] font-bold text-gray-400 border border-gray-200 px-1.5 py-0.5 rounded bg-white">⌘ K</span>
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+                                <Search className="h-4 w-4" />
                             </div>
+                            
+                            {searchQuery && isSearchFocused && (
+                                <div className="absolute top-full mt-2 w-full bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-50">
+                                    {filteredSearch.length > 0 ? (
+                                        <div className="max-h-64 overflow-y-auto">
+                                            {filteredSearch.map((result, idx) => (
+                                                <div key={idx} className="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer flex items-center justify-between">
+                                                    <span className="text-sm font-bold text-gray-900">{result.name}</span>
+                                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{result.type}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="px-4 py-4 text-sm text-gray-500 text-center font-medium">No matches found.</div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         <button 

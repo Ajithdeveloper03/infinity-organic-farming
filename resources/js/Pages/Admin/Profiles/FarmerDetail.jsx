@@ -18,7 +18,7 @@ export default function FarmerDetail({ id }) {
         lat: '11.0168',
         lon: '76.9558',
         registered_by: 'Officer Rajesh',
-        img: 'https://images.unsplash.com/photo-1599423631163-fdf6dafb2d98?auto=format&fit=crop&q=80&w=1200&h=400'
+        img: '/images/image7.jpg'
     };
 
     return (
@@ -78,7 +78,7 @@ export default function FarmerDetail({ id }) {
                         </h3>
                         <div className="relative h-48 rounded-2xl overflow-hidden mb-6 border border-gray-100 bg-gray-50 flex items-center justify-center">
                             {/* Abstract map representation */}
-                            <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]"></div>
+                            <div className="absolute inset-0 opacity-10 bg-black/5"></div>
                             <Map className="w-10 h-10 text-green-300 relative z-10" />
                         </div>
                         <div className="flex justify-between space-x-4">

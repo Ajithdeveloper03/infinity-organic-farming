@@ -23,7 +23,7 @@ export default function Login() {
             {/* Full Screen Background Image with Lighter Elegant Overlay */}
             <div className="absolute inset-0 z-0">
                 <img 
-                    src="https://images.unsplash.com/photo-1595914614210-908bc79e438e?auto=format&fit=crop&q=80&w=2000" 
+                    src="/images/intro_bg.png" 
                     alt="Agricultural Landscape" 
                     className="w-full h-full object-cover opacity-80"
                 />

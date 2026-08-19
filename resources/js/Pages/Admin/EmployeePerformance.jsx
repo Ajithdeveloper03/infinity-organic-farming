@@ -38,7 +38,7 @@ export default function EmployeePerformance() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Performance Logs')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">Distance tracking, fuel reimbursements, and attendance logs.</p>
+                    <p className="text-gray-500 mt-1 font-medium text-sm">Distance tracking and attendance logs.</p>
                 </div>
                 <button onClick={handleExport} className="flex items-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-700 hover:bg-gray-50 transition shadow-sm">
                     <Download className="w-4 h-4 mr-2" /> Export Report
@@ -90,9 +90,9 @@ export default function EmployeePerformance() {
                         <div className="flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
                             <h2 className="text-xl font-heading font-bold text-gray-900 flex items-center group-hover:text-slate-800 transition-colors">
                                 <div className="p-2 bg-slate-50 rounded-xl mr-3 border border-slate-200 shadow-sm">
-                                    <Fuel className="w-5 h-5 text-slate-800" />
+                                    <Navigation className="w-5 h-5 text-slate-800" />
                                 </div>
-                                Daily Fuel & Distance Audit
+                                Daily Distance Audit
                             </h2>
                         </div>
                         
@@ -102,8 +102,7 @@ export default function EmployeePerformance() {
                                     <tr className="border-b-2 border-gray-100 text-xs font-bold uppercase tracking-wider text-gray-400">
                                         <th className="pb-4 pl-2">Officer Name</th>
                                         <th className="pb-4 text-right">Route Hops</th>
-                                        <th className="pb-4 text-right">Total Distance</th>
-                                        <th className="pb-4 text-right pr-2">Est. Fuel Allowance</th>
+                                        <th className="pb-4 text-right pr-2">Total Distance</th>
                                     </tr>
                                 </thead>
                                 <tbody className="text-sm">
@@ -114,8 +113,7 @@ export default function EmployeePerformance() {
                                         <tr key={i} className="cursor-pointer border-b border-gray-50 hover:bg-gray-50 transition group/row">
                                             <td className="py-5 pl-2 font-bold text-gray-900 group-hover/row:text-slate-800 transition-colors">{e.name}</td>
                                             <td className="py-5 text-right font-medium text-gray-500">{e.route}</td>
-                                            <td className="py-5 text-right font-bold text-slate-800 text-lg">{e.distance} km</td>
-                                            <td className="py-5 text-right font-bold text-gray-900 pr-2">₹ {e.fuel.toFixed(2)}</td>
+                                            <td className="py-5 text-right font-bold text-slate-800 text-lg pr-2">{e.distance} km</td>
                                         </tr>
                                     ))}
                                 </tbody>

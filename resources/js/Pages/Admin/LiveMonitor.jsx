@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import AdminLayout from './AdminLayout';
 import { Head } from '@inertiajs/react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
@@ -6,7 +7,7 @@ import {
     ShieldAlert, MapPin, Clock, Activity, Search,
     CheckCircle2, AlertTriangle, Wifi, WifiOff, Phone,
     Battery, Navigation, Calendar, ChevronDown, User,
-    TrendingUp, Filter, RefreshCw, Eye, MessageSquare
+    TrendingUp, Filter, RefreshCw, Eye, MessageSquare, Maximize, Minimize
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -81,8 +82,75 @@ const midnightMapStyle = [
   },
 ];
 
-export default function LiveMonitor({ employees = [] }) {
+export default function LiveMonitor({ employees: propEmployees = [] }) {
     const { t } = useTranslation();
+    
+    const dummyEmployees = [
+        {
+            id: 1,
+            name: "Muthusamy",
+            role: "Field Officer",
+            region: "Coimbatore",
+            status: "active",
+            currentLocation: "Farm #294 (Muthusamy)",
+            latitude: 11.0168,
+            longitude: 76.9558,
+            lastSeen: "Just now",
+            battery: 85,
+            gps: "enabled",
+            checkInTime: "08:30 AM",
+            visitsDone: 4,
+            visitsTarget: 6,
+            activities: [
+                { type: "checkin", action: "Marked Morning Attendance", time: "08:30 AM", location: "HQ Office" },
+                { type: "visit", action: "Checked in at Farm #294", time: "09:40 AM", location: "Coimbatore South" },
+                { type: "form", action: "Submitted Soil Quality Report", time: "10:15 AM", location: "Coimbatore South" }
+            ]
+        },
+        {
+            id: 2,
+            name: "Karthikeyan",
+            role: "Agronomy Expert",
+            region: "Pollachi",
+            status: "active",
+            currentLocation: "En route to Farm #112",
+            latitude: 10.6622,
+            longitude: 77.0028,
+            lastSeen: "2 mins ago",
+            battery: 45,
+            gps: "enabled",
+            checkInTime: "09:00 AM",
+            visitsDone: 2,
+            visitsTarget: 5,
+            activities: [
+                { type: "checkin", action: "Started shift", time: "09:00 AM", location: "Pollachi Town" },
+                { type: "visit", action: "Completed audit at Farm #098", time: "10:30 AM", location: "Pollachi North" }
+            ]
+        },
+        {
+            id: 3,
+            name: "Anitha R",
+            role: "Quality Inspector",
+            region: "Tirupur",
+            status: "offline",
+            currentLocation: "Last known: Tirupur Main Market",
+            latitude: 11.1085,
+            longitude: 77.3411,
+            lastSeen: "2 hours ago",
+            battery: 12,
+            gps: "disabled",
+            checkInTime: "07:45 AM",
+            visitsDone: 1,
+            visitsTarget: 4,
+            activities: [
+                { type: "checkin", action: "Marked Morning Attendance", time: "07:45 AM", location: "Tirupur Base" },
+                { type: "visit", action: "Market vendor inspection", time: "08:20 AM", location: "Tirupur Main Market" },
+                { type: "break", action: "Turned OFF GPS. Red Alert Triggered.", time: "09:42 AM", location: "Unknown" }
+            ]
+        }
+    ];
+
+    const employees = propEmployees.length > 0 ? propEmployees : dummyEmployees;
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [regionFilter, setRegionFilter] = useState('all');
@@ -90,6 +158,7 @@ export default function LiveMonitor({ employees = [] }) {
     const [showStatusDropdown, setShowStatusDropdown] = useState(false);
     const [showRegionDropdown, setShowRegionDropdown] = useState(false);
     const [lastRefreshed, setLastRefreshed] = useState(new Date().toLocaleTimeString());
+    const [isMapFullscreen, setIsMapFullscreen] = useState(false);
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -145,7 +214,7 @@ export default function LiveMonitor({ employees = [] }) {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div className="bg-slate-900 rounded-2xl p-5 text-white shadow-lg">
                     <p className="text-green-200 text-xs font-bold uppercase tracking-wider">Active Officers</p>
-                    <p className="text-4xl font-extrabold mt-1">{activeCount}<span className="text-green-300 text-lg font-bold">/{EMPLOYEES.length}</span></p>
+                    <p className="text-4xl font-extrabold mt-1">{activeCount}<span className="text-green-300 text-lg font-bold">/{employees.length}</span></p>
                 </div>
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                     <p className="text-gray-500 text-xs font-bold uppercase tracking-wider">Offline / No GPS</p>
@@ -161,7 +230,7 @@ export default function LiveMonitor({ employees = [] }) {
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                     <p className="text-gray-500 text-xs font-bold uppercase tracking-wider">Low Battery Alerts</p>
                     <div className="flex items-end gap-2 mt-1">
-                        <p className="text-4xl font-extrabold text-red-600">{EMPLOYEES.filter(e => e.battery < 20).length}</p>
+                        <p className="text-4xl font-extrabold text-red-600">{employees.filter(e => e.battery < 20).length}</p>
                         <Battery className="w-5 h-5 text-red-400 mb-1" />
                     </div>
                 </div>
@@ -281,40 +350,58 @@ export default function LiveMonitor({ employees = [] }) {
                     <div className="lg:col-span-2 space-y-6">
 
                         {/* Map View */}
-                        <div className="bg-white border border-gray-100 rounded-[2rem] p-4 shadow-sm h-[400px]">
-                            {isLoaded ? (
-                                <GoogleMap
-                                    mapContainerStyle={mapContainerStyle}
-                                    center={{
-                                        lat: parseFloat(selectedEmployee.latitude) || 12.9716,
-                                        lng: parseFloat(selectedEmployee.longitude) || 77.5946
-                                    }}
-                                    zoom={14}
-                                    options={{
-                                        styles: midnightMapStyle,
-                                        disableDefaultUI: true,
-                                        zoomControl: true,
-                                    }}
-                                >
-                                    {selectedEmployee.latitude && selectedEmployee.longitude && (
-                                        <Marker
-                                            position={{
-                                                lat: parseFloat(selectedEmployee.latitude),
-                                                lng: parseFloat(selectedEmployee.longitude)
-                                            }}
-                                            icon={{
-                                                url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white"/><circle cx="12" cy="12" r="8" fill="#10B981"/></svg>'),
-                                                scaledSize: { width: 32, height: 32, equals: () => false }
-                                            }}
-                                        />
+                        {(() => {
+                            const mapComponent = (
+                                <div className={`bg-white border border-gray-100 shadow-sm relative overflow-hidden flex flex-col ${isMapFullscreen ? 'fixed top-0 left-0 right-0 bottom-0 z-[99999] w-[100vw] h-[100vh] m-0 rounded-none' : 'rounded-[2rem] p-4 h-[400px]'}`}>
+                                    <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setIsMapFullscreen(!isMapFullscreen);
+                                        }}
+                                        className="absolute top-8 right-8 z-50 bg-white/90 backdrop-blur-md border border-gray-200 p-2.5 rounded-xl shadow-sm hover:text-slate-800 transition-colors"
+                                    >
+                                        {isMapFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+                                    </button>
+                                    
+                                    {isLoaded ? (
+                                        <div className="flex-1 w-full h-full relative rounded-2xl overflow-hidden">
+                                            <GoogleMap
+                                                mapContainerStyle={mapContainerStyle}
+                                                center={{
+                                                    lat: parseFloat(selectedEmployee.latitude) || 12.9716,
+                                                    lng: parseFloat(selectedEmployee.longitude) || 77.5946
+                                                }}
+                                                zoom={14}
+                                                options={{
+                                                    styles: midnightMapStyle,
+                                                    disableDefaultUI: true,
+                                                    zoomControl: true,
+                                                }}
+                                            >
+                                                {selectedEmployee.latitude && selectedEmployee.longitude && (
+                                                    <Marker
+                                                        position={{
+                                                            lat: parseFloat(selectedEmployee.latitude),
+                                                            lng: parseFloat(selectedEmployee.longitude)
+                                                        }}
+                                                        icon={{
+                                                            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white"/><circle cx="12" cy="12" r="8" fill="#10B981"/></svg>'),
+                                                            scaledSize: { width: 32, height: 32, equals: () => false }
+                                                        }}
+                                                    />
+                                                )}
+                                            </GoogleMap>
+                                        </div>
+                                    ) : (
+                                        <div className="w-full h-full bg-slate-900 rounded-[1.5rem] flex items-center justify-center">
+                                            <p className="text-gray-400 font-medium">Loading Map...</p>
+                                        </div>
                                     )}
-                                </GoogleMap>
-                            ) : (
-                                <div className="w-full h-full bg-slate-900 rounded-[1.5rem] flex items-center justify-center">
-                                    <p className="text-gray-400 font-medium">Loading Map...</p>
                                 </div>
-                            )}
-                        </div>
+                            );
+
+                            return isMapFullscreen ? createPortal(mapComponent, document.body) : mapComponent;
+                        })()}
 
                         {/* Profile Header */}
                         <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm">

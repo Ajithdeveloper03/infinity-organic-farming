@@ -19,8 +19,8 @@ export default function Visits({ visits = [] }) {
             date: 'Aug 10, 2026', farm_condition_notes: 'Vetiver crop is showing good root propagation. Soil moisture is optimal. No pests visible.',
             recommendations: 'Apply organic compost in 2 weeks. Maintain current watering schedule.',
             media: [
-                { type: 'photo', url: 'https://images.unsplash.com/photo-1599423631163-fdf6dafb2d98?auto=format&fit=crop&q=80&w=600&h=400', exif_lat: '11.0168', exif_lon: '76.9558', exif_time: '09:20 AM', verified: true },
-                { type: 'photo', url: 'https://images.unsplash.com/photo-1592982537447-6f2c6a0c5c4e?auto=format&fit=crop&q=80&w=600&h=400', exif_lat: '11.0168', exif_lon: '76.9558', exif_time: '10:10 AM', verified: true }
+                { type: 'photo', url: '/images/image2.jpg', exif_lat: '11.0168', exif_lon: '76.9558', exif_time: '09:20 AM', verified: true },
+                { type: 'photo', url: '/images/image3.jpg', exif_lat: '11.0168', exif_lon: '76.9558', exif_time: '10:10 AM', verified: true }
             ]
         },
         {
