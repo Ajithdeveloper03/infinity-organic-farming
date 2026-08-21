@@ -1,11 +1,12 @@
 import React from 'react';
 import AdminLayout from '../AdminLayout';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { Shield, MapPin, ChevronRight, Search, Filter, Plus, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export default function EmployeeList() {
     const { t } = useTranslation();
+    const { flash } = usePage().props;
 
     const employees = [
         { id: 'EMP-001', name: 'Rajesh Kumar', role: 'Field Officer', region: 'Coimbatore South', status: 'Active', img: '/images/logo.png' },
@@ -15,14 +16,27 @@ export default function EmployeeList() {
 
     return (
         <AdminLayout>
+            {flash?.success && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 font-medium flex justify-between items-center">
+                    <div>
+                        <p>{flash.success}</p>
+                        {flash.generated_password && (
+                            <p className="mt-1">
+                                <strong>Generated Password: </strong>
+                                <span className="bg-white px-2 py-1 rounded text-green-900 border border-green-300 ml-2 font-mono">{flash.generated_password}</span>
+                            </p>
+                        )}
+                    </div>
+                </div>
+            )}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Employee Directory')}</h1>
                     <p className="text-gray-500 mt-1 font-medium text-sm">Manage field staff and internal operational teams.</p>
                 </div>
-                <button className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
+                <Link href="/admin/employees/create" className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
                     <Plus className="w-5 h-5 mr-1" /> Register Employee
-                </button>
+                </Link>
             </div>
 
             {/* Filter & Category Bar */}

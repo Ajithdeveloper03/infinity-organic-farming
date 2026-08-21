@@ -21,6 +21,14 @@ class EmployeeController extends Controller
             'battery_level' => 'required|integer',
         ]);
 
+        $request->user()->locationLogs()->create([
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
+            'is_gps_enabled' => $validated['is_gps_enabled'],
+            'battery_level' => $validated['battery_level'],
+            'recorded_at' => now(),
+        ]);
+
         if (!$validated['is_gps_enabled'] || $validated['battery_level'] < 15) {
             // Dispatch Critical Alert Job
             TriggerEmergencyVoip::dispatch($request->user());

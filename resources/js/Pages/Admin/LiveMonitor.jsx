@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import AdminLayout from './AdminLayout';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import {
     ShieldAlert, MapPin, Clock, Activity, Search,
@@ -183,9 +183,15 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
     const totalVisits = employees.reduce((sum, e) => sum + e.visitsDone, 0);
 
     const handleRefresh = () => {
-        setLastRefreshed(new Date().toLocaleTimeString());
-        // Since we are using Inertia, we could also do router.reload({ only: ['employees'] })
+        router.reload({ only: ['employees'], preserveScroll: true, preserveState: true, onSuccess: () => setLastRefreshed(new Date().toLocaleTimeString()) });
     };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            router.reload({ only: ['employees'], preserveScroll: true, preserveState: true, onSuccess: () => setLastRefreshed(new Date().toLocaleTimeString()) });
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <AdminLayout>

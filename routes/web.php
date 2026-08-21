@@ -31,6 +31,8 @@ Route::prefix('admin')->group(function () {
 
     // Employee Management
     Route::get('/employees', [EmployeeDirectoryController::class, 'index']);
+    Route::get('/employees/create', [EmployeeDirectoryController::class, 'create'])->name('employees.create');
+    Route::post('/employees', [EmployeeDirectoryController::class, 'store'])->name('employees.store');
     Route::get('/employees/{id}', [EmployeeDirectoryController::class, 'show']);
 
     // Farmer Management
