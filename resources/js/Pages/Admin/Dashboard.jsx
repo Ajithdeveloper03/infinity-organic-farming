@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import AdminLayout from './AdminLayout';
+import { router } from '@inertiajs/react';
 import { 
     Users, Activity, MapPin, BatteryWarning, 
     TrendingUp, TrendingDown, Clock, ChevronRight, CheckCircle2, ShieldAlert, Maximize, Minimize,
@@ -23,10 +24,18 @@ const midnightMapStyle = [
   { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0B1120' }] },
 ];
 
-export default function Dashboard({ locationLogs = [], stats = {} }) {
+export default function Dashboard({ locationLogs = [], stats = {}, recentVisits = [] }) {
     const [drawerOpen, setDrawerOpen] = useState(true);
     const [isMapFullscreen, setIsMapFullscreen] = useState(false);
     const { t } = useTranslation();
+
+    // 30-second auto-refresh for live location data and stats
+    useEffect(() => {
+        const interval = setInterval(() => {
+            router.reload({ only: ['locationLogs', 'stats', 'recentVisits'], preserveScroll: true });
+        }, 30000);
+        return () => clearInterval(interval);
+    }, []);
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',

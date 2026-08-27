@@ -40,6 +40,8 @@ class FarmerProfile extends Model
         'seed_bags_required',
         'planned_investment',
         'farm_photos',
+        'customer_category',
+        'crop_types',
     ];
 
     protected $casts = [
@@ -51,6 +53,7 @@ class FarmerProfile extends Model
         'planned_investment' => 'decimal:2',
         'land_latitude' => 'decimal:7',
         'land_longitude' => 'decimal:7',
+        'crop_types' => 'array',
     ];
 
     public function user()

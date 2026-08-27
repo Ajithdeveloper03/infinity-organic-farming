@@ -1,91 +1,166 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AdminLayout from '../AdminLayout';
-import { Link } from '@inertiajs/react';
-import { Map, Leaf, ChevronRight, Search, Phone, Plus, Filter, ChevronDown } from 'lucide-react';
+import { Link, usePage, router } from '@inertiajs/react';
+import { Map, Leaf, ChevronRight, Search, Phone, Plus, Filter, ChevronDown, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function FarmerList() {
-    const { t } = useTranslation();
+const kycBadge = (status) => {
+    if (status === 'verified') return 'bg-green-50 text-green-700 border-green-200';
+    if (status === 'rejected') return 'bg-red-50 text-red-700 border-red-200';
+    return 'bg-amber-50 text-amber-600 border-amber-100';
+};
 
-    const farmers = [
-        { id: 'FAR-001', name: 'Muthusamy', size: '4.5 Acres', crop: 'Vetiver', location: 'Coimbatore South', img: '/images/image4.jpg' },
-        { id: 'FAR-002', name: 'Kandasamy', size: '2.0 Acres', crop: 'Vetiver', location: 'Pollachi', img: '/images/image5.jpg' },
-        { id: 'FAR-003', name: 'Velusamy', size: '6.2 Acres', crop: 'Vetiver', location: 'Tirupur', img: '/images/image6.jpg' },
-    ];
+const kycIcon = (status) => {
+    if (status === 'verified') return <CheckCircle2 className="w-3 h-3" />;
+    if (status === 'rejected') return <AlertCircle className="w-3 h-3" />;
+    return <Clock className="w-3 h-3" />;
+};
+
+export default function FarmerList({ farmers = [], districts = [], filters = {} }) {
+    const { t } = useTranslation();
+    const { flash } = usePage().props;
+    const [search, setSearch] = useState(filters.search || '');
+    const [district, setDistrict] = useState(filters.district || '');
+    const [kyc, setKyc] = useState(filters.kyc || '');
+    const [category, setCategory] = useState(filters.category || 'crop');
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        router.get('/admin/farmers', { search, district, kyc, category }, { preserveState: true, replace: true });
+    };
+
+    const handleDistrictChange = (d) => {
+        const nd = district === d ? '' : d;
+        setDistrict(nd);
+        router.get('/admin/farmers', { search, district: nd, kyc, category }, { preserveState: true, replace: true });
+    };
+
+    const handleCategoryChange = (cat) => {
+        setCategory(cat);
+        router.get('/admin/farmers', { search, district, kyc, category: cat }, { preserveState: true, replace: true });
+    };
 
     return (
         <AdminLayout>
+            {flash?.success && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 font-medium">
+                    {flash.success}
+                </div>
+            )}
+
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Farmer Directory')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">Verified farm properties and agricultural profiles.</p>
+                    <p className="text-gray-500 mt-1 font-medium text-sm">{farmers.length} verified farm properties and agricultural profiles.</p>
                 </div>
                 <Link href="/admin/farmers/register" className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
                     <Plus className="w-5 h-5 mr-1" /> Register Farmer
                 </Link>
             </div>
 
-            {/* Filter & Category Bar */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+            {/* Category Tabs */}
+            <div className="flex space-x-4 mb-6 border-b border-gray-200">
+                <button
+                    onClick={() => handleCategoryChange('crop')}
+                    className={`pb-4 px-2 text-sm font-bold transition-colors border-b-2 ${category === 'crop' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+                >
+                    Crop Farmers (Vetiver, etc)
+                </button>
+                <button
+                    onClick={() => handleCategoryChange('fertilizer')}
+                    className={`pb-4 px-2 text-sm font-bold transition-colors border-b-2 ${category === 'fertilizer' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+                >
+                    Fertilizer Customers
+                </button>
+                <button
+                    onClick={() => handleCategoryChange('both')}
+                    className={`pb-4 px-2 text-sm font-bold transition-colors border-b-2 ${category === 'both' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+                >
+                    Both (Crop & Fertilizer)
+                </button>
+            </div>
+
+            {/* Filter Bar */}
+            <form onSubmit={handleSearch} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:w-96">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input 
-                        type="text" 
-                        placeholder="Search by FAR ID, Name, or Location..." 
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        placeholder="Search by FAR ID, Name, or Phone..."
                         className="cursor-pointer w-full pl-10 pr-4 py-2 border border-gray-200 bg-gray-50 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-sm"
                     />
                 </div>
                 <div className="flex w-full md:w-auto gap-3 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
-                    <button className="flex items-center px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-100 transition whitespace-nowrap">
-                        Crop Type <ChevronDown className="w-3 h-3 ml-2" />
-                    </button>
-                    <button className="flex items-center px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-100 transition whitespace-nowrap">
-                        Location <ChevronDown className="w-3 h-3 ml-2" />
-                    </button>
-                    <button className="flex items-center px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-100 transition whitespace-nowrap">
-                        <Filter className="w-4 h-4 mr-2 text-gray-400" /> More Filters
+                    {districts.slice(0, 4).map(d => (
+                        <button key={d} type="button" onClick={() => handleDistrictChange(d)}
+                            className={`flex items-center px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap border ${district === d ? 'bg-slate-900 text-white border-slate-900' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'}`}>
+                            {d}
+                        </button>
+                    ))}
+                    <select value={kyc} onChange={e => { setKyc(e.target.value); router.get('/admin/farmers', { search, district, kyc: e.target.value }, { preserveState: true, replace: true }); }}
+                        className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-600">
+                        <option value="">All KYC</option>
+                        <option value="verified">Verified</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <button type="submit" className="flex items-center px-4 py-2 bg-green-600 border border-green-600 text-white rounded-xl text-sm font-bold hover:bg-green-700 transition whitespace-nowrap">
+                        <Search className="w-4 h-4 mr-2" /> Search
                     </button>
                 </div>
-            </div>
+            </form>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {farmers.map((farm) => (
-                    <Link key={farm.id} href={`/admin/farmers/${farm.id}`} className="cursor-pointer group bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all hover:border-green-200 flex flex-col">
-                        <div className="relative h-40">
-                            <img src={farm.img} alt={farm.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                            <div className="absolute inset-0 bg-slate-900/80"></div>
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <h3 className="font-heading font-bold text-xl">{farm.name}</h3>
-                                <p className="text-xs font-mono font-bold text-green-300 tracking-wider mt-1">{farm.id}</p>
-                            </div>
-                        </div>
-                        <div className="p-5 bg-white flex-1 flex flex-col justify-between relative">
-                            {/* Floating icon */}
-                            <div className="absolute -top-6 right-4 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-gray-100 text-slate-700">
-                                <Leaf className="w-6 h-6" />
-                            </div>
-                            
-                            <div className="space-y-3 mb-6 pt-2">
-                                <div className="flex items-center justify-between text-sm">
-                                    <span className="text-gray-500 font-bold">Land Size</span>
-                                    <span className="font-heading font-bold text-gray-900">{farm.size}</span>
+            {farmers.length === 0 ? (
+                <div className="text-center py-20 text-gray-400">
+                    <Leaf className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                    <p className="text-lg font-semibold">No farmers found</p>
+                    <p className="text-sm mt-1">Try adjusting your search or register a new farmer.</p>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {farmers.map((farm) => (
+                        <Link key={farm.id} href={`/admin/farmers/${farm.id}`} className="cursor-pointer group bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all hover:border-green-200 flex flex-col">
+                            <div className="relative h-40 bg-gradient-to-br from-slate-800 to-slate-900">
+                                {farm.farmer_photo ? (
+                                    <img src={farm.farmer_photo} alt={farm.name} className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <Leaf className="w-16 h-16 text-green-400/30" />
+                                    </div>
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent" />
+                                <div className="absolute bottom-4 left-4 text-white">
+                                    <h3 className="font-heading font-bold text-xl">{farm.name}</h3>
+                                    <p className="text-xs font-mono font-bold text-green-300 tracking-wider mt-1">{farm.farmer_code}</p>
                                 </div>
-                                <div className="flex items-center justify-between text-sm">
-                                    <span className="text-gray-500 font-bold">Main Crop</span>
-                                    <span className="font-heading font-bold text-gray-900">{farm.crop}</span>
-                                </div>
-                                <div className="flex items-center text-sm font-medium text-gray-700 mt-4 pt-3 border-t border-gray-100">
-                                    <Map className="w-4 h-4 text-slate-700 mr-2" /> {farm.location}
+                                <div className={`absolute top-4 right-4 flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider border ${kycBadge(farm.kyc_status)}`}>
+                                    {kycIcon(farm.kyc_status)} {farm.kyc_status}
                                 </div>
                             </div>
-                            <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">View Farm Profile</span>
-                                <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-slate-800 transition-colors group-hover:translate-x-1" />
+                            <div className="p-5 bg-white flex-1 flex flex-col justify-between">
+                                <div className="space-y-2 mb-4">
+                                    <div className="flex items-center text-sm font-medium text-gray-700">
+                                        <Leaf className="w-4 h-4 text-green-600 mr-2" /> {farm.land_acres || '–'} Acres · Vetiver
+                                    </div>
+                                    <div className="flex items-center text-sm font-medium text-gray-700">
+                                        <Map className="w-4 h-4 text-slate-700 mr-2" /> {farm.village}, {farm.district}
+                                    </div>
+                                    <div className="flex items-center text-sm font-medium text-gray-700">
+                                        <Phone className="w-4 h-4 text-slate-700 mr-2" /> {farm.phone}
+                                    </div>
+                                    <p className="text-xs text-gray-400 mt-1">Reg. by: {farm.registered_by}</p>
+                                </div>
+                                <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
+                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">View Profile</span>
+                                    <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-slate-800 transition-colors group-hover:translate-x-1" />
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                ))}
-            </div>
+                        </Link>
+                    ))}
+                </div>
+            )}
         </AdminLayout>
     );
 }

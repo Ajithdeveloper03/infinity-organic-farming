@@ -5,19 +5,9 @@ import { Link } from '@inertiajs/react';
 import { ArrowLeft, MapPin, Navigation, Clock, Smartphone, ShieldCheck, Activity, Maximize, Minimize } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function EmployeeDetail({ id }) {
+export default function EmployeeDetail({ employee = {}, attendance = [], visitsThisWeek = [] }) {
     const { t } = useTranslation();
     const [isMapFullscreen, setIsMapFullscreen] = useState(false);
-
-    const emp = {
-        id: id,
-        name: 'Rajesh Kumar',
-        role: 'Field Officer',
-        region: 'Coimbatore South',
-        phone: '+91 9876543210',
-        joined: 'Jan 2025',
-        img: '/images/logo.png'
-    };
 
     const mapContent = (
         <div className={`bg-white overflow-hidden flex flex-col cursor-pointer group transition-all duration-300 ${isMapFullscreen ? 'fixed top-0 left-0 right-0 bottom-0 z-[99999] w-[100vw] h-[100vh] m-0 p-0 border-0 rounded-none' : 'rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-md h-[700px] relative'}`}>
@@ -58,15 +48,15 @@ export default function EmployeeDetail({ id }) {
                 </div>
                 
                 <div className="z-10 flex flex-col items-center">
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md border-4 border-green-200 relative animate-bounce">
-                        <img src={emp.img} className="w-full h-full rounded-full object-cover" alt="marker" />
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md border-4 border-green-200 relative animate-bounce text-2xl font-bold text-slate-800">
+                        {employee.name?.[0]}
                         <div className="absolute -bottom-2 -right-2 bg-slate-900 w-6 h-6 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
                             <Navigation className="w-3 h-3 text-white" />
                         </div>
                     </div>
                     <div className="mt-4 bg-white/90 backdrop-blur px-4 py-2 rounded-xl shadow-sm border border-gray-100 text-center text-sm">
-                        <p className="font-bold text-gray-900">Moving • 45 km/h</p>
-                        <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mt-0.5">Updated: Just now</p>
+                        <p className="font-bold text-gray-900">GPS Status</p>
+                        <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mt-0.5">Updated: {employee.last_seen || 'Never'}</p>
                     </div>
                 </div>
             </div>
@@ -87,41 +77,44 @@ export default function EmployeeDetail({ id }) {
                     <div className="bg-white border border-gray-100 rounded-[2rem] p-8 shadow-sm text-center relative overflow-hidden group hover:shadow-md transition-shadow">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-full -mr-8 -mt-8 pointer-events-none"></div>
                         
-                        <div className="w-32 h-32 mx-auto rounded-[2rem] overflow-hidden border-4 border-white shadow-sm mb-6 relative group-hover:scale-105 transition-transform">
-                            <img src={emp.img} alt={emp.name} className="w-full h-full object-cover" />
-                            <div className="absolute bottom-0 right-0 w-6 h-6 bg-slate-800 border-2 border-white rounded-full shadow-sm"></div>
+                        <div className="w-32 h-32 mx-auto rounded-[2rem] bg-slate-800 flex items-center justify-center border-4 border-white shadow-sm mb-6 relative group-hover:scale-105 transition-transform text-white text-5xl font-bold">
+                            {employee.name?.[0]}
+                            <div className="absolute bottom-0 right-0 w-6 h-6 bg-slate-800 border-2 border-white rounded-full shadow-sm flex items-center justify-center">
+                                <span className={`w-3 h-3 rounded-full ${employee.status === 'active' ? 'bg-green-400' : 'bg-gray-400'}`}></span>
+                            </div>
                         </div>
                         
-                        <h1 className="text-2xl font-heading font-extrabold text-gray-900">{emp.name}</h1>
-                        <p className="text-[10px] font-mono font-bold text-slate-700 mt-1 bg-slate-50 px-2 py-0.5 rounded-lg inline-block">{emp.id}</p>
+                        <h1 className="text-2xl font-heading font-extrabold text-gray-900">{employee.name}</h1>
+                        <p className="text-[10px] font-mono font-bold text-slate-700 mt-1 bg-slate-50 px-2 py-0.5 rounded-lg inline-block">{employee.employee_code || 'N/A'}</p>
                         
                         <div className="mt-6 flex flex-col space-y-3 text-left bg-gray-50 p-5 rounded-2xl border border-gray-100">
                             <div className="flex items-center text-sm font-medium text-gray-700">
-                                <ShieldCheck className="w-4 h-4 text-slate-700 mr-3" /> {emp.role}
+                                <ShieldCheck className="w-4 h-4 text-slate-700 mr-3" /> Field Officer
                             </div>
                             <div className="flex items-center text-sm font-medium text-gray-700">
-                                <MapPin className="w-4 h-4 text-slate-700 mr-3" /> {emp.region}
+                                <MapPin className="w-4 h-4 text-slate-700 mr-3" /> {employee.region || 'Unassigned'}
                             </div>
                             <div className="flex items-center text-sm font-medium text-gray-700">
-                                <Smartphone className="w-4 h-4 text-gray-400 mr-3" /> {emp.phone}
+                                <Smartphone className="w-4 h-4 text-gray-400 mr-3" /> {employee.phone}
                             </div>
+                            {employee.emergency && (
+                                <div className="flex items-center text-sm font-medium text-red-600">
+                                    <Activity className="w-4 h-4 mr-3" /> Emg: {employee.emergency}
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-shadow">
-                        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Today's Performance</h3>
+                        <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 pb-2">Weekly Activity</h3>
                         <div className="space-y-4">
                             <div className="flex justify-between items-center cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-colors">
-                                <span className="text-sm font-medium text-gray-600 flex items-center"><Navigation className="w-4 h-4 mr-2 text-slate-700" /> Distance</span>
-                                <span className="font-heading font-bold text-gray-900">42.5 km</span>
-                            </div>
-                            <div className="flex justify-between items-center cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-colors">
-                                <span className="text-sm font-medium text-gray-600 flex items-center"><Clock className="w-4 h-4 mr-2 text-slate-700" /> Hours Logged</span>
-                                <span className="font-heading font-bold text-gray-900">8h 15m</span>
-                            </div>
-                            <div className="flex justify-between items-center cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-colors">
                                 <span className="text-sm font-medium text-gray-600 flex items-center"><MapPin className="w-4 h-4 mr-2 text-amber-500" /> Farm Visits</span>
-                                <span className="font-heading font-bold text-gray-900">4 / 6</span>
+                                <span className="font-heading font-bold text-gray-900">{visitsThisWeek.length}</span>
+                            </div>
+                            <div className="flex justify-between items-center cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-colors">
+                                <span className="text-sm font-medium text-gray-600 flex items-center"><Clock className="w-4 h-4 mr-2 text-slate-700" /> Days Present</span>
+                                <span className="font-heading font-bold text-gray-900">{attendance.filter(a => a.status === 'present').length}</span>
                             </div>
                         </div>
                     </div>

@@ -43,10 +43,10 @@ export default function AdminLayout({ children }) {
     };
 
     return (
-        <div className="flex h-screen bg-gray-50 text-gray-800 font-sans overflow-hidden">
+        <div className="flex h-screen bg-[#f4f7f4] text-gray-800 font-sans overflow-hidden">
             
-            {/* Left Vertical Sidebar */}
-            <aside className={`${isSidebarCollapsed ? 'w-20' : 'w-64'} bg-white border-r border-gray-100 flex flex-col z-20 shadow-sm transition-all duration-300 relative`}>
+            {/* Left Vertical Sidebar (Desktop Only) */}
+            <aside className={`hidden md:flex ${isSidebarCollapsed ? 'w-20' : 'w-64'} bg-white border-r border-gray-100 flex-col z-20 shadow-sm transition-all duration-300 relative`}>
                 
                 {/* Toggle Button */}
                 <button 
@@ -138,7 +138,7 @@ export default function AdminLayout({ children }) {
             </aside>
             
             {/* Main Canvas */}
-            <main className="flex-1 flex flex-col min-w-0 bg-[#f9fafb] relative">
+            <main className="flex-1 flex flex-col min-w-0 bg-[#f4f7f4] relative">
                 {/* Top Navigation Bar */}
                 <header className="h-20 bg-white/70 backdrop-blur-xl border-b border-gray-100 flex items-center justify-between px-8 z-10 sticky top-0">
                     {/* Left: Breadcrumb */}
@@ -221,10 +221,39 @@ export default function AdminLayout({ children }) {
                 </header>
                 
                 {/* Dashboard / View Content */}
-                <div className="flex-1 overflow-auto p-8 max-w-[1600px] mx-auto w-full z-10">
+                <div className="flex-1 overflow-auto p-4 md:p-8 pb-24 md:pb-8 max-w-[1600px] mx-auto w-full z-10">
                     {children}
                 </div>
             </main>
+
+            {/* Mobile Bottom Navigation (Material Design 3) */}
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex justify-around items-center px-2 py-2 z-50 pb-safe shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)]">
+                <Link href="/admin/dashboard" className="flex flex-col items-center justify-center p-2 w-16 group">
+                    <div className={`px-4 py-1 rounded-full transition-all duration-300 ${isActive('/admin/dashboard') ? 'bg-green-100' : 'group-hover:bg-gray-100'}`}>
+                        <LayoutDashboard className={`w-5 h-5 ${isActive('/admin/dashboard') ? 'text-green-800' : 'text-gray-500'}`} />
+                    </div>
+                    <span className={`text-[10px] mt-1 font-bold ${isActive('/admin/dashboard') ? 'text-green-800' : 'text-gray-500'}`}>{t('Dashboard')}</span>
+                </Link>
+                <Link href="/admin/farmers" className="flex flex-col items-center justify-center p-2 w-16 group">
+                    <div className={`px-4 py-1 rounded-full transition-all duration-300 ${isActive('/admin/farmers') ? 'bg-green-100' : 'group-hover:bg-gray-100'}`}>
+                        <Users className={`w-5 h-5 ${isActive('/admin/farmers') ? 'text-green-800' : 'text-gray-500'}`} />
+                    </div>
+                    <span className={`text-[10px] mt-1 font-bold ${isActive('/admin/farmers') ? 'text-green-800' : 'text-gray-500'}`}>{t('Farmers')}</span>
+                </Link>
+                <Link href="/admin/monitor" className="flex flex-col items-center justify-center p-2 w-16 group relative">
+                    <div className={`px-4 py-1 rounded-full transition-all duration-300 ${isActive('/admin/monitor') ? 'bg-green-100' : 'group-hover:bg-gray-100'}`}>
+                        <ShieldAlert className={`w-5 h-5 ${isActive('/admin/monitor') ? 'text-green-800' : 'text-gray-500'}`} />
+                    </div>
+                    <span className="absolute top-1 right-2 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+                    <span className={`text-[10px] mt-1 font-bold ${isActive('/admin/monitor') ? 'text-green-800' : 'text-gray-500'}`}>{t('Monitor')}</span>
+                </Link>
+                <Link href="/admin/tasks" className="flex flex-col items-center justify-center p-2 w-16 group">
+                    <div className={`px-4 py-1 rounded-full transition-all duration-300 ${isActive('/admin/tasks') ? 'bg-green-100' : 'group-hover:bg-gray-100'}`}>
+                        <ClipboardList className={`w-5 h-5 ${isActive('/admin/tasks') ? 'text-green-800' : 'text-gray-500'}`} />
+                    </div>
+                    <span className={`text-[10px] mt-1 font-bold ${isActive('/admin/tasks') ? 'text-green-800' : 'text-gray-500'}`}>{t('Tasks')}</span>
+                </Link>
+            </nav>
         </div>
     );
 }

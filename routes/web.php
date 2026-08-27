@@ -13,54 +13,65 @@ use App\Http\Controllers\Admin\TasksController;
 use App\Http\Controllers\Admin\LiveMonitorController;
 use App\Http\Controllers\Auth\LoginController;
 
-Route::get('/', function () {
-    return redirect('/admin/login');
-});
+// Root redirect
+Route::get('/', fn() => redirect('/admin/login'));
 
 Route::prefix('admin')->group(function () {
-    Route::get('/', function () {
-        return redirect('/admin/login');
-    });
-
-    // Auth
+    // ── Public: Auth ─────────────────────────────────────────────────────────
     Route::get('/login', [LoginController::class, 'index'])->name('login');
-    Route::post('/login', [LoginController::class, 'store']);
+    Route::post('/login', [LoginController::class, 'store'])->name('login.store');
+    Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 
-    // Core
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    // ── Protected: All admin routes require auth + admin role ─────────────────
+    Route::middleware(['auth', 'admin'])->group(function () {
 
-    // Employee Management
-    Route::get('/employees', [EmployeeDirectoryController::class, 'index']);
-    Route::get('/employees/create', [EmployeeDirectoryController::class, 'create'])->name('employees.create');
-    Route::post('/employees', [EmployeeDirectoryController::class, 'store'])->name('employees.store');
-    Route::get('/employees/{id}', [EmployeeDirectoryController::class, 'show']);
+        // Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/', fn() => redirect('/admin/dashboard'));
 
-    // Farmer Management
-    Route::get('/farmers', [FarmerDirectoryController::class, 'index']);
-    Route::get('/farmers/register', function() {
-        return inertia('Admin/Profiles/FarmerRegistrationForm');
-    })->name('farmers.register');
-    Route::get('/farmers/{id}', [FarmerDirectoryController::class, 'show']);
+        // Employee Management
+        Route::get('/employees', [EmployeeDirectoryController::class, 'index'])->name('employees.index');
+        Route::get('/employees/create', [EmployeeDirectoryController::class, 'create'])->name('employees.create');
+        Route::post('/employees', [EmployeeDirectoryController::class, 'store'])->name('employees.store');
+        Route::get('/employees/{id}', [EmployeeDirectoryController::class, 'show'])->name('employees.show');
+        Route::get('/employees/{id}/edit', [EmployeeDirectoryController::class, 'edit'])->name('employees.edit');
+        Route::put('/employees/{id}', [EmployeeDirectoryController::class, 'update'])->name('employees.update');
 
-    // Pending Approvals
-    Route::get('/pending-farmers', [FarmerController::class, 'pending']);
+        // Farmer Management
+        Route::get('/farmers', [FarmerDirectoryController::class, 'index'])->name('farmers.index');
+        Route::get('/farmers/register', fn() => inertia('Admin/Profiles/FarmerRegistrationForm'))->name('farmers.register');
+        Route::post('/farmers', [FarmerDirectoryController::class, 'store'])->name('farmers.store');
+        Route::get('/farmers/{id}', [FarmerDirectoryController::class, 'show'])->name('farmers.show');
 
-    // Analytics & Visits
-    Route::get('/visits', [VisitController::class, 'index']);
+        // Pending Farmer Approvals
+        Route::get('/pending-farmers', [FarmerController::class, 'pending'])->name('farmers.pending');
+        Route::post('/pending-farmers/{id}/approve', [FarmerController::class, 'approve'])->name('farmers.approve');
+        Route::post('/pending-farmers/{id}/reject', [FarmerController::class, 'reject'])->name('farmers.reject');
 
-    // Performance Logs
-    Route::get('/performance', [PerformanceController::class, 'index']);
+        // Visit Audits
+        Route::get('/visits', [VisitController::class, 'index'])->name('visits.index');
 
-    // Settings
-    Route::get('/settings', [SettingsController::class, 'index']);
+        // Performance Analytics
+        Route::get('/performance', [PerformanceController::class, 'index'])->name('performance.index');
 
-    // Payments & Financials
-    Route::get('/payments', [PaymentsController::class, 'index']);
+        // Settings
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+        Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile');
+        Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
 
-    // Tasks & Schedule Management
-    Route::get('/tasks', [TasksController::class, 'index']);
+        // Payments & Financials
+        Route::get('/payments', [PaymentsController::class, 'index'])->name('payments.index');
+        Route::post('/payments', [PaymentsController::class, 'store'])->name('payments.store');
+        Route::post('/payments/{id}/mark-paid', [PaymentsController::class, 'markPaid'])->name('payments.markPaid');
 
-    // Live Employee Monitor
-    Route::get('/monitor', [LiveMonitorController::class, 'index']);
+        // Task Management
+        Route::get('/tasks', [TasksController::class, 'index'])->name('tasks.index');
+        Route::post('/tasks', [TasksController::class, 'store'])->name('tasks.store');
+        Route::put('/tasks/{id}', [TasksController::class, 'update'])->name('tasks.update');
+        Route::delete('/tasks/{id}', [TasksController::class, 'destroy'])->name('tasks.destroy');
+
+        // Live Monitor (page + JSON polling endpoint)
+        Route::get('/monitor', [LiveMonitorController::class, 'index'])->name('monitor.index');
+        Route::get('/monitor/live', [LiveMonitorController::class, 'liveData'])->name('monitor.live');
+    });
 });
-

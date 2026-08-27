@@ -1,44 +1,38 @@
 import React, { useState, useMemo } from 'react';
 import AdminLayout from './AdminLayout';
 import { 
-    Fuel, Navigation, UserCheck, Star, Trophy, Clock, Search, Filter, ChevronDown, Download, X
+    Fuel, Navigation, UserCheck, Star, Trophy, Clock, Search, Filter, ChevronDown, Download, X, CheckCircle2
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAlert } from '../../Components/AlertSystem';
 
-export default function EmployeePerformance() {
+export default function EmployeePerformance({ employees = [], period = '' }) {
     const { t } = useTranslation();
     const { triggerInfo } = useAlert();
     const [searchQuery, setSearchQuery] = useState('');
-    const [filterDate, setFilterDate] = useState('');
-    const [department, setDepartment] = useState('all');
-    const [showDeptDropdown, setShowDeptDropdown] = useState(false);
+    const [regionFilter, setRegionFilter] = useState('all');
+    const [showRegionDropdown, setShowRegionDropdown] = useState(false);
 
-    const performanceData = [
-        { name: 'Rajesh Kumar', route: 'HQ → Farm A → Farm B → HQ', distance: 42.5, fuel: 148.75, dept: 'Field' },
-        { name: 'Suresh Menon', route: 'HQ → Farm X → Farm Y', distance: 28.0, fuel: 98.00, dept: 'Field' },
-        { name: 'Priya D.', route: 'HQ → Farm C → Farm D → Farm E', distance: 55.2, fuel: 193.20, dept: 'Agronomy' },
-        { name: 'Murugan P.', route: 'HQ → Farm P → HQ', distance: 18.5, fuel: 64.75, dept: 'Field' },
-    ];
+    const regions = ['all', ...Array.from(new Set(employees.map(e => e.region)))];
 
     const filteredData = useMemo(() => {
-        return performanceData.filter(e => {
+        return employees.filter(e => {
             const matchSearch = e.name.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchDept = department === 'all' || e.dept === department;
-            return matchSearch && matchDept;
+            const matchRegion = regionFilter === 'all' || e.region === regionFilter;
+            return matchSearch && matchRegion;
         });
-    }, [searchQuery, department]);
+    }, [searchQuery, regionFilter, employees]);
 
     const handleExport = () => {
-        triggerInfo(`Exporting performance report${filterDate ? ` for ${filterDate}` : ''}. Download will begin shortly.`);
+        triggerInfo(`Exporting performance report. Download will begin shortly.`);
     };
 
     return (
         <AdminLayout>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
-                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Performance Logs')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">Distance tracking and attendance logs.</p>
+                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Performance Analytics')}</h1>
+                    <p className="text-gray-500 mt-1 font-medium text-sm">Monthly performance scoring for {period}</p>
                 </div>
                 <button onClick={handleExport} className="flex items-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-700 hover:bg-gray-50 transition shadow-sm">
                     <Download className="w-4 h-4 mr-2" /> Export Report
@@ -59,22 +53,20 @@ export default function EmployeePerformance() {
                     {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>}
                 </div>
                 <div className="flex w-full md:w-auto gap-3 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
-                    <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)}
-                        className="cursor-pointer bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all" />
                     <div className="relative">
-                        <button onClick={() => setShowDeptDropdown(!showDeptDropdown)}
+                        <button onClick={() => setShowRegionDropdown(!showRegionDropdown)}
                             className={`flex items-center px-4 py-2 border rounded-xl text-sm font-bold transition-colors whitespace-nowrap ${
-                                department !== 'all' ? 'bg-slate-50 border-green-300 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                                regionFilter !== 'all' ? 'bg-slate-50 border-green-300 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
                             }`}>
                             <Filter className="w-4 h-4 mr-2 text-gray-400" />
-                            {department === 'all' ? 'Department' : department} <ChevronDown className="w-3 h-3 ml-2" />
+                            {regionFilter === 'all' ? 'Region' : regionFilter} <ChevronDown className="w-3 h-3 ml-2" />
                         </button>
-                        {showDeptDropdown && (
+                        {showRegionDropdown && (
                             <div className="absolute top-full mt-1 right-0 min-w-[140px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
-                                {['all', 'Field', 'Agronomy', 'Admin'].map(d => (
-                                    <button key={d} onClick={() => { setDepartment(d); setShowDeptDropdown(false); }}
-                                        className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${department === d ? 'text-slate-800' : 'text-gray-700'}`}>
-                                        {d === 'all' ? 'All Departments' : d}
+                                {regions.map(r => (
+                                    <button key={r} onClick={() => { setRegionFilter(r); setShowRegionDropdown(false); }}
+                                        className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${regionFilter === r ? 'text-slate-800' : 'text-gray-700'}`}>
+                                        {r === 'all' ? 'All Regions' : r}
                                     </button>
                                 ))}
                             </div>
@@ -90,9 +82,9 @@ export default function EmployeePerformance() {
                         <div className="flex items-center justify-between mb-6 border-b border-gray-100 pb-4">
                             <h2 className="text-xl font-heading font-bold text-gray-900 flex items-center group-hover:text-slate-800 transition-colors">
                                 <div className="p-2 bg-slate-50 rounded-xl mr-3 border border-slate-200 shadow-sm">
-                                    <Navigation className="w-5 h-5 text-slate-800" />
+                                    <Trophy className="w-5 h-5 text-slate-800" />
                                 </div>
-                                Daily Distance Audit
+                                Performance Leaderboard
                             </h2>
                         </div>
                         
@@ -101,8 +93,9 @@ export default function EmployeePerformance() {
                                 <thead>
                                     <tr className="border-b-2 border-gray-100 text-xs font-bold uppercase tracking-wider text-gray-400">
                                         <th className="pb-4 pl-2">Officer Name</th>
-                                        <th className="pb-4 text-right">Route Hops</th>
-                                        <th className="pb-4 text-right pr-2">Total Distance</th>
+                                        <th className="pb-4 text-center">Visits (Month)</th>
+                                        <th className="pb-4 text-center">Attendance</th>
+                                        <th className="pb-4 text-right pr-2">Total Score</th>
                                     </tr>
                                 </thead>
                                 <tbody className="text-sm">
@@ -111,9 +104,13 @@ export default function EmployeePerformance() {
                                     )}
                                     {filteredData.map((e, i) => (
                                         <tr key={i} className="cursor-pointer border-b border-gray-50 hover:bg-gray-50 transition group/row">
-                                            <td className="py-5 pl-2 font-bold text-gray-900 group-hover/row:text-slate-800 transition-colors">{e.name}</td>
-                                            <td className="py-5 text-right font-medium text-gray-500">{e.route}</td>
-                                            <td className="py-5 text-right font-bold text-slate-800 text-lg pr-2">{e.distance} km</td>
+                                            <td className="py-5 pl-2 font-bold text-gray-900 group-hover/row:text-slate-800 transition-colors">
+                                                {e.name}
+                                                <div className="text-[10px] text-gray-400 font-mono mt-1">{e.employee_code}</div>
+                                            </td>
+                                            <td className="py-5 text-center font-medium text-gray-500">{e.visits_month} / {e.target_visits}</td>
+                                            <td className="py-5 text-center font-medium text-gray-500">{e.attendance_rate}%</td>
+                                            <td className="py-5 text-right font-bold text-slate-800 text-lg pr-2">{e.score} pts</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -134,16 +131,16 @@ export default function EmployeePerformance() {
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
-                            {[1, 2, 3, 4].map(i => (
+                            {filteredData.slice(0, 4).map((e, i) => (
                                 <div key={i} className="cursor-pointer bg-gray-50 border border-gray-100 p-4 rounded-2xl flex flex-col items-center shadow-sm hover:shadow-md transition-all group/card hover:border-orange-200">
-                                    <div className="w-20 h-20 bg-white rounded-full mb-4 border-4 border-white shadow-md overflow-hidden relative group-hover/card:scale-105 transition-transform">
-                                        <img src="/images/logo.png" alt="Selfie" className="w-full h-full object-cover" />
+                                    <div className="w-20 h-20 bg-white rounded-full mb-4 border-4 border-white shadow-md flex items-center justify-center text-xl font-bold text-slate-800 relative group-hover/card:scale-105 transition-transform">
+                                        {e.name?.[0]}
                                         <div className="absolute inset-0 ring-4 ring-inset ring-orange-500/20 rounded-full"></div>
                                     </div>
-                                    <p className="text-sm font-bold text-gray-900 text-center">Officer {i}</p>
+                                    <p className="text-sm font-bold text-gray-900 text-center">{e.name}</p>
                                     <div className="mt-2 bg-white px-3 py-1 rounded-full border border-gray-200 flex items-center shadow-sm group-hover/card:border-orange-300 transition-colors">
-                                        <Clock className="w-3 h-3 mr-1.5 text-slate-700" />
-                                        <span className="text-xs font-bold text-orange-600">08:30 AM</span>
+                                        <CheckCircle2 className="w-3 h-3 mr-1.5 text-slate-700" />
+                                        <span className="text-xs font-bold text-orange-600">{e.attendance_rate}%</span>
                                     </div>
                                 </div>
                             ))}
@@ -164,23 +161,19 @@ export default function EmployeePerformance() {
                         </h2>
                         
                         <div className="space-y-4 relative z-10">
-                            {[
-                                { name: 'Rajesh Kumar', rating: 4.8, reviews: 24, bad: 0 },
-                                { name: 'Anita Raj', rating: 4.5, reviews: 18, bad: 1 },
-                                { name: 'Karthik S.', rating: 3.2, reviews: 12, bad: 3 },
-                            ].map((officer, i) => (
+                            {filteredData.slice(0, 5).map((officer, i) => (
                                 <div key={i} className="cursor-pointer bg-gray-50 border border-gray-100 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-green-200 transition-all group/matrix">
                                     <div className="flex justify-between items-center mb-3">
                                         <p className="font-bold text-gray-900 group-hover/matrix:text-slate-800 transition-colors">{officer.name}</p>
                                         <div className="flex items-center bg-white px-2.5 py-1 rounded-lg border border-gray-200 shadow-sm group-hover/matrix:border-amber-200 transition-colors">
                                             <Star className="w-3.5 h-3.5 text-amber-400 mr-1.5 fill-amber-400" />
-                                            <span className="text-sm font-bold text-gray-900">{officer.rating}</span>
+                                            <span className="text-sm font-bold text-gray-900">{officer.avg_rating || 'N/A'}</span>
                                         </div>
                                     </div>
                                     <div className="flex justify-between text-[10px] font-bold text-gray-400 mt-4 border-t border-gray-200 pt-3 uppercase tracking-wider">
-                                        <span>Total Reviews: {officer.reviews}</span>
-                                        <span className={`px-2 py-0.5 rounded flex items-center ${officer.bad > 0 ? 'bg-red-50 text-red-500 border border-red-100' : 'bg-gray-100 text-gray-500 border border-gray-200'}`}>
-                                            Flags: {officer.bad}
+                                        <span>Total Visits: {officer.total_visits}</span>
+                                        <span className={`px-2 py-0.5 rounded flex items-center ${officer.score < 50 ? 'bg-red-50 text-red-500 border border-red-100' : 'bg-green-50 text-green-600 border border-green-200'}`}>
+                                            Score: {officer.score}
                                         </span>
                                     </div>
                                 </div>

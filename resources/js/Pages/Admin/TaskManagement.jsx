@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import AdminLayout from './AdminLayout';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { 
     ClipboardList, CalendarClock, Target, Activity, 
     Search, Filter, ChevronDown, CheckCircle2, X,
@@ -10,19 +10,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useAlert } from '../../Components/AlertSystem';
 
-const INITIAL_TASKS = [
-    { id: 'TSK-001', assignee: 'Rajesh Kumar', type: 'Farm Visit', target: '5 Farmers', status: 'In Progress', priority: 'High', date: 'Today' },
-    { id: 'TSK-002', assignee: 'Priya D.', type: 'Data Collection', target: 'Soil Reports (10)', status: 'Pending', priority: 'Medium', date: 'Tomorrow' },
-    { id: 'TSK-003', assignee: 'Suresh V.', type: 'Target', target: 'Onboard 20 Farmers', status: 'Completed', priority: 'High', date: 'This Week' },
-    { id: 'TSK-004', assignee: 'All Field Officers', type: 'Training', target: 'App Usage Sync', status: 'To Do', priority: 'Low', date: 'Next Week' },
-    { id: 'TSK-005', assignee: 'Kavitha S.', type: 'Farm Visit', target: '3 Farmers', status: 'Pending', priority: 'Medium', date: 'Today' },
-];
-
-export default function TaskManagement() {
+export default function TaskManagement({ tasks = [], employees = [], kpis = {} }) {
     const { t } = useTranslation();
     const { triggerInfo, triggerSuccess, triggerCritical } = useAlert();
     const [activeTab, setActiveTab] = useState('tasks');
-    const [tasks, setTasks] = useState(INITIAL_TASKS);
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [priorityFilter, setPriorityFilter] = useState('all');
@@ -31,56 +22,69 @@ export default function TaskManagement() {
     const [showNewTaskModal, setShowNewTaskModal] = useState(false);
     const [scheduleForm, setScheduleForm] = useState({ officer: 'Rajesh Kumar', n: 5, date: '' });
     const [targetForm, setTargetForm] = useState({ period: 'Daily', metric: 'Farmers Onboarded', value: '' });
-    const [newTask, setNewTask] = useState({ assignee: '', type: 'Farm Visit', target: '', priority: 'Medium', date: '', broadcast: false });
-
-    const completedTasksToday = tasks.filter(t => t.status === 'Completed').length;
-    const pendingVisits = tasks.filter(t => t.status === 'Pending').length;
+    const [newTask, setNewTask] = useState({ assignee_id: '', type: 'Farm Visit', description: '', priority: 'Medium', due_date: '', is_broadcast: false });
+    const [processing, setProcessing] = useState(false);
 
     const filteredTasks = useMemo(() => {
         return tasks.filter(t => {
-            const matchSearch = t.assignee.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            const assigneeName = t.assignee?.name || 'All Officers';
+            const matchSearch = assigneeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 t.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                t.id.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchStatus = statusFilter === 'all' || t.status === statusFilter;
-            const matchPriority = priorityFilter === 'all' || t.priority === priorityFilter;
+                t.task_code.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchStatus = statusFilter === 'all' || t.status === statusFilter.toLowerCase();
+            const matchPriority = priorityFilter === 'all' || t.priority === priorityFilter.toLowerCase();
             return matchSearch && matchStatus && matchPriority;
         });
     }, [tasks, searchQuery, statusFilter, priorityFilter]);
 
     const getStatusStyle = (status) => {
-        if (status === 'Completed') return 'bg-slate-100 text-green-700 border-green-200';
-        if (status === 'In Progress') return 'bg-slate-100 text-green-700 border-green-200';
-        if (status === 'To Do') return 'bg-gray-100 text-gray-700 border-gray-200';
-        return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+        if (status === 'completed') return 'bg-slate-100 text-green-700 border-green-200';
+        if (status === 'in-progress') return 'bg-slate-100 text-green-700 border-green-200';
+        if (status === 'pending') return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+        return 'bg-gray-100 text-gray-700 border-gray-200';
     };
 
     const getPriorityStyle = (priority) => {
-        if (priority === 'High') return 'text-red-600 bg-red-50 border border-red-200';
-        if (priority === 'Medium') return 'text-yellow-600 bg-yellow-50 border border-yellow-200';
+        if (priority === 'high') return 'text-red-600 bg-red-50 border border-red-200';
+        if (priority === 'medium') return 'text-yellow-600 bg-yellow-50 border border-yellow-200';
         return 'text-slate-800 bg-slate-50 border border-green-200';
     };
 
-    const handleMarkComplete = (taskId) => {
-        setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: 'Completed' } : t));
-        triggerSuccess(`Task ${taskId} marked as completed!`);
+    const handleMarkComplete = (taskId, taskCode) => {
+        if (processing) return;
+        setProcessing(true);
+        router.put(`/admin/tasks/${taskId}`, { status: 'completed' }, {
+            onSuccess: () => { triggerSuccess(`Task ${taskCode} marked as completed!`); setProcessing(false); },
+            onError: () => setProcessing(false)
+        });
     };
 
-    const handleDeleteTask = (taskId) => {
-        setTasks(prev => prev.filter(t => t.id !== taskId));
-        triggerInfo(`Task ${taskId} removed.`);
+    const handleDeleteTask = (taskId, taskCode) => {
+        if (processing) return;
+        if (!confirm(`Are you sure you want to delete Task ${taskCode}?`)) return;
+        setProcessing(true);
+        router.delete(`/admin/tasks/${taskId}`, {
+            onSuccess: () => { triggerInfo(`Task ${taskCode} removed.`); setProcessing(false); },
+            onError: () => setProcessing(false)
+        });
     };
 
     const handleCreateTask = (e) => {
         e.preventDefault();
-        if (!newTask.assignee || !newTask.target) {
+        if ((!newTask.assignee_id && !newTask.is_broadcast) || !newTask.description) {
             triggerCritical('Please fill in all required fields.');
             return;
         }
-        const id = `TSK-${String(tasks.length + 1).padStart(3, '0')}`;
-        setTasks(prev => [...prev, { ...newTask, id, status: 'To Do' }]);
-        setShowNewTaskModal(false);
-        setNewTask({ assignee: '', type: 'Farm Visit', target: '', priority: 'Medium', date: '', broadcast: false });
-        triggerSuccess(`Task ${id} created and assigned to ${newTask.broadcast ? 'All Field Officers' : newTask.assignee}!`);
+        setProcessing(true);
+        router.post('/admin/tasks', newTask, {
+            onSuccess: () => {
+                setShowNewTaskModal(false);
+                setNewTask({ assignee_id: '', type: 'Farm Visit', description: '', priority: 'Medium', due_date: '', is_broadcast: false });
+                triggerSuccess(`Task created successfully!`);
+                setProcessing(false);
+            },
+            onError: () => setProcessing(false)
+        });
     };
 
     const handleScheduleSubmit = (e) => {
@@ -121,39 +125,33 @@ export default function TaskManagement() {
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Broadcast to All Officers?</label>
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input type="checkbox" className="w-4 h-4 rounded accent-green-600"
-                                        checked={newTask.broadcast}
-                                        onChange={e => setNewTask(prev => ({ ...prev, broadcast: e.target.checked, assignee: e.target.checked ? 'All Field Officers' : '' }))} />
+                                        checked={newTask.is_broadcast}
+                                        onChange={e => setNewTask(prev => ({ ...prev, is_broadcast: e.target.checked, assignee_id: e.target.checked ? '' : prev.assignee_id }))} />
                                     <span className="text-sm font-medium text-gray-700">Assign to All Field Officers</span>
                                 </label>
                             </div>
-                            {!newTask.broadcast && (
+                            {!newTask.is_broadcast && (
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Assignee *</label>
-                                    <select value={newTask.assignee} onChange={e => setNewTask(prev => ({ ...prev, assignee: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500">
-                                        <option value="">Select Officer</option>
-                                        <option>Rajesh Kumar</option>
-                                        <option>Priya D.</option>
-                                        <option>Suresh V.</option>
-                                        <option>Kavitha S.</option>
-                                        <option>Murugan P.</option>
-                                    </select>
+                                    <input type="text" list="employee-list" value={newTask.assignee_id} onChange={e => setNewTask(prev => ({ ...prev, assignee_id: e.target.value }))}
+                                        placeholder="Type to search or select officer..."
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
+                                    <datalist id="employee-list">
+                                        {employees.map(emp => (
+                                            <option key={emp.id} value={emp.id}>{emp.name} ({emp.region})</option>
+                                        ))}
+                                    </datalist>
                                 </div>
                             )}
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Task Type</label>
-                                <select value={newTask.type} onChange={e => setNewTask(prev => ({ ...prev, type: e.target.value }))}
-                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500">
-                                    <option>Farm Visit</option>
-                                    <option>Data Collection</option>
-                                    <option>Target</option>
-                                    <option>Training</option>
-                                    <option>Report Submission</option>
-                                </select>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Task Type / Title</label>
+                                <input type="text" value={newTask.type} onChange={e => setNewTask(prev => ({ ...prev, type: e.target.value }))}
+                                    placeholder="e.g. Farm Visit, Data Collection"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Target / Description *</label>
-                                <input value={newTask.target} onChange={e => setNewTask(prev => ({ ...prev, target: e.target.value }))}
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Description *</label>
+                                <input value={newTask.description} onChange={e => setNewTask(prev => ({ ...prev, description: e.target.value }))}
                                     placeholder="e.g. Visit 5 Farmers" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -168,7 +166,7 @@ export default function TaskManagement() {
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Due Date</label>
-                                    <input type="date" value={newTask.date} onChange={e => setNewTask(prev => ({ ...prev, date: e.target.value }))}
+                                    <input type="date" value={newTask.due_date} onChange={e => setNewTask(prev => ({ ...prev, due_date: e.target.value }))}
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
                                 </div>
                             </div>
@@ -177,9 +175,9 @@ export default function TaskManagement() {
                                     className="flex-1 py-3 border border-gray-200 rounded-xl font-bold text-gray-700 hover:bg-gray-50 transition-colors">
                                     Cancel
                                 </button>
-                                <button type="submit"
-                                    className="flex-1 py-3 bg-slate-900 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all">
-                                    Create & Assign
+                                <button type="submit" disabled={processing}
+                                    className="flex-1 py-3 bg-slate-900 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-50">
+                                    {processing ? 'Creating...' : 'Create & Assign'}
                                 </button>
                             </div>
                         </form>
@@ -207,7 +205,7 @@ export default function TaskManagement() {
                         <h3 className="font-bold text-green-100">Tasks Completed Today</h3>
                         <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"><CheckCircle2 className="w-5 h-5 text-white" /></div>
                     </div>
-                    <p className="text-4xl font-extrabold tracking-tight relative z-10">{completedTasksToday}</p>
+                    <p className="text-4xl font-extrabold tracking-tight relative z-10">{kpis.completed_today}</p>
                     <p className="text-green-200 text-sm mt-2 font-medium flex items-center"><Activity className="w-4 h-4 mr-1" /> Updated live</p>
                 </div>
                 <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
@@ -215,7 +213,7 @@ export default function TaskManagement() {
                         <h3 className="font-bold text-gray-500">Pending Tasks</h3>
                         <div className="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center border border-yellow-100 group-hover:scale-110 transition-transform"><Clock className="w-5 h-5 text-yellow-500" /></div>
                     </div>
-                    <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{pendingVisits}</p>
+                    <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{kpis.pending_tasks}</p>
                     <p className="text-gray-400 text-sm mt-2 font-medium">Requires attention</p>
                 </div>
                 <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
@@ -307,30 +305,30 @@ export default function TaskManagement() {
                                     )}
                                     {filteredTasks.map(task => (
                                         <tr key={task.id} className="hover:bg-gray-50/50 transition-colors">
-                                            <td className="py-4 px-5"><span className="font-mono text-sm font-bold text-slate-800 bg-slate-50 px-2 py-1 rounded-md">{task.id}</span></td>
+                                            <td className="py-4 px-5"><span className="font-mono text-sm font-bold text-slate-800 bg-slate-50 px-2 py-1 rounded-md">{task.task_code}</span></td>
                                             <td className="py-4 px-5">
                                                 <div className="flex items-center gap-2">
-                                                    {task.assignee === 'All Field Officers' ? <Users className="w-4 h-4 text-slate-700" /> : <UserPlus className="w-4 h-4 text-gray-400" />}
-                                                    <span className="font-bold text-sm text-gray-900">{task.assignee}</span>
+                                                    {task.is_broadcast ? <Users className="w-4 h-4 text-slate-700" /> : <UserPlus className="w-4 h-4 text-gray-400" />}
+                                                    <span className="font-bold text-sm text-gray-900">{task.is_broadcast ? 'All Field Officers' : task.assignee?.name}</span>
                                                 </div>
                                             </td>
                                             <td className="py-4 px-5">
                                                 <p className="font-bold text-sm text-gray-900">{task.type}</p>
-                                                <p className="text-xs text-gray-500">{task.target}</p>
+                                                <p className="text-xs text-gray-500">{task.description}</p>
                                             </td>
-                                            <td className="py-4 px-5 text-sm text-gray-500 font-medium">{task.date || '—'}</td>
-                                            <td className="py-4 px-5"><span className={`px-2.5 py-1 rounded-full text-xs font-bold ${getPriorityStyle(task.priority)}`}>{task.priority}</span></td>
-                                            <td className="py-4 px-5"><span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${getStatusStyle(task.status)}`}>{task.status}</span></td>
+                                            <td className="py-4 px-5 text-sm text-gray-500 font-medium">{task.due_date || '—'}</td>
+                                            <td className="py-4 px-5"><span className={`px-2.5 py-1 rounded-full text-xs font-bold capitalize ${getPriorityStyle(task.priority)}`}>{task.priority}</span></td>
+                                            <td className="py-4 px-5"><span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${getStatusStyle(task.status)}`}>{task.status.replace('-', ' ')}</span></td>
                                             <td className="py-4 px-5">
                                                 <div className="flex gap-1">
-                                                    {task.status !== 'Completed' && (
-                                                        <button onClick={() => handleMarkComplete(task.id)} title="Mark Complete"
-                                                            className="p-2 text-gray-400 hover:text-slate-800 hover:bg-slate-50 rounded-lg transition-colors">
+                                                    {task.status !== 'completed' && (
+                                                        <button onClick={() => handleMarkComplete(task.id, task.task_code)} title="Mark Complete" disabled={processing}
+                                                            className="p-2 text-gray-400 hover:text-slate-800 hover:bg-slate-50 rounded-lg transition-colors disabled:opacity-50">
                                                             <CheckCircle2 className="w-4 h-4" />
                                                         </button>
                                                     )}
-                                                    <button onClick={() => handleDeleteTask(task.id)} title="Delete Task"
-                                                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                                    <button onClick={() => handleDeleteTask(task.id, task.task_code)} title="Delete Task" disabled={processing}
+                                                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50">
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
                                                 </div>
@@ -350,15 +348,16 @@ export default function TaskManagement() {
                             <h3 className="text-lg font-bold text-gray-900 mb-5 border-b border-gray-100 pb-3">Schedule N Farmers Visit</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Select Field Officer</label>
-                                    <select value={scheduleForm.officer} onChange={e => setScheduleForm(p => ({ ...p, officer: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500">
-                                        <option>Rajesh Kumar (Coimbatore)</option>
-                                        <option>Priya D. (Salem)</option>
-                                        <option>Suresh V. (Erode)</option>
-                                        <option>Kavitha S. (Madurai)</option>
-                                        <option>Murugan P. (Trichy)</option>
-                                    </select>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Assign Field Officer</label>
+                                    <input type="text" list="officer-list" placeholder="Type officer name..." value={scheduleForm.officer} onChange={e => setScheduleForm(p => ({ ...p, officer: e.target.value }))}
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
+                                    <datalist id="officer-list">
+                                        <option value="Rajesh Kumar (Coimbatore)" />
+                                        <option value="Priya D. (Salem)" />
+                                        <option value="Suresh V. (Erode)" />
+                                        <option value="Kavitha S. (Madurai)" />
+                                        <option value="Murugan P. (Trichy)" />
+                                    </datalist>
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Number of Farmers to Visit (N)</label>

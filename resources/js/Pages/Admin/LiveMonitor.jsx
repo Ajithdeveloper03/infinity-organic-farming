@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import AdminLayout from './AdminLayout';
 import { Head, router } from '@inertiajs/react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow, Polyline } from '@react-google-maps/api';
 import {
     ShieldAlert, MapPin, Clock, Activity, Search,
     CheckCircle2, AlertTriangle, Wifi, WifiOff, Phone,
@@ -150,7 +150,7 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
         }
     ];
 
-    const employees = propEmployees.length > 0 ? propEmployees : dummyEmployees;
+    const employees = propEmployees;
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [regionFilter, setRegionFilter] = useState('all');
@@ -189,7 +189,7 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
     useEffect(() => {
         const interval = setInterval(() => {
             router.reload({ only: ['employees'], preserveScroll: true, preserveState: true, onSuccess: () => setLastRefreshed(new Date().toLocaleTimeString()) });
-        }, 5000);
+        }, 30000); // 30-second real-time polling
         return () => clearInterval(interval);
     }, []);
 
@@ -384,6 +384,17 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
                                                     zoomControl: true,
                                                 }}
                                             >
+                                                {selectedEmployee.recentPath && selectedEmployee.recentPath.length > 1 && (
+                                                    <Polyline
+                                                        path={selectedEmployee.recentPath.map(p => ({ lat: p.lat, lng: p.lng }))}
+                                                        options={{
+                                                            strokeColor: '#10B981',
+                                                            strokeOpacity: 0.8,
+                                                            strokeWeight: 4,
+                                                            geodesic: true,
+                                                        }}
+                                                    />
+                                                )}
                                                 {selectedEmployee.latitude && selectedEmployee.longitude && (
                                                     <Marker
                                                         position={{

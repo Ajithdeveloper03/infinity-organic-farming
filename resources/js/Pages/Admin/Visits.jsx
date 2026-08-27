@@ -1,44 +1,29 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import AdminLayout from './AdminLayout';
+import { router } from '@inertiajs/react';
 import { 
     CalendarCheck, Clock, MapPin, Camera, 
     Leaf, FileText, CheckCircle2, AlertCircle, Navigation, Search, Filter, ChevronDown, X
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function Visits({ visits = [] }) {
+export default function Visits({ visits = {}, employees = [], filters = {} }) {
     const { t } = useTranslation();
-    const [searchQuery, setSearchQuery] = useState('');
-    const [dateRange, setDateRange] = useState('30');
+    const [searchQuery, setSearchQuery] = useState(filters.search || '');
+    const [dateRange, setDateRange] = useState(filters.days || '30');
     const [showDateDropdown, setShowDateDropdown] = useState(false);
     const [activeCategory, setActiveCategory] = useState('all');
-    const mockVisits = visits.length > 0 ? visits : [
-        {
-            id: 1, farmer: { user: { name: 'Muthusamy' } }, employee: { name: 'Officer Rajesh' },
-            distance_from_previous_farmer_km: 12.5, check_in_time: '09:15 AM', check_out_time: '10:45 AM',
-            date: 'Aug 10, 2026', farm_condition_notes: 'Vetiver crop is showing good root propagation. Soil moisture is optimal. No pests visible.',
-            recommendations: 'Apply organic compost in 2 weeks. Maintain current watering schedule.',
-            media: [
-                { type: 'photo', url: '/images/image2.jpg', exif_lat: '11.0168', exif_lon: '76.9558', exif_time: '09:20 AM', verified: true },
-                { type: 'photo', url: '/images/image3.jpg', exif_lat: '11.0168', exif_lon: '76.9558', exif_time: '10:10 AM', verified: true }
-            ]
-        },
-        {
-            id: 2, farmer: { user: { name: 'Lakshmi Devi' } }, employee: { name: 'Officer Priya' },
-            distance_from_previous_farmer_km: 8.2, check_in_time: '11:00 AM', check_out_time: '12:30 PM',
-            date: 'Aug 11, 2026', farm_condition_notes: 'Soil needs irrigation. Sugarcane crop at early stage.',
-            recommendations: 'Schedule irrigation within 3 days.',
-            media: []
-        }
-    ];
+    const [processing, setProcessing] = useState(false);
 
-    const filteredVisits = useMemo(() => {
-        const q = searchQuery.toLowerCase();
-        return mockVisits.filter(v =>
-            v.farmer.user.name.toLowerCase().includes(q) ||
-            v.employee.name.toLowerCase().includes(q)
-        );
-    }, [mockVisits, searchQuery]);
+    const visitsData = visits.data || [];
+    const handleApplyFilters = () => {
+        setProcessing(true);
+        router.get('/admin/visits', { search: searchQuery, days: dateRange }, {
+            preserveState: true,
+            preserveScroll: true,
+            onFinish: () => setProcessing(false)
+        });
+    };
 
     const dateRangeOptions = [{ label: 'Last 7 Days', value: '7' }, { label: 'Last 30 Days', value: '30' }, { label: 'Last 3 Months', value: '90' }, { label: 'All Time', value: 'all' }];
 
@@ -60,10 +45,11 @@ export default function Visits({ visits = [] }) {
                         type="text"
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && handleApplyFilters()}
                         placeholder={t('Search by officer or farmer...')} 
                         className="w-full pl-10 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
                     />
-                    {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>}
+                    {searchQuery && <button onClick={() => { setSearchQuery(''); handleApplyFilters(); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>}
                 </div>
                 <div className="flex w-full md:w-auto gap-3 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
                     {/* Date Range Dropdown */}
@@ -85,21 +71,21 @@ export default function Visits({ visits = [] }) {
                             </div>
                         )}
                     </div>
-                    <button onClick={() => setSearchQuery('')}
-                        className="px-5 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-slate-900/10 transition-all whitespace-nowrap">
-                        Apply Filters
+                    <button onClick={handleApplyFilters} disabled={processing}
+                        className="px-5 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-slate-900/10 transition-all whitespace-nowrap disabled:opacity-50">
+                        {processing ? 'Applying...' : 'Apply Filters'}
                     </button>
                 </div>
             </div>
 
             {/* Visits List */}
             <div className="space-y-6">
-                {filteredVisits.length === 0 && (
+                {visitsData.length === 0 && (
                     <div className="bg-white border border-gray-100 rounded-[2rem] p-16 text-center text-gray-400 font-medium shadow-sm">
                         {searchQuery ? `No visits match "${searchQuery}".` : 'No visits recorded yet.'}
                     </div>
                 )}
-                {filteredVisits.map(visit => (
+                {visitsData.map(visit => (
                     <div key={visit.id} className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
                         
                         {/* Elegant Header with Gradient Background */}

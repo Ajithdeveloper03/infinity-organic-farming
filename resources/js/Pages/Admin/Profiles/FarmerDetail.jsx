@@ -4,22 +4,8 @@ import { Link } from '@inertiajs/react';
 import { ArrowLeft, Map, Smartphone, FileText, CheckCircle2, Leaf, Clock, Navigation } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function FarmerDetail({ id }) {
+export default function FarmerDetail({ farmer = {}, visits = [] }) {
     const { t } = useTranslation();
-
-    const farm = {
-        id: id,
-        name: 'Muthusamy',
-        phone: '+91 8765432109',
-        size: '4.5 Acres',
-        crop: 'Vetiver',
-        stage: 'Growing phase',
-        location: 'Coimbatore South, Tamil Nadu',
-        lat: '11.0168',
-        lon: '76.9558',
-        registered_by: 'Officer Rajesh',
-        img: '/images/image7.jpg'
-    };
 
     return (
         <AdminLayout>
@@ -31,40 +17,48 @@ export default function FarmerDetail({ id }) {
 
             {/* Farm Hero Header */}
             <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-8 group cursor-pointer">
-                <div className="relative h-64 w-full">
-                    <img src={farm.img} alt="Farm Landscape" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
-                    <div className="absolute inset-0 bg-slate-900/90"></div>
+                <div className="relative h-64 w-full bg-slate-800">
+                    {farmer.farmer_photo ? (
+                        <img src={farmer.farmer_photo} alt="Farmer" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 opacity-80" />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center opacity-40">
+                            <Leaf className="w-24 h-24 text-green-400" />
+                        </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent"></div>
                     <div className="absolute bottom-6 left-8 text-white">
                         <div className="flex items-center space-x-3 mb-2">
                             <span className="bg-slate-900/90 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-lg border border-slate-700/50 shadow-sm uppercase tracking-wider">
-                                {farm.id}
+                                {farmer.farmer_code || 'N/A'}
                             </span>
-                            <span className="bg-orange-600/90 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-lg border border-slate-1000/50 shadow-sm uppercase tracking-wider flex items-center">
-                                <CheckCircle2 className="w-3 h-3 mr-1" /> Verified Property
-                            </span>
+                            {farmer.kyc_status === 'verified' && (
+                                <span className="bg-green-600/90 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-lg border border-green-800/50 shadow-sm uppercase tracking-wider flex items-center">
+                                    <CheckCircle2 className="w-3 h-3 mr-1" /> Verified Property
+                                </span>
+                            )}
                         </div>
-                        <h1 className="text-4xl font-heading font-extrabold">{farm.name}'s Farm</h1>
+                        <h1 className="text-4xl font-heading font-extrabold">{farmer.name}'s Farm</h1>
                         <p className="text-sm font-medium flex items-center mt-2 text-gray-200">
-                            <Map className="w-4 h-4 mr-1.5 text-green-400" /> {farm.location}
+                            <Map className="w-4 h-4 mr-1.5 text-green-400" /> {farmer.village}, {farmer.district}
                         </p>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100 bg-white">
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Total Land Size</p>
-                        <p className="font-heading font-bold text-2xl text-gray-900">{farm.size}</p>
+                        <p className="font-heading font-bold text-2xl text-gray-900">{farmer.land_acres || '–'} Acres</p>
                     </div>
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Primary Crop</p>
-                        <p className="font-heading font-bold text-2xl text-slate-800">{farm.crop}</p>
+                        <p className="font-heading font-bold text-2xl text-slate-800">Vetiver</p>
                     </div>
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Current Stage</p>
-                        <p className="font-heading font-bold text-xl text-gray-900 mt-1">{farm.stage}</p>
+                        <p className="font-heading font-bold text-xl text-gray-900 mt-1 capitalize">{farmer.crop_stage || 'Unknown'}</p>
                     </div>
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Contact</p>
-                        <p className="font-bold text-sm text-gray-900 flex items-center justify-center mt-2"><Smartphone className="w-4 h-4 mr-1 text-slate-700" /> {farm.phone}</p>
+                        <p className="font-bold text-sm text-gray-900 flex items-center justify-center mt-2"><Smartphone className="w-4 h-4 mr-1 text-slate-700" /> {farmer.phone}</p>
                     </div>
                 </div>
             </div>
@@ -84,15 +78,15 @@ export default function FarmerDetail({ id }) {
                         <div className="flex justify-between space-x-4">
                             <div className="flex-1 bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
                                 <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Latitude</p>
-                                <p className="text-sm font-bold text-gray-900">{farm.lat}</p>
+                                <p className="text-sm font-bold text-gray-900">{farmer.land_latitude || 'N/A'}</p>
                             </div>
                             <div className="flex-1 bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
                                 <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Longitude</p>
-                                <p className="text-sm font-bold text-gray-900">{farm.lon}</p>
+                                <p className="text-sm font-bold text-gray-900">{farmer.land_longitude || 'N/A'}</p>
                             </div>
                         </div>
                         <p className="text-xs font-medium text-gray-500 mt-6 text-center bg-gray-50 p-2 rounded-xl">
-                            Registered by <span className="font-bold text-gray-700">{farm.registered_by}</span>
+                            Registered by <span className="font-bold text-gray-700">{farmer.registered_by}</span> on {farmer.joined}
                         </p>
                     </div>
                 </div>
@@ -105,58 +99,42 @@ export default function FarmerDetail({ id }) {
                                 <FileText className="w-5 h-5 text-orange-600 mr-2" /> Farm Inspection Log
                             </h3>
                             <span className="text-[10px] font-bold text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200 uppercase tracking-wider">
-                                4 Total Visits
+                                {farmer.total_visits || 0} Total Visits
                             </span>
                         </div>
 
                         <div className="space-y-6">
-                            {/* Mock Visit Item */}
-                            <div className="flex items-start group">
-                                <div className="flex flex-col items-center mr-4">
-                                    <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-800 group-hover:bg-slate-900 group-hover:text-white transition-colors">
-                                        <Leaf className="w-5 h-5" />
-                                    </div>
-                                    <div className="w-px h-full bg-gray-200 mt-2 group-last:hidden"></div>
-                                </div>
-                                <div className="flex-1 bg-gray-50 border border-gray-100 rounded-2xl p-5 shadow-sm group-hover:border-green-200 group-hover:shadow-md transition-all">
-                                    <div className="flex justify-between items-start mb-3">
-                                        <div>
-                                            <h4 className="font-bold text-gray-900">Routine Checkup</h4>
-                                            <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mt-0.5">By Rajesh Kumar</p>
+                            {visits.length === 0 ? (
+                                <div className="text-center text-gray-500 py-10">No visits recorded yet.</div>
+                            ) : visits.map((visit, idx) => (
+                                <div key={visit.id} className="flex items-start group">
+                                    <div className="flex flex-col items-center mr-4">
+                                        <div className={`w-10 h-10 rounded-xl ${idx === 0 ? 'bg-slate-50 border-slate-200 text-slate-800' : 'bg-gray-50 border-gray-200 text-gray-400'} border flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors`}>
+                                            <Leaf className="w-5 h-5" />
                                         </div>
-                                        <span className="text-xs font-bold text-gray-500 flex items-center bg-white px-2 py-1 rounded-lg shadow-sm border border-gray-200">
-                                            <Clock className="w-3 h-3 mr-1 text-green-400" /> Aug 10, 2026
-                                        </span>
+                                        {idx !== visits.length - 1 && <div className="w-px h-full bg-gray-200 mt-2"></div>}
                                     </div>
-                                    <p className="text-sm text-gray-700 leading-relaxed">
-                                        Crop is progressing well. Recommended organic compost mixture to boost soil nitrogen levels. 
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            {/* Older Mock Visit Item */}
-                            <div className="flex items-start group">
-                                <div className="flex flex-col items-center mr-4">
-                                    <div className="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400 group-hover:border-orange-300 group-hover:text-slate-700 transition-colors">
-                                        <Leaf className="w-5 h-5" />
-                                    </div>
-                                    <div className="w-px h-full bg-gray-200 mt-2 group-last:hidden"></div>
-                                </div>
-                                <div className="flex-1 bg-gray-50 border border-gray-100 rounded-2xl p-5 shadow-sm opacity-70 group-hover:opacity-100 transition-opacity">
-                                    <div className="flex justify-between items-start mb-3">
-                                        <div>
-                                            <h4 className="font-bold text-gray-900">Initial Planting Verification</h4>
-                                            <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mt-0.5">By Rajesh Kumar</p>
+                                    <div className={`flex-1 bg-gray-50 border border-gray-100 rounded-2xl p-5 shadow-sm ${idx !== 0 ? 'opacity-70 group-hover:opacity-100' : ''} group-hover:border-green-200 group-hover:shadow-md transition-all`}>
+                                        <div className="flex justify-between items-start mb-3">
+                                            <div>
+                                                <h4 className="font-bold text-gray-900">Farm Inspection</h4>
+                                                <p className="text-[10px] font-medium text-gray-500 uppercase tracking-wider mt-0.5">By {visit.employee_name}</p>
+                                            </div>
+                                            <span className={`text-xs font-bold flex items-center bg-white px-2 py-1 rounded-lg shadow-sm border border-gray-200 ${idx === 0 ? 'text-gray-500' : 'text-gray-400'}`}>
+                                                <Clock className={`w-3 h-3 mr-1 ${idx === 0 ? 'text-green-400' : 'text-gray-400'}`} /> {visit.date}
+                                            </span>
                                         </div>
-                                        <span className="text-xs font-bold text-gray-500 flex items-center bg-white px-2 py-1 rounded-lg shadow-sm border border-gray-200">
-                                            <Clock className="w-3 h-3 mr-1 text-gray-400" /> Jul 15, 2026
-                                        </span>
+                                        <p className="text-sm text-gray-700 leading-relaxed">
+                                            <strong>Notes:</strong> {visit.notes || 'No notes.'}
+                                        </p>
+                                        {visit.recommendations && (
+                                            <p className="text-sm text-gray-700 leading-relaxed mt-2 border-t border-gray-200 pt-2">
+                                                <strong>Recommendations:</strong> {visit.recommendations}
+                                            </p>
+                                        )}
                                     </div>
-                                    <p className="text-sm text-gray-700 leading-relaxed">
-                                        Verified planting bounds. Vetiver slips successfully planted across 4.5 acres.
-                                    </p>
                                 </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>

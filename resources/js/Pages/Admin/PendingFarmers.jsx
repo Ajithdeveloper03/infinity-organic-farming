@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import AdminLayout from './AdminLayout';
+import { router, usePage } from '@inertiajs/react';
 import { 
     CheckCircle, XCircle, Map, User, Smartphone, 
     AlertTriangle, ShieldCheck, MapPin, Search, Filter, ChevronDown, X
@@ -10,30 +11,38 @@ import { useTranslation } from 'react-i18next';
 export default function PendingFarmers({ farmers = [] }) {
     const { triggerInfo, triggerSuccess } = useAlert();
     const { t } = useTranslation();
+    const { flash } = usePage().props;
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('all');
-
-    const [mockFarmers, setMockFarmers] = useState(farmers.length > 0 ? farmers : [
-        { id: 1, user: { name: 'Muthusamy', phone: '+91 9876543210' }, land_size_acres: '4.5', land_latitude: '11.0168', land_longitude: '76.9558', land_address: 'Coimbatore South, Tamil Nadu', creator: { name: 'Officer Rajesh' } },
-        { id: 2, user: { name: 'Kandasamy', phone: '+91 8765432109' }, land_size_acres: '2.0', land_latitude: '11.0256', land_longitude: '76.9612', land_address: 'Pollachi, Tamil Nadu', creator: { name: 'Officer Suresh' } },
-        { id: 3, user: { name: 'Lakshmi Devi', phone: '+91 7654321098' }, land_size_acres: '3.2', land_latitude: '11.1205', land_longitude: '77.0143', land_address: 'Erode District, Tamil Nadu', creator: { name: 'Officer Priya' } },
-    ]);
+    const [processing, setProcessing] = useState(null);
 
     const filteredFarmers = useMemo(() => {
-        return mockFarmers.filter(f => {
+        return farmers.filter(f => {
             const q = searchQuery.toLowerCase();
-            return f.user.name.toLowerCase().includes(q) || f.user.phone.includes(q) || f.land_address.toLowerCase().includes(q);
+            return f.name.toLowerCase().includes(q) ||
+                   f.phone?.includes(q) ||
+                   (f.district || '').toLowerCase().includes(q) ||
+                   (f.village || '').toLowerCase().includes(q);
         });
-    }, [mockFarmers, searchQuery]);
+    }, [farmers, searchQuery]);
 
     const handleApprove = (id, name) => {
-        setMockFarmers(prev => prev.filter(f => f.id !== id));
-        triggerSuccess(`Farmer ${name} approved successfully! SMS credentials sent.`);
+        if (processing) return;
+        setProcessing(id + '_approve');
+        router.post(`/admin/pending-farmers/${id}/approve`, {}, {
+            onSuccess: () => { triggerSuccess(`Farmer ${name} approved successfully!`); setProcessing(null); },
+            onError: () => setProcessing(null),
+        });
     };
 
     const handleReject = (id, name) => {
-        setMockFarmers(prev => prev.filter(f => f.id !== id));
-        triggerInfo(`Farmer ${name} application rejected and archived.`);
+        if (processing) return;
+        if (!confirm(`Are you sure you want to reject ${name}?`)) return;
+        setProcessing(id + '_reject');
+        router.post(`/admin/pending-farmers/${id}/reject`, {}, {
+            onSuccess: () => { triggerInfo(`Farmer ${name} application rejected.`); setProcessing(null); },
+            onError: () => setProcessing(null),
+        });
     };
 
     return (
@@ -45,9 +54,12 @@ export default function PendingFarmers({ farmers = [] }) {
                 </div>
                 <div className="bg-orange-50 text-orange-600 border border-orange-100 px-5 py-2.5 rounded-xl flex items-center font-bold shadow-sm">
                     <AlertTriangle className="w-4 h-4 mr-2" />
-                    {filteredFarmers.length} Pending
+                    {farmers.length} Pending
                 </div>
             </div>
+            {flash?.success && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 font-medium">{flash.success}</div>
+            )}
 
             {/* Filter & Category Bar */}
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -67,7 +79,7 @@ export default function PendingFarmers({ farmers = [] }) {
                         className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all whitespace-nowrap ${
                             activeCategory === 'all' ? 'bg-slate-900 text-white shadow-slate-900/10' : 'bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100'
                         }`}>
-                        Awaiting Review ({mockFarmers.length})
+                        Awaiting Review ({farmers.length})
                     </button>
                     <button onClick={() => setActiveCategory('docs')}
                         className={`px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all whitespace-nowrap ${
@@ -99,47 +111,52 @@ export default function PendingFarmers({ farmers = [] }) {
                                             <User className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <h3 className="text-2xl font-heading font-bold text-gray-900">{farmer.user.name}</h3>
+                                            <h3 className="text-2xl font-heading font-bold text-gray-900">{farmer.name}</h3>
                                             <p className="text-sm font-bold text-gray-500 flex items-center mt-1">
-                                                <Smartphone className="w-4 h-4 mr-1 text-green-400" /> {farmer.user.phone}
+                                                <Smartphone className="w-4 h-4 mr-1 text-green-400" /> {farmer.phone}
                                             </p>
                                         </div>
                                     </div>
                                     <span className="bg-gray-50 text-gray-600 text-[10px] font-bold px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm uppercase tracking-wider">
-                                        By: {farmer.creator.name}
+                                        By: {farmer.registered_by}
                                     </span>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4 mt-6">
                                     <div className="cursor-pointer bg-gray-50 p-4 rounded-2xl border border-gray-100 shadow-sm transition-colors hover:border-green-200">
                                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Land Size</p>
-                                        <p className="text-2xl font-heading font-bold text-gray-900 mt-1">{farmer.land_size_acres} <span className="text-sm font-sans text-gray-500">Acres</span></p>
+                                        <p className="text-2xl font-heading font-bold text-gray-900 mt-1">{farmer.land_acres || '–'} <span className="text-sm font-sans text-gray-500">Acres</span></p>
                                     </div>
                                     <div className="cursor-pointer bg-gray-50 p-4 rounded-2xl border border-gray-100 shadow-sm transition-colors hover:border-green-200">
-                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Crop Stage</p>
-                                        <p className="text-lg font-heading font-bold text-gray-900 mt-1.5">Pre-Planting</p>
+                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">KYC Status</p>
+                                        <p className="text-lg font-heading font-bold text-gray-900 mt-1.5 capitalize">{farmer.kyc_status}</p>
                                     </div>
                                 </div>
                                 
                                 <div className="mt-4 bg-gray-50 p-4 rounded-2xl border border-gray-100 shadow-sm cursor-pointer hover:border-green-200 transition-colors">
                                     <p className="text-[10px] text-slate-700 font-bold uppercase mb-1.5 flex items-center tracking-wider">
-                                        <MapPin className="w-3 h-3 mr-1.5" /> Registered Address
+                                        <MapPin className="w-3 h-3 mr-1.5" /> Location
                                     </p>
-                                    <p className="text-sm font-medium text-gray-700 leading-relaxed">{farmer.land_address}</p>
+                                    <p className="text-sm font-medium text-gray-700 leading-relaxed">{farmer.village}, {farmer.district}</p>
+                                    <p className="text-xs text-gray-400 mt-1">Submitted: {farmer.submitted_on}</p>
                                 </div>
                             </div>
 
                             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-8 pt-6 border-t border-gray-100 relative z-10">
                                 <button 
-                                    onClick={() => handleApprove(farmer.id, farmer.user.name)}
-                                    className="cursor-pointer flex-1 bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-bold flex items-center justify-center transition-colors shadow-md shadow-slate-900/10"
+                                    onClick={() => handleApprove(farmer.id, farmer.name)}
+                                    disabled={processing !== null}
+                                    className="cursor-pointer flex-1 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white py-3 rounded-xl font-bold flex items-center justify-center transition-colors shadow-md shadow-slate-900/10"
                                 >
-                                    <ShieldCheck className="w-5 h-5 mr-2" /> Approve
+                                    <ShieldCheck className="w-5 h-5 mr-2" />
+                                    {processing === farmer.id + '_approve' ? 'Approving...' : 'Approve'}
                                 </button>
                                 <button
-                                    onClick={() => handleReject(farmer.id, farmer.user.name)}
-                                    className="cursor-pointer px-5 py-3 bg-white border border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 rounded-xl font-bold flex items-center justify-center transition-colors shadow-sm">
-                                    <XCircle className="w-5 h-5 mr-2" /> Reject
+                                    onClick={() => handleReject(farmer.id, farmer.name)}
+                                    disabled={processing !== null}
+                                    className="cursor-pointer px-5 py-3 bg-white border border-red-200 text-red-500 hover:bg-red-50 disabled:opacity-50 hover:border-red-300 rounded-xl font-bold flex items-center justify-center transition-colors shadow-sm">
+                                    <XCircle className="w-5 h-5 mr-2" />
+                                    {processing === farmer.id + '_reject' ? 'Rejecting...' : 'Reject'}
                                 </button>
                             </div>
                         </div>

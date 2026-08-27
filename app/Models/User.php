@@ -22,7 +22,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
+        'role',
+        'status',
+        'fcm_token',
     ];
 
     /**
@@ -44,15 +48,54 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
-    /**
-     * Get the location logs for the user.
-     */
+    // ─── Relations ────────────────────────────────────────────────────────────
+
     public function locationLogs()
     {
         return $this->hasMany(LocationLog::class, 'employee_id');
+    }
+
+    public function trackingSessions()
+    {
+        return $this->hasMany(TrackingSession::class, 'employee_id');
+    }
+
+    public function locationPoints()
+    {
+        return $this->hasMany(LocationPoint::class, 'employee_id');
+    }
+
+    public function attendanceLogs()
+    {
+        return $this->hasMany(AttendanceLog::class, 'employee_id');
+    }
+
+    public function farmerVisits()
+    {
+        return $this->hasMany(FarmerVisit::class, 'employee_id');
+    }
+
+    public function employeeDetail()
+    {
+        return $this->hasOne(EmployeeDetail::class, 'user_id');
+    }
+
+    public function farmerProfile()
+    {
+        return $this->hasOne(FarmerProfile::class, 'user_id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'employee_id');
     }
 }

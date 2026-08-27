@@ -9,7 +9,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useAlert } from '../../Components/AlertSystem';
 
-export default function Payments() {
+export default function Payments({ farmer_payments = [], officer_payments = [], kpis = {} }) {
     const { t } = useTranslation();
     const { triggerInfo, triggerSuccess } = useAlert ? useAlert() : {};
     const [activeTab, setActiveTab] = useState('farmers');
@@ -17,51 +17,36 @@ export default function Payments() {
     const [statusFilter, setStatusFilter] = useState('all');
     const [showStatusDropdown, setShowStatusDropdown] = useState(false);
 
-    // Mock Data for Farmers
-    const farmerPayments = [
-        { id: 'TXN-8921', farmer: 'Muthusamy K.', amount: '45,000', type: 'Yield Payout', status: 'Paid', date: 'Oct 12, 2023', region: 'Coimbatore' },
-        { id: 'TXN-8922', farmer: 'Lakshmi S.', amount: '12,500', type: 'Subsidy Advance', status: 'Pending', date: 'Oct 14, 2023', region: 'Erode' },
-        { id: 'TXN-8923', farmer: 'Perumal R.', amount: '28,000', type: 'Yield Payout', status: 'Failed', date: 'Oct 15, 2023', region: 'Salem' },
-        { id: 'TXN-8924', farmer: 'Kandasamy M.', amount: '5,000', type: 'Seed Deduction', status: 'Paid', date: 'Oct 15, 2023', region: 'Madurai' },
-    ];
-
-    // Mock Data for Officers
-    const officerPayments = [
-        { id: 'PAY-1101', officer: 'Rajesh Kumar', amount: '35,000', type: 'Monthly Salary', status: 'Paid', date: 'Oct 01, 2023', role: 'Senior FO' },
-        { id: 'PAY-1102', officer: 'Priya D.', amount: '4,500', type: 'Travel Allowance', status: 'Pending', date: 'Oct 05, 2023', role: 'FO' },
-        { id: 'PAY-1103', officer: 'Suresh V.', amount: '10,000', type: 'Performance Bonus', status: 'Paid', date: 'Oct 10, 2023', role: 'Lead Agronomist' },
-    ];
-
-    const getStatusIcon = (status) => {
-        if (status === 'Paid') return <CheckCircle2 className="w-4 h-4 text-slate-700 mr-1" />;
-        if (status === 'Pending') return <Clock className="w-4 h-4 text-yellow-500 mr-1" />;
-        return <XCircle className="w-4 h-4 text-red-500 mr-1" />;
-    };
-
     const getStatusStyle = (status) => {
-        if (status === 'Paid') return 'bg-slate-100 text-green-700 border-green-200';
-        if (status === 'Pending') return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+        if (status === 'completed') return 'bg-slate-100 text-green-700 border-green-200';
+        if (status === 'pending') return 'bg-yellow-100 text-yellow-700 border-yellow-200';
         return 'bg-red-100 text-red-700 border-red-200';
     };
 
+    const getStatusIcon = (status) => {
+        if (status === 'completed') return <CheckCircle2 className="w-4 h-4 text-slate-700 mr-1" />;
+        if (status === 'pending') return <Clock className="w-4 h-4 text-yellow-500 mr-1" />;
+        return <XCircle className="w-4 h-4 text-red-500 mr-1" />;
+    };
+
     const filteredFarmerPayments = useMemo(() => {
-        return farmerPayments.filter(p => {
+        return farmer_payments.filter(p => {
             const matchSearch = p.farmer.toLowerCase().includes(searchQuery.toLowerCase()) || 
                                 p.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
                                 p.region.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchStatus = statusFilter === 'all' || p.status === statusFilter;
+            const matchStatus = statusFilter === 'all' || p.status === statusFilter.toLowerCase();
             return matchSearch && matchStatus;
         });
-    }, [searchQuery, statusFilter]);
+    }, [searchQuery, statusFilter, farmer_payments]);
 
     const filteredOfficerPayments = useMemo(() => {
-        return officerPayments.filter(p => {
+        return officer_payments.filter(p => {
             const matchSearch = p.officer.toLowerCase().includes(searchQuery.toLowerCase()) || 
                                 p.id.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchStatus = statusFilter === 'all' || p.status === statusFilter;
+            const matchStatus = statusFilter === 'all' || p.status === statusFilter.toLowerCase();
             return matchSearch && matchStatus;
         });
-    }, [searchQuery, statusFilter]);
+    }, [searchQuery, statusFilter, officer_payments]);
 
     const handleExport = () => {
         if (triggerInfo) triggerInfo('Exporting ledger... Your download will begin shortly.');
@@ -105,9 +90,9 @@ export default function Payments() {
                         </div>
                     </div>
                     <div className="relative z-10">
-                        <p className="text-4xl font-extrabold tracking-tight">₹14.5L</p>
+                        <p className="text-4xl font-extrabold tracking-tight">₹{kpis.total_disbursed}</p>
                         <p className="text-green-200 text-sm mt-2 font-medium flex items-center">
-                            <TrendingUp className="w-4 h-4 mr-1" /> +12% from last month
+                            <TrendingUp className="w-4 h-4 mr-1" /> All completed transactions
                         </p>
                     </div>
                 </div>
@@ -120,20 +105,20 @@ export default function Payments() {
                             <Clock className="w-5 h-5 text-yellow-500" />
                         </div>
                     </div>
-                    <p className="text-3xl font-extrabold text-gray-900 tracking-tight">₹2.1L</p>
-                    <p className="text-gray-400 text-sm mt-2 font-medium">14 transactions pending</p>
+                    <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{kpis.pending_count}</p>
+                    <p className="text-gray-400 text-sm mt-2 font-medium">transactions pending</p>
                 </div>
 
                 <div className="bg-white border border-gray-100 rounded-[2xl] p-6 shadow-sm hover:shadow-md transition-shadow group relative overflow-hidden">
                     <div className="absolute -right-6 -top-6 w-32 h-32 bg-slate-800/5 rounded-full blur-2xl group-hover:bg-slate-800/10 transition-colors duration-700"></div>
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-bold text-gray-500">Monthly Expenses</h3>
+                        <h3 className="font-bold text-gray-500">Total Transactions</h3>
                         <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center border border-slate-200 group-hover:scale-110 transition-transform">
                             <IndianRupee className="w-5 h-5 text-slate-800" />
                         </div>
                     </div>
-                    <p className="text-3xl font-extrabold text-gray-900 tracking-tight">₹3.8L</p>
-                    <p className="text-gray-400 text-sm mt-2 font-medium">Officer Salaries & Allowances</p>
+                    <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{kpis.total_transactions}</p>
+                    <p className="text-gray-400 text-sm mt-2 font-medium">Platform wide</p>
                 </div>
             </div>
 
@@ -186,10 +171,10 @@ export default function Payments() {
                             </button>
                             {showStatusDropdown && (
                                 <div className="absolute top-full mt-1 right-0 min-w-[140px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
-                                    {['all', 'Paid', 'Pending', 'Failed'].map(s => (
-                                        <button key={s} onClick={() => { setStatusFilter(s); setShowStatusDropdown(false); }}
+                                    {['all', 'Completed', 'Pending', 'Failed'].map(s => (
+                                        <button key={s} onClick={() => { setStatusFilter(s.toLowerCase()); setShowStatusDropdown(false); }}
                                             className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 transition-colors ${
-                                                statusFilter === s ? 'text-slate-800' : 'text-gray-700'
+                                                statusFilter === s.toLowerCase() ? 'text-slate-800' : 'text-gray-700'
                                             }`}>
                                             {s === 'all' ? 'All Status' : s}
                                         </button>
@@ -235,7 +220,7 @@ export default function Payments() {
                                         <span className="font-bold text-gray-900">₹{payment.amount}</span>
                                     </td>
                                     <td className="py-4 px-6">
-                                        <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${getStatusStyle(payment.status)}`}>
+                                        <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${getStatusStyle(payment.status)}`}>
                                             {getStatusIcon(payment.status)}
                                             {payment.status}
                                         </div>
@@ -268,7 +253,7 @@ export default function Payments() {
                                         <span className="font-bold text-gray-900">₹{payment.amount}</span>
                                     </td>
                                     <td className="py-4 px-6">
-                                        <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${getStatusStyle(payment.status)}`}>
+                                        <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${getStatusStyle(payment.status)}`}>
                                             {getStatusIcon(payment.status)}
                                             {payment.status}
                                         </div>
