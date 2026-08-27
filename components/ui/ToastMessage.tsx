@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Animated, Text, View, StyleSheet, Dimensions, DeviceEventEmitter } from 'react-native';
 import { AlertCircle, CheckCircle2, Info } from 'lucide-react-native';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { width } = Dimensions.get('window');
 
 type ToastType = 'success' | 'error' | 'info';

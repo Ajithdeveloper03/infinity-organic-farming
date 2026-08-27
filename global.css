@@ -18,12 +18,22 @@
   --font-brandon-semibold: "JosefinSans_600SemiBold", "sans-serif";
   --font-brandon-bold: "JosefinSans_700Bold", "sans-serif";
   
-  /* Primary Theme Colors (Soft Purple) */
+  /* Primary Theme Colors (Soft Purple / Green) */
   --color-primary-100: #e8e8fc;
   --color-primary-500: #15803d;
   --color-primary-600: #7a7ce0;
   
-  /* Surface Colors */
+  /* Surface Colors Light */
   --color-surface-bg: #f4f5f9;
   --color-surface-card: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-surface-bg: #000000;
+    --color-surface-card: #121212;
+    --color-primary-100: #1a1a24;
+    --color-primary-500: #16a34a;
+    --color-primary-600: #5a5bb5;
+  }
 }

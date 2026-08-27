@@ -1,6 +1,6 @@
-import React, { forwardRef, useState } from 'react';
-import { TextInput, View, Text, TextInputProps, TouchableOpacity } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
+import React, { forwardRef, useState } from 'react';
+import { Text, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native';
 
 interface InputProps extends TextInputProps {
   label?: string;

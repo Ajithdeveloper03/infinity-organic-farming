@@ -1,80 +1,56 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, Animated } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
-import { ChevronLeft, MapPin } from 'lucide-react-native';
-import { getVisitWithFarmer } from '../../../data/mockData';
+import React from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { ChevronLeft, Camera, CheckCircle2 } from "lucide-react-native";
 
 export default function CheckInScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const visit = id ? getVisitWithFarmer(id) : null;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const { id } = useLocalSearchParams();
 
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.2,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        })
-      ])
-    ).start();
-  }, [pulseAnim]);
-
-  if (!visit || !visit.farmer) {
-    return null;
-  }
+  const handleCheckIn = () => {
+    // Navigate to tracking or form
+    router.push(`/(employee)/visit/tracking?id=${id}` as any);
+  };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      
-      {/* Header */}
-      <View className="px-6 pt-12 pb-4 flex-row items-center border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 mr-4" activeOpacity={0.7}>
-           <ChevronLeft size={24} color="#000" />
+    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-[#0A0A0C]">
+      <View className="px-5 pt-16 pb-4 flex-row items-center border-b border-gray-100 dark:border-white/5">
+        <TouchableOpacity onPress={() => router.back()} className="mr-4">
+          <ChevronLeft size={28} className="text-gray-900 dark:text-white" />
         </TouchableOpacity>
-        <View className="flex-1 items-center -ml-8">
-          <Text className="text-gray-900 font-gotham-bold text-lg">{visit.farmer.name}</Text>
-          <Text className="text-gray-500 text-xs font-brandon" numberOfLines={1}>{visit.farmer.address}</Text>
+        <Text className="text-xl font-gotham-bold text-gray-900 dark:text-white">
+          Visit Check-In
+        </Text>
+      </View>
+      <ScrollView className="flex-1 px-5 pt-6 content-center">
+        <View className="bg-white dark:bg-[#1C1C1E] rounded-[32px] p-8 items-center justify-center border border-gray-100 dark:border-white/5 shadow-xl mt-10">
+          <View className="w-24 h-24 bg-blue-500/20 rounded-full items-center justify-center mb-6">
+            <Camera size={40} color="#3b82f6" />
+          </View>
+          <Text className="text-2xl font-gotham-bold text-gray-900 dark:text-white text-center mb-2">
+            Location Verified
+          </Text>
+          <Text className="text-gray-500 dark:text-white/60 text-center font-brandon mb-8">
+            You are within 50 meters of the farm. Please take a selfie to
+            check-in and start the visit report.
+          </Text>
+
+          <TouchableOpacity
+            onPress={handleCheckIn}
+            className="w-full bg-green-600 py-4 rounded-full items-center justify-center shadow-lg flex-row"
+          >
+            <CheckCircle2 size={20} color="#fff" className="mr-2" />
+            <Text className="text-white font-gotham-bold text-lg">
+              Check In Now
+            </Text>
+          </TouchableOpacity>
         </View>
-      </View>
-
-      {/* Main Check In Area */}
-      <View className="flex-1 items-center justify-center relative">
-        
-        {/* Ripple Rings Background */}
-        <Animated.View style={{ transform: [{ scale: pulseAnim }] }} className="absolute w-[300px] h-[300px] rounded-full bg-green-50" />
-        <Animated.View style={{ transform: [{ scale: pulseAnim }] }} className="absolute w-[220px] h-[220px] rounded-full bg-green-100" />
-
-        {/* The Button */}
-        <TouchableOpacity 
-          activeOpacity={0.9}
-          onPress={() => router.push({ pathname: '/(employee)/visit/tracking', params: { id: visit.id } })}
-          className="w-40 h-40 bg-[#15803d] rounded-full items-center justify-center shadow-2xl elevation-10"
-        >
-          <MapPin size={48} color="#fff" strokeWidth={1.5} />
-          <Text className="text-white font-gotham-bold mt-2 tracking-wide">Tap to Check In</Text>
-        </TouchableOpacity>
-        
-      </View>
-
-      {/* Footer Info */}
-      <View className="flex-row justify-between items-center px-8 pb-12">
-         <View>
-           <Text className="text-gray-500 text-xs mb-1 font-brandon">Location Accuracy</Text>
-           <Text className="text-[#15803d] font-gotham-bold text-sm">High (5m)</Text>
-         </View>
-         <View className="items-end">
-           <Text className="text-gray-900 font-gotham-bold text-sm mb-1">{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Text>
-           <Text className="text-gray-500 text-xs font-brandon">{new Date().toDateString()}</Text>
-         </View>
-      </View>
-
+      </ScrollView>
     </SafeAreaView>
   );
 }

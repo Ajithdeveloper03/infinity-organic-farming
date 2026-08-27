@@ -1,95 +1,121 @@
-import React from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { router } from 'expo-router';
-import { ChevronLeft, ChevronRight, User, CalendarDays, MapPin, FileText, Menu } from 'lucide-react-native';
+import React from "react";
+
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+
+import { router } from "expo-router";
+
+import {
+  ChevronLeft,
+  User,
+  CalendarDays,
+  MapPin,
+  FileText,
+  Menu,
+  LogOut,
+  Settings,
+} from "lucide-react-native";
 
 export default function ProfileScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      
-      {/* Header */}
-      <View className="px-6 pt-12 pb-4 flex-row items-center justify-between bg-white border-b border-gray-100">
-        <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 mr-4">
-             <ChevronLeft size={24} color="#000" />
-          </TouchableOpacity>
-          <Text className="text-gray-900 text-lg font-gotham-bold">Profile</Text>
-        </View>
-        <TouchableOpacity onPress={() => router.push('/(employee)/menu')} className="p-2 -mr-2">
-           <Menu size={24} color="#000" />
+      {/* Header with extra top padding for notch */}
+      <View className="px-5 pt-16 pb-4 flex-row items-center justify-center relative">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="absolute left-5 p-2 rounded-full hover:bg-white/10 z-10"
+        >
+          <ChevronLeft size={28} color="#fff" />
         </TouchableOpacity>
+        <Text className="text-gray-900 text-base font-gotham-bold">
+          rajesh.kumar@infinity.com
+        </Text>
       </View>
-
-      <ScrollView className="flex-1">
-        
-        {/* Profile Card */}
-        <View className="items-center bg-white py-8 border-b border-gray-100 shadow-sm mb-6">
-           <Image 
-             source={{uri: 'https://ui-avatars.com/api/?name=Ramesh+Kumar&background=396216&color=fff&size=200'}}
-             className="w-24 h-24 rounded-full mb-4"
-           />
-           <Text className="text-gray-900 text-xl font-gotham-bold mb-1">Ramesh Kumar</Text>
-           <Text className="text-gray-500 text-sm mb-4 font-brandon">Field Officer</Text>
-           
-           <View className="flex-row items-center mb-2">
-             <Text className="text-gray-400 text-xs w-16 font-brandon">Phone</Text>
-             <Text className="text-gray-900 font-brandon-medium">+91 98765 43210</Text>
-           </View>
-           <View className="flex-row items-center">
-             <Text className="text-gray-400 text-xs w-16 font-brandon">Email</Text>
-             <Text className="text-gray-900 font-brandon-medium">ramesh.kumar@infinity.com</Text>
-           </View>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{
+          paddingBottom: 100,
+        }}
+      >
+        {/* Profile Identity */}
+        <View className="items-center py-6 mb-4">
+          <View className="p-1 rounded-full border-4 border-blue-500 mb-4">
+            <Image
+              source={{
+                uri: "https://ui-avatars.com/api/?name=Rajesh+Kumar&background=1c1c1e&color=fff&size=200",
+              }}
+              className="w-24 h-24 rounded-full"
+            />
+            <View className="absolute bottom-0 right-0 bg-[#282828] p-1.5 rounded-full border border-[#1C1C1E]">
+              <Settings size={14} color="#fff" />
+            </View>
+          </View>
+          <Text className="text-gray-900 text-2xl font-gotham-bold mb-1">
+            Hi, Rajesh!
+          </Text>
+          <Text className="text-gray-400 font-brandon text-sm">
+            Field Officer • Salem Region
+          </Text>
         </View>
-
-        {/* Menu Items */}
-        <View className="bg-white rounded-2xl mx-6 shadow-sm border border-gray-50 overflow-hidden mb-24">
-          
-          <TouchableOpacity 
-            onPress={() => router.push('/(employee)/edit-profile')}
-            className="flex-row items-center p-4 border-b border-gray-100"
+        <Text className="px-5 py-4 text-[#9ca3af] font-brandon text-xs uppercase tracking-widest">
+          Employee Tools
+        </Text>
+        {/* Clean Menu Items */}
+        <View className="bg-white rounded-[24px] mx-5 overflow-hidden">
+          <TouchableOpacity
+            onPress={() => router.push("/(employee)/edit-profile" as any)}
+            className="flex-row items-center p-5 border-b border-white/5"
           >
-             <View className="w-10 h-10 bg-gray-50 rounded-full items-center justify-center mr-4">
-                <User size={20} color="#374151" />
-             </View>
-             <Text className="flex-1 text-gray-900 font-brandon-medium">My Profile</Text>
-             <ChevronRight size={20} color="#9ca3af" />
+            <User size={22} color="#fff" strokeWidth={1.5} />
+            <Text className="flex-1 text-gray-900 font-brandon-medium text-base ml-4">
+              Edit Profile Info
+            </Text>
           </TouchableOpacity>
-
-          <TouchableOpacity 
-            onPress={() => router.push('/(employee)/attendance')}
-            className="flex-row items-center p-4 border-b border-gray-100"
+          <TouchableOpacity
+            onPress={() => router.push("/(employee)/attendance" as any)}
+            className="flex-row items-center p-5 border-b border-white/5"
           >
-             <View className="w-10 h-10 bg-gray-50 rounded-full items-center justify-center mr-4">
-                <CalendarDays size={20} color="#374151" />
-             </View>
-             <Text className="flex-1 text-gray-900 font-brandon-medium">Attendance</Text>
-             <ChevronRight size={20} color="#9ca3af" />
+            <CalendarDays size={22} color="#fff" strokeWidth={1.5} />
+            <Text className="flex-1 text-gray-900 font-brandon-medium text-base ml-4">
+              My Attendance
+            </Text>
           </TouchableOpacity>
-
-          <TouchableOpacity 
-            onPress={() => router.push('/(employee)/visits')}
-            className="flex-row items-center p-4 border-b border-gray-100"
+          <TouchableOpacity
+            onPress={() => router.push("/(employee)/visits" as any)}
+            className="flex-row items-center p-5 border-b border-white/5"
           >
-             <View className="w-10 h-10 bg-gray-50 rounded-full items-center justify-center mr-4">
-                <MapPin size={20} color="#374151" />
-             </View>
-             <Text className="flex-1 text-gray-900 font-brandon-medium">My Visits</Text>
-             <ChevronRight size={20} color="#9ca3af" />
+            <MapPin size={22} color="#fff" strokeWidth={1.5} />
+            <Text className="flex-1 text-gray-900 font-brandon-medium text-base ml-4">
+              My Visits
+            </Text>
           </TouchableOpacity>
-
-          <TouchableOpacity 
-            onPress={() => router.push('/(employee)/reports')}
-            className="flex-row items-center p-4"
+          <TouchableOpacity
+            onPress={() => router.push("/(employee)/reports" as any)}
+            className="flex-row items-center p-5"
           >
-             <View className="w-10 h-10 bg-gray-50 rounded-full items-center justify-center mr-4">
-                <FileText size={20} color="#374151" />
-             </View>
-             <Text className="flex-1 text-gray-900 font-brandon-medium">Reports</Text>
-             <ChevronRight size={20} color="#9ca3af" />
+            <FileText size={22} color="#fff" strokeWidth={1.5} />
+            <Text className="flex-1 text-gray-900 font-brandon-medium text-base ml-4">
+              Daily Reports
+            </Text>
           </TouchableOpacity>
-
         </View>
-
+        <View className="bg-white rounded-[24px] mx-5 mt-4 overflow-hidden border border-red-500/20">
+          <TouchableOpacity
+            onPress={() => router.replace("/intro" as any)}
+            className="flex-row items-center p-5"
+          >
+            <LogOut size={22} color="#ef4444" strokeWidth={1.5} />
+            <Text className="flex-1 text-red-500 font-brandon-medium text-base ml-4">
+              Sign Out
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

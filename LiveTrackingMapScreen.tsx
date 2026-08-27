@@ -1,28 +1,27 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-  Easing,
-  Dimensions,
-  Platform,
-} from 'react-native';
-import MapView, {
-  Marker,
-  Polyline,
-  Polygon,
-  Circle,
-  PROVIDER_GOOGLE,
-  Region,
-} from './components/MapView';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+    Animated,
+    Easing,
+    Image,
+    Platform,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import MapView, {
+    AnimatedRegion,
+    Circle,
+    Marker,
+    Polyline,
+    PROVIDER_GOOGLE,
+} from './components/MapView';
+import { employeeProfile } from './data/mockData';
 
 // --- Constants & Types ---
-const { width, height } = Dimensions.get('window');
 
 interface Coordinate {
   latitude: number;
@@ -31,28 +30,28 @@ interface Coordinate {
 
 interface TelemetryData {
   speed: number;
-  accuracy: number;
-  battery: number;
+  accuracy: number | null;
+  battery: number | null;
   isOnline: boolean;
 }
 
 const GEOFENCE_RADIUS = 100; // meters
+const MAX_ACCEPTABLE_ACCURACY_METERS = 25;
+const MIN_MOVEMENT_METERS = 5;
 
 // --- Helper Functions ---
-const calculateBearing = (start: Coordinate, end: Coordinate) => {
-  const toRad = (val: number) => (val * Math.PI) / 180;
-  const toDeg = (val: number) => (val * 180) / Math.PI;
+const haversineMeters = (a: Coordinate, b: Coordinate) => {
+  const radius = 6371000;
+  const dLat = ((b.latitude - a.latitude) * Math.PI) / 180;
+  const dLon = ((b.longitude - a.longitude) * Math.PI) / 180;
+  const lat1 = (a.latitude * Math.PI) / 180;
+  const lat2 = (b.latitude * Math.PI) / 180;
+  const sinLat = Math.sin(dLat / 2);
+  const sinLon = Math.sin(dLon / 2);
+  const value =
+    sinLat * sinLat + Math.cos(lat1) * Math.cos(lat2) * sinLon * sinLon;
 
-  const lat1 = toRad(start.latitude);
-  const lat2 = toRad(end.latitude);
-  const dLon = toRad(end.longitude - start.longitude);
-
-  const y = Math.sin(dLon) * Math.cos(lat2);
-  const x =
-    Math.cos(lat1) * Math.sin(lat2) -
-    Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-  const brng = toDeg(Math.atan2(y, x));
-  return (brng + 360) % 360;
+  return radius * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
 };
 
 // --- Map Styles ---
@@ -102,35 +101,25 @@ const midnightMapStyle = [
   },
 ];
 
-// --- Mock Data ---
-const initialLocation: Coordinate = {
-  latitude: 12.9716,
-  longitude: 77.5946,
-};
 const farmLocation: Coordinate = {
   latitude: 12.9786,
   longitude: 77.5996,
 };
-const plannedRoute: Coordinate[] = [
-  initialLocation,
-  { latitude: 12.973, longitude: 77.596 },
-  { latitude: 12.975, longitude: 77.598 },
-  farmLocation,
-];
 
 // --- Components ---
 const SmoothMarker = ({
   coordinate,
-  accuracy,
 }: {
   coordinate: Coordinate;
-  accuracy: number;
 }) => {
-  const [prevCoord, setPrevCoord] = useState(coordinate);
-  const [bearing, setBearing] = useState(0);
-
-  const markerLat = useRef(new Animated.Value(coordinate.latitude)).current;
-  const markerLng = useRef(new Animated.Value(coordinate.longitude)).current;
+  const animatedCoordinate = useRef(
+    new AnimatedRegion({
+      latitude: coordinate.latitude,
+      longitude: coordinate.longitude,
+      latitudeDelta: 0,
+      longitudeDelta: 0,
+    })
+  ).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
   // Pulse effect
@@ -151,45 +140,25 @@ const SmoothMarker = ({
         }),
       ])
     ).start();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // LERP and Rotation
   useEffect(() => {
-    if (
-      coordinate.latitude !== prevCoord.latitude ||
-      coordinate.longitude !== prevCoord.longitude
-    ) {
-      const newBearing = calculateBearing(prevCoord, coordinate);
-      setBearing(newBearing);
-
-      Animated.parallel([
-        Animated.timing(markerLat, {
-          toValue: coordinate.latitude,
-          duration: 1000, // Smoothing duration
-          easing: Easing.linear,
-          useNativeDriver: false, // Cannot use native driver for layout properties
-        }),
-        Animated.timing(markerLng, {
-          toValue: coordinate.longitude,
-          duration: 1000,
-          easing: Easing.linear,
-          useNativeDriver: false,
-        }),
-      ]).start();
-
-      setPrevCoord(coordinate);
-    }
-  }, [coordinate]);
+    animatedCoordinate
+      .timing({
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
+        duration: 1500,
+        useNativeDriver: false,
+      } as unknown as Parameters<typeof animatedCoordinate.timing>[0])
+      .start();
+  }, [animatedCoordinate, coordinate.latitude, coordinate.longitude]);
 
   return (
     <Marker.Animated
-      coordinate={{
-        latitude: markerLat as unknown as number,
-        longitude: markerLng as unknown as number,
-      }}
+      coordinate={animatedCoordinate as unknown as Coordinate}
       anchor={{ x: 0.5, y: 0.5 }}
       flat={true}
-      style={{ transform: [{ rotate: `${bearing}deg` }] }}
     >
       <View style={styles.markerContainer}>
         {/* Pulsing Aura */}
@@ -205,9 +174,15 @@ const SmoothMarker = ({
             },
           ]}
         />
-        {/* Officer Icon */}
+        {/* Profile Image & Icon */}
         <View style={styles.markerCore}>
-          <MaterialCommunityIcons name="navigation" size={24} color="#10B981" />
+          <Image 
+            source={{ uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(employeeProfile.name)}&background=10B981&color=fff&size=64` }}
+            style={{ width: 28, height: 28, borderRadius: 14 }}
+          />
+        </View>
+        <View style={styles.markerLabelContainer}>
+          <Text style={styles.markerLabel}>{employeeProfile.name}</Text>
         </View>
       </View>
     </Marker.Animated>
@@ -216,51 +191,83 @@ const SmoothMarker = ({
 
 export default function LiveTrackingMapScreen() {
   const mapRef = useRef<MapView>(null);
-  const [currentLocation, setCurrentLocation] =
-    useState<Coordinate>(initialLocation);
+  const [currentLocation, setCurrentLocation] = useState<Coordinate | null>(null);
   const [telemetry, setTelemetry] = useState<TelemetryData>({
-    speed: 45,
-    accuracy: 5,
-    battery: 82,
-    isOnline: true,
+    speed: 0,
+    accuracy: null,
+    battery: null,
+    isOnline: false,
   });
   const [inGeofence, setInGeofence] = useState(false);
   const [is3D, setIs3D] = useState(true);
   const [showTraffic, setShowTraffic] = useState(false);
 
   const [breadcrumbRoute, setBreadcrumbRoute] = useState<Coordinate[]>([]);
+  const lastAcceptedRef = useRef<{ coordinate: Coordinate; timestamp: number } | null>(null);
 
   // Real GPS tracking
   useEffect(() => {
-    let subscription: Location.LocationSubscription;
+    let subscription: Location.LocationSubscription | null = null;
+    let isMounted = true;
 
     const startTracking = async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.warn('Permission to access location was denied');
+      if (!isMounted || status !== 'granted') {
         return;
       }
 
       subscription = await Location.watchPositionAsync(
         {
-          accuracy: Location.Accuracy.High,
-          timeInterval: 1000,
-          distanceInterval: 1,
+          accuracy: Location.Accuracy.BestForNavigation,
+          timeInterval: 2000,
+          distanceInterval: MIN_MOVEMENT_METERS,
         },
         (location) => {
+          if (!isMounted) return;
+
+          const { latitude, longitude, accuracy, speed, heading } = location.coords;
           const newCoord = {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
+            latitude,
+            longitude,
           };
+          const lastAccepted = lastAcceptedRef.current;
+
+          if (accuracy != null && accuracy > MAX_ACCEPTABLE_ACCURACY_METERS) {
+            setTelemetry((prev) => ({ ...prev, accuracy, isOnline: false }));
+            return;
+          }
+
+          if (lastAccepted && location.timestamp <= lastAccepted.timestamp) return;
+
+          if (
+            lastAccepted &&
+            haversineMeters(lastAccepted.coordinate, newCoord) <
+              Math.max(MIN_MOVEMENT_METERS, accuracy ?? MIN_MOVEMENT_METERS)
+          ) {
+            setTelemetry((prev) => ({
+              ...prev,
+              speed: 0,
+              accuracy,
+              isOnline: true,
+            }));
+            return;
+          }
 
           setCurrentLocation(newCoord);
           setBreadcrumbRoute((prev) => [...prev, newCoord]);
-          
+          lastAcceptedRef.current = { coordinate: newCoord, timestamp: location.timestamp };
+
           setTelemetry((prev) => ({
             ...prev,
-            speed: location.coords.speed ? Math.round(location.coords.speed * 3.6) : 0,
-            accuracy: Math.round(location.coords.accuracy || 0),
+            speed: speed != null && speed >= 0 ? Math.round(speed * 3.6) : 0,
+            accuracy,
+            isOnline: true,
           }));
+
+          mapRef.current?.animateCamera(
+            { center: newCoord, heading: heading != null && heading >= 0 ? heading : 0 },
+            { duration: 700 }
+          );
 
           // Geofence check
           const latDiff = Math.abs(farmLocation.latitude - newCoord.latitude);
@@ -278,11 +285,17 @@ export default function LiveTrackingMapScreen() {
           });
         }
       );
+
+      if (!isMounted) {
+        subscription.remove();
+        subscription = null;
+      }
     };
 
-    startTracking();
+    void startTracking();
 
     return () => {
+      isMounted = false;
       if (subscription) {
         subscription.remove();
       }
@@ -290,6 +303,8 @@ export default function LiveTrackingMapScreen() {
   }, []);
 
   const recenterCamera = () => {
+    if (!currentLocation) return;
+
     mapRef.current?.animateCamera(
       {
         center: currentLocation,
@@ -315,7 +330,7 @@ export default function LiveTrackingMapScreen() {
         customMapStyle={midnightMapStyle}
         showsTraffic={showTraffic}
         initialCamera={{
-          center: initialLocation,
+          center: farmLocation,
           pitch: 45,
           heading: 0,
           zoom: 17,
@@ -331,14 +346,6 @@ export default function LiveTrackingMapScreen() {
           strokeWidth={2}
         />
 
-        {/* Planned Route */}
-        <Polyline
-          coordinates={plannedRoute}
-          strokeColor="#3B82F6"
-          strokeWidth={4}
-          lineDashPattern={[10, 10]}
-        />
-
         {/* Breadcrumb Route */}
         <Polyline
           coordinates={breadcrumbRoute}
@@ -347,10 +354,7 @@ export default function LiveTrackingMapScreen() {
         />
 
         {/* Moving Marker */}
-        <SmoothMarker
-          coordinate={currentLocation}
-          accuracy={telemetry.accuracy}
-        />
+        {currentLocation && <SmoothMarker coordinate={currentLocation} />}
 
         {/* Destination Marker */}
         <Marker coordinate={farmLocation}>
@@ -403,7 +407,9 @@ export default function LiveTrackingMapScreen() {
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statBox}>
-            <Text style={styles.statValue}>±{telemetry.accuracy}m</Text>
+            <Text style={styles.statValue}>
+              {telemetry.accuracy == null ? '--' : `±${Math.round(telemetry.accuracy)}m`}
+            </Text>
             <Text style={styles.statLabel}>Signal</Text>
           </View>
           <View style={styles.statDivider} />
@@ -413,7 +419,9 @@ export default function LiveTrackingMapScreen() {
               size={24}
               color="#10B981"
             />
-            <Text style={styles.statLabel}>{telemetry.battery}%</Text>
+            <Text style={styles.statLabel}>
+              {telemetry.battery == null ? '--' : `${telemetry.battery}%`}
+            </Text>
           </View>
         </View>
 
@@ -458,8 +466,8 @@ const styles = StyleSheet.create({
   markerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 60,
-    height: 60,
+    width: 140,
+    height: 100,
   },
   markerCore: {
     width: 32,
@@ -474,14 +482,30 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 8,
     zIndex: 2,
+    marginTop: 20,
   },
   pulseAura: {
     position: 'absolute',
     width: 60,
     height: 60,
+    top: 26,
     borderRadius: 30,
     backgroundColor: '#10B981',
     zIndex: 1,
+  },
+  markerLabelContainer: {
+    backgroundColor: 'rgba(15, 23, 42, 0.8)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginTop: 6,
+    borderWidth: 1,
+    borderColor: '#334155',
+  },
+  markerLabel: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
   floatingControls: {
     position: 'absolute',

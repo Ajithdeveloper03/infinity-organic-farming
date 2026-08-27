@@ -1,12 +1,22 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, SafeAreaView, Animated, TouchableOpacity } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
-import { CheckCircle2 } from 'lucide-react-native';
-import { Button } from '../components/ui/Button';
+import React, { useEffect, useRef } from "react";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Animated,
+  TouchableOpacity,
+} from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { CheckCircle2 } from "lucide-react-native";
+import { Button } from "../components/ui/Button";
 
 export default function SuccessScreen() {
-  const { message = 'Action Completed Successfully!', redirect = '/(employee)/dashboard' } = useLocalSearchParams<{ message?: string, redirect?: string }>();
-  
+  const {
+    message = "Action Completed Successfully!",
+    redirect = "/(employee)/dashboard",
+  } = useLocalSearchParams<{ message?: string; redirect?: string }>();
+
   const scale = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -22,7 +32,7 @@ export default function SuccessScreen() {
         toValue: 1,
         duration: 500,
         useNativeDriver: true,
-      })
+      }),
     ]).start();
   }, [scale, opacity]);
 
@@ -33,13 +43,16 @@ export default function SuccessScreen() {
   return (
     <SafeAreaView className="flex-1 bg-[#15803d]">
       <View className="flex-1 items-center justify-center px-6">
-        <Animated.View style={{ transform: [{ scale }], opacity }} className="items-center">
+        <Animated.View
+          style={{ transform: [{ scale }], opacity }}
+          className="items-center"
+        >
           <View className="w-32 h-32 bg-white/20 rounded-full items-center justify-center mb-8">
-             <View className="w-24 h-24 bg-white rounded-full items-center justify-center shadow-2xl">
-               <CheckCircle2 size={64} color="#15803d" />
-             </View>
+            <View className="w-24 h-24 bg-white dark:bg-[#1C1C1E] rounded-full items-center justify-center shadow-2xl">
+              <CheckCircle2 size={64} color="#15803d" />
+            </View>
           </View>
-          <Text className="text-white font-gotham-bold text-3xl text-center mb-4 leading-10">
+          <Text className="text-gray-900 dark:text-white font-gotham-bold text-3xl text-center mb-4 leading-10">
             Success!
           </Text>
           <Text className="text-green-50 font-brandon text-lg text-center mb-12 px-4 leading-6">
@@ -47,11 +60,11 @@ export default function SuccessScreen() {
           </Text>
         </Animated.View>
 
-        <Animated.View style={{ opacity, width: '100%' }}>
-          <Button 
-            title="Continue" 
+        <Animated.View style={{ opacity, width: "100%" }}>
+          <Button
+            title="Continue"
             onPress={handleContinue}
-            className="bg-white"
+            className="bg-white dark:bg-[#1C1C1E]"
             textClassName="text-[#15803d]"
           />
         </Animated.View>
