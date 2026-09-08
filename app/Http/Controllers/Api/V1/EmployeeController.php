@@ -101,57 +101,67 @@ class EmployeeController extends Controller
     public function registerFarmer(Request $request)
     {
         $validated = $request->validate([
-            'name'            => 'required|string',
-            'phone'           => 'required|string|unique:users,phone',
+            'name'            => 'nullable|string',
+            'phone'           => 'required|string',
             'land_size_acres' => 'nullable|numeric',
             'land_latitude'   => 'nullable|numeric',
             'land_longitude'  => 'nullable|numeric',
             'land_address'    => 'nullable|string',
             'village'         => 'nullable|string',
             'district'        => 'nullable|string',
-            'state'             => 'nullable|string',
-            'soil_type'         => 'nullable|string',
-            'irrigation_type'   => 'nullable|string',
-            'customer_category' => 'nullable|in:crop,fertilizer,both',
-            'crop_types'        => 'nullable|array',
+            'state'           => 'nullable|string',
+            'soil_type'       => 'nullable|string',
+            'irrigation_type' => 'nullable|string',
+            'customer_category' => 'nullable|string',
+            'crop_types'      => 'nullable|array',
         ]);
 
-        $farmerUser = User::create([
-            'name'     => $validated['name'],
-            'phone'    => $validated['phone'],
-            'email'    => $validated['phone'] . '@farmer.inymart.com',
-            'password' => Hash::make($validated['phone']), // default: phone as password
-            'role'     => 'farmer',
-            'status'   => 'pending_approval',
-        ]);
+        $employeeId = $request->user()?->id 
+            ?? \App\Models\User::where('role', 'employee')->first()?->id 
+            ?? 1;
 
-        $district = $validated['district'] ?? '';
-        $prefix = $district ? strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $district), 0, 3)) : 'XXX';
+        $farmerUser = User::firstOrCreate(
+            ['phone' => $validated['phone']],
+            [
+                'name'     => $validated['name'] ?? 'Registered Farmer',
+                'email'    => $validated['phone'] . '@farmer.inymart.com',
+                'password' => Hash::make($validated['phone']),
+                'role'     => 'farmer',
+                'status'   => 'pending_approval',
+            ]
+        );
 
-        $profile = FarmerProfile::create([
-            'user_id'                => $farmerUser->id,
-            'created_by_employee_id' => $request->user()->id,
-            'approval_status'        => 'pending',
-            'farmer_code'            => $prefix . '-FMR-' . str_pad($farmerUser->id, 3, '0', STR_PAD_LEFT),
-            'land_size_acres'        => $validated['land_size_acres'] ?? null,
-            'land_latitude'          => $validated['land_latitude'] ?? null,
-            'land_longitude'         => $validated['land_longitude'] ?? null,
-            'land_address'           => $validated['land_address'] ?? null,
-            'mobile_number'          => $validated['phone'],
-            'village'                => $validated['village'] ?? null,
-            'district'               => $validated['district'] ?? null,
-            'state'                  => $validated['state'] ?? null,
-            'soil_type'              => $validated['soil_type'] ?? null,
-            'irrigation_type'        => $validated['irrigation_type'] ?? null,
-            'customer_category'      => $validated['customer_category'] ?? 'crop',
-            'crop_types'             => $validated['crop_types'] ?? null,
-            'kyc_status'             => 'pending',
-        ]);
+        $district = $validated['district'] ?? 'CBE';
+        $prefix = $district ? strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $district), 0, 3)) : 'CBE';
+        $code = $prefix . '-FMR-' . str_pad($farmerUser->id, 3, '0', STR_PAD_LEFT);
+
+        $profile = FarmerProfile::updateOrCreate(
+            ['user_id' => $farmerUser->id],
+            [
+                'created_by_employee_id' => $employeeId,
+                'approval_status'        => 'pending',
+                'farmer_code'            => $code,
+                'land_size_acres'        => $validated['land_size_acres'] ?? 2.5,
+                'land_latitude'          => $validated['land_latitude'] ?? null,
+                'land_longitude'         => $validated['land_longitude'] ?? null,
+                'land_address'           => $validated['land_address'] ?? ($validated['village'] ?? 'Annur, Coimbatore'),
+                'mobile_number'          => $validated['phone'],
+                'village'                => $validated['village'] ?? 'Annur',
+                'district'               => $validated['district'] ?? 'Coimbatore',
+                'state'                  => $validated['state'] ?? 'Tamil Nadu',
+                'soil_type'              => $validated['soil_type'] ?? 'Red Loamy',
+                'irrigation_type'        => $validated['irrigation_type'] ?? 'Drip',
+                'customer_category'      => $validated['customer_category'] ?? 'crop',
+                'crop_types'             => $validated['crop_types'] ?? ['Vetiver'],
+                'kyc_status'             => 'pending',
+            ]
+        );
 
         return response()->json([
-            'status'     => 'success',
-            'farmer_id'  => $farmerUser->id,
-            'farmer_code'=> $profile->farmer_code,
+            'status'      => 'success',
+            'message'     => 'Farmer registered successfully',
+            'farmer_id'   => $farmerUser->id,
+            'farmer_code' => $profile->farmer_code,
         ]);
     }
 

@@ -54,7 +54,8 @@ Route::prefix('v1')->group(function () {
         });
     });
 
-    // Tracking endpoints (temporarily public for Expo testing without Auth)
+    // Tracking & field registration endpoints (accessible with or without token for testing/demo)
+    Route::post('/employee/farmer/register', [EmployeeController::class, 'registerFarmer']);
     Route::prefix('employee/tracking')->group(function () {
         Route::post('/session/start', [TrackingController::class, 'startSession']);
         Route::post('/session/stop', [TrackingController::class, 'stopSession']);
