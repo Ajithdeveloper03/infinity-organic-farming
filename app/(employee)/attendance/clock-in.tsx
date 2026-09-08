@@ -37,15 +37,6 @@ export default function ClockInScreen() {
   const { startSession } = useTracking();
 
   useEffect(() => {
-    const checkStatus = async () => {
-      const isClockedIn = await AsyncStorage.getItem("isClockedIn");
-      const clockInDate = await AsyncStorage.getItem("clockInDate");
-      if (isClockedIn === "true" && clockInDate === new Date().toDateString()) {
-        router.replace("/(employee)/dashboard");
-      }
-    };
-    checkStatus();
-
     (async () => {
       let { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
       if (foregroundStatus !== "granted") {

@@ -69,12 +69,10 @@ export default function FarmerLoginScreen() {
     }
 
     setLoading(true);
-    setTimeout(async () => {
-      await AsyncStorage.setItem("isLoggedIn", "true");
-      await AsyncStorage.setItem("role", "farmer");
+    setTimeout(() => {
       setLoading(false);
       router.replace("/(farmer)/dashboard");
-    }, 1000);
+    }, 500);
   };
 
   const handleOtpChange = (text: string, index: number) => {

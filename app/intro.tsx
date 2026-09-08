@@ -1,8 +1,7 @@
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { CheckCircle2, Leaf, Users } from "lucide-react-native";
-import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -18,25 +17,10 @@ import { Card } from "../components/ui/Card";
 export default function IntroScreen() {
   const [role, setRole] = useState<"farmer" | "employee">("employee");
 
-  useEffect(() => {
-    const checkLogin = async () => {
-      const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-      const savedRole = await AsyncStorage.getItem("role");
-      if (isLoggedIn === "true") {
-        if (savedRole === "farmer") {
-          router.replace("/(farmer)/dashboard");
-        } else {
-          router.replace("/(employee)/attendance/clock-in");
-        }
-      }
-    };
-    checkLogin();
-  }, []);
-
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-black">
       <StatusBar
-        barStyle="dark-content"
+        barStyle="light-content"
         translucent
         backgroundColor="transparent"
       />
@@ -44,9 +28,9 @@ export default function IntroScreen() {
       <ImageBackground
         source={require("../assets/images/intro_bg.png")}
         style={StyleSheet.absoluteFill}
-        resizeMode="contain"
+        resizeMode="cover"
       >
-        <View className="flex-1 bg-white/20">
+        <View className="flex-1 bg-black/40">
           <SafeAreaView className="flex-1 justify-between">
             {/* Header Section */}
             <View className="items-center pt-16">

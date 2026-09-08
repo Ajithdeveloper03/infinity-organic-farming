@@ -88,7 +88,6 @@ const schema = yup.object().shape({
 export default function LoginScreen() {
   const { role } = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [rememberMe, setRememberMe] = useState(false);
 
   const {
@@ -100,24 +99,13 @@ export default function LoginScreen() {
     defaultValues: { mobile: "9629567318", password: "Employee@1234" },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = (data: any) => {
     setLoading(true);
-    await AsyncStorage.setItem("isLoggedIn", "true");
-    await AsyncStorage.setItem("role", (role || "employee") as string);
-    await AsyncStorage.setItem("userName", "Harish");
-    await AsyncStorage.setItem("userRegion", "Delta Zone");
-    await AsyncStorage.setItem("userPhone", data?.mobile || "9629567318");
-
-    const isClockedIn = await AsyncStorage.getItem("isClockedIn");
-    const clockInDate = await AsyncStorage.getItem("clockInDate");
-    const alreadyClockedToday = isClockedIn === "true" && clockInDate === new Date().toDateString();
-
+    // Instant login without session blocking/persistence
     setTimeout(() => {
       setLoading(false);
       if (role === "farmer") {
         router.replace("/(farmer)/dashboard");
-      } else if (alreadyClockedToday) {
-        router.replace("/(employee)/dashboard");
       } else {
         router.replace("/(employee)/attendance/clock-in");
       }
@@ -186,8 +174,23 @@ export default function LoginScreen() {
                 )}
               />
 
-              {/* Forgot Password */}
-              <View className="items-end mb-8 mt-2">
+              {/* Remember Me & Forgot Password */}
+              <View className="flex-row justify-between items-center mb-8 mt-2">
+                <TouchableOpacity
+                  className="flex-row items-center"
+                  onPress={() => setRememberMe(!rememberMe)}
+                  activeOpacity={0.7}
+                >
+                  {rememberMe ? (
+                    <CheckSquare size={20} color="#15803d" />
+                  ) : (
+                    <Square size={20} color="#6b7280" />
+                  )}
+                  <Text className="text-gray-600 ml-2 font-brandon text-base">
+                    Remember Me
+                  </Text>
+                </TouchableOpacity>
+
                 <TouchableOpacity>
                   <Text className="text-[#15803d] font-gotham-bold">
                     Forgot Password?
