@@ -33,11 +33,30 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // ─── 2. Employees ─────────────────────────────────────────────────────────
+        // ─── 2. Real Employees (Hierarchical Structure from 5 Regions) ─────────
         $employeeData = [
-            ['name' => 'Rajesh Kumar',  'phone' => '9111111111', 'email' => 'rajesh@infinityorganics.com',  'region' => 'Coimbatore South'],
-            ['name' => 'Priya Nair',    'phone' => '9222222222', 'email' => 'priya@infinityorganics.com',   'region' => 'Pollachi'],
-            ['name' => 'Suresh Menon',  'phone' => '9333333333', 'email' => 'suresh@infinityorganics.com',  'region' => 'Tirupur'],
+            // Delta Zone Hierarchy (Image 1)
+            ['name' => 'RM Delta', 'phone' => '8428060946', 'email' => 'rm.delta@infinityorganics.com', 'region' => 'Delta Zone', 'designation' => 'regional_officer', 'reports_to' => null],
+            ['name' => 'Harish', 'phone' => '9629567318', 'email' => 'harish@infinityorganics.com', 'region' => 'Delta Zone', 'designation' => 'field_officer', 'reports_to' => 0],
+            ['name' => 'Hemath', 'phone' => '9087365253', 'email' => 'hemath@infinityorganics.com', 'region' => 'Delta Zone', 'designation' => 'field_officer', 'reports_to' => 0],
+            ['name' => 'Shivasakthibio', 'phone' => '8807141589', 'email' => 'shivasakthi@infinityorganics.com', 'region' => 'Delta Zone', 'designation' => 'regional_officer', 'reports_to' => null],
+
+            // Ranipettai Region Hierarchy (Image 2)
+            ['name' => 'Subash Ramasamy', 'phone' => '9688702326', 'email' => 'subash.rm@infinityorganics.com', 'region' => 'Ranipettai Region', 'designation' => 'regional_officer', 'reports_to' => null],
+            ['name' => 'Senthilkumar', 'phone' => '9787472120', 'email' => 'senthilkumar@infinityorganics.com', 'region' => 'Ranipettai Region', 'designation' => 'district_officer', 'reports_to' => 4],
+            ['name' => 'panandan43', 'phone' => '9786786514', 'email' => 'panandan@infinityorganics.com', 'region' => 'Ranipettai Region', 'designation' => 'taluk_officer', 'reports_to' => 5],
+            ['name' => 'Military @ Bas', 'phone' => '9944328842', 'email' => 'military@infinityorganics.com', 'region' => 'Ranipettai Region', 'designation' => 'field_officer', 'reports_to' => 6],
+            ['name' => 'MR MATRIX', 'phone' => '8637664535', 'email' => 'matrix@infinityorganics.com', 'region' => 'Ranipettai Region', 'designation' => 'field_officer', 'reports_to' => 6],
+
+            // Central Zone Hierarchy (Image 3)
+            ['name' => 'farming', 'phone' => '8939141578', 'email' => 'farming.rm@infinityorganics.com', 'region' => 'Central Zone', 'designation' => 'regional_officer', 'reports_to' => null],
+            ['name' => 'Sugumar G', 'phone' => '9655985444', 'email' => 'sugumar@infinityorganics.com', 'region' => 'Central Zone', 'designation' => 'district_officer', 'reports_to' => 9],
+            ['name' => 'Siva', 'phone' => '6382999250', 'email' => 'siva@infinityorganics.com', 'region' => 'Central Zone', 'designation' => 'field_officer', 'reports_to' => 10],
+
+            // Salem/Erode Region Hierarchy (Image 4 & 5)
+            ['name' => 'Vignesh Raja', 'phone' => '7904171441', 'email' => 'vigneshraja.rm@infinityorganics.com', 'region' => 'Salem/Erode Region', 'designation' => 'regional_officer', 'reports_to' => null],
+            ['name' => 'Murugan', 'phone' => '9791810456', 'email' => 'murugan@infinityorganics.com', 'region' => 'Salem/Erode Region', 'designation' => 'field_officer', 'reports_to' => 12],
+            ['name' => 'Ramesh', 'phone' => '9965884122', 'email' => 'ramesh@infinityorganics.com', 'region' => 'Salem/Erode Region', 'designation' => 'field_officer', 'reports_to' => 12],
         ];
 
         $employees = [];
@@ -53,10 +72,18 @@ class DatabaseSeeder extends Seeder
                 ]
             );
 
+            $reportsToUserId = null;
+            if ($data['reports_to'] !== null) {
+                // Look up the ID of the manager created earlier in the loop
+                $reportsToUserId = $employees[$data['reports_to']]->id ?? null;
+            }
+
             EmployeeDetail::firstOrCreate(
                 ['user_id' => $emp->id],
                 [
                     'employee_code'  => 'EMP-' . str_pad($emp->id, 3, '0', STR_PAD_LEFT),
+                    'designation'    => $data['designation'],
+                    'reports_to'     => $reportsToUserId,
                     'emergency_phone' => '9800000000',
                     'assigned_region' => $data['region'],
                 ]

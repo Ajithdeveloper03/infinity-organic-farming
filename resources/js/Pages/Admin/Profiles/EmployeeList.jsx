@@ -9,18 +9,22 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
     const { flash } = usePage().props;
     const [search, setSearch] = useState(filters.search || '');
     const [region, setRegion] = useState(filters.region || '');
+    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
+    // Format designation
+    const formatDesignation = (designation) => {
+        if (!designation) return 'Field Officer';
+        return designation.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    };
     const handleSearch = (e) => {
         e.preventDefault();
         router.get('/admin/employees', { search, region }, { preserveState: true, replace: true });
     };
-
     const handleRegionChange = (r) => {
         const newRegion = region === r ? '' : r;
         setRegion(newRegion);
         router.get('/admin/employees', { search, region: newRegion }, { preserveState: true, replace: true });
     };
-
     return (
         <AdminLayout>
             {flash?.success && (
@@ -36,7 +40,6 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                     </div>
                 </div>
             )}
-
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Employee Directory')}</h1>
@@ -48,7 +51,6 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                     <Plus className="w-5 h-5 mr-1" /> Register Employee
                 </Link>
             </div>
-
             {/* Filter Bar */}
             <form onSubmit={handleSearch} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:w-96">
@@ -62,6 +64,26 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                     />
                 </div>
                 <div className="flex w-full md:w-auto gap-3 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
+                    {/* Grid / List Toggle */}
+                    <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl p-1 mr-2">
+                        <button
+                            type="button"
+                            onClick={() => setViewMode('grid')}
+                            className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm text-slate-900 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
+                            title="Grid View"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setViewMode('list')}
+                            className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm text-slate-900 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
+                            title="List View"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                        </button>
+                    </div>
+
                     {regions.map(r => (
                         <button
                             key={r}
@@ -87,6 +109,71 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                     <Shield className="w-12 h-12 mx-auto mb-4 opacity-30" />
                     <p className="text-lg font-semibold">No employees found</p>
                     <p className="text-sm mt-1">Try adjusting your search or register a new employee.</p>
+                </div>
+            ) : viewMode === 'list' ? (
+                <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-slate-50 border-b border-gray-100">
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Employee</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Designation</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Region</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Reports To</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Status</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {employees.map(emp => (
+                                    <tr key={emp.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                                        <td className="py-4 px-6">
+                                            <div className="flex items-center space-x-3">
+                                                <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-white font-bold text-sm">
+                                                    {emp.name[0]}
+                                                </div>
+                                                <div>
+                                                    <p className="font-heading font-bold text-sm text-gray-900">{emp.name}</p>
+                                                    <p className="text-[10px] font-mono text-gray-500 mt-0.5">{emp.employee_code}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded-md">
+                                                {formatDesignation(emp.designation)}
+                                            </span>
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <span className="text-xs font-medium text-gray-600 flex items-center">
+                                                <MapPin className="w-3 h-3 mr-1" /> {emp.region}
+                                            </span>
+                                        </td>
+                                        <td className="py-4 px-6 text-xs font-medium text-gray-600">
+                                            {emp.manager_name}
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <div className="flex flex-col gap-1 items-start">
+                                                {emp.checked_in ? (
+                                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md uppercase bg-green-50 text-green-700 border border-green-200 flex items-center gap-1">
+                                                        <CheckCircle2 className="w-3 h-3" /> Present
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md uppercase bg-gray-50 text-gray-400 border border-gray-200">
+                                                        Not Checked In
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </td>
+                                        <td className="py-4 px-6 text-right">
+                                            <Link href={`/admin/employees/${emp.id}`} className="text-sm font-bold text-green-600 hover:text-green-700 transition-colors">
+                                                View
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -120,7 +207,7 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                             <div className="p-5 bg-white flex-1 flex flex-col justify-between">
                                 <div className="space-y-3 mb-6">
                                     <div className="flex items-center text-sm font-medium text-gray-700">
-                                        <Shield className="w-4 h-4 text-slate-700 mr-2" /> Field Officer
+                                        <Shield className="w-4 h-4 text-slate-700 mr-2" /> {formatDesignation(emp.designation)}
                                     </div>
                                     <div className="flex items-center text-sm font-medium text-gray-700">
                                         <MapPin className="w-4 h-4 text-slate-700 mr-2" /> {emp.region}

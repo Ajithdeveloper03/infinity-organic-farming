@@ -23,6 +23,7 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
     const [district, setDistrict] = useState(filters.district || '');
     const [kyc, setKyc] = useState(filters.kyc || '');
     const [category, setCategory] = useState(filters.category || 'crop');
+    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -93,6 +94,26 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                     />
                 </div>
                 <div className="flex w-full md:w-auto gap-3 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
+                    {/* Grid / List Toggle */}
+                    <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl p-1 mr-2">
+                        <button
+                            type="button"
+                            onClick={() => setViewMode('grid')}
+                            className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm text-slate-900 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
+                            title="Grid View"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setViewMode('list')}
+                            className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm text-slate-900 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
+                            title="List View"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                        </button>
+                    </div>
+
                     {districts.slice(0, 4).map(d => (
                         <button key={d} type="button" onClick={() => handleDistrictChange(d)}
                             className={`flex items-center px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap border ${district === d ? 'bg-slate-900 text-white border-slate-900' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'}`}>
@@ -117,6 +138,64 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                     <Leaf className="w-12 h-12 mx-auto mb-4 opacity-30" />
                     <p className="text-lg font-semibold">No farmers found</p>
                     <p className="text-sm mt-1">Try adjusting your search or register a new farmer.</p>
+                </div>
+            ) : viewMode === 'list' ? (
+                <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-slate-50 border-b border-gray-100">
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Farmer</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Acres / Crop</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Location</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">KYC Status</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {farmers.map(farm => (
+                                    <tr key={farm.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                                        <td className="py-4 px-6">
+                                            <div className="flex items-center space-x-3">
+                                                <div className="w-10 h-10 rounded-xl bg-slate-800 overflow-hidden flex items-center justify-center text-white font-bold text-sm">
+                                                    {farm.farmer_photo ? (
+                                                        <img src={farm.farmer_photo} alt={farm.name} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        farm.name[0]
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <p className="font-heading font-bold text-sm text-gray-900">{farm.name}</p>
+                                                    <p className="text-[10px] font-mono text-gray-500 mt-0.5">{farm.farmer_code}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <span className="text-xs font-bold text-slate-700">
+                                                {farm.land_acres || '–'} Acres
+                                            </span>
+                                            <p className="text-[10px] font-medium text-gray-500 mt-0.5">Vetiver</p>
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <span className="text-xs font-medium text-gray-600 flex items-center">
+                                                <MapPin className="w-3 h-3 mr-1" /> {farm.village}, {farm.district}
+                                            </span>
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <div className={`inline-flex flex-row items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase border ${kycBadge(farm.kyc_status)}`}>
+                                                {kycIcon(farm.kyc_status)} <span className="ml-0.5">{farm.kyc_status}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-4 px-6 text-right">
+                                            <Link href={`/admin/farmers/${farm.id}`} className="text-sm font-bold text-green-600 hover:text-green-700 transition-colors">
+                                                View
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

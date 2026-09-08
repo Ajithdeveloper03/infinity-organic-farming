@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\V1\EmployeeController;
 use App\Http\Controllers\Api\V1\FarmerController;
 use App\Http\Controllers\Api\V1\TranslationController;
 use App\Http\Controllers\Api\V1\TrackingController;
+use App\Http\Controllers\Api\V1\OrderController;
+use App\Http\Controllers\Api\V1\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('employee')->group(function () {
             Route::get('/dashboard', [EmployeeController::class, 'dashboard']);
             Route::get('/farmers', [EmployeeController::class, 'myFarmers']);
+            Route::get('/visits', [EmployeeController::class, 'visits']);
             Route::post('/attendance', [EmployeeController::class, 'attendance']);
             Route::post('/location-ping', [EmployeeController::class, 'locationPing']);
             Route::post('/farmer/register', [EmployeeController::class, 'registerFarmer']);
@@ -43,8 +46,11 @@ Route::prefix('v1')->group(function () {
 
         // Farmer endpoints
         Route::prefix('farmer')->group(function () {
+            Route::get('/dashboard', [FarmerController::class, 'dashboard']);
             Route::get('/visits', [FarmerController::class, 'visits']);
             Route::post('/visit/{id}/rate', [FarmerController::class, 'rateVisit']);
+            Route::get('/orders', [OrderController::class, 'index']);
+            Route::get('/products', [ProductController::class, 'index']);
         });
     });
 

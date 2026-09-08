@@ -43,6 +43,9 @@ class EmployeeDirectoryController extends Controller
                 'status'       => $user->status,
                 'employee_code'=> $user->employeeDetail?->employee_code ?? 'N/A',
                 'region'       => $user->employeeDetail?->assigned_region ?? 'Unassigned',
+                'designation'  => $user->employeeDetail?->designation ?? 'field_officer',
+                'reports_to'   => $user->employeeDetail?->reports_to,
+                'manager_name' => $user->employeeDetail?->reports_to ? \App\Models\User::find($user->employeeDetail->reports_to)?->name : 'None',
                 'emergency'    => $user->employeeDetail?->emergency_phone ?? 'N/A',
                 'checked_in'   => $user->attendanceLogs->isNotEmpty(),
             ]);
