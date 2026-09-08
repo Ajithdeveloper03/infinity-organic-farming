@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   useColorScheme,
   Share,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { router } from "expo-router";
 
@@ -48,8 +48,9 @@ export default function ReferralScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView
-        className="flex-1 px-6 pt-12"
+        className="flex-1 px-6 pt-2"
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
       >
         {/* Header */}
         <View className="flex-row items-center mb-10">

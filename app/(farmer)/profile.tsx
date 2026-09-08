@@ -52,7 +52,7 @@ export default function FarmerProfileScreen() {
 
         <ScrollView
           className="flex-1"
-          contentContainerStyle={{ paddingBottom: 60 }}
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Banner and Profile Card */}
@@ -67,12 +67,13 @@ export default function FarmerProfileScreen() {
             </View>
             {/* Profile Picture */}
             <View className="items-center -mt-12 mb-3">
-              <View className="w-24 h-24 bg-white rounded-full p-1 shadow-md border-2 border-green-600/30">
+              <View className="w-24 h-24 bg-white rounded-full p-1 shadow-md border-2 border-slate-200 overflow-hidden">
                 <Image
                   source={{
-                    uri: "https://ui-avatars.com/api/?name=Kuppusamy&background=15803d&color=fff&size=200",
+                    uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80",
                   }}
                   className="w-full h-full rounded-full"
+                  resizeMode="cover"
                 />
               </View>
             </View>

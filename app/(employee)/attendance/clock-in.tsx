@@ -238,7 +238,7 @@ export default function ClockInScreen() {
           >
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
+              contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 150, paddingTop: 10 }}
             >
               {/* Live Digital Clock Section (Crisp Dark Text) */}
               <View className="items-center mt-2 mb-5">
@@ -265,9 +265,7 @@ export default function ClockInScreen() {
                     source={{
                       uri:
                         photoUri ||
-                        `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                          officerName
-                        )}&background=059669&color=fff&size=200`,
+                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
                     }}
                     className="w-full h-full"
                     resizeMode="cover"

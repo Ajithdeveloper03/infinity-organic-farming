@@ -46,7 +46,7 @@ export default function FarmerMyFarmScreen() {
 
         <ScrollView
           className="flex-1"
-          contentContainerStyle={{ paddingBottom: 60 }}
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Farm Image Hero Banner */}

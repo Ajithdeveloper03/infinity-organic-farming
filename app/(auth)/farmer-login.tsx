@@ -4,7 +4,6 @@ import {
   View,
   Text,
   ScrollView,
-  SafeAreaView,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
@@ -12,6 +11,7 @@ import {
   TextInput,
   Animated,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -116,7 +116,7 @@ export default function FarmerLoginScreen() {
         </View>
 
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
           bounces={false}
           showsVerticalScrollIndicator={false}
         >

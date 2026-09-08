@@ -128,7 +128,7 @@ export default function ClockOutScreen() {
           >
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
+              contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 150, paddingTop: 10 }}
             >
               {/* Header Greeting */}
               <View className="items-center mt-2 mb-6">

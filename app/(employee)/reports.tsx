@@ -132,7 +132,7 @@ export default function ReportsScreen() {
 
         <ScrollView
           className="flex-1"
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Hero Banner with DARK Overlay & Enhanced Bright White Text */}

@@ -88,7 +88,7 @@ export default function CheckInScreen() {
 
           <ScrollView
             className="flex-1 px-5"
-            contentContainerStyle={{ paddingBottom: 40, justifyContent: "center", flexGrow: 1 }}
+            contentContainerStyle={{ paddingBottom: 150, paddingTop: 10, justifyContent: "center", flexGrow: 1 }}
           >
             <View className="bg-white rounded-[32px] p-6 items-center border border-slate-200 shadow-md">
               <View className="w-20 h-20 bg-emerald-50 rounded-full items-center justify-center mb-4 border border-emerald-200 shadow-sm">

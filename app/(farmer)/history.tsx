@@ -63,11 +63,11 @@ export default function FarmerHistoryScreen() {
       />
 
       <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Header */}
-        <View className="px-5 py-4 bg-white/95 border-b border-gray-100 flex-row items-center justify-between shadow-sm backdrop-blur-md">
+        {/* Header - Transparent */}
+        <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center border border-gray-200"
+            className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
             activeOpacity={0.7}
           >
             <ChevronLeft size={22} color="#111827" />
@@ -80,7 +80,7 @@ export default function FarmerHistoryScreen() {
 
         <ScrollView
           className="flex-1"
-          contentContainerStyle={{ paddingBottom: 60 }}
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Hero Banner with Background Image */}

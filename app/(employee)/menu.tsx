@@ -19,12 +19,12 @@ import {
 import React from "react";
 
 import {
-  SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -103,22 +103,23 @@ export default function MenuScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="px-5 pt-16 pb-4 flex-row items-center justify-between z-10">
+      <View className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
         <TouchableOpacity
           onPress={() => router.back()}
-          className="w-12 h-12 bg-white/90 rounded-full items-center justify-center border border-white/10"
+          className="w-10 h-10 bg-white rounded-full items-center justify-center border border-slate-200 shadow-sm"
           activeOpacity={0.8}
         >
-          <ChevronLeft size={28} color="#fff" />
+          <ChevronLeft size={22} color="#0f172a" />
         </TouchableOpacity>
-        <Text className="text-gray-900 text-xl font-gotham-bold">Menu</Text>
-        <View className="w-12 h-12" /> {/* Spacer */}
+        <Text className="text-slate-900 text-lg font-gotham-bold">Menu</Text>
+        <View className="w-10 h-10" /> {/* Spacer */}
       </View>
       <ScrollView
-        className="flex-1 px-5 pt-4"
+        className="flex-1 px-5 pt-2"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: 150,
+          paddingTop: 10,
         }}
       >
         {menuGroups.map((group, groupIdx) => (

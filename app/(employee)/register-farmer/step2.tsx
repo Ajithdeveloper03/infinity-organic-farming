@@ -76,7 +76,7 @@ export default function Step2OTP() {
       <ScrollView
         className="flex-1 px-5"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 40 }}
+        contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
       >
         {/* Stepper (3 Steps) */}
         <View className="flex-row items-center justify-center my-4 px-6">

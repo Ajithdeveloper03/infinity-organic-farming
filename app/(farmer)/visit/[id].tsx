@@ -3,12 +3,12 @@ import React from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   Image,
   useColorScheme,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { router, useLocalSearchParams } from "expo-router";
 
@@ -20,19 +20,24 @@ export default function FarmerVisitReportScreen() {
   const isDark = false;
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="px-6 pt-12 pb-4 bg-white flex-row items-center z-10">
+      {/* Header - Transparent */}
+      <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
         <TouchableOpacity
           onPress={() => router.back()}
-          className="p-2 -ml-2 mr-2 bg-gray-50 rounded-full"
+          className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
         >
-          <ChevronLeft size={24} color={isDark ? "#fff" : "#000"} />
+          <ChevronLeft size={22} color="#0f172a" />
         </TouchableOpacity>
         <Text className="text-gray-900 text-lg font-gotham-bold">
           Visit Report
         </Text>
+        <View className="w-10" />
       </View>
-      <ScrollView className="flex-1 pb-24" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
+      >
         {/* Banner Image */}
         <Image
           source={{

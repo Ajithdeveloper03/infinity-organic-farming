@@ -61,14 +61,44 @@ export default function DashboardScreen() {
   const { isTracking } = useTracking();
   const nextVisit = todayVisitsList.find((v) => v.status === "pending") || todayVisitsList[0];
 
-  // Google Pay style Assigned Farmers Circular Avatar List
+  // Google Pay style Assigned Farmers Circular Avatar List (with online free photos)
   const assignedFarmers = [
-    { id: "1", name: "Murugan S", initial: "M", bg: "#2563eb", phone: "+91 9411111111" },
-    { id: "2", name: "Chandra K", initial: "C", bg: "#7c3aed", phone: "+91 9422222222" },
-    { id: "3", name: "Swathi M", initial: "S", bg: "#db2777", phone: "+91 9433333333" },
-    { id: "4", name: "Buhanesh", initial: "B", bg: "#059669", phone: "+91 9444444444" },
-    { id: "5", name: "Dhanabal", initial: "D", bg: "#d97706", phone: "+91 9455555555" },
-    { id: "6", name: "Vijaykumar", initial: "V", bg: "#4f46e5", phone: "+91 9466666666" },
+    {
+      id: "1",
+      name: "Murugan S",
+      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+      phone: "+91 9411111111",
+    },
+    {
+      id: "2",
+      name: "Chandra K",
+      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+      phone: "+91 9422222222",
+    },
+    {
+      id: "3",
+      name: "Swathi M",
+      photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+      phone: "+91 9433333333",
+    },
+    {
+      id: "4",
+      name: "Buhanesh",
+      photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
+      phone: "+91 9444444444",
+    },
+    {
+      id: "5",
+      name: "Dhanabal",
+      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
+      phone: "+91 9455555555",
+    },
+    {
+      id: "6",
+      name: "Vijaykumar",
+      photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80",
+      phone: "+91 9466666666",
+    },
   ];
 
   useEffect(() => {
@@ -170,17 +200,15 @@ export default function DashboardScreen() {
                 onPress={() => router.push("/(employee)/profile" as any)}
                 className="relative"
               >
-                <View className="w-10 h-10 rounded-full overflow-hidden border-2 border-emerald-600 bg-emerald-50 shadow-sm">
+                <View className="w-10 h-10 rounded-full overflow-hidden border-2 border-slate-200 bg-slate-100 shadow-sm">
                   <Image
                     source={{
-                      uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        employeeName
-                      )}&background=059669&color=fff&size=100`,
+                      uri: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
                     }}
                     className="w-full h-full"
+                    resizeMode="cover"
                   />
                 </View>
-                <View className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white" />
               </TouchableOpacity>
             </View>
 
@@ -239,7 +267,7 @@ export default function DashboardScreen() {
           <ScrollView
             style={{ flex: 1 }}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 120, paddingTop: 4 }}
+            contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
           >
             {/* Google Pay Style Celebratory / Motivational Banner (Light Mode) */}
             {/* <View className="px-5 mb-4">
@@ -541,30 +569,30 @@ export default function DashboardScreen() {
                     onPress={() => router.push("/(employee)/my-farmers" as any)}
                     className="items-center mr-4"
                   >
-                    <View className="relative">
-                      <View
-                        style={{
-                          width: 58,
-                          height: 58,
-                          borderRadius: 29,
-                          backgroundColor: f.bg,
-                          alignItems: "center",
-                          justifyContent: "center",
-                          shadowColor: "#000",
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.15,
-                          shadowRadius: 4,
-                          elevation: 3,
-                        }}
-                      >
-                        <Text className="text-white font-gotham-bold text-xl">
-                          {f.initial}
-                        </Text>
-                      </View>
-                      <View className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white" />
+                    <View
+                      style={{
+                        width: 58,
+                        height: 58,
+                        borderRadius: 29,
+                        overflow: "hidden",
+                        borderWidth: 2,
+                        borderColor: "#e2e8f0",
+                        backgroundColor: "#f1f5f9",
+                        shadowColor: "#000",
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.1,
+                        shadowRadius: 4,
+                        elevation: 2,
+                      }}
+                    >
+                      <Image
+                        source={{ uri: f.photo }}
+                        style={{ width: "100%", height: "100%" }}
+                        resizeMode="cover"
+                      />
                     </View>
                     <Text
-                      className="text-slate-800 font-gotham-bold text-xs mt-1.5 text-center w-16"
+                      className="text-slate-800 font-brandon-medium text-xs mt-1.5 text-center w-16"
                       numberOfLines={1}
                     >
                       {f.name}
@@ -681,7 +709,7 @@ export default function DashboardScreen() {
           </ScrollView>
 
           {/* JioHotstar Style Floating Bottom Pill Dock (Light Mode) */}
-          <View className="absolute bottom-24 left-5 right-5 items-center pointer-events-box-none">
+          {/* <View className="absolute bottom-24 left-5 right-5 items-center pointer-events-box-none">
             <View
               style={{
                 flexDirection: "row",
@@ -712,7 +740,7 @@ export default function DashboardScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
         </SafeAreaView>
       </ImageBackground>
     </View>

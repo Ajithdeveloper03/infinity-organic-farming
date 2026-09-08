@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
+  Image,
   StyleSheet,
   Linking,
   TextInput,
@@ -35,7 +36,7 @@ export default function MyFarmersScreen() {
       crops: "Vetiver, Turmeric",
       status: "Active",
       acres: "4.5",
-      color: "#2563eb",
+      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
     },
     {
       id: "2",
@@ -45,7 +46,7 @@ export default function MyFarmersScreen() {
       crops: "Vetiver, Pepper",
       status: "Active",
       acres: "2.0",
-      color: "#7c3aed",
+      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
     },
     {
       id: "3",
@@ -55,7 +56,7 @@ export default function MyFarmersScreen() {
       crops: "Vetiver",
       status: "Pending Approval",
       acres: "1.5",
-      color: "#059669",
+      photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
     },
     {
       id: "4",
@@ -65,7 +66,7 @@ export default function MyFarmersScreen() {
       crops: "Organic Paddy & Vetiver",
       status: "Active",
       acres: "5.0",
-      color: "#ea580c",
+      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -144,7 +145,7 @@ export default function MyFarmersScreen() {
 
           <ScrollView
             className="flex-1"
-            contentContainerStyle={{ paddingBottom: 100 }}
+            contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
             showsVerticalScrollIndicator={false}
           >
             {/* Search Bar (Light Mode) */}
@@ -208,26 +209,41 @@ export default function MyFarmersScreen() {
                   className="bg-white rounded-[24px] p-4 mb-3.5 border border-slate-200 shadow-sm"
                 >
                   <View className="flex-row items-center mb-3">
-                    {/* Google Pay Style Circular Avatar with Initial */}
+                    {/* Circular Avatar with Online Free Photo */}
                     <View
                       style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: 24,
-                        backgroundColor: farmer.color || "#059669",
+                        width: 52,
+                        height: 52,
+                        borderRadius: 26,
+                        overflow: "hidden",
+                        borderWidth: 2,
+                        borderColor: "#e2e8f0",
+                        backgroundColor: "#f1f5f9",
                         alignItems: "center",
                         justifyContent: "center",
                         marginRight: 12,
                         shadowColor: "#000",
                         shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.15,
+                        shadowOpacity: 0.1,
                         shadowRadius: 4,
-                        elevation: 3,
+                        elevation: 2,
                       }}
                     >
-                      <Text className="text-white font-gotham-bold text-lg">
-                        {farmer.name.charAt(0)}
-                      </Text>
+                      <Image
+                        source={{
+                          uri:
+                            farmer.photo ||
+                            [
+                              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+                              "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+                              "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+                              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
+                              "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
+                            ][idx % 5],
+                        }}
+                        style={{ width: "100%", height: "100%" }}
+                        resizeMode="cover"
+                      />
                     </View>
 
                     <View className="flex-1">

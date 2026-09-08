@@ -5,13 +5,13 @@ import React, { useState } from "react";
 import {
   Image,
   ImageBackground,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "../components/ui/Card";
 
 export default function IntroScreen() {
@@ -49,7 +49,7 @@ export default function IntroScreen() {
             </View>
 
             {/* Bottom Sheet Card for Role Selection (Glassmorphism) */}
-            <View className="px-4 pb-8">
+            <View className="px-4 pb-4">
               <BlurView
                 intensity={80}
                 tint="light"

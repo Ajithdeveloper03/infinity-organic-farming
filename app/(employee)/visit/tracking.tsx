@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   Image,
   StyleSheet,
   Modal,
   TextInput,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import * as Location from "expo-location";
 

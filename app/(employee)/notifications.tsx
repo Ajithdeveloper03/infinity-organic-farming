@@ -28,7 +28,10 @@ export default function NotificationsScreen() {
           <View className="w-10" />
         </View>
 
-        <ScrollView className="flex-1 px-5 pt-6">
+        <ScrollView
+          className="flex-1 px-5 pt-2"
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
+        >
           <View className="items-center justify-center mt-16 bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
             <View className="w-20 h-20 bg-emerald-50 rounded-full items-center justify-center mb-4 border border-emerald-200">
               <Bell size={36} color="#059669" />

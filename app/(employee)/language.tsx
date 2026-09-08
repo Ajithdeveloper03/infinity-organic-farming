@@ -17,21 +17,25 @@ export default function LanguageScreen() {
   return (
     <View className="flex-1 bg-gray-50">
       <SafeAreaView className="flex-1">
-        {/* Header */}
-        <View className="px-5 pt-4 pb-4 flex-row items-center border-b border-gray-200 bg-white">
+        {/* Header - Transparent */}
+        <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center -ml-2"
+            className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
             accessibilityRole="button"
           >
-            <ChevronLeft size={24} color="#111827" />
+            <ChevronLeft size={22} color="#111827" />
           </TouchableOpacity>
-          <Text className="flex-1 text-center text-lg font-gotham-bold text-gray-900 mr-8">
+          <Text className="text-lg font-gotham-bold text-gray-900">
             Select Language
           </Text>
+          <View className="w-10" />
         </View>
 
-        <ScrollView className="flex-1 px-5 pt-6">
+        <ScrollView
+          className="flex-1 px-5 pt-4"
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
+        >
           <View className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
             {languages.map((lang, index) => (
               <TouchableOpacity

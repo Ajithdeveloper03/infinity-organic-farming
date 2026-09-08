@@ -17,12 +17,12 @@ import React from "react";
 
 import {
   ImageBackground,
-  SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const menuItems = [
   {
@@ -84,11 +84,22 @@ const menuItems = [
 export default function FarmerMenuScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      {/* Header */}
-      <View className="px-6 pt-12 pb-4 bg-white flex-row items-center border-b border-gray-100 justify-center">
+      {/* Header - Transparent */}
+      <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
+        >
+          <ChevronRight size={20} color="#0f172a" style={{ transform: [{ rotate: "180deg" }] }} />
+        </TouchableOpacity>
         <Text className="text-gray-900 text-lg font-gotham-bold">Menu</Text>
+        <View className="w-10" />
       </View>
-      <ScrollView className="flex-1 pb-24">
+      <ScrollView
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
+      >
         <View className="bg-white rounded-2xl mx-6 mt-6 shadow-sm border border-gray-50 mb-6 overflow-hidden">
           {menuItems.map((item) => {
             const Icon = item.icon;

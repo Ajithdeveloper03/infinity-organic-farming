@@ -79,7 +79,7 @@ export default function ReportDetailsScreen() {
         <ScrollView
           className="flex-1 px-5 pt-2"
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
         >
           {/* Detailed Hero Image with DARK Bottom-to-Top Overlay & Enhanced Bright White Text */}
           <View className="rounded-[28px] overflow-hidden shadow-md bg-slate-900 mb-4">

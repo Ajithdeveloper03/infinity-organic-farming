@@ -69,12 +69,12 @@ export default function AttendanceScreen() {
 
           <ScrollView
             className="flex-1"
-            contentContainerStyle={{ paddingBottom: 60 }}
+            contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
             showsVerticalScrollIndicator={false}
           >
-            {/* Hero Banner with Bottom-to-Top White Gradient Overlay */}
+            {/* Hero Banner with DARK Overlay & Enhanced Bright White Text */}
             <View className="p-5">
-              <View className="rounded-[28px] overflow-hidden shadow-md border border-slate-200 bg-white">
+              <View className="rounded-[28px] overflow-hidden shadow-md border border-slate-200 bg-slate-900">
                 <ImageBackground
                   source={require("../../../assets/images/image1.jpg")}
                   className="w-full h-52"
@@ -83,53 +83,52 @@ export default function AttendanceScreen() {
                   <LinearGradient
                     colors={[
                       "transparent",
-                      "rgba(255, 255, 255, 0.4)",
-                      "rgba(255, 255, 255, 0.92)",
-                      "#ffffff",
+                      "rgba(0, 0, 0, 0.45)",
+                      "rgba(10, 15, 25, 0.94)",
                     ]}
-                    locations={[0, 0.25, 0.65, 1]}
+                    locations={[0, 0.25, 1]}
                     style={StyleSheet.absoluteFill}
                   />
 
                   <View className="flex-1 p-5 justify-between">
                     <View className="flex-row items-center justify-between">
-                      <View className="flex-row items-center bg-emerald-700 px-3 py-1 rounded-full shadow-sm">
+                      <View className="flex-row items-center bg-emerald-500 px-3 py-1 rounded-full shadow-sm">
                         <CalendarDays size={14} color="#ffffff" />
                         <Text className="text-white font-gotham-bold text-[11px] ml-1.5 uppercase tracking-wider">
                           Daily Time Tracker
                         </Text>
                       </View>
 
-                      <View className="bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200">
-                        <Text className="text-emerald-800 font-gotham-bold text-xs">
+                      <View className="bg-white/20 px-3 py-1 rounded-full border border-white/30">
+                        <Text className="text-white font-gotham-bold text-xs">
                           {isClockedIn ? "● On Duty" : "○ Clocked Out"}
                         </Text>
                       </View>
                     </View>
 
                     <View>
-                      <Text className="text-slate-900 font-gotham-bold text-2xl mb-3">
+                      <Text className="text-white font-gotham-bold text-2xl mb-3">
                         Today's Shift Hours
                       </Text>
 
-                      <View className="flex-row justify-between bg-slate-50 rounded-2xl p-3.5 border border-slate-200">
+                      <View className="flex-row justify-between bg-black/40 rounded-2xl p-3.5 border border-white/20">
                         <View className="items-center flex-1">
-                          <Text className="text-slate-500 text-[11px] font-brandon uppercase">Clock In</Text>
-                          <Text className="text-slate-900 font-gotham-bold text-sm mt-0.5">
+                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">Clock In</Text>
+                          <Text className="text-white font-gotham-bold text-sm mt-0.5">
                             {clockInTime || "09:15 AM"}
                           </Text>
                         </View>
-                        <View className="w-px bg-slate-200 h-full" />
+                        <View className="w-px bg-white/20 h-full" />
                         <View className="items-center flex-1">
-                          <Text className="text-slate-500 text-[11px] font-brandon uppercase">Shift Duration</Text>
-                          <Text className="text-emerald-700 font-gotham-bold text-sm mt-0.5">
+                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">Shift Duration</Text>
+                          <Text className="text-emerald-300 font-gotham-bold text-sm mt-0.5">
                             8.0 Hours
                           </Text>
                         </View>
-                        <View className="w-px bg-slate-200 h-full" />
+                        <View className="w-px bg-white/20 h-full" />
                         <View className="items-center flex-1">
-                          <Text className="text-slate-500 text-[11px] font-brandon uppercase">Geofence</Text>
-                          <Text className="text-blue-700 font-gotham-bold text-sm mt-0.5">
+                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">Geofence</Text>
+                          <Text className="text-blue-300 font-gotham-bold text-sm mt-0.5">
                             Verified
                           </Text>
                         </View>

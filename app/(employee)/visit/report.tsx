@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   TextInput,
@@ -11,6 +10,8 @@ import {
   Platform,
   Image,
 } from "react-native";
+
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { router, useLocalSearchParams } from "expo-router";
 
@@ -66,7 +67,7 @@ export default function SubmitReportScreen() {
       setLoading(false);
       showToast({
         title: "Report Submitted",
-        message: "Securely transmitted report & payment details.",
+        message: "Visit marked as completed successfully.",
         type: "success",
       });
       router.push("/(employee)/visit/success");
@@ -78,23 +79,24 @@ export default function SubmitReportScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
-        {/* Header */}
-        <View className="px-6 pt-12 pb-4 flex-row items-center justify-between border-b border-gray-100">
+        {/* Header - Transparent */}
+        <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
           <TouchableOpacity
             onPress={() => router.back()}
             activeOpacity={0.7}
-            className="p-2 -ml-2"
+            className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
           >
-            <ChevronLeft size={24} color="#000" />
+            <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
           <Text className="text-gray-900 font-gotham-bold text-lg">
             Submit Report
           </Text>
-          <View className="w-8" />
+          <View className="w-10" />
         </View>
         <ScrollView
-          className="flex-1 px-6 pt-6"
+          className="flex-1 px-6 pt-4"
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
         >
           {/* Progress Steps */}
           <View className="flex-row items-center justify-between mb-8 px-4">

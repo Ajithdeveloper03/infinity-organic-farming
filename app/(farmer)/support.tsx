@@ -12,14 +12,23 @@ export default function SupportScreen() {
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="px-6 pt-12 pb-4 bg-white flex-row items-center border-b border-gray-100">
-        <TouchableOpacity onPress={() => router.back()} className="p-2 -ml-2 mr-2">
-          <ChevronLeft size={24} color="#000" />
+      {/* Header - Transparent */}
+      <View style={{ backgroundColor: "transparent" }} className="px-6 pt-2 pb-3 flex-row items-center justify-between z-10">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
+        >
+          <ChevronLeft size={22} color="#111827" />
         </TouchableOpacity>
         <Text className="text-gray-900 text-lg font-gotham-bold">24/7 Support Center</Text>
+        <View className="w-10" />
       </View>
       
-      <ScrollView className="flex-1 pb-24" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
+        showsVerticalScrollIndicator={false}
+      >
         <View className="px-6 pt-6">
           <View className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-6 items-center">
             <View className="w-16 h-16 bg-green-50 rounded-full items-center justify-center mb-4">

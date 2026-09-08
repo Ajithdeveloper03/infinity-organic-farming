@@ -95,7 +95,7 @@ export default function ProfileScreen() {
 
           <ScrollView
             className="flex-1"
-            contentContainerStyle={{ paddingBottom: 100 }}
+            contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
             showsVerticalScrollIndicator={false}
           >
             {/* Officer Identification Hero Card (Light Mode) */}
@@ -120,14 +120,13 @@ export default function ProfileScreen() {
 
                 {/* Avatar & Name Details */}
                 <View className="items-center -mt-16 pb-6 px-5">
-                  <View className="w-24 h-24 rounded-full p-1 bg-white border-2 border-emerald-600 shadow-md mb-3">
+                  <View className="w-24 h-24 rounded-full p-1 bg-white border-2 border-slate-200 shadow-md mb-3 overflow-hidden">
                     <Image
                       source={{
-                        uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                          employeeName
-                        )}&background=059669&color=fff&size=200`,
+                        uri: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80",
                       }}
                       className="w-full h-full rounded-full"
+                      resizeMode="cover"
                     />
                   </View>
 

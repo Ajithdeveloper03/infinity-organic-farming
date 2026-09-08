@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   Image,
@@ -11,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { router, useLocalSearchParams } from "expo-router";
 
@@ -36,26 +36,32 @@ export default function FarmerRateOfficerScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
       >
-        {/* Header */}
-        <View className="px-6 pt-12 pb-4 bg-white flex-row items-center border-b border-gray-100">
+        {/* Header - Transparent */}
+        <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
           <TouchableOpacity
             onPress={() => router.back()}
-            className="p-2 -ml-2 mr-2"
+            className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
           >
-            <ChevronLeft size={24} color="#000" />
+            <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
           <Text className="text-gray-900 text-lg font-gotham-bold">
             Rate Field Officer
           </Text>
+          <View className="w-10" />
         </View>
-        <ScrollView className="flex-1 px-6 pt-12 pb-24 items-center">
+        <ScrollView
+          className="flex-1 px-6 pt-4"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10, alignItems: "center" }}
+        >
           <View className="items-center mb-8">
-            <View className="w-24 h-24 bg-green-50 rounded-full items-center justify-center mb-4 border-4 border-white shadow-sm">
+            <View className="w-24 h-24 bg-white rounded-full items-center justify-center mb-4 border-2 border-slate-200 shadow-sm overflow-hidden">
               <Image
                 source={{
-                  uri: "https://ui-avatars.com/api/?name=Arun+Kumar&background=15803d&color=fff&size=200",
+                  uri: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&auto=format&fit=crop&q=80",
                 }}
                 className="w-full h-full rounded-full"
+                resizeMode="cover"
               />
             </View>
             <Text className="text-gray-900 text-2xl font-gotham-bold mb-1">

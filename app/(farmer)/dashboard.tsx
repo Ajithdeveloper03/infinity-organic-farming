@@ -39,7 +39,7 @@ export default function FarmerDashboardScreen() {
       <ImageBackground
         source={require("../../assets/images/image4.jpg")}
         style={StyleSheet.absoluteFill}
-        imageStyle={{ opacity: 0.16 }}
+        imageStyle={{ opacity: 0.26 }}
         resizeMode="cover"
       />
 
@@ -47,12 +47,13 @@ export default function FarmerDashboardScreen() {
         {/* Header - Strictly Transparent Background */}
         <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row justify-between items-center z-10">
           <View className="flex-row items-center flex-1">
-            <View className="w-12 h-12 rounded-full mr-3 border-2 border-green-600/30 overflow-hidden bg-white/80 items-center justify-center shadow-sm">
+            <View className="w-12 h-12 rounded-full mr-3 border-2 border-slate-200 overflow-hidden bg-white/80 items-center justify-center shadow-sm">
               <Image
                 source={{
-                  uri: "https://ui-avatars.com/api/?name=Kuppusamy&background=15803d&color=fff",
+                  uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
                 }}
                 className="w-full h-full"
+                resizeMode="cover"
             />
           </View>
           <View>
@@ -81,7 +82,7 @@ export default function FarmerDashboardScreen() {
       <ScrollView
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 110, paddingTop: 16 }}
+        contentContainerStyle={{ paddingBottom: 150, paddingTop: 16 }}
       >
         {/* Weather Widget Mini */}
         <View className="px-5 mb-6">
