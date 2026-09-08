@@ -5,18 +5,18 @@
 @import "nativewind/theme";
 
 @theme {
-  --font-sans: "Poppins_400Regular", "sans-serif";
+  --font-sans: "Montserrat_400Regular", "sans-serif";
   --font-serif: "Lora_400Regular", "serif";
-  --font-poppins: "Poppins_400Regular", "sans-serif";
+  --font-poppins: "Montserrat_400Regular", "sans-serif";
   --font-lora: "Lora_400Regular", "serif";
   --font-gotham: "Montserrat_400Regular", "sans-serif";
   --font-gotham-medium: "Montserrat_500Medium", "sans-serif";
   --font-gotham-semibold: "Montserrat_600SemiBold", "sans-serif";
   --font-gotham-bold: "Montserrat_700Bold", "sans-serif";
-  --font-brandon: "JosefinSans_400Regular", "sans-serif";
-  --font-brandon-medium: "JosefinSans_500Medium", "sans-serif";
-  --font-brandon-semibold: "JosefinSans_600SemiBold", "sans-serif";
-  --font-brandon-bold: "JosefinSans_700Bold", "sans-serif";
+  --font-brandon: "Montserrat_400Regular", "sans-serif";
+  --font-brandon-medium: "Montserrat_500Medium", "sans-serif";
+  --font-brandon-semibold: "Montserrat_600SemiBold", "sans-serif";
+  --font-brandon-bold: "Montserrat_700Bold", "sans-serif";
   
   /* Primary Theme Colors (Soft Purple / Green) */
   --color-primary-100: #e8e8fc;
