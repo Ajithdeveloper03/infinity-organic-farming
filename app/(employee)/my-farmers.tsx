@@ -5,11 +5,10 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Image,
   ImageBackground,
   StyleSheet,
   Linking,
-  ActivityIndicator,
+  TextInput,
 } from "react-native";
 import {
   ChevronLeft,
@@ -18,9 +17,12 @@ import {
   MessageCircle,
   Sprout,
   Users,
-  CheckCircle2,
+  Search,
+  UserPlus,
+  ShieldCheck,
 } from "lucide-react-native";
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 import { api } from "../../services/api";
 
 export default function MyFarmersScreen() {
@@ -33,6 +35,7 @@ export default function MyFarmersScreen() {
       crops: "Vetiver, Turmeric",
       status: "Active",
       acres: "4.5",
+      color: "#2563eb",
     },
     {
       id: "2",
@@ -42,6 +45,7 @@ export default function MyFarmersScreen() {
       crops: "Vetiver, Pepper",
       status: "Active",
       acres: "2.0",
+      color: "#7c3aed",
     },
     {
       id: "3",
@@ -51,9 +55,21 @@ export default function MyFarmersScreen() {
       crops: "Vetiver",
       status: "Pending Approval",
       acres: "1.5",
+      color: "#059669",
+    },
+    {
+      id: "4",
+      name: "Murugan S",
+      phone: "+91 9455555555",
+      location: "Thanjavur Delta Zone",
+      crops: "Organic Paddy & Vetiver",
+      status: "Active",
+      acres: "5.0",
+      color: "#ea580c",
     },
   ]);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -61,7 +77,8 @@ export default function MyFarmersScreen() {
       try {
         const res = await api.get("/employee/farmers");
         if (res?.status === "success" && res?.farmers && res.farmers.length > 0) {
-          const mapped = res.farmers.map((f: any) => ({
+          const colors = ["#2563eb", "#7c3aed", "#059669", "#ea580c", "#db2777"];
+          const mapped = res.farmers.map((f: any, i: number) => ({
             id: String(f.id),
             name: f.name || "Farmer",
             phone: f.phone || "",
@@ -69,6 +86,7 @@ export default function MyFarmersScreen() {
             crops: "Vetiver",
             status: f.kyc_status === "verified" ? "Active" : "Pending Approval",
             acres: f.land_acres ? String(f.land_acres) : "2.5",
+            color: colors[i % colors.length],
           }));
           setFarmers(mapped);
         }
@@ -80,152 +98,190 @@ export default function MyFarmersScreen() {
     })();
   }, []);
 
+  const filtered = farmers.filter((f) =>
+    f.name.toLowerCase().includes(search.toLowerCase()) ||
+    f.location.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      {/* Background image subtle overlay */}
       <ImageBackground
         source={require("../../assets/images/image7.jpg")}
         style={StyleSheet.absoluteFill}
         imageStyle={{ opacity: 0.12 }}
         resizeMode="cover"
-      />
+      >
+        <LinearGradient
+          colors={["rgba(255, 255, 255, 0.4)", "rgba(248, 250, 252, 0.85)", "#f8fafc"]}
+          style={StyleSheet.absoluteFill}
+        />
 
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Header */}
-        <View className="px-5 py-4 bg-white/95 border-b border-gray-100 flex-row items-center justify-between shadow-sm backdrop-blur-md">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center border border-gray-200"
-            activeOpacity={0.7}
+        <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
+          {/* Header - Strictly Transparent Background (Light Mode) */}
+          <View
+            style={{ backgroundColor: "transparent" }}
+            className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
           >
-            <ChevronLeft size={22} color="#111827" />
-          </TouchableOpacity>
-          <Text className="text-lg font-gotham-bold text-gray-900">
-            Registered Farmers
-          </Text>
-          <View className="w-10 items-end">
-            {loading && <ActivityIndicator size="small" color="#15803d" />}
-          </View>
-        </View>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm"
+              activeOpacity={0.7}
+            >
+              <ChevronLeft size={22} color="#0f172a" />
+            </TouchableOpacity>
 
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{ paddingBottom: 60 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Hero Banner with Background Image */}
-          <View className="p-5">
-            <View className="rounded-3xl overflow-hidden shadow-md border border-green-800/20">
-              <ImageBackground
-                source={require("../../assets/images/image2.jpg")}
-                className="w-full"
-                resizeMode="cover"
-              >
-                <View className="p-6 bg-green-950/80">
-                  <View className="flex-row items-center mb-2">
-                    <Users size={20} color="#86efac" className="mr-2" />
-                    <Text className="text-green-300 font-brandon font-bold text-xs uppercase tracking-widest">
-                      Delta & Regional Network
-                    </Text>
-                  </View>
-                  <Text className="text-white font-gotham-bold text-2xl mb-2">
-                    Assigned Farm Portfolio
-                  </Text>
-                  <Text className="text-white/80 font-brandon text-xs leading-relaxed">
-                    {farmers.length} active organic farmers registered under your supervision.
-                  </Text>
-                </View>
-              </ImageBackground>
-            </View>
-          </View>
-
-          {/* Farmers List */}
-          <View className="px-5">
-            <Text className="text-gray-900 font-gotham-bold text-base mb-3">
-              Farmer Directory ({farmers.length})
+            <Text className="text-lg font-gotham-bold text-slate-900">
+              Farmer Directory
             </Text>
 
-            {farmers.map((farmer) => {
-              const isActive = farmer.status === "Active";
-              return (
-                <View
-                  key={farmer.id}
-                  className="mb-4 p-5 rounded-2xl border bg-white border-gray-200 shadow-sm"
+            <TouchableOpacity
+              onPress={() => router.push("/(employee)/register-farmer/step1" as any)}
+              className="w-10 h-10 rounded-full bg-emerald-600 items-center justify-center shadow-md shadow-emerald-700/25"
+            >
+              <UserPlus size={18} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={{ paddingBottom: 100 }}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Search Bar (Light Mode) */}
+            <View className="px-5 mb-4">
+              <View className="flex-row items-center bg-white px-3.5 py-2.5 rounded-full border border-slate-200 shadow-sm">
+                <Search size={18} color="#64748b" />
+                <TextInput
+                  placeholder="Search farmers by name or village..."
+                  placeholderTextColor="#94a3b8"
+                  value={search}
+                  onChangeText={setSearch}
+                  className="flex-1 ml-2 text-slate-900 font-brandon text-sm py-0"
+                />
+              </View>
+            </View>
+
+            {/* Hero Summary Card with Bottom-to-Top White Gradient */}
+            <View className="px-5 mb-5">
+              <View className="rounded-[28px] overflow-hidden shadow-md border border-slate-200 bg-white">
+                <ImageBackground
+                  source={require("../../assets/images/image3.jpg")}
+                  className="w-full h-44"
+                  resizeMode="cover"
                 >
-                  <View className="flex-row justify-between items-start mb-3">
-                    <View className="flex-row items-center flex-1 pr-3">
-                      <View className="w-13 h-13 rounded-2xl mr-3.5 border border-green-200 overflow-hidden bg-green-50 shadow-sm">
-                        <Image
-                          source={{
-                            uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(farmer.name)}&background=15803d&color=fff`,
-                          }}
-                          className="w-full h-full"
-                        />
-                      </View>
-                      <View className="flex-1">
-                        <Text className="font-gotham-bold text-base text-gray-900 mb-0.5">
+                  <LinearGradient
+                    colors={[
+                      "transparent",
+                      "rgba(255, 255, 255, 0.4)",
+                      "rgba(255, 255, 255, 0.92)",
+                      "#ffffff",
+                    ]}
+                    locations={[0, 0.25, 0.65, 1]}
+                    style={StyleSheet.absoluteFill}
+                  />
+
+                  <View className="flex-1 p-5 justify-between">
+                    <View className="flex-row items-center bg-emerald-700 px-3 py-1 rounded-full self-start shadow-sm">
+                      <Users size={14} color="#ffffff" />
+                      <Text className="text-white font-gotham-bold text-[11px] ml-1.5 uppercase tracking-wider">
+                        Assigned Landholders
+                      </Text>
+                    </View>
+
+                    <View>
+                      <Text className="text-slate-900 font-gotham-bold text-2xl mb-1">
+                        {farmers.length} Enrolled Farmers
+                      </Text>
+                      <Text className="text-emerald-800 font-brandon font-bold text-xs">
+                        Cultivating 13.0+ Acres of Organic Certified Vetiver
+                      </Text>
+                    </View>
+                  </View>
+                </ImageBackground>
+              </View>
+            </View>
+
+            {/* Farmers List (White Cards with Vibrant Colored Initials & Deep Dark Text) */}
+            <View className="px-5">
+              {filtered.map((farmer, idx) => (
+                <View
+                  key={farmer.id || idx}
+                  className="bg-white rounded-[24px] p-4 mb-3.5 border border-slate-200 shadow-sm"
+                >
+                  <View className="flex-row items-center mb-3">
+                    {/* Google Pay Style Circular Avatar with Initial */}
+                    <View
+                      style={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: 24,
+                        backgroundColor: farmer.color || "#059669",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginRight: 12,
+                        shadowColor: "#000",
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.15,
+                        shadowRadius: 4,
+                        elevation: 3,
+                      }}
+                    >
+                      <Text className="text-white font-gotham-bold text-lg">
+                        {farmer.name.charAt(0)}
+                      </Text>
+                    </View>
+
+                    <View className="flex-1">
+                      <View className="flex-row items-center">
+                        <Text className="text-slate-900 font-gotham-bold text-base">
                           {farmer.name}
                         </Text>
-                        <View className="flex-row items-center">
-                          <MapPin size={13} color="#4b5563" className="mr-1" />
-                          <Text
-                            className="text-xs text-gray-700 font-brandon"
-                            numberOfLines={1}
-                          >
-                            {farmer.location}
-                          </Text>
-                        </View>
+                        <ShieldCheck size={15} color="#059669" className="ml-1.5" />
+                      </View>
+                      <View className="flex-row items-center mt-0.5">
+                        <MapPin size={12} color="#64748b" />
+                        <Text className="text-slate-600 font-brandon text-xs ml-1">
+                          {farmer.location}
+                        </Text>
                       </View>
                     </View>
 
-                    <View
-                      className={`px-3 py-1 rounded-full border ${
-                        isActive
-                          ? "bg-emerald-50 border-emerald-300"
-                          : "bg-amber-50 border-amber-300"
-                      }`}
-                    >
-                      <Text
-                        className={`text-[11px] font-gotham-bold uppercase tracking-wider ${
-                          isActive ? "text-emerald-800" : "text-amber-800"
-                        }`}
-                      >
-                        {farmer.status}
+                    <View className="bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                      <Text className="text-emerald-800 font-gotham-bold text-xs">
+                        {farmer.acres} Acres
                       </Text>
                     </View>
                   </View>
 
-                  <View className="flex-row items-center justify-between pt-3 border-t border-gray-100">
+                  <View className="flex-row justify-between items-center pt-2.5 border-t border-slate-100">
                     <View className="flex-row items-center">
-                      <Sprout size={15} color="#15803d" className="mr-1.5" />
-                      <Text className="text-xs text-gray-800 font-gotham-bold">
-                        {farmer.crops} • {farmer.acres} Acres
+                      <Sprout size={14} color="#059669" />
+                      <Text className="text-slate-700 font-gotham-bold text-xs ml-1.5">
+                        {farmer.crops}
                       </Text>
                     </View>
 
-                    <View className="flex-row items-center">
+                    <View className="flex-row space-x-2">
                       <TouchableOpacity
                         onPress={() => Linking.openURL(`tel:${farmer.phone}`)}
-                        className="w-9 h-9 rounded-xl bg-green-100 items-center justify-center border border-green-300 mr-2"
-                        activeOpacity={0.7}
+                        className="w-9 h-9 rounded-full bg-emerald-50 items-center justify-center border border-emerald-200 mr-2"
                       >
-                        <Phone size={16} color="#15803d" />
+                        <Phone size={16} color="#059669" />
                       </TouchableOpacity>
                       <TouchableOpacity
-                        onPress={() => Linking.openURL(`sms:${farmer.phone}`)}
-                        className="w-9 h-9 rounded-xl bg-blue-100 items-center justify-center border border-blue-300"
-                        activeOpacity={0.7}
+                        onPress={() => Linking.openURL(`https://wa.me/${farmer.phone.replace(/[^0-9]/g, "")}`)}
+                        className="w-9 h-9 rounded-full bg-emerald-600 items-center justify-center shadow-sm"
                       >
-                        <MessageCircle size={16} color="#2563eb" />
+                        <MessageCircle size={16} color="#ffffff" />
                       </TouchableOpacity>
                     </View>
                   </View>
                 </View>
-              );
-            })}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+              ))}
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </ImageBackground>
     </View>
   );
 }

@@ -44,10 +44,10 @@ export default function FarmerDashboardScreen() {
       />
 
       <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Header */}
-        <View className="bg-white/90 px-5 pt-3 pb-4 border-b border-gray-100 shadow-sm flex-row justify-between items-center z-10 backdrop-blur-md">
+        {/* Header - Strictly Transparent Background */}
+        <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row justify-between items-center z-10">
           <View className="flex-row items-center flex-1">
-            <View className="w-12 h-12 rounded-full mr-3 border-2 border-green-600/30 overflow-hidden bg-green-50 items-center justify-center shadow-sm">
+            <View className="w-12 h-12 rounded-full mr-3 border-2 border-green-600/30 overflow-hidden bg-white/80 items-center justify-center shadow-sm">
               <Image
                 source={{
                   uri: "https://ui-avatars.com/api/?name=Kuppusamy&background=15803d&color=fff",
@@ -56,7 +56,7 @@ export default function FarmerDashboardScreen() {
             />
           </View>
           <View>
-            <Text className="text-gray-400 text-xs font-brandon uppercase tracking-wider">
+            <Text className="text-gray-500 text-xs font-brandon uppercase tracking-wider">
               Good Morning
             </Text>
             <Text className="text-gray-900 text-lg font-gotham-bold leading-tight">
@@ -70,7 +70,7 @@ export default function FarmerDashboardScreen() {
 
         <TouchableOpacity
           onPress={() => router.push("/(farmer)/notifications" as any)}
-          className="w-10 h-10 rounded-full bg-gray-50 items-center justify-center border border-gray-200 shadow-sm"
+          className="w-10 h-10 rounded-full bg-white/80 items-center justify-center border border-gray-200 shadow-sm"
           activeOpacity={0.7}
         >
           <Bell size={20} color="#374151" />
