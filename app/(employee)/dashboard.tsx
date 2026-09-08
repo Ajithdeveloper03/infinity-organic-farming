@@ -168,14 +168,14 @@ export default function DashboardScreen() {
       >
         <Image
           source={require("../../assets/images/image1.jpg")}
-          style={{ width: "100%", height: "100%", opacity: 0.75 }}
+          style={{ width: "100%", height: "100%", opacity: 0.95 }}
           resizeMode="cover"
         />
         {/* Bottom-to-top overlay blending from solid #f8fafc at bottom into translucent top */}
         <LinearGradient
           colors={[
             "rgba(248, 250, 252, 0.05)",
-            "rgba(248, 250, 252, 0.85)",
+            "rgba(248, 250, 252, 0.35)",
             "#f8fafc",
           ]}
           locations={[0, 0.65, 1]}
@@ -212,14 +212,14 @@ export default function DashboardScreen() {
               <View className="flex-1 justify-center">
                 <View className="flex-row items-center">
                   <Text
-                    className="text-slate-900 font-gotham-bold text-base tracking-tight"
+                    className="text-white font-gotham-bold text-base tracking-tight"
                     numberOfLines={1}
                   >
                     {employeeName || employeeProfile.name}
                   </Text>
-                  <BadgeCheck size={16} color="#059669" className="ml-1" />
+                  <BadgeCheck size={16} color="#059669" className="ml-5" />
                 </View>
-                <View className="flex-row items-center mt-0.5">
+                <View className="flex-row items-center mt-2">
                   <View className="bg-emerald-100/90 border border-emerald-300/70 px-2 py-0.5 rounded-full flex-row items-center">
                     <Text className="text-emerald-900 font-gotham-bold text-[10px] tracking-wide">
                       ID: {employeeProfile.id} • {employeeProfile.role}
@@ -330,13 +330,13 @@ export default function DashboardScreen() {
             {nextVisit && (
               <View className="px-5 mb-6">
                 <View className="flex-row justify-between items-center mb-2.5">
-                  <Text className="text-slate-900 font-gotham-bold text-lg">
+                  <Text className="text-white font-gotham-bold text-lg">
                     Next Up For You
                   </Text>
                   <TouchableOpacity
                     onPress={() => router.push("/(employee)/visits" as any)}
                   >
-                    <Text className="text-emerald-700 font-gotham-bold text-xs uppercase tracking-wider">
+                    <Text className="text-white bg-green-500 px-3 py-2 rounded-full font-gotham-bold text-xs uppercase tracking-wider">
                       View All
                     </Text>
                   </TouchableOpacity>

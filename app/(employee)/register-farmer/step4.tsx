@@ -64,7 +64,7 @@ export default function RegisterStep4Screen() {
             Farmer Registration
           </Text>
           <Text className="text-slate-500 font-brandon text-xs">
-            Step 4 of 5
+            Step 3 of 4 • KYC Verification
           </Text>
         </View>
       </View>
@@ -74,26 +74,22 @@ export default function RegisterStep4Screen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
       >
-        {/* 5-Step Stepper */}
-        <View className="flex-row items-center justify-center my-4 px-2">
+        {/* 4-Step Stepper */}
+        <View className="flex-row items-center justify-center my-4 px-4">
           <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
             <Text className="text-white font-gotham-bold text-xs">✓</Text>
           </View>
-          <View className="flex-1 h-0.5 bg-[#2f6f36] mx-1.5" />
+          <View className="flex-1 h-0.5 bg-[#2f6f36] mx-2" />
           <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
             <Text className="text-white font-gotham-bold text-xs">✓</Text>
           </View>
-          <View className="flex-1 h-0.5 bg-[#2f6f36] mx-1.5" />
-          <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">✓</Text>
-          </View>
-          <View className="flex-1 h-0.5 bg-[#2f6f36] mx-1.5" />
+          <View className="flex-1 h-0.5 bg-[#2f6f36] mx-2" />
           <View className="w-8 h-8 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">4</Text>
+            <Text className="text-white font-gotham-bold text-xs">3</Text>
           </View>
-          <View className="flex-1 h-0.5 bg-slate-200 mx-1.5" />
+          <View className="flex-1 h-0.5 bg-slate-200 mx-2" />
           <View className="w-7 h-7 rounded-full bg-white border border-slate-300 items-center justify-center">
-            <Text className="text-slate-400 font-gotham-bold text-[11px]">5</Text>
+            <Text className="text-slate-400 font-gotham-bold text-xs">4</Text>
           </View>
         </View>
 
