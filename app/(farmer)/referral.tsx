@@ -1,26 +1,20 @@
-import React, { useState } from "react";
-
+import React from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
-  useColorScheme,
   Share,
+  ImageBackground,
+  StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import { router } from "expo-router";
-
-import { ArrowLeft, Copy, Gift, Share2, Star } from "lucide-react-native";
-
+import { ChevronLeft, Copy, Gift, Share2, Star } from "lucide-react-native";
 import { showToast } from "../../components/ui/ToastMessage";
-
 import * as Clipboard from "expo-clipboard";
 
 export default function ReferralScreen() {
-  const isDark = false;
-
   const referralCode = "FARM-KUPPU-089";
 
   const copyToClipboard = async () => {
@@ -35,7 +29,7 @@ export default function ReferralScreen() {
   const shareCode = async () => {
     try {
       await Share.share({
-        message: `Join Infinity Organics using my referral code: ${referralCode}. We both get 500 bonus points!`,
+        message: `Join Infinity Organics using my referral code: ${referralCode}. We both get 500 bonus reward points!`,
       });
     } catch (error: any) {
       showToast({
@@ -45,100 +39,102 @@ export default function ReferralScreen() {
       });
     }
   };
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <ScrollView
-        className="flex-1 px-6 pt-2"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
-      >
-        {/* Header */}
-        <View className="flex-row items-center mb-10">
+    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      {/* Background image subtle overlay */}
+      <ImageBackground
+        source={require("../../assets/images/image4.jpg")}
+        style={StyleSheet.absoluteFill}
+        imageStyle={{ opacity: 0.12 }}
+        resizeMode="cover"
+      />
+
+      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
+        {/* Header - Transparent */}
+        <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
           <TouchableOpacity
             onPress={() => router.back()}
-            className="mr-4 p-2 bg-gray-50 rounded-full"
+            className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
             activeOpacity={0.7}
           >
-            <ArrowLeft size={24} color={isDark ? "#fff" : "#000"} />
+            <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
-          <View>
-            <Text className="text-xl font-gotham-bold text-gray-900">
-              Refer & Earn
-            </Text>
-            <Text className="text-gray-500 text-xs font-brandon uppercase tracking-wider mt-1">
-              Infinity Organics Rewards
-            </Text>
-          </View>
-        </View>
-        <View className="items-center mb-8">
-          <View className="w-32 h-32 bg-green-100 rounded-full items-center justify-center mb-6">
-            <Gift size={64} color={isDark ? "#4ade80" : "#15803d"} />
-          </View>
-          <Text className="text-2xl font-gotham-bold text-gray-900 mb-3 text-center px-4 leading-8">
-            Invite Farmers, Get Rewarded!
+          <Text className="text-slate-900 text-lg font-gotham-bold">
+            Refer & Earn
           </Text>
-          <Text className="text-gray-500 font-brandon text-center px-6 leading-5">
-            Share your unique code with other farmers. When they register and
-            order their first fertilizer, you both receive 500 bonus points.
-          </Text>
+          <View className="w-10" />
         </View>
-        {/* Current Balance */}
-        <View className="bg-gray-50 rounded-[24px] p-6 mb-8 border border-gray-100 flex-row items-center justify-between">
-          <View>
-            <Text className="text-gray-500 font-gotham-bold text-xs uppercase tracking-widest mb-1">
-              Your Balance
+
+        <ScrollView
+          className="flex-1 px-5 pt-2"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 150, paddingTop: 6 }}
+        >
+          <View className="items-center mb-6 pt-2">
+            <View className="w-24 h-24 bg-emerald-100/90 border border-emerald-300/80 rounded-full items-center justify-center mb-4 shadow-xs">
+              <Gift size={46} color="#15803d" />
+            </View>
+            <Text className="text-2xl font-gotham-bold text-slate-900 mb-2 text-center px-4">
+              Invite Farmers, Get Rewarded!
             </Text>
-            <Text className="text-gray-900 font-gotham-bold text-3xl">
-              1,250
-            </Text>
-          </View>
-          <View className="w-14 h-14 bg-yellow-100 rounded-full items-center justify-center">
-            <Star
-              size={32}
-              color={isDark ? "#facc15" : "#eab308"}
-              fill={isDark ? "#facc15" : "#eab308"}
-            />
-          </View>
-        </View>
-        {/* Referral Code Block */}
-        <View className="bg-green-50 rounded-[24px] p-6 border border-green-200 mb-8 items-center">
-          <Text className="text-green-800 font-brandon-medium mb-3 uppercase tracking-wider text-xs">
-            Your Unique Code
-          </Text>
-          <View className="flex-row items-center justify-center bg-white rounded-xl py-3 px-6 shadow-sm border border-green-100 mb-6">
-            <Text className="text-2xl font-gotham-bold text-gray-900 tracking-widest">
-              {referralCode}
+            <Text className="text-slate-600 font-gotham-medium text-xs text-center px-4 leading-relaxed">
+              Share your unique code with neighboring farmers. When they register and order their first organic supply, you both receive 500 reward points!
             </Text>
           </View>
-          <View className="flex-row space-x-4 w-full">
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={copyToClipboard}
-              className="flex-1 bg-white py-3 rounded-xl items-center flex-row justify-center border border-gray-200"
-            >
-              <Copy
-                size={18}
-                color={isDark ? "#fff" : "#1f2937"}
-                className="mr-2"
-              />
-              <Text className="text-gray-900 font-gotham-bold text-sm">
-                Copy Code
+
+          {/* Current Balance */}
+          <View className="bg-amber-50/80 rounded-[24px] p-5 mb-5 border border-amber-200/90 shadow-sm flex-row items-center justify-between">
+            <View>
+              <Text className="text-amber-900 font-gotham-bold text-[11px] uppercase tracking-widest mb-1">
+                Your Reward Points
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={shareCode}
-              className="flex-1 bg-[#15803d] py-3 rounded-xl items-center flex-row justify-center"
-            >
-              <Share2 size={18} color="#fff" className="mr-2" />
-              <Text className="text-gray-900 font-gotham-bold text-sm">
-                Share
+              <Text className="text-slate-900 font-gotham-bold text-3xl">
+                1,250
               </Text>
-            </TouchableOpacity>
+            </View>
+            <View className="w-12 h-12 bg-amber-100 rounded-full items-center justify-center border border-amber-300">
+              <Star size={24} color="#d97706" fill="#f59e0b" />
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+
+          {/* Referral Code Block */}
+          <View className="bg-emerald-50/80 rounded-[24px] p-5 border border-emerald-200/90 mb-8 items-center shadow-sm">
+            <Text className="text-emerald-900 font-gotham-bold mb-2 uppercase tracking-wider text-[11px]">
+              Your Unique Farmer Code
+            </Text>
+            <View className="flex-row items-center justify-center bg-white rounded-xl py-3 px-6 shadow-xs border border-emerald-200 mb-5">
+              <Text className="text-xl font-gotham-bold text-slate-900 tracking-widest">
+                {referralCode}
+              </Text>
+            </View>
+            <View className="flex-row gap-3 w-full">
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={copyToClipboard}
+                className="flex-1 bg-white py-3.5 rounded-xl items-center flex-row justify-center border border-slate-200 shadow-xs"
+              >
+                <Copy size={17} color="#0f172a" className="mr-1.5" />
+                <Text className="text-slate-900 font-gotham-bold text-xs uppercase tracking-wider">
+                  Copy Code
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.85}
+                onPress={shareCode}
+                className="flex-1 bg-[#15803d] py-3.5 rounded-xl items-center flex-row justify-center shadow-xs"
+              >
+                <Share2 size={17} color="#fff" className="mr-1.5" />
+                <Text className="text-white font-gotham-bold text-xs uppercase tracking-wider">
+                  Share
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
+
 
