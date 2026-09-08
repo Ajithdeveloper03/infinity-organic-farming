@@ -86,15 +86,14 @@ export default function FarmerDashboardScreen() {
                     className="w-full h-full"
                     resizeMode="cover"
                   />
-                </Vi
-                ew>
+                </View>
                 <View className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white" />
               </TouchableOpacity>
 
               <View className="flex-1 justify-center">
                 <View className="flex-row items-center">
                   <Text
-                    className="text-white font-gotham-bold text-base tracking-tight"
+                    className="text-slate-900 font-gotham-bold text-base tracking-tight"
                     numberOfLines={1}
                   >
                     Kuppusamy

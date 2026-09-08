@@ -202,6 +202,12 @@ export default function FarmerLayout() {
           }}
         />
         <Tabs.Screen
+          name="report"
+          options={{
+            href: null,
+          }}
+        />
+        <Tabs.Screen
           name="menu"
           options={{
             href: null,
