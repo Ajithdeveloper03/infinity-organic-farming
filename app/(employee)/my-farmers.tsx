@@ -21,88 +21,69 @@ import {
   Search,
   UserPlus,
   ShieldCheck,
+  Package,
+  Layers,
+  Sparkles,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import { mockFarmers, CustomerType } from "../../data/mockData";
 import { api } from "../../services/api";
 
 export default function MyFarmersScreen() {
-  const [farmers, setFarmers] = useState<any[]>([
-    {
-      id: "1",
-      name: "Muthusamy",
-      phone: "+91 9411111111",
-      location: "Annur, Coimbatore",
-      crops: "Vetiver, Turmeric",
-      status: "Active",
-      acres: "4.5",
-      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-    },
-    {
-      id: "2",
-      name: "Kandasamy",
-      phone: "+91 9422222222",
-      location: "Pollachi, Coimbatore",
-      crops: "Vetiver, Pepper",
-      status: "Active",
-      acres: "2.0",
-      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
-    },
-    {
-      id: "3",
-      name: "Lakshmi Devi",
-      phone: "+91 9444444444",
-      location: "Udumalpet, Tirupur",
-      crops: "Vetiver",
-      status: "Pending Approval",
-      acres: "1.5",
-      photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
-    },
-    {
-      id: "4",
-      name: "Murugan S",
-      phone: "+91 9455555555",
-      location: "Thanjavur Delta Zone",
-      crops: "Organic Paddy & Vetiver",
-      status: "Active",
-      acres: "5.0",
-      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
-    },
-  ]);
-  const [loading, setLoading] = useState(false);
+  const [farmers, setFarmers] = useState<any[]>(mockFarmers);
   const [search, setSearch] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState<"all" | "both" | "crop" | "fertilizer">("all");
 
   useEffect(() => {
     (async () => {
-      setLoading(true);
       try {
         const res = await api.get("/employee/farmers");
         if (res?.status === "success" && res?.farmers && res.farmers.length > 0) {
-          const colors = ["#2563eb", "#7c3aed", "#059669", "#ea580c", "#db2777"];
           const mapped = res.farmers.map((f: any, i: number) => ({
             id: String(f.id),
             name: f.name || "Farmer",
-            phone: f.phone || "",
-            location: f.land_address || "Tamil Nadu",
-            crops: "Vetiver",
-            status: f.kyc_status === "verified" ? "Active" : "Pending Approval",
-            acres: f.land_acres ? String(f.land_acres) : "2.5",
-            color: colors[i % colors.length],
+            phone: f.phone || "+91 94111 11111",
+            address: f.land_address || "Tamil Nadu",
+            cropType: f.crop_type || "Vetiver",
+            customerType: (i % 3 === 0 ? "both" : i % 3 === 1 ? "crop" : "fertilizer") as CustomerType,
+            farmArea: f.land_acres ? `${f.land_acres} Acres` : "3.0 Acres",
+            cropDetails: f.crop_details || "Certified Organic Plot",
+            fertilizerDetails: f.fertilizer_details || "Organic Vermicompost & Bio-NPK",
+            recentOrder: f.recent_order || "50kg Bio-NPK Granules",
+            photo: [
+              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
+              "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
+            ][i % 6],
           }));
           setFarmers(mapped);
         }
       } catch (err) {
-        console.log("My farmers fetch notice:", err);
-      } finally {
-        setLoading(false);
+        console.log("Farmers fallback to mockData:", err);
       }
     })();
   }, []);
 
-  const filtered = farmers.filter((f) =>
-    f.name.toLowerCase().includes(search.toLowerCase()) ||
-    f.location.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = farmers.filter((f) => {
+    const matchesSearch =
+      f.name.toLowerCase().includes(search.toLowerCase()) ||
+      (f.address && f.address.toLowerCase().includes(search.toLowerCase())) ||
+      (f.cropType && f.cropType.toLowerCase().includes(search.toLowerCase()));
+
+    if (!matchesSearch) return false;
+    if (selectedFilter === "both") return f.customerType === "both";
+    if (selectedFilter === "crop") return f.customerType === "crop" || f.customerType === "both";
+    if (selectedFilter === "fertilizer") return f.customerType === "fertilizer" || f.customerType === "both";
+    return true;
+  });
+
+  const bothCount = farmers.filter((f) => f.customerType === "both").length;
+  const cropCount = farmers.filter((f) => f.customerType === "crop").length;
+  const fertCount = farmers.filter((f) => f.customerType === "fertilizer").length;
 
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
@@ -118,7 +99,7 @@ export default function MyFarmersScreen() {
         />
 
         <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-          {/* Header - Strictly Transparent Background (Light Mode) */}
+          {/* Header - Transparent */}
           <View
             style={{ backgroundColor: "transparent" }}
             className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
@@ -131,9 +112,14 @@ export default function MyFarmersScreen() {
               <ChevronLeft size={22} color="#0f172a" />
             </TouchableOpacity>
 
-            <Text className="text-lg font-gotham-bold text-slate-900">
-              Farmer Directory
-            </Text>
+            <View className="items-center">
+              <Text className="text-lg font-gotham-bold text-slate-900">
+                Farmer & Client Directory
+              </Text>
+              <Text className="text-[11px] text-emerald-700 font-gotham-bold">
+                Crop Cultivators & Fertilizer Buyers
+              </Text>
+            </View>
 
             <TouchableOpacity
               onPress={() => router.push("/(employee)/register-farmer/step1" as any)}
@@ -145,15 +131,15 @@ export default function MyFarmersScreen() {
 
           <ScrollView
             className="flex-1"
-            contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
+            contentContainerStyle={{ paddingBottom: 150, paddingTop: 6 }}
             showsVerticalScrollIndicator={false}
           >
-            {/* Search Bar (Light Mode) */}
-            <View className="px-5 mb-4">
+            {/* Search Bar */}
+            <View className="px-5 mb-3.5">
               <View className="flex-row items-center bg-white px-3.5 py-2.5 rounded-full border border-slate-200 shadow-sm">
                 <Search size={18} color="#64748b" />
                 <TextInput
-                  placeholder="Search farmers by name or village..."
+                  placeholder="Search by farmer name, crop, or district..."
                   placeholderTextColor="#94a3b8"
                   value={search}
                   onChangeText={setSearch}
@@ -162,7 +148,45 @@ export default function MyFarmersScreen() {
               </View>
             </View>
 
-            {/* Hero Summary Card with Bottom-to-Top White Gradient */}
+            {/* Mingle Category Filter Pills */}
+            <View className="px-5 mb-4">
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 8 }}
+              >
+                {[
+                  { key: "all", label: `All (${farmers.length})` },
+                  { key: "both", label: `Dual Customers (${bothCount})` },
+                  { key: "crop", label: `Crop Growers (${bothCount + cropCount})` },
+                  { key: "fertilizer", label: `Fertilizer Buyers (${bothCount + fertCount})` },
+                ].map((item) => {
+                  const isActive = selectedFilter === item.key;
+                  return (
+                    <TouchableOpacity
+                      key={item.key}
+                      activeOpacity={0.8}
+                      onPress={() => setSelectedFilter(item.key as any)}
+                      className={`px-4 py-2 rounded-full border shadow-xs ${
+                        isActive
+                          ? "bg-[#15803d] border-[#15803d]"
+                          : "bg-white border-slate-200"
+                      }`}
+                    >
+                      <Text
+                        className={`text-xs font-gotham-bold ${
+                          isActive ? "text-white" : "text-slate-700"
+                        }`}
+                      >
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
+
+            {/* Hero Summary Card: Breakdown of Customers */}
             <View className="px-5 mb-5">
               <View className="rounded-[28px] overflow-hidden shadow-md bg-slate-900">
                 <ImageBackground
@@ -184,31 +208,45 @@ export default function MyFarmersScreen() {
                     <View className="flex-row items-center bg-emerald-500 px-3 py-1 rounded-full self-start shadow-sm">
                       <Users size={14} color="#ffffff" />
                       <Text className="text-white font-gotham-bold text-[11px] ml-1.5 uppercase tracking-wider">
-                        Assigned Landholders
+                        Integrated Agronomy Network
                       </Text>
                     </View>
 
                     <View>
                       <Text className="text-white font-gotham-bold text-2xl mb-1">
-                        {farmers.length} Enrolled Farmers
+                        {farmers.length} Total Enrolled Clients
                       </Text>
-                      <Text className="text-emerald-300 font-brandon text-xs">
-                        Cultivating 13.0+ Acres of Organic Certified Vetiver
-                      </Text>
+                      <View className="flex-row items-center flex-wrap gap-2 mt-1">
+                        <View className="bg-emerald-500/30 px-2.5 py-0.5 rounded-full border border-emerald-400/40">
+                          <Text className="text-emerald-200 font-gotham-bold text-[10px]">
+                            {bothCount} Dual (Crop + Fert)
+                          </Text>
+                        </View>
+                        <View className="bg-sky-500/30 px-2.5 py-0.5 rounded-full border border-sky-400/40">
+                          <Text className="text-sky-200 font-gotham-bold text-[10px]">
+                            {cropCount} Exclusive Crops
+                          </Text>
+                        </View>
+                        <View className="bg-amber-500/30 px-2.5 py-0.5 rounded-full border border-amber-400/40">
+                          <Text className="text-amber-200 font-gotham-bold text-[10px]">
+                            {fertCount} Bio-Input Buyers
+                          </Text>
+                        </View>
+                      </View>
                     </View>
                   </View>
                 </ImageBackground>
               </View>
             </View>
 
-            {/* Farmers List (Light Multi-Color Pastel Cards) */}
+            {/* Farmers List (Light Multi-Color Cards with Dual Badges) */}
             <View className="px-5">
               {filtered.map((farmer, idx) => {
                 const cardThemes = [
-                  { bg: "bg-emerald-50/80", border: "border-emerald-200", badgeBg: "bg-emerald-100", badgeText: "text-emerald-800" },
-                  { bg: "bg-sky-50/80", border: "border-sky-200", badgeBg: "bg-sky-100", badgeText: "text-sky-800" },
-                  { bg: "bg-amber-50/80", border: "border-amber-200", badgeBg: "bg-amber-100", badgeText: "text-amber-800" },
-                  { bg: "bg-purple-50/80", border: "border-purple-200", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
+                  { bg: "bg-emerald-50/80", border: "border-emerald-200" },
+                  { bg: "bg-sky-50/80", border: "border-sky-200" },
+                  { bg: "bg-amber-50/80", border: "border-amber-200" },
+                  { bg: "bg-purple-50/80", border: "border-purple-200" },
                 ];
                 const theme = cardThemes[idx % cardThemes.length];
 
@@ -217,93 +255,150 @@ export default function MyFarmersScreen() {
                     key={farmer.id || idx}
                     className={`${theme.bg} rounded-[24px] p-4 mb-3.5 border ${theme.border} shadow-sm`}
                   >
-                  <View className="flex-row items-center mb-3">
-                    {/* Circular Avatar with Online Free Photo */}
-                    <View
-                      style={{
-                        width: 52,
-                        height: 52,
-                        borderRadius: 26,
-                        overflow: "hidden",
-                        borderWidth: 2,
-                        borderColor: "#e2e8f0",
-                        backgroundColor: "#f1f5f9",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginRight: 12,
-                        shadowColor: "#000",
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 4,
-                        elevation: 2,
-                      }}
-                    >
-                      <Image
-                        source={{
-                          uri:
-                            farmer.photo ||
-                            [
-                              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-                              "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
-                              "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
-                              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
-                              "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
-                            ][idx % 5],
+                    <View className="flex-row items-center mb-2.5">
+                      {/* Avatar */}
+                      <View
+                        style={{
+                          width: 54,
+                          height: 54,
+                          borderRadius: 27,
+                          overflow: "hidden",
+                          borderWidth: 2,
+                          borderColor: "#ffffff",
+                          backgroundColor: "#f1f5f9",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginRight: 12,
+                          shadowColor: "#000",
+                          shadowOffset: { width: 0, height: 2 },
+                          shadowOpacity: 0.1,
+                          shadowRadius: 4,
+                          elevation: 2,
                         }}
-                        style={{ width: "100%", height: "100%" }}
-                        resizeMode="cover"
-                      />
+                      >
+                        <Image
+                          source={{
+                            uri:
+                              farmer.photo ||
+                              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+                          }}
+                          style={{ width: "100%", height: "100%" }}
+                          resizeMode="cover"
+                        />
+                      </View>
+
+                      <View className="flex-1">
+                        <View className="flex-row items-center">
+                          <Text className="text-slate-900 font-gotham-bold text-base">
+                            {farmer.name}
+                          </Text>
+                          <ShieldCheck size={15} color="#059669" className="ml-1.5" />
+                        </View>
+                        <View className="flex-row items-center mt-0.5">
+                          <MapPin size={12} color="#64748b" />
+                          <Text
+                            className="text-slate-600 font-brandon text-xs ml-1"
+                            numberOfLines={1}
+                          >
+                            {farmer.address}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View className="bg-white/90 px-2.5 py-1 rounded-full border border-slate-200 shadow-xs">
+                        <Text className="text-emerald-800 font-gotham-bold text-xs">
+                          {farmer.farmArea || "3.0 Acres"}
+                        </Text>
+                      </View>
                     </View>
 
-                    <View className="flex-1">
+                    {/* Customer Category Badges (Crop & Fertilizer Mingle) */}
+                    <View className="flex-row flex-wrap items-center gap-1.5 mb-2.5">
+                      {(farmer.customerType === "both" || farmer.customerType === "crop") && (
+                        <View className="flex-row items-center bg-emerald-100/90 border border-emerald-300 px-2.5 py-0.5 rounded-full">
+                          <Sprout size={11} color="#047857" className="mr-1" />
+                          <Text className="text-emerald-900 font-gotham-bold text-[10px] uppercase tracking-wider">
+                            Crop: {farmer.cropType}
+                          </Text>
+                        </View>
+                      )}
+
+                      {(farmer.customerType === "both" || farmer.customerType === "fertilizer") && (
+                        <View className="flex-row items-center bg-amber-100/90 border border-amber-300 px-2.5 py-0.5 rounded-full">
+                          <Package size={11} color="#b45309" className="mr-1" />
+                          <Text className="text-amber-900 font-gotham-bold text-[10px] uppercase tracking-wider">
+                            Fertilizer Buyer
+                          </Text>
+                        </View>
+                      )}
+
+                      {farmer.customerType === "both" && (
+                        <View className="bg-purple-100/90 border border-purple-300 px-2 py-0.5 rounded-full">
+                          <Text className="text-purple-900 font-gotham-bold text-[9px] uppercase tracking-widest">
+                            ★ Dual Client
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+
+                    {/* Detailed Crops & Fertilizer Info */}
+                    <View className="bg-white/90 rounded-2xl p-3 mb-2.5 border border-slate-200/80">
+                      {farmer.cropDetails && (
+                        <View className="flex-row items-start mb-1.5">
+                          <Sprout size={13} color="#059669" className="mt-0.5 mr-1.5" />
+                          <Text className="text-slate-800 text-xs font-gotham-medium flex-1">
+                            <Text className="font-gotham-bold text-slate-900">Crop Details: </Text>
+                            {farmer.cropDetails}
+                          </Text>
+                        </View>
+                      )}
+
+                      {farmer.fertilizerDetails && (
+                        <View className="flex-row items-start">
+                          <Package size={13} color="#d97706" className="mt-0.5 mr-1.5" />
+                          <Text className="text-slate-800 text-xs font-gotham-medium flex-1">
+                            <Text className="font-gotham-bold text-slate-900">Bio-Inputs: </Text>
+                            {farmer.fertilizerDetails}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+
+                    {/* Bottom Action Footer */}
+                    <View className="flex-row justify-between items-center pt-2 border-t border-slate-200/60">
+                      <View className="flex-1 mr-2">
+                        <Text
+                          className="text-slate-600 text-[11px] font-gotham-medium"
+                          numberOfLines={1}
+                        >
+                          {farmer.recentOrder || "Active Organic Certification"}
+                        </Text>
+                      </View>
+
                       <View className="flex-row items-center">
-                        <Text className="text-slate-900 font-gotham-bold text-base">
-                          {farmer.name}
-                        </Text>
-                        <ShieldCheck size={15} color="#059669" className="ml-1.5" />
-                      </View>
-                      <View className="flex-row items-center mt-0.5">
-                        <MapPin size={12} color="#64748b" />
-                        <Text className="text-slate-600 font-brandon text-xs ml-1">
-                          {farmer.location}
-                        </Text>
-                      </View>
-                    </View>
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL(`tel:${farmer.phone}`)}
+                          className="w-8 h-8 rounded-full bg-emerald-50 items-center justify-center border border-emerald-200 mr-2"
+                        >
+                          <Phone size={14} color="#059669" />
+                        </TouchableOpacity>
 
-                    <View className="bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                      <Text className="text-emerald-800 font-gotham-bold text-xs">
-                        {farmer.acres} Acres
-                      </Text>
+                        <TouchableOpacity
+                          onPress={() =>
+                            Linking.openURL(
+                              `https://wa.me/${farmer.phone.replace(/[^0-9]/g, "")}`
+                            )
+                          }
+                          className="w-8 h-8 rounded-full bg-emerald-600 items-center justify-center shadow-xs"
+                        >
+                          <MessageCircle size={14} color="#ffffff" />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
-
-                  <View className="flex-row justify-between items-center pt-2.5 border-t border-slate-100">
-                    <View className="flex-row items-center">
-                      <Sprout size={14} color="#059669" />
-                      <Text className="text-slate-700 font-gotham-bold text-xs ml-1.5">
-                        {farmer.crops}
-                      </Text>
-                    </View>
-
-                    <View className="flex-row space-x-2">
-                      <TouchableOpacity
-                        onPress={() => Linking.openURL(`tel:${farmer.phone}`)}
-                        className="w-9 h-9 rounded-full bg-emerald-50 items-center justify-center border border-emerald-200 mr-2"
-                      >
-                        <Phone size={16} color="#059669" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => Linking.openURL(`https://wa.me/${farmer.phone.replace(/[^0-9]/g, "")}`)}
-                        className="w-9 h-9 rounded-full bg-emerald-600 items-center justify-center shadow-sm"
-                      >
-                        <MessageCircle size={16} color="#ffffff" />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
+                );
+              })}
+            </View>
           </ScrollView>
         </SafeAreaView>
       </ImageBackground>

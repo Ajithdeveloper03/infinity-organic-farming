@@ -22,8 +22,26 @@ import { router } from "expo-router";
 export default function OrdersScreen() {
   const orders = [
     {
+      id: "#8831",
+      product: "Certified Vetiver Root Slips",
+      category: "Crop Planting Material",
+      qty: "5,000 Slips (For 2.5 Acres)",
+      price: "₹12,500",
+      status: "Delivered",
+      date: "Aug 02, 2026",
+      icon: CheckCircle2,
+      color: "#15803d",
+      cardBg: "bg-emerald-50/80",
+      cardBorder: "border-emerald-200/90",
+      badgeBg: "#dcfce7",
+      badgeBorder: "#86efac",
+      iconBg: "bg-emerald-100/90",
+      iconBorder: "border-emerald-300/80",
+    },
+    {
       id: "#8832",
-      product: "Organic Compost (50kg)",
+      product: "Organic Vermicompost (50kg)",
+      category: "Bio-Fertilizer Input",
       qty: "2 Bags",
       price: "₹1,250",
       status: "Delivered",
@@ -40,6 +58,7 @@ export default function OrdersScreen() {
     {
       id: "#8833",
       product: "Pure Neem Oil Extract (5L)",
+      category: "Organic Pest Bio-Control",
       qty: "1 Canister",
       price: "₹850",
       status: "Processing",
@@ -56,6 +75,7 @@ export default function OrdersScreen() {
     {
       id: "#8834",
       product: "Bio-Fertilizer Soil Booster (25kg)",
+      category: "Bio-Fertilizer Input",
       qty: "1 Bag",
       price: "₹1,350",
       status: "Dispatched",
@@ -124,12 +144,12 @@ export default function OrdersScreen() {
                   <View className="flex-row justify-between bg-white/10 rounded-2xl p-4 border border-white/20">
                     <View>
                       <Text className="text-white/75 text-xs font-gotham-medium">Total Orders</Text>
-                      <Text className="text-white font-gotham-bold text-xl mt-0.5">3 Items</Text>
+                      <Text className="text-white font-gotham-bold text-xl mt-0.5">{orders.length} Items</Text>
                     </View>
                     <View className="w-px bg-white/20 h-full" />
                     <View>
                       <Text className="text-white/75 text-xs font-gotham-medium">Total Value</Text>
-                      <Text className="text-white font-gotham-bold text-xl mt-0.5">₹3,450</Text>
+                      <Text className="text-white font-gotham-bold text-xl mt-0.5">₹15,950</Text>
                     </View>
                     <View className="w-px bg-white/20 h-full" />
                     <View>
@@ -145,7 +165,7 @@ export default function OrdersScreen() {
           {/* Orders List Section */}
           <View className="px-5">
             <Text className="text-slate-900 font-gotham-bold text-base mb-3.5">
-              Recent Order History
+              Recent Order History (Crops & Bio-Fertilizers)
             </Text>
 
             {orders.map((order, index) => {
@@ -188,9 +208,18 @@ export default function OrdersScreen() {
                   </View>
 
                   <View className="bg-white/85 rounded-xl p-3.5 mb-3 border border-slate-200/70">
-                    <Text className="font-gotham-bold text-sm text-slate-900 mb-0.5">
-                      {order.product}
-                    </Text>
+                    <View className="flex-row items-center justify-between mb-1">
+                      <Text className="font-gotham-bold text-sm text-slate-900 flex-1 mr-2">
+                        {order.product}
+                      </Text>
+                      {order.category && (
+                        <View className="bg-emerald-100 px-2 py-0.5 rounded-md">
+                          <Text className="text-emerald-800 text-[10px] font-gotham-bold">
+                            {order.category}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
                     <Text className="text-slate-600 font-gotham-medium text-xs">
                       Quantity: {order.qty}
                     </Text>

@@ -57,43 +57,55 @@ export default function DashboardScreen() {
   const { isTracking } = useTracking();
   const nextVisit = todayVisitsList.find((v) => v.status === "pending") || todayVisitsList[0];
 
-  // Google Pay style Assigned Farmers Circular Avatar List (with online free photos)
+  // Google Pay style Assigned Farmers Circular Avatar List (with online free photos & customer types)
   const assignedFarmers = [
     {
       id: "1",
       name: "Murugan S",
       photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
       phone: "+91 9411111111",
+      customerType: "both",
+      tag: "Dual",
     },
     {
       id: "2",
       name: "Chandra K",
       photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
       phone: "+91 9422222222",
+      customerType: "fertilizer",
+      tag: "Fertilizer",
     },
     {
       id: "3",
       name: "Swathi M",
       photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
       phone: "+91 9433333333",
+      customerType: "crop",
+      tag: "Crop",
     },
     {
       id: "4",
       name: "Buhanesh",
       photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
       phone: "+91 9444444444",
+      customerType: "both",
+      tag: "Dual",
     },
     {
       id: "5",
       name: "Dhanabal",
       photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
       phone: "+91 9455555555",
+      customerType: "fertilizer",
+      tag: "Fertilizer",
     },
     {
       id: "6",
       name: "Vijaykumar",
       photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80",
       phone: "+91 9466666666",
+      customerType: "crop",
+      tag: "Crop",
     },
   ];
 
@@ -568,11 +580,11 @@ export default function DashboardScreen() {
             </View>
           </View>
 
-          {/* Google Pay Style "People" Section: Assigned Farmers Circular Avatars (Light Mode) */}
+          {/* Google Pay Style "People" Section: Assigned Farmers & Clients Circular Avatars (Light Mode) */}
           <View className="px-5 mb-6">
-            <View className="flex-row justify-between items-center mb-3">
+            <View className="flex-row justify-between items-center mb-1">
               <Text className="text-slate-900 font-gotham-bold text-lg">
-                Assigned Farmers
+                Farmers & Input Clients
               </Text>
               <TouchableOpacity
                 onPress={() => router.push("/(employee)/my-farmers" as any)}
@@ -582,6 +594,9 @@ export default function DashboardScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
+            <Text className="text-slate-500 font-gotham-medium text-xs mb-3">
+              Mingle of Contract Crop Growers & Bio-Fertilizer Buyers
+            </Text>
 
             <ScrollView
               horizontal
@@ -591,6 +606,13 @@ export default function DashboardScreen() {
               {assignedFarmers.map((f, fIdx) => {
                 const ringColors = ["#a7f3d0", "#bae6fd", "#fde68a", "#ddd6fe"];
                 const ringBorder = ringColors[fIdx % ringColors.length];
+
+                const tagBg =
+                  f.customerType === "both"
+                    ? "bg-purple-100 border-purple-200 text-purple-800"
+                    : f.customerType === "fertilizer"
+                    ? "bg-amber-100 border-amber-200 text-amber-800"
+                    : "bg-emerald-100 border-emerald-200 text-emerald-800";
 
                 return (
                   <TouchableOpacity
@@ -622,11 +644,32 @@ export default function DashboardScreen() {
                       />
                     </View>
                     <Text
-                      className="text-slate-800 font-gotham-medium text-xs mt-1.5 text-center w-16"
+                      className="text-slate-800 font-gotham-medium text-xs mt-1.5 text-center w-18"
                       numberOfLines={1}
                     >
                       {f.name}
                     </Text>
+                    <View
+                      className={`px-1.5 py-0.2 rounded-full border mt-0.5 ${
+                        f.customerType === "both"
+                          ? "bg-purple-50 border-purple-200"
+                          : f.customerType === "fertilizer"
+                          ? "bg-amber-50 border-amber-200"
+                          : "bg-emerald-50 border-emerald-200"
+                      }`}
+                    >
+                      <Text
+                        className={`text-[9px] font-gotham-bold ${
+                          f.customerType === "both"
+                            ? "text-purple-700"
+                            : f.customerType === "fertilizer"
+                            ? "text-amber-700"
+                            : "text-emerald-700"
+                        }`}
+                      >
+                        {f.tag}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
                 );
               })}

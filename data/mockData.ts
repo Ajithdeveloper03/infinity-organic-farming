@@ -1,3 +1,5 @@
+export type CustomerType = 'both' | 'crop' | 'fertilizer';
+
 export interface Farmer {
   id: string;
   name: string;
@@ -7,6 +9,11 @@ export interface Farmer {
   longitude: number;
   farmArea: string;
   cropType: string;
+  customerType: CustomerType;
+  cropDetails?: string;
+  fertilizerDetails?: string;
+  recentOrder?: string;
+  photo?: string;
 }
 
 export interface Visit {
@@ -31,41 +38,91 @@ export const mockFarmers: Farmer[] = [
     id: 'f1',
     name: 'Kuppusamy',
     phone: '+91 98765 43210',
-    address: 'Vetiver Farm - Block A, Thondamuthur',
+    address: 'Vetiver & Organic Farm - Block A, Thondamuthur',
     latitude: 10.9930,
     longitude: 76.8220,
-    farmArea: '2.5 Acres',
-    cropType: 'Vetiver',
+    farmArea: '4.5 Acres',
+    cropType: 'Vetiver & Turmeric',
+    customerType: 'both',
+    cropDetails: 'Vetiver (3.0 Acres) + Turmeric (1.5 Acres)',
+    fertilizerDetails: 'Vermicompost (500kg/season) & Bio-NPK Granules',
+    recentOrder: '50kg Bio-NPK Granules (Delivered)',
+    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
   },
   {
     id: 'f2',
     name: 'Subramani',
     phone: '+91 87654 32109',
-    address: 'Vetiver Farm - Block B, Pollachi',
+    address: 'Horticultural Estate - Block B, Pollachi',
     latitude: 10.6620,
     longitude: 77.0060,
     farmArea: '4.0 Acres',
-    cropType: 'Vetiver',
+    cropType: 'Coconut & Cocoa (Commercial)',
+    customerType: 'fertilizer',
+    cropDetails: 'Commercial Plantation Crop',
+    fertilizerDetails: 'Organic Manure, Neem Cake & Liquid Bio-Fertilizer',
+    recentOrder: '100L Liquid Growth Booster (In Transit)',
+    photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
   },
   {
     id: 'f3',
     name: 'Muthuvel',
     phone: '+91 76543 21098',
-    address: 'Vetiver Farm - Block C, Kinathukadavu',
+    address: 'Contract Farm - Block C, Kinathukadavu',
     latitude: 10.8170,
     longitude: 77.0140,
-    farmArea: '1.5 Acres',
-    cropType: 'Vetiver',
+    farmArea: '3.5 Acres',
+    cropType: 'Contract Vetiver Saplings',
+    customerType: 'crop',
+    cropDetails: 'Exclusive Vetiver Root Slips for Industrial Distillation',
+    fertilizerDetails: 'Supplied under buyback contract',
+    recentOrder: '5,000 Certified Vetiver Slips (Ready)',
+    photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
   },
   {
     id: 'f4',
     name: 'Perumal',
     phone: '+91 65432 10987',
-    address: 'Vetiver Farm - Block D, Sulur',
+    address: 'Spice & Agronomy Fields - Block D, Sulur',
     latitude: 11.0260,
     longitude: 77.1260,
-    farmArea: '3.0 Acres',
-    cropType: 'Vetiver',
+    farmArea: '5.0 Acres',
+    cropType: 'Organic Pepper & Vetiver',
+    customerType: 'both',
+    cropDetails: 'Pepper intercropped with Vetiver border rows',
+    fertilizerDetails: 'Enriched Compost, Bio-Potash & Micronutrient Foliar',
+    recentOrder: '200kg Enriched Vermicompost (Delivered)',
+    photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'f5',
+    name: 'Lakshmi Devi',
+    phone: '+91 94444 12345',
+    address: 'Greenhouse & Natural Farm - Udumalpet',
+    latitude: 10.5840,
+    longitude: 77.2480,
+    farmArea: '2.0 Acres',
+    cropType: 'Exotic Veg & Millets',
+    customerType: 'fertilizer',
+    cropDetails: 'Organic Kitchen & Millets Garden',
+    fertilizerDetails: 'Panchagavya, Neem Kernel Cake & Bio-Pesticide',
+    recentOrder: '25kg Neem Pellets (Delivered)',
+    photo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'f6',
+    name: 'Murugan S',
+    phone: '+91 94555 67890',
+    address: 'Delta Agronomy Lands - Thanjavur',
+    latitude: 10.7870,
+    longitude: 79.1378,
+    farmArea: '6.0 Acres',
+    cropType: 'Organic Paddy & Vetiver',
+    customerType: 'both',
+    cropDetails: 'Traditional Ponni Organic Paddy & Vetiver Bunds',
+    fertilizerDetails: 'Azospirillum, Phosphobacteria & Farmyard Bio-Manure',
+    recentOrder: '75kg Bio-Manure Blend (Processing)',
+    photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80',
   }
 ];
 

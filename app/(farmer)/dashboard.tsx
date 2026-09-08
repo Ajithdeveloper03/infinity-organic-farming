@@ -25,6 +25,7 @@ import {
   MapPin,
   TrendingUp,
   Sprout,
+  Package,
 } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -103,7 +104,7 @@ export default function FarmerDashboardScreen() {
                 <View className="flex-row items-center mt-1">
                   <View className="bg-emerald-100/95 border border-emerald-300/80 px-2.5 py-0.5 rounded-full flex-row items-center shadow-xs">
                     <Text className="text-emerald-950 font-gotham-bold text-[10px] tracking-wide">
-                      ID: FMR-1002 • Annur, Coimbatore
+                      ID: FMR-1002 • Dual Client (Crop + Fert)
                     </Text>
                   </View>
                 </View>
@@ -120,7 +121,7 @@ export default function FarmerDashboardScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* Quick Dual Switcher Badges */}
+          {/* Quick Dual Switcher Badges (Crop & Fertilizer Mingle) */}
           <View className="flex-row items-center justify-between mt-3.5">
             <View className="flex-1 mr-2 rounded-full overflow-hidden shadow-sm">
               <LinearGradient
@@ -145,7 +146,7 @@ export default function FarmerDashboardScreen() {
 
             <View className="flex-1 ml-2 rounded-full overflow-hidden shadow-sm">
               <LinearGradient
-                colors={["#0284c7", "#0369a1"]}
+                colors={["#d97706", "#b45309"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={{
@@ -157,9 +158,9 @@ export default function FarmerDashboardScreen() {
                   borderRadius: 999,
                 }}
               >
-                <Sprout size={14} color="#bae6fd" />
+                <Package size={14} color="#fef08a" />
                 <Text className="text-white font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
-                  Soil pH 6.8 • Prime
+                  Bio-Input Client
                 </Text>
               </LinearGradient>
             </View>
