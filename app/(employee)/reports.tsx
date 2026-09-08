@@ -200,69 +200,106 @@ export default function ReportsScreen() {
             })}
           </View>
 
-          {/* Concise Reports Overview List - Lesser Content with Exact Layout */}
+          {/* Concise Reports Overview List - Darkish Rich Cards with Enhanced Contrast */}
           <View className="px-5">
-            {filteredReports.map((item) => (
-              <TouchableOpacity
-                key={item.id}
-                activeOpacity={0.85}
-                onPress={() =>
-                  router.push(`/(employee)/report/${item.id}` as any)
-                }
-                className="bg-white rounded-[22px] p-4 mb-3 border border-slate-200 shadow-sm"
-              >
-                <View className="flex-row justify-between items-center mb-2">
-                  <View className="flex-row items-center">
-                    <Calendar size={13} color="#64748b" />
-                    <Text className="text-slate-500 font-brandon text-xs ml-1 font-bold">
-                      {item.date}
-                    </Text>
-                  </View>
+            {filteredReports.map((item, idx) => {
+              const darkThemes = [
+                {
+                  bg: "bg-[#062c1e]",
+                  border: "border-emerald-500/40",
+                  pillBg: "bg-emerald-500/25",
+                  pillBorder: "border-emerald-400/50",
+                  pillText: "text-emerald-300",
+                  iconColor: "#34d399",
+                  actionText: "text-emerald-300",
+                },
+                {
+                  bg: "bg-[#08203e]",
+                  border: "border-sky-500/40",
+                  pillBg: "bg-sky-500/25",
+                  pillBorder: "border-sky-400/50",
+                  pillText: "text-sky-300",
+                  iconColor: "#38bdf8",
+                  actionText: "text-sky-300",
+                },
+                {
+                  bg: "bg-[#2a1705]",
+                  border: "border-amber-500/40",
+                  pillBg: "bg-amber-500/25",
+                  pillBorder: "border-amber-400/50",
+                  pillText: "text-amber-300",
+                  iconColor: "#fbbf24",
+                  actionText: "text-amber-300",
+                },
+                {
+                  bg: "bg-[#200a35]",
+                  border: "border-purple-500/40",
+                  pillBg: "bg-purple-500/25",
+                  pillBorder: "border-purple-400/50",
+                  pillText: "text-purple-300",
+                  iconColor: "#c084fc",
+                  actionText: "text-purple-300",
+                },
+              ];
+              const theme = darkThemes[idx % darkThemes.length];
 
-                  <View
-                    style={{
-                      backgroundColor: item.tagBg,
-                      borderColor: item.tagBorder,
-                    }}
-                    className="px-2.5 py-0.5 rounded-full border"
-                  >
-                    <Text
-                      style={{ color: item.tagText }}
-                      className="font-gotham-bold text-[10px] uppercase tracking-wider"
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  activeOpacity={0.85}
+                  onPress={() =>
+                    router.push(`/(employee)/report/${item.id}` as any)
+                  }
+                  className={`${theme.bg} rounded-[22px] p-4 mb-3 border ${theme.border} shadow-md`}
+                >
+                  <View className="flex-row justify-between items-center mb-2">
+                    <View className="flex-row items-center">
+                      <Calendar size={13} color={theme.iconColor} />
+                      <Text className="text-slate-300 font-gotham-semibold text-xs ml-1.5">
+                        {item.date}
+                      </Text>
+                    </View>
+
+                    <View
+                      className={`px-2.5 py-0.5 rounded-full border ${theme.pillBg} ${theme.pillBorder}`}
                     >
-                      {item.status}
-                    </Text>
+                      <Text
+                        className={`font-gotham-bold text-[10px] uppercase tracking-wider ${theme.pillText}`}
+                      >
+                        {item.status}
+                      </Text>
+                    </View>
                   </View>
-                </View>
 
-                <Text className="text-slate-900 font-gotham-bold text-base mb-1">
-                  {item.name}
-                </Text>
-
-                <View className="flex-row items-center mb-2.5">
-                  <MapPin size={12} color="#64748b" />
-                  <Text className="text-slate-600 font-brandon text-xs ml-1">
-                    {item.location} • {item.acres}
+                  <Text className="text-white font-gotham-bold text-base mb-1">
+                    {item.name}
                   </Text>
-                </View>
 
-                <View className="flex-row items-center justify-between pt-2.5 border-t border-slate-100">
-                  <View className="flex-row items-center bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
-                    <Droplets size={12} color="#059669" />
-                    <Text className="text-emerald-800 font-gotham-bold text-[11px] ml-1">
-                      Moisture: {item.moisture}
+                  <View className="flex-row items-center mb-2.5">
+                    <MapPin size={12} color={theme.iconColor} />
+                    <Text className="text-slate-200 font-gotham-medium text-xs ml-1">
+                      {item.location} • {item.acres}
                     </Text>
                   </View>
 
-                  <View className="flex-row items-center">
-                    <Text className="text-emerald-700 font-gotham-bold text-xs mr-1">
-                      View Full Report
-                    </Text>
-                    <ChevronRight size={14} color="#059669" />
+                  <View className="flex-row items-center justify-between pt-2.5 border-t border-white/15">
+                    <View className={`flex-row items-center ${theme.pillBg} px-2.5 py-1 rounded-md border ${theme.pillBorder}`}>
+                      <Droplets size={12} color={theme.iconColor} />
+                      <Text className={`font-gotham-bold text-[11px] ml-1 ${theme.pillText}`}>
+                        Moisture: {item.moisture}
+                      </Text>
+                    </View>
+
+                    <View className="flex-row items-center">
+                      <Text className={`${theme.actionText} font-gotham-bold text-xs mr-1`}>
+                        View Full Report
+                      </Text>
+                      <ChevronRight size={14} color={theme.iconColor} />
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </ScrollView>
       </SafeAreaView>

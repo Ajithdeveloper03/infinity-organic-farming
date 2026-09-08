@@ -169,13 +169,45 @@ export default function VisitsScreen() {
           <View className="px-5">
             {filteredVisits.map((visit, idx) => {
               const isCompleted = visit.status === "completed";
-              const cardThemes = [
-                { bg: "bg-emerald-50/80", border: "border-emerald-200" },
-                { bg: "bg-sky-50/80", border: "border-sky-200" },
-                { bg: "bg-amber-50/80", border: "border-amber-200" },
-                { bg: "bg-purple-50/80", border: "border-purple-200" },
+              const darkThemes = [
+                {
+                  bg: "bg-[#062c1e]",
+                  border: "border-emerald-500/40",
+                  timeBg: "bg-emerald-500/25",
+                  timeBorder: "border-emerald-400/50",
+                  timeText: "text-emerald-300",
+                  iconColor: "#34d399",
+                  actionText: "text-emerald-300",
+                },
+                {
+                  bg: "bg-[#08203e]",
+                  border: "border-sky-500/40",
+                  timeBg: "bg-sky-500/25",
+                  timeBorder: "border-sky-400/50",
+                  timeText: "text-sky-300",
+                  iconColor: "#38bdf8",
+                  actionText: "text-sky-300",
+                },
+                {
+                  bg: "bg-[#2a1705]",
+                  border: "border-amber-500/40",
+                  timeBg: "bg-amber-500/25",
+                  timeBorder: "border-amber-400/50",
+                  timeText: "text-amber-300",
+                  iconColor: "#fbbf24",
+                  actionText: "text-amber-300",
+                },
+                {
+                  bg: "bg-[#200a35]",
+                  border: "border-purple-500/40",
+                  timeBg: "bg-purple-500/25",
+                  timeBorder: "border-purple-400/50",
+                  timeText: "text-purple-300",
+                  iconColor: "#c084fc",
+                  actionText: "text-purple-300",
+                },
               ];
-              const theme = cardThemes[idx % cardThemes.length];
+              const theme = darkThemes[idx % darkThemes.length];
 
               return (
                 <TouchableOpacity
@@ -184,26 +216,20 @@ export default function VisitsScreen() {
                   onPress={() =>
                     router.push(`/(employee)/visit/${visit.id}` as any)
                   }
-                  className={`${theme.bg} rounded-[22px] p-4 mb-3 border ${theme.border} shadow-sm`}
+                  className={`${theme.bg} rounded-[22px] p-4 mb-3 border ${theme.border} shadow-md`}
                 >
                   <View className="flex-row justify-between items-center mb-2">
                     <View className="flex-row items-center">
                       <View
-                        className={`px-2.5 py-0.5 rounded-md mr-2 ${
-                          isCompleted
-                            ? "bg-emerald-100 border border-emerald-200"
-                            : "bg-orange-100 border border-orange-200"
-                        }`}
+                        className={`px-2.5 py-0.5 rounded-md mr-2 border ${theme.timeBg} ${theme.timeBorder}`}
                       >
                         <Text
-                          className={`text-[11px] font-gotham-bold ${
-                            isCompleted ? "text-emerald-800" : "text-orange-800"
-                          }`}
+                          className={`text-[11px] font-gotham-bold ${theme.timeText}`}
                         >
                           {visit.time || "10:30 AM"}
                         </Text>
                       </View>
-                      <Text className="text-slate-500 font-brandon text-xs">
+                      <Text className="text-slate-300 font-gotham-medium text-xs">
                         {isCompleted ? "Completed ✓" : "Upcoming"}
                       </Text>
                     </View>
@@ -214,21 +240,21 @@ export default function VisitsScreen() {
                           `tel:${visit.farmer?.phone || "9411111111"}`
                         )
                       }
-                      className="w-8 h-8 rounded-full bg-emerald-50 items-center justify-center border border-emerald-200"
+                      className="w-8 h-8 rounded-full bg-white/15 items-center justify-center border border-white/20"
                     >
-                      <Phone size={15} color="#059669" />
+                      <Phone size={14} color={theme.iconColor} />
                     </TouchableOpacity>
                   </View>
 
-                  <Text className="text-slate-900 font-gotham-bold text-base mb-1">
+                  <Text className="text-white font-gotham-bold text-base mb-1">
                     {visit.farmerName || visit.farmer?.name || "Organic Farm"}
                   </Text>
 
-                  <View className="flex-row items-center justify-between pt-2 border-t border-slate-100">
+                  <View className="flex-row items-center justify-between pt-2.5 border-t border-white/15">
                     <View className="flex-row items-center flex-1 mr-2">
-                      <MapPin size={13} color="#64748b" />
+                      <MapPin size={13} color={theme.iconColor} />
                       <Text
-                        className="text-slate-600 text-xs ml-1 font-brandon"
+                        className="text-slate-200 text-xs ml-1 font-gotham-medium"
                         numberOfLines={1}
                       >
                         {visit.address || visit.farmer?.address || "Thanjavur Ag-Corridor"}
@@ -236,10 +262,10 @@ export default function VisitsScreen() {
                     </View>
 
                     <View className="flex-row items-center">
-                      <Text className="text-emerald-700 font-gotham-bold text-xs mr-1">
+                      <Text className={`${theme.actionText} font-gotham-bold text-xs mr-1`}>
                         View Details
                       </Text>
-                      <ChevronRight size={14} color="#059669" />
+                      <ChevronRight size={14} color={theme.iconColor} />
                     </View>
                   </View>
                 </TouchableOpacity>

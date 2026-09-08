@@ -132,83 +132,83 @@ export default function ReportDetailsScreen() {
             </ImageBackground>
           </View>
 
-          {/* 4 Agronomic Key Metrics Gauges (White Cards, High Contrast) */}
+          {/* 4 Agronomic Key Metrics Gauges (Darkish Rich Cards, High Contrast) */}
           <View className="flex-row justify-between mb-4">
-            <View className="w-[48%] bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <View className="w-[48%] bg-[#062c1e] p-4 rounded-2xl border border-emerald-500/40 shadow-md">
               <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-slate-500 font-gotham-bold text-[11px] uppercase">
+                <Text className="text-emerald-300/80 font-gotham-semibold text-[11px] uppercase tracking-wider">
                   Soil Moisture
                 </Text>
-                <Droplets size={16} color="#059669" />
+                <Droplets size={16} color="#34d399" />
               </View>
-              <Text className="text-slate-900 font-gotham-bold text-2xl">
+              <Text className="text-white font-gotham-bold text-2xl my-0.5">
                 {report.moisture}
               </Text>
-              <Text className="text-emerald-700 font-brandon text-xs font-bold mt-0.5">
+              <Text className="text-emerald-300 font-gotham-medium text-xs">
                 Optimal Field Range
               </Text>
             </View>
 
-            <View className="w-[48%] bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <View className="w-[48%] bg-[#08203e] p-4 rounded-2xl border border-sky-500/40 shadow-md">
               <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-slate-500 font-gotham-bold text-[11px] uppercase">
+                <Text className="text-sky-300/80 font-gotham-semibold text-[11px] uppercase tracking-wider">
                   Soil pH
                 </Text>
-                <Sprout size={16} color="#2563eb" />
+                <Sprout size={16} color="#38bdf8" />
               </View>
-              <Text className="text-slate-900 font-gotham-bold text-2xl">
+              <Text className="text-white font-gotham-bold text-2xl my-0.5">
                 {report.ph}
               </Text>
-              <Text className="text-blue-700 font-brandon text-xs font-bold mt-0.5">
+              <Text className="text-sky-300 font-gotham-medium text-xs">
                 Neutral Balance
               </Text>
             </View>
           </View>
 
           <View className="flex-row justify-between mb-4">
-            <View className="w-[48%] bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <View className="w-[48%] bg-[#200a35] p-4 rounded-2xl border border-purple-500/40 shadow-md">
               <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-slate-500 font-gotham-bold text-[11px] uppercase">
+                <Text className="text-purple-300/80 font-gotham-semibold text-[11px] uppercase tracking-wider">
                   Nitrogen Index
                 </Text>
-                <ShieldCheck size={16} color="#7c3aed" />
+                <ShieldCheck size={16} color="#c084fc" />
               </View>
-              <Text className="text-slate-900 font-gotham-bold text-lg">
+              <Text className="text-white font-gotham-bold text-lg my-0.5">
                 {report.nitrogen}
               </Text>
-              <Text className="text-purple-700 font-brandon text-xs font-bold mt-0.5">
+              <Text className="text-purple-300 font-gotham-medium text-xs">
                 Bio-Enriched
               </Text>
             </View>
 
-            <View className="w-[48%] bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <View className="w-[48%] bg-[#2a1705] p-4 rounded-2xl border border-amber-500/40 shadow-md">
               <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-slate-500 font-gotham-bold text-[11px] uppercase">
+                <Text className="text-amber-300/80 font-gotham-semibold text-[11px] uppercase tracking-wider">
                   Root Depth
                 </Text>
-                <FileCheck2 size={16} color="#ea580c" />
+                <FileCheck2 size={16} color="#fbbf24" />
               </View>
-              <Text className="text-slate-900 font-gotham-bold text-lg">
+              <Text className="text-white font-gotham-bold text-lg my-0.5">
                 {report.rootDepth}
               </Text>
-              <Text className="text-orange-700 font-brandon text-xs font-bold mt-0.5">
+              <Text className="text-amber-300 font-gotham-medium text-xs">
                 Healthy Taproots
               </Text>
             </View>
           </View>
 
           {/* Agronomist Observations & Recommendations */}
-          <View className="bg-white rounded-[26px] p-5 shadow-sm border border-slate-200 mb-4">
-            <Text className="text-slate-900 font-gotham-bold text-base mb-2">
+          <View className="bg-slate-900 rounded-[26px] p-5 shadow-md border border-slate-700/60 mb-4">
+            <Text className="text-white font-gotham-bold text-base mb-2">
               Agronomist Recommendations
             </Text>
-            <Text className="text-slate-700 text-xs font-brandon leading-relaxed mb-4">
+            <Text className="text-slate-200 text-xs font-gotham-medium leading-relaxed mb-4">
               {report.recommendation}
             </Text>
 
-            <View className="bg-emerald-50 rounded-xl p-3 border border-emerald-200 flex-row items-center">
-              <CheckCircle2 size={18} color="#059669" className="mr-2" />
-              <Text className="text-emerald-900 text-xs font-gotham-bold ml-1 flex-1">
+            <View className="bg-emerald-500/20 rounded-xl p-3 border border-emerald-400/40 flex-row items-center">
+              <CheckCircle2 size={18} color="#34d399" />
+              <Text className="text-emerald-300 text-xs font-gotham-bold ml-2 flex-1">
                 Digital Sign-off: Certified by Regional Officer
               </Text>
             </View>

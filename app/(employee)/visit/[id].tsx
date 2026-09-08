@@ -50,22 +50,22 @@ export default function VisitDetailsScreen() {
   }
 
   const InfoRow = ({ icon: Icon, label, value, color }: any) => (
-    <View className="flex-row items-center py-3.5 border-b border-slate-100">
+    <View className="flex-row items-center py-3.5 border-b border-white/10">
       <View
         className="w-10 h-10 rounded-2xl items-center justify-center mr-3.5 shadow-sm"
         style={{
-          backgroundColor: `${color}15`,
-          borderColor: `${color}30`,
+          backgroundColor: `${color}25`,
+          borderColor: `${color}50`,
           borderWidth: 1,
         }}
       >
         <Icon size={18} color={color} />
       </View>
       <View className="flex-1">
-        <Text className="text-slate-500 font-gotham-bold text-[10px] uppercase tracking-wider">
+        <Text className="text-slate-400 font-gotham-semibold text-[10px] uppercase tracking-wider">
           {label}
         </Text>
-        <Text className="text-slate-900 font-gotham-bold text-sm mt-0.5">
+        <Text className="text-white font-gotham-bold text-sm mt-0.5">
           {value}
         </Text>
       </View>
@@ -158,9 +158,9 @@ export default function VisitDetailsScreen() {
             </ImageBackground>
           </View>
 
-          {/* Full Audit Detailed Parameters */}
-          <View className="bg-white rounded-[28px] p-5 shadow-sm border border-slate-200 mb-6">
-            <Text className="text-slate-900 font-gotham-bold text-base mb-2">
+          {/* Full Audit Detailed Parameters (Darkish Rich Card) */}
+          <View className="bg-slate-900 rounded-[28px] p-5 shadow-md border border-slate-700/60 mb-6">
+            <Text className="text-white font-gotham-bold text-base mb-2">
               Agronomic Parameters
             </Text>
 
@@ -168,38 +168,38 @@ export default function VisitDetailsScreen() {
               icon={Calendar}
               label="Audit Scheduled Date"
               value={visit.date}
-              color="#059669"
+              color="#34d399"
             />
             <InfoRow
               icon={Clock}
               label="Target Time Window"
               value={visit.time}
-              color="#2563eb"
+              color="#38bdf8"
             />
             <InfoRow
               icon={MapPin}
               label="Registered Parcel Size"
               value={visit.farmer.farmArea || "5.0 Acres"}
-              color="#ea580c"
+              color="#fbbf24"
             />
             <InfoRow
               icon={Leaf}
               label="Cultivated Crops"
               value={visit.farmer.cropType || "Organic Vetiver & Turmeric"}
-              color="#7c3aed"
+              color="#c084fc"
             />
             <InfoRow
               icon={History}
               label="Previous Field Log"
               value={visit.previousVisitDate || "Initial Onboarding Audit"}
-              color="#db2777"
+              color="#f472b6"
             />
 
             <View className="pt-4">
-              <Text className="text-slate-500 font-gotham-bold text-[10px] uppercase tracking-wider mb-1">
+              <Text className="text-slate-400 font-gotham-bold text-[10px] uppercase tracking-wider mb-1">
                 Field Instructions & Notes
               </Text>
-              <Text className="text-slate-700 text-xs leading-relaxed font-brandon">
+              <Text className="text-slate-200 text-xs leading-relaxed font-gotham-medium">
                 {visit.remarks ||
                   "Conduct root depth inspection, test soil moisture levels, inspect bio-tonic spray efficacy, and record geo-coordinates."}
               </Text>

@@ -370,13 +370,13 @@ export default function DashboardScreen() {
                       </Text>
                       <View className="flex-row items-center mb-2">
                         <MapPin size={13} color="#34d399" />
-                        <Text className="text-emerald-300 font-brandon font-bold text-xs ml-1">
+                        <Text className="text-emerald-300 font-gotham font-bold text-xs ml-1">
                           {nextVisit.address || nextVisit.farmer?.address || "Thanjavur Ag-Corridor"}
                         </Text>
-                        <Text className="text-white/40 mx-1.5">•</Text>
+                        {/* <Text className="text-white/40 mx-1.5">•</Text>
                         <Text className="text-slate-300 font-gotham-medium text-xs">
                           Soil & Bio-Tonic Audit
-                        </Text>
+                        </Text> */}
                       </View>
 
                       {/* JioHotstar Style Buttons on Hero Card (+ and Play) */}
