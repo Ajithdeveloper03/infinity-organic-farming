@@ -3,10 +3,10 @@ import React, { useEffect, useRef } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   Animated,
   TouchableOpacity,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { CheckCircle2 } from "lucide-react-native";
 import { Button } from "../components/ui/Button";
@@ -41,7 +41,7 @@ export default function SuccessScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#15803d]">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#15803d" }}>
       <View className="flex-1 items-center justify-center px-6">
         <Animated.View
           style={{ transform: [{ scale }], opacity }}

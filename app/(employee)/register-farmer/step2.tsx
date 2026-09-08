@@ -1,16 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   TextInput,
   Image,
-  Alert,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
-import { Button } from "../../../components/ui/Button";
+import { ChevronLeft, ArrowRight, ShieldCheck } from "lucide-react-native";
 import { showToast } from "../../../components/ui/ToastMessage";
 
 const DUMMY_OTP = "123456";
@@ -38,69 +37,109 @@ export default function Step2OTP() {
   const handleFillDummy = () => {
     const otpArr = DUMMY_OTP.split("");
     setOtp(otpArr);
-    showToast({ title: "Demo OTP", message: "Filled with dummy OTP: 123456", type: "info" });
+    showToast({ title: "Demo OTP", message: "Auto-filled dummy OTP: 123456", type: "info" });
   };
 
   const handleNext = () => {
     router.push({
       pathname: "/(employee)/register-farmer/step3",
-      params: { 
-        mobile: params.mobile || "9842155678", 
-        category: params.category || "Crop", 
-        crops: params.crops || "Vetiver" 
+      params: {
+        mobile: params.mobile || "9842155678",
+        category: params.category || "Crop",
+        crops: params.crops || "Vetiver",
       },
     });
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-1 px-6 pt-12">
-        {/* Header */}
-        <View className="flex-row items-center mb-8">
-          <TouchableOpacity onPress={() => router.back()} className="mr-4">
-            <ArrowLeft size={24} color="#000" />
-          </TouchableOpacity>
-          <Text className="text-xl font-gotham-bold text-gray-900">
-            Verify Your Number
-          </Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      {/* Header - Strictly Transparent Background */}
+      <View
+        style={{ backgroundColor: "transparent" }}
+        className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
+      >
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm"
+          activeOpacity={0.7}
+        >
+          <ChevronLeft size={22} color="#0f172a" />
+        </TouchableOpacity>
+
+        <Text className="text-lg font-gotham-bold text-slate-900">
+          Verify Mobile OTP
+        </Text>
+
+        <View className="w-10" />
+      </View>
+
+      <ScrollView
+        className="flex-1 px-5"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 40 }}
+      >
+        {/* Stepper (3 Steps) */}
+        <View className="flex-row items-center justify-center my-4 px-6">
+          <View className="w-8 h-8 rounded-full bg-emerald-600 items-center justify-center shadow-sm">
+            <Text className="text-white font-gotham-bold text-xs">✓</Text>
+          </View>
+          <View className="flex-1 h-0.5 bg-emerald-500 mx-2" />
+          <View className="w-8 h-8 rounded-full bg-emerald-600 items-center justify-center shadow-sm">
+            <Text className="text-white font-gotham-bold text-xs">2</Text>
+          </View>
+          <View className="flex-1 h-0.5 bg-slate-200 mx-2" />
+          <View className="w-8 h-8 rounded-full bg-white border border-slate-300 items-center justify-center">
+            <Text className="text-slate-400 font-gotham-bold text-xs">3</Text>
+          </View>
         </View>
 
-        <View className="items-center mb-8">
-          <Text className="text-gray-500 text-base text-center font-brandon">
-            Enter the 6-digit code sent to
+        {/* Hero Visual */}
+        <View className="items-center justify-center my-4">
+          <View className="w-28 h-28 rounded-3xl bg-blue-50 items-center justify-center border border-blue-200 shadow-sm">
+            <Image
+              source={require("../../../assets/images/lock_phone.png")}
+              style={{ width: 80, height: 80 }}
+              resizeMode="contain"
+            />
+          </View>
+          <Text className="text-xl font-gotham-bold text-slate-900 mt-4 text-center">
+            Enter 6-Digit OTP
           </Text>
-          <Text className="text-gray-900 font-gotham-bold text-base mt-1">
-            +91 {params.mobile || "XXXXXXXXXX"}
+          <Text className="text-slate-500 font-brandon text-xs text-center mt-1">
+            Sent to +91 {params.mobile || "9842155678"}
           </Text>
 
-          {/* Demo hint banner */}
+          {/* Quick Fill Button */}
           <TouchableOpacity
             onPress={handleFillDummy}
-            className="mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2"
+            className="mt-3 bg-amber-50 border border-amber-200 rounded-full px-4 py-1.5 shadow-sm"
           >
-            <Text className="text-amber-700 font-brandon-medium text-xs text-center">
-              🔑 Demo mode — tap here to auto-fill OTP: <Text className="font-gotham-bold">123456</Text>
+            <Text className="text-amber-800 font-gotham-bold text-xs">
+              ⚡ Demo Auto-Fill (123456)
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* OTP Inputs */}
-        <View className="flex-row justify-between mb-8 px-2">
+        {/* OTP Input Boxes */}
+        <View className="flex-row justify-between my-6 px-1">
           {otp.map((digit, index) => (
             <TextInput
               key={index}
-              ref={(ref) => { inputs.current[index] = ref; }}
+              ref={(ref) => {
+                inputs.current[index] = ref;
+              }}
               style={{
                 width: 46,
                 height: 56,
                 borderWidth: 2,
-                borderRadius: 12,
+                borderRadius: 14,
                 textAlign: "center",
                 fontSize: 22,
                 fontFamily: "Gotham-Bold",
-                borderColor: digit ? "#15803d" : "#e5e7eb",
-                backgroundColor: digit ? "#f0fdf4" : "#f9fafb",
-                color: digit ? "#15803d" : "#111827",
+                borderColor: digit ? "#059669" : "#cbd5e1",
+                backgroundColor: digit ? "#ecfdf5" : "#ffffff",
+                color: digit ? "#059669" : "#0f172a",
+                elevation: digit ? 2 : 0,
               }}
               keyboardType="number-pad"
               maxLength={1}
@@ -112,28 +151,25 @@ export default function Step2OTP() {
           ))}
         </View>
 
-        <View className="flex-row justify-center mb-12">
-          <Text className="text-gray-500 font-brandon-medium">Resend OTP in </Text>
-          <Text className="text-[#15803d] font-gotham-bold">00:25</Text>
+        <View className="flex-row justify-center mb-8">
+          <Text className="text-slate-500 font-brandon text-xs">Didn't receive code? </Text>
+          <TouchableOpacity onPress={handleFillDummy}>
+            <Text className="text-emerald-700 font-gotham-bold text-xs">Resend Code</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Real Image */}
-        <View className="items-center justify-center h-48 mb-auto self-center">
-          <Image
-            source={require("../../../assets/images/lock_phone.png")}
-            style={{ width: 160, height: 160 }}
-            resizeMode="contain"
-          />
-        </View>
-
-        <View className="pb-8">
-          <Button
-            title="Verify & Continue"
-            onPress={handleNext}
-            className="bg-[#15803d]"
-          />
-        </View>
-      </View>
+        {/* Verify & Continue Button */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={handleNext}
+          className="w-full bg-emerald-600 py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-700/25 flex-row"
+        >
+          <Text className="text-white font-gotham-bold text-base uppercase tracking-wider mr-2">
+            Verify & Proceed to Details
+          </Text>
+          <ArrowRight size={18} color="#ffffff" />
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 }

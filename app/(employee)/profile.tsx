@@ -101,7 +101,7 @@ export default function ProfileScreen() {
             {/* Officer Identification Hero Card (Light Mode) */}
             <View className="px-5 mt-2 mb-5">
               <View className="rounded-[28px] overflow-hidden bg-white border border-slate-200 shadow-sm">
-                {/* Banner with Bottom-to-Top White Gradient */}
+                {/* Banner with Dark Bottom-to-Top Overlay */}
                 <ImageBackground
                   source={require("../../assets/images/image1.jpg")}
                   className="w-full h-36"
@@ -110,11 +110,10 @@ export default function ProfileScreen() {
                   <LinearGradient
                     colors={[
                       "transparent",
-                      "rgba(255, 255, 255, 0.4)",
-                      "rgba(255, 255, 255, 0.95)",
-                      "#ffffff",
+                      "rgba(0, 0, 0, 0.45)",
+                      "rgba(10, 15, 25, 0.94)",
                     ]}
-                    locations={[0, 0.25, 0.65, 1]}
+                    locations={[0, 0.35, 1]}
                     style={StyleSheet.absoluteFill}
                   />
                 </ImageBackground>

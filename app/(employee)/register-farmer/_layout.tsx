@@ -6,6 +6,11 @@ export default function RegisterFarmerLayout() {
       screenOptions={{
         headerShown: false,
       }}
-    />
+      initialRouteName="step1"
+    >
+      <Stack.Screen name="step1" />
+      <Stack.Screen name="step2" />
+      <Stack.Screen name="step3" />
+    </Stack>
   );
 }

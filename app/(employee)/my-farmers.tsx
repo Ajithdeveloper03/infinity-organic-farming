@@ -163,7 +163,7 @@ export default function MyFarmersScreen() {
 
             {/* Hero Summary Card with Bottom-to-Top White Gradient */}
             <View className="px-5 mb-5">
-              <View className="rounded-[28px] overflow-hidden shadow-md border border-slate-200 bg-white">
+              <View className="rounded-[28px] overflow-hidden shadow-md bg-slate-900">
                 <ImageBackground
                   source={require("../../assets/images/image3.jpg")}
                   className="w-full h-44"
@@ -172,16 +172,15 @@ export default function MyFarmersScreen() {
                   <LinearGradient
                     colors={[
                       "transparent",
-                      "rgba(255, 255, 255, 0.4)",
-                      "rgba(255, 255, 255, 0.92)",
-                      "#ffffff",
+                      "rgba(0, 0, 0, 0.45)",
+                      "rgba(10, 15, 25, 0.94)",
                     ]}
-                    locations={[0, 0.25, 0.65, 1]}
+                    locations={[0, 0.35, 1]}
                     style={StyleSheet.absoluteFill}
                   />
 
                   <View className="flex-1 p-5 justify-between">
-                    <View className="flex-row items-center bg-emerald-700 px-3 py-1 rounded-full self-start shadow-sm">
+                    <View className="flex-row items-center bg-emerald-500 px-3 py-1 rounded-full self-start shadow-sm">
                       <Users size={14} color="#ffffff" />
                       <Text className="text-white font-gotham-bold text-[11px] ml-1.5 uppercase tracking-wider">
                         Assigned Landholders
@@ -189,10 +188,10 @@ export default function MyFarmersScreen() {
                     </View>
 
                     <View>
-                      <Text className="text-slate-900 font-gotham-bold text-2xl mb-1">
+                      <Text className="text-white font-gotham-bold text-2xl mb-1">
                         {farmers.length} Enrolled Farmers
                       </Text>
-                      <Text className="text-emerald-800 font-brandon font-bold text-xs">
+                      <Text className="text-emerald-300 font-brandon text-xs">
                         Cultivating 13.0+ Acres of Organic Certified Vetiver
                       </Text>
                     </View>

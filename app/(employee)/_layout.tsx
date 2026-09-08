@@ -250,6 +250,18 @@ export default function EmployeeLayout() {
               href: null,
             }}
           />
+          <Tabs.Screen
+            name="report"
+            options={{
+              href: null,
+            }}
+          />
+          <Tabs.Screen
+            name="notifications"
+            options={{
+              href: null,
+            }}
+          />
         </Tabs>
     </TrackingProvider>
   );

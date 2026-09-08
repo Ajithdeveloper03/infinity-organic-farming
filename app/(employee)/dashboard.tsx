@@ -242,7 +242,7 @@ export default function DashboardScreen() {
             contentContainerStyle={{ paddingBottom: 120, paddingTop: 4 }}
           >
             {/* Google Pay Style Celebratory / Motivational Banner (Light Mode) */}
-            <View className="px-5 mb-4">
+            {/* <View className="px-5 mb-4">
               <View className="rounded-[22px] overflow-hidden border border-amber-200 bg-amber-50 shadow-sm p-3.5 flex-row items-center justify-between">
                 <View className="flex-1 pr-2">
                   <View className="flex-row items-center mb-0.5">
@@ -267,7 +267,7 @@ export default function DashboardScreen() {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View>
+            </View> */}
 
             {/* JioHotstar Style Featured Spotlight Card (Hero Farmer Visit) */}
             {nextVisit && (
@@ -285,59 +285,58 @@ export default function DashboardScreen() {
                   </TouchableOpacity>
                 </View>
 
-                <View className="rounded-[28px] overflow-hidden shadow-md border border-slate-200 bg-white">
+                <View className="rounded-[28px] overflow-hidden shadow-xl border border-slate-200 bg-slate-900">
                   <ImageBackground
                     source={require("../../assets/images/image3.jpg")}
                     className="w-full h-72"
                     resizeMode="cover"
                   >
-                    {/* Mandatory Bottom-to-Top White-to-Transparent Overlay for Pristine Readability */}
+                    {/* Mandatory Dark Bottom-to-Top Overlay with Enhanced White Text */}
                     <LinearGradient
                       colors={[
                         "transparent",
-                        "rgba(255, 255, 255, 0.4)",
-                        "rgba(255, 255, 255, 0.92)",
-                        "#ffffff",
+                        "rgba(0, 0, 0, 0.45)",
+                        "rgba(10, 15, 25, 0.94)",
                       ]}
-                      locations={[0, 0.25, 0.65, 1]}
+                      locations={[0, 0.35, 1]}
                       style={StyleSheet.absoluteFill}
                     />
 
                     <View className="flex-1 p-5 justify-between">
                       {/* Top Pill Tag */}
-                      <View className="flex-row items-center self-start bg-emerald-700 px-3 py-1 rounded-full shadow-sm">
+                      <View className="flex-row items-center self-start bg-emerald-500 px-3 py-1 rounded-full shadow-sm">
                         <Sparkles size={12} color="#ffffff" />
                         <Text className="text-white font-gotham-bold text-[11px] ml-1 uppercase tracking-wider">
                           Priority Field Visit • {nextVisit.time || "10:30 AM"}
                         </Text>
                       </View>
 
-                      {/* Bottom Details with 100% High Contrast Dark Text */}
+                      {/* Bottom Details with Enhanced Pure White Text */}
                       <View>
-                        <Text className="text-slate-900 font-gotham-bold text-2xl mb-1 leading-tight">
+                        <Text className="text-white font-gotham-bold text-2xl mb-1 leading-tight">
                           {nextVisit.farmerName || nextVisit.farmer?.name || "Murugan Organic Farm"}
                         </Text>
                         <View className="flex-row items-center mb-2">
-                          <MapPin size={13} color="#059669" />
-                          <Text className="text-emerald-800 font-brandon font-bold text-xs ml-1">
+                          <MapPin size={13} color="#34d399" />
+                          <Text className="text-emerald-300 font-brandon font-bold text-xs ml-1">
                             {nextVisit.address || nextVisit.farmer?.address || "Thanjavur Ag-Corridor"}
                           </Text>
-                          <Text className="text-slate-400 mx-1.5">•</Text>
-                          <Text className="text-slate-600 font-brandon text-xs">
+                          <Text className="text-white/40 mx-1.5">•</Text>
+                          <Text className="text-slate-300 font-brandon text-xs">
                             Soil & Bio-Tonic Audit
                           </Text>
                         </View>
 
                         {/* JioHotstar Style Buttons on Hero Card (+ and Play) */}
-                        <View className="flex-row items-center justify-between mt-2 pt-2 border-t border-slate-200">
+                        <View className="flex-row items-center justify-between mt-2 pt-2 border-t border-white/20">
                           <View className="flex-row items-center">
                             <TouchableOpacity
                               onPress={() => router.push("/(employee)/reports" as any)}
-                              className="w-10 h-10 rounded-full bg-slate-100 items-center justify-center border border-slate-200 mr-2.5 shadow-sm"
+                              className="w-10 h-10 rounded-full bg-white/20 items-center justify-center border border-white/30 mr-2.5 shadow-sm"
                             >
-                              <Plus size={20} color="#0f172a" />
+                              <Plus size={20} color="#ffffff" />
                             </TouchableOpacity>
-                            <Text className="text-slate-700 font-brandon font-bold text-xs">
+                            <Text className="text-white font-brandon font-bold text-xs">
                               Add Note
                             </Text>
                           </View>
@@ -347,7 +346,7 @@ export default function DashboardScreen() {
                             onPress={() =>
                               router.push(`/(employee)/visit/${nextVisit.id}` as any)
                             }
-                            className="bg-emerald-600 px-5 py-2.5 rounded-full flex-row items-center shadow-md shadow-emerald-700/30"
+                            className="bg-emerald-500 px-5 py-2.5 rounded-full flex-row items-center shadow-md shadow-emerald-700/40"
                           >
                             <Play size={16} color="#ffffff" fill="#ffffff" />
                             <Text className="text-white font-gotham-bold text-sm ml-2">
@@ -638,14 +637,15 @@ export default function DashboardScreen() {
                       className="w-full h-32"
                       resizeMode="cover"
                     >
-                      {/* Bottom to top white overlay for high contrast text */}
+                      {/* Bottom to top dark overlay for high contrast white text */}
                       <LinearGradient
-                        colors={["transparent", "rgba(255, 255, 255, 0.7)", "#ffffff"]}
+                        colors={["transparent", "rgba(0, 0, 0, 0.5)", "rgba(10, 15, 25, 0.92)"]}
+                        locations={[0, 0.35, 1]}
                         style={StyleSheet.absoluteFill}
                       />
 
                       <View className="flex-1 p-3 justify-between">
-                        <View className="self-end bg-emerald-700 px-2 py-0.5 rounded-md shadow-sm">
+                        <View className="self-end bg-emerald-500 px-2 py-0.5 rounded-md shadow-sm">
                           <Text className="text-white font-gotham-bold text-[11px]">
                             {v.time || "11:00 AM"}
                           </Text>
@@ -653,13 +653,13 @@ export default function DashboardScreen() {
 
                         <View>
                           <Text
-                            className="text-slate-900 font-gotham-bold text-sm"
+                            className="text-white font-gotham-bold text-sm"
                             numberOfLines={1}
                           >
                             {v.farmerName || v.farmer?.name || "Farmer Visit"}
                           </Text>
                           <Text
-                            className="text-slate-600 font-brandon text-xs"
+                            className="text-slate-200 font-brandon text-xs"
                             numberOfLines={1}
                           >
                             {v.address || v.farmer?.address || "Tamil Nadu Field"}
