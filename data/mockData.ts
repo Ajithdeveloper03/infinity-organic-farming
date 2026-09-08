@@ -119,9 +119,18 @@ export const mockVisits: Visit[] = [
 ];
 
 export const getVisitWithFarmer = (visitId: string) => {
-  const visit = mockVisits.find(v => v.id === visitId);
-  if (!visit) return null;
-  const farmer = mockFarmers.find(f => f.id === visit.farmerId);
+  const cleanId = String(visitId || "");
+  const visit =
+    mockVisits.find(
+      (v) =>
+        v.id === cleanId ||
+        v.id === `v${cleanId}` ||
+        v.id.replace("v", "") === cleanId
+    ) || mockVisits[0];
+
+  const farmer =
+    mockFarmers.find((f) => f.id === visit?.farmerId) || mockFarmers[0];
+
   return { ...visit, farmer };
 };
 

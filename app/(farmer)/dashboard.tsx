@@ -24,6 +24,7 @@ import {
   Sparkles,
   MapPin,
   TrendingUp,
+  Sprout,
 } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -54,8 +55,8 @@ export default function FarmerDashboardScreen() {
         {/* Bottom-to-top overlay blending into solid #f8fafc */}
         <LinearGradient
           colors={[
-            "rgba(248, 250, 252, 0.05)",
-            "rgba(248, 250, 252, 0.35)",
+            "rgba(248, 250, 252, 0.45)",
+            "rgba(248, 250, 252, 0.85)",
             "#f8fafc",
           ]}
           locations={[0, 0.65, 1]}
@@ -85,7 +86,8 @@ export default function FarmerDashboardScreen() {
                     className="w-full h-full"
                     resizeMode="cover"
                   />
-                </View>
+                </Vi
+                ew>
                 <View className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white" />
               </TouchableOpacity>
 
@@ -156,9 +158,9 @@ export default function FarmerDashboardScreen() {
                   borderRadius: 999,
                 }}
               >
-                <Sun size={14} color="#bae6fd" />
+                <Sprout size={14} color="#bae6fd" />
                 <Text className="text-white font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
-                  28°C • Sunny Annur
+                  Soil pH 6.8 • Prime
                 </Text>
               </LinearGradient>
             </View>
@@ -170,35 +172,60 @@ export default function FarmerDashboardScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 150, paddingTop: 14 }}
         >
-          {/* Weather Widget Mini */}
-          <View className="px-5 mb-5">
-            <LinearGradient
-              colors={["#0284c7", "#1d4ed8"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={{ borderRadius: 24, padding: 20, position: "relative", overflow: "hidden", shadowColor: "#0284c7", shadowOpacity: 0.15, shadowRadius: 10, elevation: 4 }}
+          {/* Active Agronomy & Fertilizer Advisory Card (Replaces Weather) */}
+          {/* <View className="px-5 mb-5">
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => router.push("/(farmer)/recommendations" as any)}
+              className="rounded-3xl overflow-hidden shadow-md"
             >
-              <View style={{ position: "absolute", right: -10, bottom: -10, opacity: 0.15 }}>
-                <CloudRain size={130} color="#fff" />
-              </View>
-              <View className="flex-row items-center justify-between">
-                <View>
-                  <Text className="text-white/85 font-gotham-bold text-[11px] uppercase tracking-widest mb-1">
-                    Microclimate • Coimbatore Delta
-                  </Text>
-                  <Text className="text-white font-gotham-bold text-3xl">
-                    28°C
-                  </Text>
-                  <Text className="text-white/90 font-gotham-medium text-xs mt-1">
-                    Optimal humidity 62% • Ideal for field inspection
-                  </Text>
+              <LinearGradient
+                colors={["#064e3b", "#047857"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{ padding: 20, position: "relative", overflow: "hidden" }}
+              >
+                <View style={{ position: "absolute", right: -15, bottom: -15, opacity: 0.12 }}>
+                  <Leaf size={140} color="#fff" />
                 </View>
-                <View className="bg-white/20 p-3 rounded-full border border-white/30">
-                  <Sun size={28} color="#fff" />
+                <View className="flex-row items-center justify-between mb-2.5">
+                  <View className="bg-emerald-400/20 px-3 py-1 rounded-full border border-emerald-300/30 flex-row items-center">
+                    <Sparkles size={12} color="#a7f3d0" className="mr-1" />
+                    <Text className="text-emerald-200 font-gotham-bold text-[10px] uppercase tracking-wider">
+                      Advisory • Active Growth Stage
+                    </Text>
+                  </View>
+                  <View className="bg-amber-400/20 px-2.5 py-0.5 rounded-full border border-amber-300/40">
+                    <Text className="text-amber-200 font-gotham-bold text-[10px] uppercase tracking-wider">
+                      Due in 3 Days
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </LinearGradient>
-          </View>
+
+                <Text className="text-white font-gotham-bold text-xl mb-1">
+                  Bio-Fertilizer & Soil Nutrition
+                </Text>
+                <Text className="text-emerald-100/90 font-gotham-medium text-xs leading-relaxed mb-3">
+                  Apply 50kg Organic Vermicompost & Neem Cake blend along root irrigation drip lines for maximum rhizosphere elongation.
+                </Text>
+
+                <View className="flex-row items-center justify-between pt-2.5 border-t border-emerald-500/30">
+                  <View className="flex-row items-center">
+                    <View className="w-2 h-2 rounded-full bg-emerald-400 mr-2" />
+                    <Text className="text-emerald-200 font-gotham-medium text-xs">
+                      Agronomist: Harish (Delta Zone)
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center">
+                    <Text className="text-white font-gotham-bold text-xs mr-1">
+                      View Protocol
+                    </Text>
+                    <ChevronRight size={14} color="#fff" />
+                  </View>
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View> */}
 
           {/* Category Tabs (All / Crops / Fertilizers) */}
           <View className="mb-5 px-5">

@@ -151,8 +151,10 @@ export default function FarmerHistoryScreen() {
           {/* Visits List */}
           <View className="px-5">
             {history.map((visit) => (
-              <View
+              <TouchableOpacity
                 key={visit.id}
+                activeOpacity={0.9}
+                onPress={() => router.push(`/(farmer)/visit/${visit.id}` as any)}
                 className={`rounded-2xl p-5 shadow-sm border mb-4 ${visit.cardBg} ${visit.cardBorder}`}
               >
                 <View className="flex-row justify-between items-start mb-3">
@@ -195,22 +197,18 @@ export default function FarmerHistoryScreen() {
                       {visit.location}
                     </Text>
                   </View>
-                  <Text className="text-slate-100 font-gotham-medium text-xs leading-relaxed">
+                  <Text className="text-slate-100 font-gotham-medium text-xs leading-relaxed" numberOfLines={2}>
                     {visit.notes}
                   </Text>
                 </View>
 
-                <TouchableOpacity
-                  onPress={() => router.push(`/(farmer)/history` as any)}
-                  activeOpacity={0.7}
-                  className="flex-row items-center justify-between pt-2 border-t border-white/10"
-                >
+                <View className="flex-row items-center justify-between pt-2 border-t border-white/10">
                   <Text className="text-emerald-300 font-gotham-bold text-xs uppercase tracking-wider">
                     View Complete Audit Log
                   </Text>
                   <ChevronRight size={16} color="#34d399" />
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             ))}
           </View>
         </ScrollView>

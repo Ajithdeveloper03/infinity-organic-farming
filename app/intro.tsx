@@ -18,7 +18,7 @@ export default function IntroScreen() {
   const [role, setRole] = useState<"farmer" | "employee">("employee");
 
   return (
-    <View className="flex-1 bg-black">
+    <View className="flex-1 bg-black relative">
       <StatusBar
         barStyle="light-content"
         translucent
@@ -37,24 +37,24 @@ export default function IntroScreen() {
               <View className="bg-white/95 p-4 rounded-3xl mb-4 shadow-lg border border-gray-100">
                 <Image
                   source={require("../assets/images/logo.png")}
-                  style={{ width: 80, height: 80 }}
+                  style={{ width: 180, height: 180 }}
                   resizeMode="contain"
                 />
               </View>
-              <Card className="rounded-full py-3 px-6 shadow-xl bg-white/95">
+              {/* <Card className="rounded-full py-3 px-6 shadow-xl bg-white/95">
                 <Text className="text-xl font-gotham-bold text-[#15803d] text-center tracking-wide">
                   Infinity Organics
                 </Text>
-              </Card>
+              </Card> */}
             </View>
 
             {/* Bottom Sheet Card for Role Selection (Glassmorphism) */}
-            <View className="px-4 pb-4">
+            <View className="px-4 relative bottom-0 left-0 pb-4 mt-20">
               <BlurView
-                intensity={80}
-                tint="light"
-                style={styles.glassCard}
-                className="rounded-[32px] overflow-hidden pt-8 pb-6 border border-white/40 shadow-2xl bg-white/60"
+                // intensity={80}
+                // tint="light"
+                // style={styles.glassCard}
+                className="bg-transparent overflow-hidden pt-8 pb-6"
               >
                 <View className="items-center mb-6">
                   <View className="bg-white/80 p-4 rounded-full mb-4 shadow-sm border border-white/60">
@@ -75,8 +75,8 @@ export default function IntroScreen() {
                     activeOpacity={0.8}
                     onPress={() => setRole("employee")}
                     className={`flex-row items-center p-4 rounded-[20px] border-2 mb-3 ${role === "employee"
-                        ? "bg-white/80 border-[#15803d] shadow-sm"
-                        : "bg-white/40 border-transparent"
+                      ? "bg-white/80 border-[#15803d] shadow-sm"
+                      : "bg-orange-200/80 border-orange-400"
                       }`}
                   >
                     <View
@@ -93,7 +93,7 @@ export default function IntroScreen() {
                       >
                         Field Officer
                       </Text>
-                      <Text className="text-gray-600 font-brandon text-xs mt-0.5">
+                      <Text className="text-gray-800 font-brandon text-xs mt-0.5">
                         Manage visits & track activities
                       </Text>
                     </View>
@@ -107,8 +107,8 @@ export default function IntroScreen() {
                     activeOpacity={0.8}
                     onPress={() => setRole("farmer")}
                     className={`flex-row items-center p-4 rounded-[20px] border-2 ${role === "farmer"
-                        ? "bg-white/80 border-[#15803d] shadow-sm"
-                        : "bg-white/40 border-transparent"
+                      ? "bg-white/80 border-[#15803d] shadow-sm"
+                      : "bg-orange-200/80 border-orange-400"
                       }`}
                   >
                     <View

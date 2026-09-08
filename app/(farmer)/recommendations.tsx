@@ -206,8 +206,10 @@ export default function FarmerRecommendationsScreen() {
             {activeTab === "reports" ? (
               <View>
                 {visitReports.map((report) => (
-                  <View
+                  <TouchableOpacity
                     key={report.id}
+                    activeOpacity={0.9}
+                    onPress={() => router.push(`/(farmer)/report/${report.id}` as any)}
                     className={`rounded-2xl p-5 shadow-sm border mb-4 ${report.cardBg} ${report.cardBorder}`}
                   >
                     <View className="flex-row justify-between items-center mb-3">
@@ -241,25 +243,26 @@ export default function FarmerRecommendationsScreen() {
                       <Text className="text-emerald-300 font-gotham-bold text-xs uppercase tracking-wider mb-1">
                         Agronomist Recommendation
                       </Text>
-                      <Text className="text-slate-100 font-gotham-medium text-xs leading-relaxed">
+                      <Text className="text-slate-100 font-gotham-medium text-xs leading-relaxed" numberOfLines={2}>
                         {report.recommendation}
                       </Text>
                     </View>
 
-                    {report.hasPhotos && (
-                      <View className="flex-row items-center justify-between pt-2 border-t border-white/10">
-                        <View className="flex-row items-center">
-                          <Camera size={14} color="#34d399" className="mr-1.5" />
-                          <Text className="text-emerald-300 font-gotham-bold text-xs">
-                            Field Inspection Photos Attached
-                          </Text>
-                        </View>
-                        <Text className="text-slate-300 font-gotham-medium text-xs">
-                          2 Captured
+                    <View className="flex-row items-center justify-between pt-2.5 border-t border-white/10">
+                      <View className="flex-row items-center">
+                        <Camera size={13} color="#34d399" className="mr-1.5" />
+                        <Text className="text-emerald-300 font-gotham-bold text-xs">
+                          Photos Attached
                         </Text>
                       </View>
-                    )}
-                  </View>
+                      <View className="flex-row items-center">
+                        <Text className="text-emerald-300 font-gotham-bold text-xs mr-1">
+                          View Full Report
+                        </Text>
+                        <ChevronLeft size={14} color="#34d399" style={{ transform: [{ rotate: "180deg" }] }} />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             ) : (
