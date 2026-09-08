@@ -169,6 +169,14 @@ export default function VisitsScreen() {
           <View className="px-5">
             {filteredVisits.map((visit, idx) => {
               const isCompleted = visit.status === "completed";
+              const cardThemes = [
+                { bg: "bg-emerald-50/80", border: "border-emerald-200" },
+                { bg: "bg-sky-50/80", border: "border-sky-200" },
+                { bg: "bg-amber-50/80", border: "border-amber-200" },
+                { bg: "bg-purple-50/80", border: "border-purple-200" },
+              ];
+              const theme = cardThemes[idx % cardThemes.length];
+
               return (
                 <TouchableOpacity
                   key={visit.id || idx}
@@ -176,7 +184,7 @@ export default function VisitsScreen() {
                   onPress={() =>
                     router.push(`/(employee)/visit/${visit.id}` as any)
                   }
-                  className="bg-white rounded-[22px] p-4 mb-3 border border-slate-200 shadow-sm"
+                  className={`${theme.bg} rounded-[22px] p-4 mb-3 border ${theme.border} shadow-sm`}
                 >
                   <View className="flex-row justify-between items-center mb-2">
                     <View className="flex-row items-center">

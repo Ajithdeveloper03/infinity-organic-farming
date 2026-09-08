@@ -201,13 +201,22 @@ export default function MyFarmersScreen() {
               </View>
             </View>
 
-            {/* Farmers List (White Cards with Vibrant Colored Initials & Deep Dark Text) */}
+            {/* Farmers List (Light Multi-Color Pastel Cards) */}
             <View className="px-5">
-              {filtered.map((farmer, idx) => (
-                <View
-                  key={farmer.id || idx}
-                  className="bg-white rounded-[24px] p-4 mb-3.5 border border-slate-200 shadow-sm"
-                >
+              {filtered.map((farmer, idx) => {
+                const cardThemes = [
+                  { bg: "bg-emerald-50/80", border: "border-emerald-200", badgeBg: "bg-emerald-100", badgeText: "text-emerald-800" },
+                  { bg: "bg-sky-50/80", border: "border-sky-200", badgeBg: "bg-sky-100", badgeText: "text-sky-800" },
+                  { bg: "bg-amber-50/80", border: "border-amber-200", badgeBg: "bg-amber-100", badgeText: "text-amber-800" },
+                  { bg: "bg-purple-50/80", border: "border-purple-200", badgeBg: "bg-purple-100", badgeText: "text-purple-800" },
+                ];
+                const theme = cardThemes[idx % cardThemes.length];
+
+                return (
+                  <View
+                    key={farmer.id || idx}
+                    className={`${theme.bg} rounded-[24px] p-4 mb-3.5 border ${theme.border} shadow-sm`}
+                  >
                   <View className="flex-row items-center mb-3">
                     {/* Circular Avatar with Online Free Photo */}
                     <View
@@ -292,8 +301,9 @@ export default function MyFarmersScreen() {
                     </View>
                   </View>
                 </View>
-              ))}
-            </View>
+              );
+            })}
+          </View>
           </ScrollView>
         </SafeAreaView>
       </ImageBackground>

@@ -2,121 +2,65 @@ import React, { useState } from "react";
 import {
   View,
   Text,
+  TextInput,
   TouchableOpacity,
   ScrollView,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { ChevronLeft, CheckCircle2, Send, ArrowRight, ShieldCheck } from "lucide-react-native";
-import { api } from "../../../services/api";
+import { ChevronLeft } from "lucide-react-native";
 import { showToast } from "../../../components/ui/ToastMessage";
 
-const BorderedInput = ({
-  label,
-  value,
-  onChangeText,
-  placeholder,
-  half = false,
-}: any) => (
-  <View
-    className={`border border-slate-200 rounded-xl px-3.5 py-2.5 bg-slate-50 mb-3.5 ${
-      half ? "flex-1" : "w-full"
-    }`}
-  >
-    <Text className="text-slate-500 font-gotham-bold text-[11px] uppercase tracking-wider mb-1">
-      {label}
-    </Text>
-    <TextInput
-      className="text-slate-900 font-gotham-bold text-sm p-0 m-0"
-      value={value}
-      onChangeText={onChangeText}
-      placeholder={placeholder || `Enter ${label}`}
-      placeholderTextColor="#94a3b8"
-    />
-  </View>
-);
-
-export default function Step3Personal() {
-  const params = useLocalSearchParams<{ mobile?: string; category?: string; crops?: string }>();
+export default function RegisterStep3Screen() {
+  const params = useLocalSearchParams<{ mobile?: string }>();
   const [form, setForm] = useState({
-    fullName: "K. Muthusamy",
-    email: "muthusamy@infinityorganics.com",
-    mobile: params.mobile ? `+91 ${params.mobile}` : "+91 9842155678",
-    village: "Annur",
-    taluk: "Sulur",
+    fullName: "Ramesh Kumar",
+    email: "rameshkumar@gmail.com",
+    mobile: params.mobile || "9687846895",
+    village: "Thottipalayam",
+    taluk: "Coimbatore",
     district: "Coimbatore",
-    state: "Tamil Nadu",
-    pincode: "641653",
+    state: "Tamilnadu",
+    pincode: "641045",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittedCode, setSubmittedCode] = useState<string | null>(null);
-
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    let farmerCode = `FMR-2026-${Math.floor(100 + Math.random() * 900)}`;
-
-    try {
-      const rawPhone = form.mobile || params.mobile || "9842155678";
-      const cleanPhone = rawPhone.replace(/\D/g, "").slice(-10) || "9842155678";
-
-      const res = await api.post("/employee/farmer/register", {
-        name: form.fullName || "K. Muthusamy",
-        phone: cleanPhone,
-        village: form.village || "Annur",
-        district: form.district || "Coimbatore",
-        state: form.state || "Tamil Nadu",
-        customer_category: (params.category || "crop").toLowerCase(),
-        land_size_acres: 2.5,
-      }).catch((e) => {
-        console.log("Farmer registration API warning:", e?.message);
-        return null;
-      });
-
-      if (res?.farmer_code) {
-        farmerCode = res.farmer_code;
-      }
-    } catch (err: any) {
-      console.log("Registration exception caught:", err);
-    } finally {
-      setIsSubmitting(false);
-      setSubmittedCode(farmerCode);
+  const handleNext = () => {
+    if (!form.fullName.trim() || !form.mobile.trim()) {
       showToast({
-        title: "Registration Success",
-        message: `Farmer ID ${farmerCode} registered successfully!`,
-        type: "success",
+        title: "Missing Details",
+        message: "Please enter the farmer's full name and mobile number.",
+        type: "error",
       });
+      return;
     }
-  };
 
-  const handleFinish = () => {
-    router.replace("/(employee)/dashboard" as any);
+    router.push({
+      pathname: "/(employee)/register-farmer/step4",
+      params: { ...form },
+    } as any);
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      {/* Header - Strictly Transparent Background */}
-      <View
-        style={{ backgroundColor: "transparent" }}
-        className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
-      >
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fbfdfa" }}>
+      {/* Header matching Image 2 Screen 3 */}
+      <View className="px-5 pt-3 pb-2 flex-row items-center">
         <TouchableOpacity
           onPress={() => router.back()}
-          className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm"
+          className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm mr-3"
           activeOpacity={0.7}
         >
           <ChevronLeft size={22} color="#0f172a" />
         </TouchableOpacity>
-
-        <Text className="text-lg font-gotham-bold text-slate-900">
-          Landholder Profile
-        </Text>
-
-        <View className="w-10" />
+        <View>
+          <Text className="text-xl font-gotham-bold text-slate-900">
+            Farmer Registration
+          </Text>
+          <Text className="text-slate-500 font-brandon text-xs">
+            Step 3 of 5
+          </Text>
+        </View>
       </View>
 
       <KeyboardAvoidingView
@@ -124,132 +68,160 @@ export default function Step3Personal() {
         style={{ flex: 1 }}
       >
         <ScrollView
-          className="flex-1 px-5"
+          className="flex-1 px-6"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
         >
-          {/* Stepper (3 Steps) */}
-          <View className="flex-row items-center justify-center my-4 px-6">
-            <View className="w-8 h-8 rounded-full bg-emerald-600 items-center justify-center shadow-sm">
+          {/* 5-Step Stepper */}
+          <View className="flex-row items-center justify-center my-4 px-2">
+            <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
               <Text className="text-white font-gotham-bold text-xs">✓</Text>
             </View>
-            <View className="flex-1 h-0.5 bg-emerald-500 mx-2" />
-            <View className="w-8 h-8 rounded-full bg-emerald-600 items-center justify-center shadow-sm">
+            <View className="flex-1 h-0.5 bg-[#2f6f36] mx-1.5" />
+            <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
               <Text className="text-white font-gotham-bold text-xs">✓</Text>
             </View>
-            <View className="flex-1 h-0.5 bg-emerald-500 mx-2" />
-            <View className="w-8 h-8 rounded-full bg-emerald-600 items-center justify-center shadow-sm">
+            <View className="flex-1 h-0.5 bg-[#2f6f36] mx-1.5" />
+            <View className="w-8 h-8 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
               <Text className="text-white font-gotham-bold text-xs">3</Text>
+            </View>
+            <View className="flex-1 h-0.5 bg-slate-200 mx-1.5" />
+            <View className="w-7 h-7 rounded-full bg-white border border-slate-300 items-center justify-center">
+              <Text className="text-slate-400 font-gotham-bold text-[11px]">4</Text>
+            </View>
+            <View className="flex-1 h-0.5 bg-slate-200 mx-1.5" />
+            <View className="w-7 h-7 rounded-full bg-white border border-slate-300 items-center justify-center">
+              <Text className="text-slate-400 font-gotham-bold text-[11px]">5</Text>
             </View>
           </View>
 
-          {/* Success Overlay View once submitted */}
-          {submittedCode ? (
-            <View className="bg-white rounded-3xl p-6 items-center border border-emerald-200 shadow-xl my-8">
-              <View className="w-20 h-20 bg-emerald-100 rounded-full items-center justify-center mb-4 border border-emerald-200">
-                <CheckCircle2 size={44} color="#059669" />
-              </View>
+          {/* Section Heading */}
+          <Text className="text-slate-900 font-gotham-bold text-base mt-2 mb-4">
+            Personal Details
+          </Text>
 
-              <Text className="text-2xl font-gotham-bold text-slate-900 text-center mb-1">
-                Registration Complete!
+          {/* Form Fields matching Design */}
+          <View className="space-y-4">
+            {/* Full Name */}
+            <View className="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm mb-3">
+              <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
+                Full Name
               </Text>
-
-              <View className="bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-200 my-2">
-                <Text className="text-emerald-800 font-gotham-bold text-sm">
-                  Farmer ID: {submittedCode}
-                </Text>
-              </View>
-
-              <Text className="text-slate-600 text-center font-brandon text-xs leading-relaxed my-3 px-2">
-                The farmer profile for <Text className="font-gotham-bold">{form.fullName}</Text> has been queued for verification and synced with the regional agronomy ledger.
-              </Text>
-
-              <TouchableOpacity
-                onPress={handleFinish}
-                className="w-full bg-emerald-600 py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-700/25 flex-row mt-3"
-              >
-                <Text className="text-white font-gotham-bold text-base uppercase tracking-wider mr-2">
-                  Return to Dashboard
-                </Text>
-                <ArrowRight size={18} color="#ffffff" />
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View className="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm mt-2">
-              <Text className="text-lg font-gotham-bold text-slate-900 mb-1">
-                Personal & Land Details
-              </Text>
-              <Text className="text-slate-500 font-brandon text-xs mb-4">
-                Please review and ensure all field records match land documents.
-              </Text>
-
-              <BorderedInput
-                label="Full Legal Name"
+              <TextInput
+                className="text-base font-gotham-bold text-slate-900 p-0 m-0"
                 value={form.fullName}
-                onChangeText={(t: string) => setForm({ ...form, fullName: t })}
+                onChangeText={(t) => setForm({ ...form, fullName: t })}
+                placeholder="Full Name"
+                placeholderTextColor="#94a3b8"
               />
-              <BorderedInput
-                label="Registered Mobile"
-                value={form.mobile}
-                onChangeText={(t: string) => setForm({ ...form, mobile: t })}
-              />
-              <BorderedInput
-                label="Email Address"
-                value={form.email}
-                onChangeText={(t: string) => setForm({ ...form, email: t })}
-              />
-
-              <View className="flex-row space-x-3">
-                <BorderedInput
-                  half
-                  label="Village"
-                  value={form.village}
-                  onChangeText={(t: string) => setForm({ ...form, village: t })}
-                />
-                <View className="w-3" />
-                <BorderedInput
-                  half
-                  label="Taluk"
-                  value={form.taluk}
-                  onChangeText={(t: string) => setForm({ ...form, taluk: t })}
-                />
-              </View>
-
-              <View className="flex-row space-x-3">
-                <BorderedInput
-                  half
-                  label="District"
-                  value={form.district}
-                  onChangeText={(t: string) => setForm({ ...form, district: t })}
-                />
-                <View className="w-3" />
-                <BorderedInput
-                  half
-                  label="Pincode"
-                  value={form.pincode}
-                  onChangeText={(t: string) => setForm({ ...form, pincode: t })}
-                />
-              </View>
-
-              <TouchableOpacity
-                activeOpacity={0.85}
-                onPress={handleSubmit}
-                disabled={isSubmitting}
-                className="w-full bg-emerald-600 py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-700/25 flex-row mt-4"
-              >
-                {isSubmitting ? (
-                  <ActivityIndicator size="small" color="#ffffff" />
-                ) : (
-                  <>
-                    <Text className="text-white font-gotham-bold text-base uppercase tracking-wider mr-2">
-                      Submit & Register Farmer
-                    </Text>
-                    <Send size={18} color="#ffffff" />
-                  </>
-                )}
-              </TouchableOpacity>
             </View>
-          )}
+
+            {/* Email */}
+            <View className="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm mb-3">
+              <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
+                Email
+              </Text>
+              <TextInput
+                className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+                value={form.email}
+                onChangeText={(t) => setForm({ ...form, email: t })}
+                placeholder="Email Address"
+                placeholderTextColor="#94a3b8"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+
+            {/* Mobile Number */}
+            <View className="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm mb-3">
+              <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
+                Mobile Number
+              </Text>
+              <TextInput
+                className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+                value={form.mobile}
+                onChangeText={(t) => setForm({ ...form, mobile: t })}
+                placeholder="+91 Mobile Number"
+                placeholderTextColor="#94a3b8"
+                keyboardType="phone-pad"
+              />
+            </View>
+
+            {/* Village & Taluk in 2 columns */}
+            <View className="flex-row space-x-3 mb-3">
+              <View className="flex-1 bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm mr-2">
+                <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
+                  Village
+                </Text>
+                <TextInput
+                  className="text-sm font-gotham-bold text-slate-900 p-0 m-0"
+                  value={form.village}
+                  onChangeText={(t) => setForm({ ...form, village: t })}
+                />
+              </View>
+
+              <View className="flex-1 bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm ml-2">
+                <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
+                  Taluk
+                </Text>
+                <TextInput
+                  className="text-sm font-gotham-bold text-slate-900 p-0 m-0"
+                  value={form.taluk}
+                  onChangeText={(t) => setForm({ ...form, taluk: t })}
+                />
+              </View>
+            </View>
+
+            {/* District & State in 2 columns */}
+            <View className="flex-row space-x-3 mb-3">
+              <View className="flex-1 bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm mr-2">
+                <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
+                  District
+                </Text>
+                <TextInput
+                  className="text-sm font-gotham-bold text-slate-900 p-0 m-0"
+                  value={form.district}
+                  onChangeText={(t) => setForm({ ...form, district: t })}
+                />
+              </View>
+
+              <View className="flex-1 bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm ml-2">
+                <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
+                  State
+                </Text>
+                <TextInput
+                  className="text-sm font-gotham-bold text-slate-900 p-0 m-0"
+                  value={form.state}
+                  onChangeText={(t) => setForm({ ...form, state: t })}
+                />
+              </View>
+            </View>
+
+            {/* Pincode */}
+            <View className="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm mb-6">
+              <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
+                Pincode
+              </Text>
+              <TextInput
+                className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+                value={form.pincode}
+                onChangeText={(t) => setForm({ ...form, pincode: t })}
+                keyboardType="number-pad"
+                maxLength={6}
+              />
+            </View>
+          </View>
+
+          {/* Primary Action Button: Next (Green) */}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={handleNext}
+            className="w-full bg-[#2f6f36] py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-900/20 flex-row"
+          >
+            <Text className="text-white font-gotham-bold text-base tracking-wide">
+              Next
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

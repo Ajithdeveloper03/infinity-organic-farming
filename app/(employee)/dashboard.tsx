@@ -35,6 +35,7 @@ import {
   ChevronDown,
   Navigation,
   FileCheck2,
+  BadgeCheck,
 } from "lucide-react-native";
 import {
   dashboardStats,
@@ -154,53 +155,49 @@ export default function DashboardScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      {/* Aesthetic Agricultural Background Image with Bottom-to-Top White Overlay */}
-      <ImageBackground
-        source={require("../../assets/images/image7.jpg")}
-        style={StyleSheet.absoluteFill}
-        imageStyle={{ opacity: 0.12 }}
-        resizeMode="cover"
+      {/* Agricultural Hero Background for Top to Main Section with Bottom-to-Top Overlay */}
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 380,
+          overflow: "hidden",
+        }}
       >
+        <Image
+          source={require("../../assets/images/image1.jpg")}
+          style={{ width: "100%", height: "100%", opacity: 0.75 }}
+          resizeMode="cover"
+        />
+        {/* Bottom-to-top overlay blending from solid #f8fafc at bottom into translucent top */}
         <LinearGradient
-          colors={["rgba(255, 255, 255, 0.4)", "rgba(248, 250, 252, 0.85)", "#f8fafc"]}
-          locations={[0, 0.35, 1]}
+          colors={[
+            "rgba(248, 250, 252, 0.05)",
+            "rgba(248, 250, 252, 0.85)",
+            "#f8fafc",
+          ]}
+          locations={[0, 0.65, 1]}
           style={StyleSheet.absoluteFill}
         />
+      </View>
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-          {/* HEADER - Strictly Transparent Background (Light Mode) */}
-          <View
-            style={{ backgroundColor: "transparent" }}
-            className="px-5 pt-2 pb-3 z-10"
-          >
-            {/* Google Pay Style Top Search & Profile Bar */}
-            <View className="flex-row items-center justify-between">
-              <View className="flex-1 mr-3 flex-row items-center bg-white px-3.5 py-2.5 rounded-full border border-slate-200 shadow-sm">
-                <Search size={18} color="#64748b" />
-                <TextInput
-                  placeholder="Search farmers, visits, schemes..."
-                  placeholderTextColor="#94a3b8"
-                  value={searchQuery}
-                  onChangeText={setSearchQuery}
-                  className="flex-1 ml-2 text-slate-900 font-brandon text-sm py-0"
-                />
-              </View>
-
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(employee)/notifications" as any)}
-                className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm mr-2.5"
-              >
-                <Bell size={18} color="#0f172a" />
-                <View className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white" />
-              </TouchableOpacity>
-
+      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
+        {/* HEADER - Transparent Background with Employee Name & ID */}
+        <View
+          style={{ backgroundColor: "transparent" }}
+          className="px-5 pt-2 pb-3 z-10"
+        >
+          {/* Top Officer Profile, Name & ID (Replaces Search Bar) */}
+          <View className="flex-row items-center justify-between">
+            <View className="flex-1 mr-3 flex-row items-center">
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => router.push("/(employee)/profile" as any)}
-                className="relative"
+                className="relative mr-3"
               >
-                <View className="w-10 h-10 rounded-full overflow-hidden border-2 border-slate-200 bg-slate-100 shadow-sm">
+                <View className="w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-500/40 bg-emerald-100 shadow-sm items-center justify-center">
                   <Image
                     source={{
                       uri: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
@@ -209,8 +206,38 @@ export default function DashboardScreen() {
                     resizeMode="cover"
                   />
                 </View>
+                <View className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white" />
               </TouchableOpacity>
+
+              <View className="flex-1 justify-center">
+                <View className="flex-row items-center">
+                  <Text
+                    className="text-slate-900 font-gotham-bold text-base tracking-tight"
+                    numberOfLines={1}
+                  >
+                    {employeeName || employeeProfile.name}
+                  </Text>
+                  <BadgeCheck size={16} color="#059669" className="ml-1" />
+                </View>
+                <View className="flex-row items-center mt-0.5">
+                  <View className="bg-emerald-100/90 border border-emerald-300/70 px-2 py-0.5 rounded-full flex-row items-center">
+                    <Text className="text-emerald-900 font-gotham-bold text-[10px] tracking-wide">
+                      ID: {employeeProfile.id} • {employeeProfile.role}
+                    </Text>
+                  </View>
+                </View>
+              </View>
             </View>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => router.push("/(employee)/notifications" as any)}
+              className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
+            >
+              <Bell size={18} color="#0f172a" />
+              <View className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white" />
+            </TouchableOpacity>
+          </View>
 
             {/* JioHotstar Style Dual Glowing Switcher Badges */}
             <View className="flex-row items-center justify-between mt-3.5">
@@ -270,25 +297,27 @@ export default function DashboardScreen() {
             contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
           >
             {/* Google Pay Style Celebratory / Motivational Banner (Light Mode) */}
-            {/* <View className="px-5 mb-4">
-              <View className="rounded-[22px] overflow-hidden border border-amber-200 bg-amber-50 shadow-sm p-3.5 flex-row items-center justify-between">
-                <View className="flex-1 pr-2">
-                  <View className="flex-row items-center mb-0.5">
-                    <Award size={15} color="#b45309" />
-                    <Text className="text-amber-800 font-gotham-bold text-xs ml-1 uppercase tracking-wider">
+            {/* Light Multi-Color Target & Achievement Card */}
+            {/* <View className="px-5 mb-5">
+              <View className="rounded-[24px] overflow-hidden border border-amber-200 bg-amber-50/90 shadow-sm p-4 flex-row items-center justify-between">
+                <View className="flex-1 pr-3">
+                  <View className="flex-row items-center mb-1">
+                    <Award size={16} color="#b45309" />
+                    <Text className="text-amber-800 font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
                       Harvest Target 2026
                     </Text>
                   </View>
                   <Text className="text-amber-950 font-gotham-bold text-base">
                     72% Achieved • 18 Farmers
                   </Text>
-                  <Text className="text-amber-700 font-brandon text-xs mt-0.5">
-                    Keep pushing to reach monthly organic certification goal!
+                  <Text className="text-amber-800/80 font-brandon text-xs mt-0.5">
+                    Monthly Organic Certification on track
                   </Text>
                 </View>
                 <TouchableOpacity
+                  activeOpacity={0.8}
                   onPress={() => router.push("/(employee)/reports" as any)}
-                  className="bg-amber-600 px-3 py-1.5 rounded-full shadow-sm"
+                  className="bg-amber-600 px-3.5 py-2 rounded-full shadow-sm"
                 >
                   <Text className="text-white font-gotham-bold text-xs">
                     View
@@ -511,31 +540,33 @@ export default function DashboardScreen() {
                 </TouchableOpacity>
               </View>
 
-              {/* GPay Style Mini Shortcut Pill Row (Light Mode) */}
+              {/* Light Multi-Color Shortcut Pill Row */}
               <View className="flex-row justify-between mt-2">
                 <TouchableOpacity
+                  activeOpacity={0.8}
                   onPress={() => router.push("/(employee)/attendance/clock-in" as any)}
-                  className="flex-1 mr-1.5 bg-white p-2.5 rounded-2xl flex-row items-center border border-slate-200 shadow-sm"
+                  className="flex-1 mr-1.5 bg-sky-50/90 p-2.5 rounded-2xl flex-row items-center border border-sky-200 shadow-sm"
                 >
                   <Zap size={16} color="#0284c7" />
-                  <Text className="text-slate-800 font-gotham-bold text-xs ml-1.5">
+                  <Text className="text-sky-900 font-gotham-bold text-xs ml-1.5">
                     Clock In
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
+                  activeOpacity={0.8}
                   onPress={() => router.push("/(employee)/attendance/clock-out" as any)}
-                  className="flex-1 mx-1.5 bg-white p-2.5 rounded-2xl flex-row items-center border border-slate-200 shadow-sm"
+                  className="flex-1 mx-1.5 bg-amber-50/90 p-2.5 rounded-2xl flex-row items-center border border-amber-200 shadow-sm"
                 >
                   <Clock size={16} color="#d97706" />
-                  <Text className="text-slate-800 font-gotham-bold text-xs ml-1.5">
+                  <Text className="text-amber-900 font-gotham-bold text-xs ml-1.5">
                     Clock Out
                   </Text>
                 </TouchableOpacity>
 
-                <View className="flex-1 ml-1.5 bg-white p-2.5 rounded-2xl flex-row items-center border border-slate-200 shadow-sm">
+                <View className="flex-1 ml-1.5 bg-emerald-50/90 p-2.5 rounded-2xl flex-row items-center border border-emerald-200 shadow-sm">
                   <Radio size={16} color="#16a34a" />
-                  <Text className="text-slate-800 font-gotham-bold text-xs ml-1.5">
+                  <Text className="text-emerald-900 font-gotham-bold text-xs ml-1.5">
                     GPS Live
                   </Text>
                 </View>
@@ -562,43 +593,48 @@ export default function DashboardScreen() {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ paddingRight: 20 }}
               >
-                {assignedFarmers.map((f) => (
-                  <TouchableOpacity
-                    key={f.id}
-                    activeOpacity={0.8}
-                    onPress={() => router.push("/(employee)/my-farmers" as any)}
-                    className="items-center mr-4"
-                  >
-                    <View
-                      style={{
-                        width: 58,
-                        height: 58,
-                        borderRadius: 29,
-                        overflow: "hidden",
-                        borderWidth: 2,
-                        borderColor: "#e2e8f0",
-                        backgroundColor: "#f1f5f9",
-                        shadowColor: "#000",
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 4,
-                        elevation: 2,
-                      }}
+                {assignedFarmers.map((f, fIdx) => {
+                  const ringColors = ["#a7f3d0", "#bae6fd", "#fde68a", "#ddd6fe"];
+                  const ringBorder = ringColors[fIdx % ringColors.length];
+
+                  return (
+                    <TouchableOpacity
+                      key={f.id}
+                      activeOpacity={0.8}
+                      onPress={() => router.push("/(employee)/my-farmers" as any)}
+                      className="items-center mr-4"
                     >
-                      <Image
-                        source={{ uri: f.photo }}
-                        style={{ width: "100%", height: "100%" }}
-                        resizeMode="cover"
-                      />
-                    </View>
-                    <Text
-                      className="text-slate-800 font-brandon-medium text-xs mt-1.5 text-center w-16"
-                      numberOfLines={1}
-                    >
-                      {f.name}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                      <View
+                        style={{
+                          width: 58,
+                          height: 58,
+                          borderRadius: 29,
+                          overflow: "hidden",
+                          borderWidth: 2.5,
+                          borderColor: ringBorder,
+                          backgroundColor: "#f1f5f9",
+                          shadowColor: "#000",
+                          shadowOffset: { width: 0, height: 2 },
+                          shadowOpacity: 0.08,
+                          shadowRadius: 4,
+                          elevation: 2,
+                        }}
+                      >
+                        <Image
+                          source={{ uri: f.photo }}
+                          style={{ width: "100%", height: "100%" }}
+                          resizeMode="cover"
+                        />
+                      </View>
+                      <Text
+                        className="text-slate-800 font-brandon-medium text-xs mt-1.5 text-center w-16"
+                        numberOfLines={1}
+                      >
+                        {f.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
 
                 {/* More Farmer Button */}
                 <TouchableOpacity
@@ -645,65 +681,75 @@ export default function DashboardScreen() {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ paddingRight: 20 }}
               >
-                {todayVisitsList.map((v, i) => (
-                  <TouchableOpacity
-                    key={v.id || i}
-                    activeOpacity={0.85}
-                    onPress={() =>
-                      router.push(`/(employee)/visit/${v.id}` as any)
-                    }
-                    className="w-64 mr-4 rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm"
-                  >
-                    <ImageBackground
-                      source={
-                        i === 0
-                          ? require("../../assets/images/image1.jpg")
-                          : i === 1
-                          ? require("../../assets/images/image2.jpg")
-                          : require("../../assets/images/image5.jpg")
+                {todayVisitsList.map((v, i) => {
+                  const routeThemes = [
+                    { cardBg: "bg-emerald-50/90", border: "border-emerald-200", text: "text-emerald-800", iconColor: "#059669" },
+                    { cardBg: "bg-sky-50/90", border: "border-sky-200", text: "text-sky-800", iconColor: "#0284c7" },
+                    { cardBg: "bg-amber-50/90", border: "border-amber-200", text: "text-amber-800", iconColor: "#d97706" },
+                    { cardBg: "bg-purple-50/90", border: "border-purple-200", text: "text-purple-800", iconColor: "#7c3aed" },
+                  ];
+                  const rTheme = routeThemes[i % routeThemes.length];
+
+                  return (
+                    <TouchableOpacity
+                      key={v.id || i}
+                      activeOpacity={0.85}
+                      onPress={() =>
+                        router.push(`/(employee)/visit/${v.id}` as any)
                       }
-                      className="w-full h-32"
-                      resizeMode="cover"
+                      className={`w-64 mr-4 rounded-2xl overflow-hidden border ${rTheme.border} ${rTheme.cardBg} shadow-sm`}
                     >
-                      {/* Bottom to top dark overlay for high contrast white text */}
-                      <LinearGradient
-                        colors={["transparent", "rgba(0, 0, 0, 0.5)", "rgba(10, 15, 25, 0.92)"]}
-                        locations={[0, 0.35, 1]}
-                        style={StyleSheet.absoluteFill}
-                      />
+                      <ImageBackground
+                        source={
+                          i === 0
+                            ? require("../../assets/images/image1.jpg")
+                            : i === 1
+                            ? require("../../assets/images/image2.jpg")
+                            : require("../../assets/images/image5.jpg")
+                        }
+                        className="w-full h-32"
+                        resizeMode="cover"
+                      >
+                        {/* Bottom to top dark overlay for high contrast white text */}
+                        <LinearGradient
+                          colors={["transparent", "rgba(0, 0, 0, 0.5)", "rgba(10, 15, 25, 0.92)"]}
+                          locations={[0, 0.35, 1]}
+                          style={StyleSheet.absoluteFill}
+                        />
 
-                      <View className="flex-1 p-3 justify-between">
-                        <View className="self-end bg-emerald-500 px-2 py-0.5 rounded-md shadow-sm">
-                          <Text className="text-white font-gotham-bold text-[11px]">
-                            {v.time || "11:00 AM"}
-                          </Text>
-                        </View>
+                        <View className="flex-1 p-3 justify-between">
+                          <View className="self-end bg-emerald-500 px-2 py-0.5 rounded-md shadow-sm">
+                            <Text className="text-white font-gotham-bold text-[11px]">
+                              {v.time || "11:00 AM"}
+                            </Text>
+                          </View>
 
-                        <View>
-                          <Text
-                            className="text-white font-gotham-bold text-sm"
-                            numberOfLines={1}
-                          >
-                            {v.farmerName || v.farmer?.name || "Farmer Visit"}
-                          </Text>
-                          <Text
-                            className="text-slate-200 font-brandon text-xs"
-                            numberOfLines={1}
-                          >
-                            {v.address || v.farmer?.address || "Tamil Nadu Field"}
-                          </Text>
+                          <View>
+                            <Text
+                              className="text-white font-gotham-bold text-sm"
+                              numberOfLines={1}
+                            >
+                              {v.farmerName || v.farmer?.name || "Farmer Visit"}
+                            </Text>
+                            <Text
+                              className="text-slate-200 font-brandon text-xs"
+                              numberOfLines={1}
+                            >
+                              {v.address || v.farmer?.address || "Tamil Nadu Field"}
+                            </Text>
+                          </View>
                         </View>
+                      </ImageBackground>
+
+                      <View className="p-3 flex-row items-center justify-between border-t border-slate-200/60">
+                        <Text className={`${rTheme.text} font-gotham-bold text-xs`}>
+                          {v.status === "completed" ? "✓ Completed" : "Start Inspection"}
+                        </Text>
+                        <ChevronRight size={16} color={rTheme.iconColor} />
                       </View>
-                    </ImageBackground>
-
-                    <View className="p-3 flex-row items-center justify-between border-t border-slate-100">
-                      <Text className="text-emerald-700 font-gotham-bold text-xs">
-                        {v.status === "completed" ? "✓ Completed" : "Start Inspection"}
-                      </Text>
-                      <ChevronRight size={16} color="#059669" />
-                    </View>
-                  </TouchableOpacity>
-                ))}
+                    </TouchableOpacity>
+                  );
+                })}
               </ScrollView>
             </View>
           </ScrollView>
@@ -742,7 +788,6 @@ export default function DashboardScreen() {
             </View>
           </View> */}
         </SafeAreaView>
-      </ImageBackground>
     </View>
   );
 }

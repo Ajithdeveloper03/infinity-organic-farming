@@ -28,7 +28,7 @@ export default function IntroScreen() {
       <ImageBackground
         source={require("../assets/images/intro_bg.png")}
         style={StyleSheet.absoluteFill}
-        resizeMode="cover"
+        resizeMode="contain"
       >
         <View className="flex-1 bg-black/40">
           <SafeAreaView className="flex-1 justify-between">
@@ -74,11 +74,10 @@ export default function IntroScreen() {
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => setRole("employee")}
-                    className={`flex-row items-center p-4 rounded-[20px] border-2 mb-3 ${
-                      role === "employee"
+                    className={`flex-row items-center p-4 rounded-[20px] border-2 mb-3 ${role === "employee"
                         ? "bg-white/80 border-[#15803d] shadow-sm"
                         : "bg-white/40 border-transparent"
-                    }`}
+                      }`}
                   >
                     <View
                       className={`p-3 rounded-full ${role === "employee" ? "bg-[#15803d]" : "bg-gray-200/80"}`}
@@ -107,11 +106,10 @@ export default function IntroScreen() {
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => setRole("farmer")}
-                    className={`flex-row items-center p-4 rounded-[20px] border-2 ${
-                      role === "farmer"
+                    className={`flex-row items-center p-4 rounded-[20px] border-2 ${role === "farmer"
                         ? "bg-white/80 border-[#15803d] shadow-sm"
                         : "bg-white/40 border-transparent"
-                    }`}
+                      }`}
                   >
                     <View
                       className={`p-3 rounded-full ${role === "farmer" ? "bg-[#15803d]" : "bg-gray-200/80"}`}
