@@ -143,12 +143,9 @@ export default function IntroScreen() {
                     activeOpacity={0.9}
                     onPress={() => {
                       if (role === "farmer") {
-                        router.push("/farmer-login");
+                        router.push("/(auth)/farmer-login" as any);
                       } else {
-                        router.push({
-                          pathname: "/login",
-                          params: { role: "employee" },
-                        });
+                        router.push("/(auth)/login" as any);
                       }
                     }}
                     className="w-full bg-[#15803d] py-4 rounded-full items-center shadow-md flex-row justify-center"

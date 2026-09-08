@@ -1,134 +1,111 @@
 import React from "react";
-
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   ImageBackground,
+  StyleSheet,
 } from "react-native";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-
-import { ChevronLeft, CheckCircle2 } from "lucide-react-native";
-
+import {
+  ChevronLeft,
+  CheckCircle2,
+  MapPin,
+  Sprout,
+  Droplets,
+  Layers,
+} from "lucide-react-native";
 import { Button } from "../../components/ui/Button";
 
 export default function FarmerMyFarmScreen() {
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
-      {/* Header */}
-      <View className="px-6 pt-12 pb-4 bg-white flex-row items-center">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          className="p-2 -ml-2 mr-2"
-        >
-          <ChevronLeft size={24} color="#000" />
-        </TouchableOpacity>
-        <Text className="text-gray-900 text-lg font-gotham-bold">My Farm</Text>
-      </View>
-      <ScrollView className="flex-1 pb-24">
-        {/* Farm Image Banner */}
-        <View className="h-64 relative bg-gray-200">
-          <ImageBackground
-            source={{
-              uri: "https://images.unsplash.com/photo-1592982537447-7440770cbfc9?q=80&w=800&auto=format&fit=crop",
-            }}
-            className="w-full h-full"
+    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      {/* Background image overlay */}
+      <ImageBackground
+        source={require("../../assets/images/image4.jpg")}
+        style={StyleSheet.absoluteFill}
+        imageStyle={{ opacity: 0.12 }}
+        resizeMode="cover"
+      />
+
+      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
+        {/* Header */}
+        <View className="px-5 py-4 bg-white/95 border-b border-gray-100 flex-row items-center justify-between shadow-sm backdrop-blur-md">
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center border border-gray-200"
+            activeOpacity={0.7}
           >
-            {/* Overlay Badge */}
-            <View className="absolute bottom-6 left-6 bg-[#15803d] px-3 py-1.5 rounded-full flex-row items-center shadow-md">
-              <CheckCircle2 size={16} color="#fff" className="mr-1" />
-              <Text className="text-gray-900 font-gotham-bold text-xs">
-                Verified Farm
-              </Text>
-            </View>
-          </ImageBackground>
+            <ChevronLeft size={22} color="#111827" />
+          </TouchableOpacity>
+          <Text className="text-gray-900 text-lg font-gotham-bold">My Farm</Text>
+          <View className="w-10" />
         </View>
-        <View className="px-6 pt-6">
-          <Text className="text-xl font-gotham-bold text-gray-900 mb-6">
-            Farm Details
-          </Text>
-          <View className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-            <View className="flex-row justify-between py-4 border-b border-gray-100">
-              <View className="flex-row items-center">
-                <Text className="text-gray-500 font-brandon-medium w-32">
-                  Farm Name
+
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{ paddingBottom: 60 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Farm Image Hero Banner */}
+          <View className="h-64 relative bg-gray-200">
+            <ImageBackground
+              source={require("../../assets/images/image2.jpg")}
+              className="w-full h-full"
+              resizeMode="cover"
+            >
+              <View className="absolute inset-0 bg-black/25" />
+              {/* Overlay Badge */}
+              <View className="absolute bottom-5 left-5 bg-green-700 px-4 py-2 rounded-full flex-row items-center shadow-lg border border-white/20">
+                <CheckCircle2 size={16} color="#fff" className="mr-1.5" />
+                <Text className="text-white font-gotham-bold text-xs uppercase tracking-wider">
+                  Verified Farm
                 </Text>
               </View>
-              <Text className="text-gray-900 font-gotham-bold flex-1 text-right">
-                Kuppusamy Farm
-              </Text>
-            </View>
-            <View className="flex-row justify-between py-4 border-b border-gray-100">
-              <View className="flex-row items-center">
-                <Text className="text-gray-500 font-brandon-medium w-32">
-                  Village
-                </Text>
-              </View>
-              <Text className="text-gray-900 font-gotham-bold flex-1 text-right">
-                Somanur
-              </Text>
-            </View>
-            <View className="flex-row justify-between py-4 border-b border-gray-100">
-              <View className="flex-row items-center">
-                <Text className="text-gray-500 font-brandon-medium w-32">
-                  Block
-                </Text>
-              </View>
-              <Text className="text-gray-900 font-gotham-bold flex-1 text-right">
-                Coimbatore
-              </Text>
-            </View>
-            <View className="flex-row justify-between py-4 border-b border-gray-100">
-              <View className="flex-row items-center">
-                <Text className="text-gray-500 font-brandon-medium w-32">
-                  Crop Type
-                </Text>
-              </View>
-              <Text className="text-gray-900 font-gotham-bold flex-1 text-right">
-                Vetiver
-              </Text>
-            </View>
-            <View className="flex-row justify-between py-4 border-b border-gray-100">
-              <View className="flex-row items-center">
-                <Text className="text-gray-500 font-brandon-medium w-32">
-                  Soil Type
-                </Text>
-              </View>
-              <Text className="text-gray-900 font-gotham-bold flex-1 text-right">
-                Red Loamy
-              </Text>
-            </View>
-            <View className="flex-row justify-between py-4 border-b border-gray-100">
-              <View className="flex-row items-center">
-                <Text className="text-gray-500 font-brandon-medium w-32">
-                  Irrigation
-                </Text>
-              </View>
-              <Text className="text-gray-900 font-gotham-bold flex-1 text-right">
-                Drip
-              </Text>
-            </View>
-            <View className="flex-row justify-between py-4">
-              <View className="flex-row items-center">
-                <Text className="text-gray-500 font-brandon-medium w-32">
-                  Area
-                </Text>
-              </View>
-              <Text className="text-gray-900 font-gotham-bold flex-1 text-right">
-                2.5 Acres
-              </Text>
-            </View>
+            </ImageBackground>
           </View>
-          <Button
-            title="Update Farm Details"
-            onPress={() => {}}
-            className="bg-[#15803d]"
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+
+          <View className="px-5 pt-6">
+            <Text className="text-xl font-gotham-bold text-gray-900 mb-4">
+              Registered Farm Details
+            </Text>
+
+            <View className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-6">
+              {[
+                { label: "Farm Name", value: "Kuppusamy Organic Estate", icon: Sprout },
+                { label: "Village", value: "Annur / Somanur", icon: MapPin },
+                { label: "District", value: "Coimbatore, Tamil Nadu", icon: MapPin },
+                { label: "Primary Crop", value: "Vetiver (Chrysopogon zizanioides)", icon: Sprout },
+                { label: "Soil Type", value: "Red Loamy Mineral Rich", icon: Layers },
+                { label: "Irrigation", value: "Drip Irrigation & Rainwater", icon: Droplets },
+                { label: "Total Area", value: "2.5 Acres", icon: Layers },
+              ].map((row, idx) => (
+                <View
+                  key={idx}
+                  className={`flex-row justify-between items-center py-3.5 ${
+                    idx < 6 ? "border-b border-gray-100" : ""
+                  }`}
+                >
+                  <Text className="text-gray-700 font-brandon font-bold text-sm w-36">
+                    {row.label}
+                  </Text>
+                  <Text className="text-gray-900 font-gotham-bold flex-1 text-right text-sm">
+                    {row.value}
+                  </Text>
+                </View>
+              ))}
+            </View>
+
+            <Button
+              title="Request Land Re-survey"
+              onPress={() => {}}
+              className="bg-green-700 py-4 rounded-xl shadow-md w-full"
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
