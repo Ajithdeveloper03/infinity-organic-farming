@@ -28,11 +28,14 @@ const history = [
     date: "May 11, 2026 • 10:30 AM",
     location: "Vetiver Farm - Block A, Annur",
     status: "Completed",
-    cardBg: "bg-[#062c1e]",
-    cardBorder: "border-emerald-700/60",
-    statusBg: "bg-emerald-500/20",
-    statusColor: "#34d399",
-    statusBorder: "border-emerald-500/40",
+    cardBg: "bg-emerald-50/95",
+    cardBorder: "border-emerald-200/90",
+    statusBg: "bg-emerald-100",
+    statusColor: "#059669",
+    statusBorder: "border-emerald-300",
+    noteBg: "bg-white/90 border-emerald-100",
+    actionColor: "#059669",
+    actionText: "text-emerald-800",
     notes: "Root development inspected. Recommended organic bio-tonic for next growth spurt.",
   },
   {
@@ -42,11 +45,14 @@ const history = [
     date: "Apr 26, 2026 • 10:15 AM",
     location: "Vetiver Farm - Block A, Annur",
     status: "Completed",
-    cardBg: "bg-[#08203e]",
-    cardBorder: "border-sky-700/60",
-    statusBg: "bg-sky-500/20",
-    statusColor: "#38bdf8",
-    statusBorder: "border-sky-500/40",
+    cardBg: "bg-sky-50/95",
+    cardBorder: "border-sky-200/90",
+    statusBg: "bg-sky-100",
+    statusColor: "#0284c7",
+    statusBorder: "border-sky-300",
+    noteBg: "bg-white/90 border-sky-100",
+    actionColor: "#0284c7",
+    actionText: "text-sky-800",
     notes: "Drip irrigation pattern calibrated. Soil pH verified optimal (6.8).",
   },
   {
@@ -56,11 +62,14 @@ const history = [
     date: "Apr 11, 2026 • 11:00 AM",
     location: "Vetiver Farm - Block B, Annur",
     status: "Completed",
-    cardBg: "bg-[#2a1705]",
-    cardBorder: "border-amber-700/60",
-    statusBg: "bg-amber-500/20",
-    statusColor: "#fbbf24",
-    statusBorder: "border-amber-500/40",
+    cardBg: "bg-amber-50/95",
+    cardBorder: "border-amber-200/90",
+    statusBg: "bg-amber-100",
+    statusColor: "#d97706",
+    statusBorder: "border-amber-300",
+    noteBg: "bg-white/90 border-amber-100",
+    actionColor: "#d97706",
+    actionText: "text-amber-800",
     notes: "Baseline plantation verification. Organic manure quantity allocated.",
   },
 ];
@@ -155,11 +164,11 @@ export default function FarmerHistoryScreen() {
                 key={visit.id}
                 activeOpacity={0.9}
                 onPress={() => router.push(`/(farmer)/visit/${visit.id}` as any)}
-                className={`rounded-2xl p-5 shadow-sm border mb-4 ${visit.cardBg} ${visit.cardBorder}`}
+                className={`rounded-2xl p-4 shadow-xs border mb-3.5 ${visit.cardBg} ${visit.cardBorder}`}
               >
                 <View className="flex-row justify-between items-start mb-3">
                   <View className="flex-row items-center flex-1 pr-2">
-                    <View className="w-11 h-11 rounded-full overflow-hidden border-2 border-white/30 mr-3 shadow-sm bg-black/20">
+                    <View className="w-11 h-11 rounded-full overflow-hidden border-2 border-white mr-3 shadow-xs bg-white">
                       <Image
                         source={{ uri: visit.photo }}
                         className="w-full h-full"
@@ -167,46 +176,46 @@ export default function FarmerHistoryScreen() {
                       />
                     </View>
                     <View className="flex-1">
-                      <Text className="text-white font-gotham-bold text-base">
+                      <Text className="text-slate-900 font-gotham-bold text-base">
                         {visit.name}
                       </Text>
                       <View className="flex-row items-center mt-0.5">
-                        <Clock size={12} color="#94a3b8" className="mr-1" />
-                        <Text className="text-slate-300 text-xs font-gotham-medium">
+                        <Clock size={12} color="#64748b" className="mr-1" />
+                        <Text className="text-slate-600 text-xs font-gotham-medium">
                           {visit.date}
                         </Text>
                       </View>
                     </View>
                   </View>
 
-                  <View className={`px-3 py-1 rounded-full border flex-row items-center ${visit.statusBg} ${visit.statusBorder}`}>
+                  <View className={`px-2.5 py-0.5 rounded-full border flex-row items-center ${visit.statusBg} ${visit.statusBorder}`}>
                     <CheckCircle2 size={12} color={visit.statusColor} className="mr-1" />
                     <Text
                       style={{ color: visit.statusColor }}
-                      className="text-[11px] font-gotham-bold uppercase tracking-wider"
+                      className="text-[10px] font-gotham-bold uppercase tracking-wider"
                     >
                       {visit.status}
                     </Text>
                   </View>
                 </View>
 
-                <View className="bg-black/30 rounded-xl p-3 mb-3 border border-white/10">
+                <View className={`rounded-xl p-3 mb-2.5 ${visit.noteBg}`}>
                   <View className="flex-row items-center mb-1">
-                    <MapPin size={13} color="#34d399" className="mr-1" />
-                    <Text className="text-emerald-300 font-gotham-bold text-xs">
+                    <MapPin size={13} color={visit.actionColor} className="mr-1" />
+                    <Text className={`font-gotham-bold text-xs ${visit.actionText}`}>
                       {visit.location}
                     </Text>
                   </View>
-                  <Text className="text-slate-100 font-gotham-medium text-xs leading-relaxed" numberOfLines={2}>
+                  <Text className="text-slate-700 font-gotham-medium text-xs leading-relaxed" numberOfLines={2}>
                     {visit.notes}
                   </Text>
                 </View>
 
-                <View className="flex-row items-center justify-between pt-2 border-t border-white/10">
-                  <Text className="text-emerald-300 font-gotham-bold text-xs uppercase tracking-wider">
+                <View className="flex-row items-center justify-between pt-2 border-t border-slate-200/70">
+                  <Text className={`${visit.actionText} font-gotham-bold text-xs uppercase tracking-wider`}>
                     View Complete Audit Log
                   </Text>
-                  <ChevronRight size={16} color="#34d399" />
+                  <ChevronRight size={15} color={visit.actionColor} />
                 </View>
               </TouchableOpacity>
             ))}

@@ -251,6 +251,12 @@ export default function EmployeeLayout() {
             }}
           />
           <Tabs.Screen
+            name="farmer"
+            options={{
+              href: null,
+            }}
+          />
+          <Tabs.Screen
             name="report"
             options={{
               href: null,

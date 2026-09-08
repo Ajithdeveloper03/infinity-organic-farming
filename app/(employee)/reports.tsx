@@ -18,6 +18,7 @@ import {
   Droplets,
   Calendar,
   Sparkles,
+  Sprout,
 } from "lucide-react-native";
 
 export const mockReports = [
@@ -203,96 +204,114 @@ export default function ReportsScreen() {
           {/* Concise Reports Overview List - Darkish Rich Cards with Enhanced Contrast */}
           <View className="px-5">
             {filteredReports.map((item, idx) => {
-              const darkThemes = [
+              const mediumThemes = [
                 {
-                  bg: "bg-[#062c1e]",
-                  border: "border-emerald-500/40",
-                  pillBg: "bg-emerald-500/25",
-                  pillBorder: "border-emerald-400/50",
-                  pillText: "text-emerald-300",
-                  iconColor: "#34d399",
-                  actionText: "text-emerald-300",
+                  bg: "bg-emerald-50/95",
+                  border: "border-emerald-200/90",
+                  pillBg: "bg-emerald-100",
+                  pillBorder: "border-emerald-300",
+                  pillText: "text-emerald-900",
+                  iconColor: "#059669",
+                  actionText: "text-emerald-800",
                 },
                 {
-                  bg: "bg-[#08203e]",
-                  border: "border-sky-500/40",
-                  pillBg: "bg-sky-500/25",
-                  pillBorder: "border-sky-400/50",
-                  pillText: "text-sky-300",
-                  iconColor: "#38bdf8",
-                  actionText: "text-sky-300",
+                  bg: "bg-sky-50/95",
+                  border: "border-sky-200/90",
+                  pillBg: "bg-sky-100",
+                  pillBorder: "border-sky-300",
+                  pillText: "text-sky-900",
+                  iconColor: "#0284c7",
+                  actionText: "text-sky-800",
                 },
                 {
-                  bg: "bg-[#2a1705]",
-                  border: "border-amber-500/40",
-                  pillBg: "bg-amber-500/25",
-                  pillBorder: "border-amber-400/50",
-                  pillText: "text-amber-300",
-                  iconColor: "#fbbf24",
-                  actionText: "text-amber-300",
+                  bg: "bg-amber-50/95",
+                  border: "border-amber-200/90",
+                  pillBg: "bg-amber-100",
+                  pillBorder: "border-amber-300",
+                  pillText: "text-amber-900",
+                  iconColor: "#d97706",
+                  actionText: "text-amber-800",
                 },
                 {
-                  bg: "bg-[#200a35]",
-                  border: "border-purple-500/40",
-                  pillBg: "bg-purple-500/25",
-                  pillBorder: "border-purple-400/50",
-                  pillText: "text-purple-300",
-                  iconColor: "#c084fc",
-                  actionText: "text-purple-300",
+                  bg: "bg-purple-50/95",
+                  border: "border-purple-200/90",
+                  pillBg: "bg-purple-100",
+                  pillBorder: "border-purple-300",
+                  pillText: "text-purple-900",
+                  iconColor: "#7e22ce",
+                  actionText: "text-purple-800",
                 },
               ];
-              const theme = darkThemes[idx % darkThemes.length];
+              const theme = mediumThemes[idx % mediumThemes.length];
 
               return (
                 <TouchableOpacity
                   key={item.id}
-                  activeOpacity={0.85}
+                  activeOpacity={0.88}
                   onPress={() =>
                     router.push(`/(employee)/report/${item.id}` as any)
                   }
-                  className={`${theme.bg} rounded-[22px] p-4 mb-3 border ${theme.border} shadow-md`}
+                  className={`${theme.bg} rounded-[24px] p-4 mb-3.5 border ${theme.border} shadow-xs`}
                 >
-                  <View className="flex-row justify-between items-center mb-2">
-                    <View className="flex-row items-center">
-                      <Calendar size={13} color={theme.iconColor} />
-                      <Text className="text-slate-300 font-gotham-semibold text-xs ml-1.5">
-                        {item.date}
-                      </Text>
+                  <View className="flex-row items-center mb-3">
+                    {/* Visual Farm Image Thumbnail */}
+                    <View className="w-14 h-14 rounded-2xl overflow-hidden mr-3 border border-white shadow-xs">
+                      <ImageBackground
+                        source={item.image}
+                        className="w-full h-full"
+                        resizeMode="cover"
+                      />
                     </View>
 
-                    <View
-                      className={`px-2.5 py-0.5 rounded-full border ${theme.pillBg} ${theme.pillBorder}`}
-                    >
-                      <Text
-                        className={`font-gotham-bold text-[10px] uppercase tracking-wider ${theme.pillText}`}
-                      >
-                        {item.status}
-                      </Text>
+                    <View className="flex-1">
+                      <View className="flex-row items-center justify-between mb-0.5">
+                        <Text className="text-slate-900 font-gotham-bold text-base flex-1 mr-2" numberOfLines={1}>
+                          {item.name}
+                        </Text>
+                        <View
+                          className={`px-2 py-0.5 rounded-full border ${theme.pillBg} ${theme.pillBorder}`}
+                        >
+                          <Text
+                            className={`font-gotham-bold text-[9px] uppercase tracking-wider ${theme.pillText}`}
+                          >
+                            {item.status}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View className="flex-row items-center">
+                        <Calendar size={11} color={theme.iconColor} />
+                        <Text className="text-slate-600 font-gotham-medium text-xs ml-1 mr-2">
+                          {item.date}
+                        </Text>
+                        <MapPin size={11} color={theme.iconColor} />
+                        <Text className="text-slate-600 font-gotham-medium text-xs ml-0.5" numberOfLines={1}>
+                          {item.location}
+                        </Text>
+                      </View>
                     </View>
                   </View>
 
-                  <Text className="text-white font-gotham-bold text-base mb-1">
-                    {item.name}
-                  </Text>
-
-                  <View className="flex-row items-center mb-2.5">
-                    <MapPin size={12} color={theme.iconColor} />
-                    <Text className="text-slate-200 font-gotham-medium text-xs ml-1">
-                      {item.location} • {item.acres}
-                    </Text>
-                  </View>
-
-                  <View className="flex-row items-center justify-between pt-2.5 border-t border-white/15">
-                    <View className={`flex-row items-center ${theme.pillBg} px-2.5 py-1 rounded-md border ${theme.pillBorder}`}>
-                      <Droplets size={12} color={theme.iconColor} />
-                      <Text className={`font-gotham-bold text-[11px] ml-1 ${theme.pillText}`}>
-                        Moisture: {item.moisture}
-                      </Text>
+                  {/* Metrics Badges */}
+                  <View className="flex-row items-center justify-between pt-2.5 border-t border-slate-200/70">
+                    <View className="flex-row items-center gap-2">
+                      <View className={`flex-row items-center bg-white/90 px-2.5 py-1 rounded-xl border border-slate-200/70 shadow-2xs`}>
+                        <Droplets size={12} color={theme.iconColor} />
+                        <Text className="font-gotham-bold text-[11px] ml-1 text-slate-800">
+                          {item.moisture}
+                        </Text>
+                      </View>
+                      <View className={`flex-row items-center bg-white/90 px-2.5 py-1 rounded-xl border border-slate-200/70 shadow-2xs`}>
+                        <Sprout size={12} color="#15803d" />
+                        <Text className="font-gotham-bold text-[11px] ml-1 text-slate-800">
+                          pH {item.ph}
+                        </Text>
+                      </View>
                     </View>
 
                     <View className="flex-row items-center">
                       <Text className={`${theme.actionText} font-gotham-bold text-xs mr-1`}>
-                        View Full Report
+                        View Dossier
                       </Text>
                       <ChevronRight size={14} color={theme.iconColor} />
                     </View>

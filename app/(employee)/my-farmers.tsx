@@ -239,29 +239,33 @@ export default function MyFarmersScreen() {
               </View>
             </View>
 
-            {/* Farmers List (Light Multi-Color Cards with Dual Badges) */}
+            {/* Farmers List (Minimal Overview Cards with Navigation) */}
             <View className="px-5">
               {filtered.map((farmer, idx) => {
                 const cardThemes = [
-                  { bg: "bg-emerald-50/80", border: "border-emerald-200" },
-                  { bg: "bg-sky-50/80", border: "border-sky-200" },
-                  { bg: "bg-amber-50/80", border: "border-amber-200" },
-                  { bg: "bg-purple-50/80", border: "border-purple-200" },
+                  { bg: "bg-emerald-50/90", border: "border-emerald-200/90", tagColor: "#047857" },
+                  { bg: "bg-sky-50/90", border: "border-sky-200/90", tagColor: "#0284c7" },
+                  { bg: "bg-amber-50/90", border: "border-amber-200/90", tagColor: "#b45309" },
+                  { bg: "bg-purple-50/90", border: "border-purple-200/90", tagColor: "#7e22ce" },
                 ];
                 const theme = cardThemes[idx % cardThemes.length];
 
                 return (
-                  <View
+                  <TouchableOpacity
                     key={farmer.id || idx}
-                    className={`${theme.bg} rounded-[24px] p-4 mb-3.5 border ${theme.border} shadow-sm`}
+                    activeOpacity={0.88}
+                    onPress={() =>
+                      router.push(`/(employee)/farmer/${farmer.id}` as any)
+                    }
+                    className={`${theme.bg} rounded-[22px] p-4 mb-3 border ${theme.border} shadow-xs`}
                   >
                     <View className="flex-row items-center mb-2.5">
                       {/* Avatar */}
                       <View
                         style={{
-                          width: 54,
-                          height: 54,
-                          borderRadius: 27,
+                          width: 52,
+                          height: 52,
+                          borderRadius: 26,
                           overflow: "hidden",
                           borderWidth: 2,
                           borderColor: "#ffffff",
@@ -270,9 +274,9 @@ export default function MyFarmersScreen() {
                           justifyContent: "center",
                           marginRight: 12,
                           shadowColor: "#000",
-                          shadowOffset: { width: 0, height: 2 },
-                          shadowOpacity: 0.1,
-                          shadowRadius: 4,
+                          shadowOffset: { width: 0, height: 1 },
+                          shadowOpacity: 0.08,
+                          shadowRadius: 3,
                           elevation: 2,
                         }}
                       >
@@ -312,7 +316,7 @@ export default function MyFarmersScreen() {
                       </View>
                     </View>
 
-                    {/* Customer Category Badges (Crop & Fertilizer Mingle) */}
+                    {/* Customer Category Badges */}
                     <View className="flex-row flex-wrap items-center gap-1.5 mb-2.5">
                       {(farmer.customerType === "both" || farmer.customerType === "crop") && (
                         <View className="flex-row items-center bg-emerald-100/90 border border-emerald-300 px-2.5 py-0.5 rounded-full">
@@ -341,41 +345,20 @@ export default function MyFarmersScreen() {
                       )}
                     </View>
 
-                    {/* Detailed Crops & Fertilizer Info */}
-                    <View className="bg-white/90 rounded-2xl p-3 mb-2.5 border border-slate-200/80">
-                      {farmer.cropDetails && (
-                        <View className="flex-row items-start mb-1.5">
-                          <Sprout size={13} color="#059669" className="mt-0.5 mr-1.5" />
-                          <Text className="text-slate-800 text-xs font-gotham-medium flex-1">
-                            <Text className="font-gotham-bold text-slate-900">Crop Details: </Text>
-                            {farmer.cropDetails}
-                          </Text>
-                        </View>
-                      )}
-
-                      {farmer.fertilizerDetails && (
-                        <View className="flex-row items-start">
-                          <Package size={13} color="#d97706" className="mt-0.5 mr-1.5" />
-                          <Text className="text-slate-800 text-xs font-gotham-medium flex-1">
-                            <Text className="font-gotham-bold text-slate-900">Bio-Inputs: </Text>
-                            {farmer.fertilizerDetails}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-
-                    {/* Bottom Action Footer */}
-                    <View className="flex-row justify-between items-center pt-2 border-t border-slate-200/60">
-                      <View className="flex-1 mr-2">
-                        <Text
-                          className="text-slate-600 text-[11px] font-gotham-medium"
-                          numberOfLines={1}
-                        >
-                          {farmer.recentOrder || "Active Organic Certification"}
+                    {/* Action Bar (Navigate to detail / Quick Contacts) */}
+                    <View className="flex-row justify-between items-center pt-2 border-t border-slate-200/70">
+                      <View className="flex-row items-center">
+                        <Text className="text-[#15803d] font-gotham-bold text-xs mr-1">
+                          View Dossier
                         </Text>
+                        <ChevronLeft
+                          size={14}
+                          color="#15803d"
+                          style={{ transform: [{ rotate: "180deg" }] }}
+                        />
                       </View>
 
-                      <View className="flex-row items-center">
+                      <View className="flex-row items-center space-x-2">
                         <TouchableOpacity
                           onPress={() => Linking.openURL(`tel:${farmer.phone}`)}
                           className="w-8 h-8 rounded-full bg-emerald-50 items-center justify-center border border-emerald-200 mr-2"
@@ -395,7 +378,7 @@ export default function MyFarmersScreen() {
                         </TouchableOpacity>
                       </View>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 );
               })}
             </View>

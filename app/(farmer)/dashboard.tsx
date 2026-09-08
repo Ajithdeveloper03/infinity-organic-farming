@@ -172,60 +172,55 @@ export default function FarmerDashboardScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 150, paddingTop: 14 }}
         >
-          {/* Active Agronomy & Fertilizer Advisory Card (Replaces Weather) */}
-          {/* <View className="px-5 mb-5">
+          {/* Active Agronomy & Fertilizer Advisory Card (Medium Brightness & Elegance) */}
+          <View className="px-5 mb-5">
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => router.push("/(farmer)/recommendations" as any)}
-              className="rounded-3xl overflow-hidden shadow-md"
+              className="rounded-3xl overflow-hidden shadow-sm border border-emerald-300 bg-emerald-50/95"
             >
-              <LinearGradient
-                colors={["#064e3b", "#047857"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ padding: 20, position: "relative", overflow: "hidden" }}
-              >
-                <View style={{ position: "absolute", right: -15, bottom: -15, opacity: 0.12 }}>
-                  <Leaf size={140} color="#fff" />
+              <View className="p-5 relative overflow-hidden">
+                <View style={{ position: "absolute", right: -15, bottom: -15, opacity: 0.08 }}>
+                  <Leaf size={140} color="#059669" />
                 </View>
                 <View className="flex-row items-center justify-between mb-2.5">
-                  <View className="bg-emerald-400/20 px-3 py-1 rounded-full border border-emerald-300/30 flex-row items-center">
-                    <Sparkles size={12} color="#a7f3d0" className="mr-1" />
-                    <Text className="text-emerald-200 font-gotham-bold text-[10px] uppercase tracking-wider">
+                  <View className="bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300 flex-row items-center">
+                    <Sparkles size={12} color="#047857" className="mr-1" />
+                    <Text className="text-emerald-900 font-gotham-bold text-[10px] uppercase tracking-wider">
                       Advisory • Active Growth Stage
                     </Text>
                   </View>
-                  <View className="bg-amber-400/20 px-2.5 py-0.5 rounded-full border border-amber-300/40">
-                    <Text className="text-amber-200 font-gotham-bold text-[10px] uppercase tracking-wider">
+                  <View className="bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">
+                    <Text className="text-amber-900 font-gotham-bold text-[10px] uppercase tracking-wider">
                       Due in 3 Days
                     </Text>
                   </View>
                 </View>
 
-                <Text className="text-white font-gotham-bold text-xl mb-1">
+                <Text className="text-slate-900 font-gotham-bold text-xl mb-1">
                   Bio-Fertilizer & Soil Nutrition
                 </Text>
-                <Text className="text-emerald-100/90 font-gotham-medium text-xs leading-relaxed mb-3">
+                <Text className="text-slate-700 font-gotham-medium text-xs leading-relaxed mb-3">
                   Apply 50kg Organic Vermicompost & Neem Cake blend along root irrigation drip lines for maximum rhizosphere elongation.
                 </Text>
 
-                <View className="flex-row items-center justify-between pt-2.5 border-t border-emerald-500/30">
+                <View className="flex-row items-center justify-between pt-2.5 border-t border-emerald-200">
                   <View className="flex-row items-center">
-                    <View className="w-2 h-2 rounded-full bg-emerald-400 mr-2" />
-                    <Text className="text-emerald-200 font-gotham-medium text-xs">
+                    <View className="w-2 h-2 rounded-full bg-emerald-600 mr-2" />
+                    <Text className="text-emerald-900 font-gotham-bold text-xs">
                       Agronomist: Harish (Delta Zone)
                     </Text>
                   </View>
                   <View className="flex-row items-center">
-                    <Text className="text-white font-gotham-bold text-xs mr-1">
+                    <Text className="text-[#15803d] font-gotham-bold text-xs mr-1">
                       View Protocol
                     </Text>
-                    <ChevronRight size={14} color="#fff" />
+                    <ChevronRight size={14} color="#15803d" />
                   </View>
                 </View>
-              </LinearGradient>
+              </View>
             </TouchableOpacity>
-          </View> */}
+          </View>
 
           {/* Category Tabs (All / Crops / Fertilizers) */}
           <View className="mb-5 px-5">

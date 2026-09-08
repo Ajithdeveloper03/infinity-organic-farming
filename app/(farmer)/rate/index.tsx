@@ -93,10 +93,10 @@ export default function RateFieldOfficerScreen() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 160, paddingTop: 6 }}
           >
-            {/* Officer Profile Card */}
-            <View className="bg-[#062c1e] rounded-3xl p-6 mb-5 border border-emerald-600/40 shadow-md items-center">
+            {/* Officer Profile Card (Medium Brightness & Elegance) */}
+            <View className="bg-emerald-50/95 rounded-3xl p-6 mb-5 border border-emerald-200/90 shadow-xs items-center">
               <View className="relative mb-3">
-                <View className="w-24 h-24 rounded-full overflow-hidden border-3 border-emerald-400 shadow-lg bg-emerald-900">
+                <View className="w-24 h-24 rounded-full overflow-hidden border-3 border-emerald-500 shadow-md bg-white">
                   <Image
                     source={{
                       uri: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80",
@@ -110,18 +110,18 @@ export default function RateFieldOfficerScreen() {
                 </View>
               </View>
 
-              <Text className="text-white font-gotham-bold text-xl mb-1">
+              <Text className="text-slate-900 font-gotham-bold text-xl mb-1">
                 {officerName}
               </Text>
 
-              <View className="flex-row items-center bg-emerald-500/20 px-3 py-1 rounded-full border border-emerald-400/30 mb-1">
-                <Award size={13} color="#6ee7b7" className="mr-1" />
-                <Text className="text-emerald-200 font-gotham-bold text-xs uppercase tracking-wider">
+              <View className="flex-row items-center bg-emerald-100/90 px-3 py-1 rounded-full border border-emerald-300 mb-1">
+                <Award size={13} color="#059669" className="mr-1" />
+                <Text className="text-emerald-900 font-gotham-bold text-xs uppercase tracking-wider">
                   Senior Agronomy Officer • Delta Zone
                 </Text>
               </View>
 
-              <Text className="text-slate-300 text-xs font-gotham-medium mt-1">
+              <Text className="text-slate-600 text-xs font-gotham-medium mt-1">
                 Recent Field Inspection • Soil & Biomass Audit
               </Text>
             </View>
