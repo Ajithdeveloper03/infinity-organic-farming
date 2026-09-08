@@ -1,7 +1,8 @@
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { CheckCircle2, Leaf, Users } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Image,
   ImageBackground,
@@ -17,24 +18,39 @@ import { Card } from "../components/ui/Card";
 export default function IntroScreen() {
   const [role, setRole] = useState<"farmer" | "employee">("employee");
 
+  useEffect(() => {
+    const checkLogin = async () => {
+      const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+      const savedRole = await AsyncStorage.getItem("role");
+      if (isLoggedIn === "true") {
+        if (savedRole === "farmer") {
+          router.replace("/(farmer)/dashboard");
+        } else {
+          router.replace("/(employee)/attendance/clock-in");
+        }
+      }
+    };
+    checkLogin();
+  }, []);
+
   return (
-    <View className="flex-1 bg-black">
+    <View className="flex-1 bg-white">
       <StatusBar
-        barStyle="light-content"
+        barStyle="dark-content"
         translucent
         backgroundColor="transparent"
       />
 
       <ImageBackground
         source={require("../assets/images/intro_bg.png")}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         resizeMode="contain"
       >
-        <View className="flex-1 bg-black/40">
+        <View className="flex-1 bg-white/20">
           <SafeAreaView className="flex-1 justify-between">
             {/* Header Section */}
             <View className="items-center pt-16">
-              <View className="bg-white/95 p-4 rounded-3xl mb-4 shadow-lg">
+              <View className="bg-white/95 p-4 rounded-3xl mb-4 shadow-lg border border-gray-100">
                 <Image
                   source={require("../assets/images/logo.png")}
                   style={{ width: 80, height: 80 }}
@@ -54,13 +70,13 @@ export default function IntroScreen() {
                 intensity={80}
                 tint="light"
                 style={styles.glassCard}
-                className="rounded-[32px] overflow-hidden pt-8 pb-6 border border-white/40 shadow-2xl"
+                className="rounded-[32px] overflow-hidden pt-8 pb-6 border border-white/40 shadow-2xl bg-white/60"
               >
                 <View className="items-center mb-6">
-                  <View className="bg-white/50 p-4 rounded-full mb-4 shadow-sm border border-white/60">
+                  <View className="bg-white/80 p-4 rounded-full mb-4 shadow-sm border border-white/60">
                     <Users size={32} color="#15803d" />
                   </View>
-                  <Text className="text-gray-900 dark:text-white font-gotham-bold text-2xl mb-2">
+                  <Text className="text-gray-900 font-gotham-bold text-2xl mb-2">
                     Choose Your Role
                   </Text>
                   <Text className="text-gray-800 font-brandon text-center px-4">
@@ -143,17 +159,17 @@ export default function IntroScreen() {
                     activeOpacity={0.9}
                     onPress={() => {
                       if (role === "farmer") {
-                        router.push("/(auth)/farmer-login");
+                        router.push("/farmer-login");
                       } else {
                         router.push({
-                          pathname: "/(auth)/login",
+                          pathname: "/login",
                           params: { role: "employee" },
                         });
                       }
                     }}
                     className="w-full bg-[#15803d] py-4 rounded-full items-center shadow-md flex-row justify-center"
                   >
-                    <Text className="text-gray-900 dark:text-white font-gotham-bold text-lg tracking-wide">
+                    <Text className="text-white font-gotham-bold text-lg tracking-wide">
                       Continue
                     </Text>
                   </TouchableOpacity>
@@ -172,3 +188,4 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
 });
+

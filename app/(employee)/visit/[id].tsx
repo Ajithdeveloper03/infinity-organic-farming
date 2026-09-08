@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  StyleSheet,
 } from "react-native";
 
 import { router, useLocalSearchParams } from "expo-router";
@@ -95,7 +96,7 @@ is in 5 days. Please be prepared.`,
         />
         <LinearGradient
           colors={["transparent", "#0A0A0C"]}
-          className="absolute inset-0"
+          style={StyleSheet.absoluteFill}
         />
       </View>
       {/* Header */}

@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0F172A',
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   markerContainer: {
     alignItems: 'center',

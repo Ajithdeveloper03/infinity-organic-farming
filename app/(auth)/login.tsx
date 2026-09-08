@@ -3,14 +3,16 @@ import {
   View,
   Text,
   ScrollView,
-  SafeAreaView,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
   Phone,
@@ -24,6 +26,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Button } from "../../components/ui/Button";
+import { api, setAuthSession } from "../../services/api";
 
 // Custom Input for the exact design
 const CustomInput = ({
@@ -40,16 +43,16 @@ const CustomInput = ({
   return (
     <View className="mb-4">
       <View
-        className={`flex-row items-center border rounded-xl bg-white dark:bg-[#1C1C1E] px-4 py-3 ${error ? "border-red-500" : "border-gray-200"}`}
+        className={`flex-row items-center border rounded-xl bg-white px-4 py-3 ${error ? "border-red-500" : "border-gray-200"}`}
       >
         <View className="mr-4">{icon}</View>
         <View className="flex-1">
-          <Text className="text-gray-500 dark:text-[#9ca3af] font-brandon text-xs mb-1">
+          <Text className="text-gray-500 font-brandon text-xs mb-1">
             {label}
           </Text>
           <View className="flex-row items-center">
             <TextInput
-              className="flex-1 text-base font-gotham-bold text-gray-900 dark:text-white p-0 m-0 leading-none"
+              className="flex-1 text-base font-gotham-bold text-gray-900 p-0 m-0 leading-none"
               value={value}
               onChangeText={onChangeText}
               secureTextEntry={isPassword && !showPassword}
@@ -94,23 +97,35 @@ export default function LoginScreen() {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: { mobile: "9999999999", password: "password123" },
+    defaultValues: { mobile: "9629567318", password: "Employee@1234" },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
+    await AsyncStorage.setItem("isLoggedIn", "true");
+    await AsyncStorage.setItem("role", (role || "employee") as string);
+    await AsyncStorage.setItem("userName", "Harish");
+    await AsyncStorage.setItem("userRegion", "Delta Zone");
+    await AsyncStorage.setItem("userPhone", data?.mobile || "9629567318");
+
+    const isClockedIn = await AsyncStorage.getItem("isClockedIn");
+    const clockInDate = await AsyncStorage.getItem("clockInDate");
+    const alreadyClockedToday = isClockedIn === "true" && clockInDate === new Date().toDateString();
+
     setTimeout(() => {
       setLoading(false);
       if (role === "farmer") {
         router.replace("/(farmer)/dashboard");
+      } else if (alreadyClockedToday) {
+        router.replace("/(employee)/dashboard");
       } else {
         router.replace("/(employee)/attendance/clock-in");
       }
-    }, 1000);
+    }, 350);
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-[#1C1C1E]">
+    <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
@@ -120,7 +135,7 @@ export default function LoginScreen() {
           bounces={false}
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 px-6 pt-12 pb-8 bg-white dark:bg-[#1C1C1E] items-center">
+          <View className="flex-1 px-6 pt-12 pb-8 bg-white items-center">
             {/* Logo area */}
             <View className="items-center mb-8 w-full mt-8">
               <Image
@@ -128,23 +143,14 @@ export default function LoginScreen() {
                 style={{ width: 140, height: 140 }}
                 resizeMode="contain"
               />
-              <Text className="text-[#15803d] text-xl font-gotham-bold mt-2 text-center tracking-widest">
-                INFINITY
-              </Text>
-              <Text className="text-[#ea580c] font-brandon text-sm mt-1">
-                —Organic Farming—
-              </Text>
-              <Text className="text-gray-500 dark:text-[#9ca3af] font-brandon text-xs mt-1">
-                Way to Smart Farming
-              </Text>
             </View>
 
             {/* Welcome Text */}
             <View className="w-full mb-8">
-              <Text className="text-3xl font-gotham-bold text-gray-900 dark:text-white mb-2 text-center">
+              <Text className="text-3xl font-gotham-bold text-gray-900 mb-2 text-center">
                 Welcome Back!
               </Text>
-              <Text className="text-gray-500 dark:text-[#9ca3af] font-brandon text-base text-center">
+              <Text className="text-gray-500 font-brandon text-base text-center">
                 Please login to continue
               </Text>
             </View>
@@ -199,7 +205,7 @@ export default function LoginScreen() {
               <View className="mb-12" />
 
               <View className="flex-row justify-center pb-6">
-                <Text className="text-gray-500 dark:text-[#9ca3af] font-brandon text-sm">
+                <Text className="text-gray-500 font-brandon text-sm">
                   Don&apos;t have an account?
                 </Text>
                 <TouchableOpacity>

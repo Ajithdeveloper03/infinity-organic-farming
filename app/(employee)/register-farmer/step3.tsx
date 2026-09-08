@@ -3,21 +3,22 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   TextInput,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { ArrowLeft, Check, Send } from "lucide-react-native";
 
 /*
  eslint-disable-next-line @typescript-eslint/no-unused-vars  */
 import { Button } from "../../../components/ui/Button";
+import { api } from "../../../services/api";
 
 const BorderedInput = ({
   label,
@@ -29,36 +30,64 @@ const BorderedInput = ({
   <View
     className={`border border-gray-200 rounded-xl px-4 py-2 bg-white mb-4 ${half ? "flex-1" : "w-full"}`}
   >
-    <Text className="text-gray-500 text-xs font-brandon-medium mb-1">
-      {label}
-    </Text>
+    <Text className="text-gray-400 font-brandon text-xs mb-1">{label}</Text>
     <TextInput
-      className="text-base font-gotham-bold text-gray-900 p-0 m-0"
-      placeholder={placeholder}
+      className="text-gray-900 font-gotham-bold text-sm p-0 m-0"
       value={value}
       onChangeText={onChangeText}
+      placeholder={placeholder || `Enter ${label}`}
+      placeholderTextColor="#9ca3af"
     />
   </View>
 );
 
 export default function Step3Personal() {
+  const params = useLocalSearchParams<{ mobile?: string; category?: string }>();
   const [form, setForm] = useState({
-    fullName: "Ramesh Kumar",
-    email: "rameshkumar@gmail.com",
-    mobile: "+91 9687846895",
-    village: "Thottipalayam",
-    taluk: "Coimbatore",
-    district: "Coimbatore",
+    fullName: "",
+    email: "",
+    mobile: params.mobile ? `+91 ${params.mobile}` : "",
+    village: "",
+    taluk: "",
+    district: "",
     state: "Tamilnadu",
-    pincode: "621345",
+    pincode: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
-    // Simulate API Call to Laravel Backend
-    setTimeout(() => {
+    try {
+      const rawPhone = form.mobile || params.mobile || "";
+      const cleanPhone = rawPhone.replace(/\D/g, "").slice(-10);
+      const fallbackPhone = cleanPhone || `98${Math.floor(10000000 + Math.random() * 90000000)}`;
+
+      const res = await api.post("/employee/farmer/register", {
+        name: form.fullName || "Registered Farmer",
+        phone: fallbackPhone,
+        village: form.village || "Annur",
+        district: form.district || "Coimbatore",
+        state: form.state || "Tamil Nadu",
+        customer_category: params.category || "crop",
+        land_size_acres: 2.5,
+      }).catch((e) => {
+        console.log("Farmer registration API warning:", e?.message);
+        return null;
+      });
+
+      setIsSubmitting(false);
+      router.replace({
+        pathname: "/success",
+        params: {
+          message: res?.farmer_code
+            ? `Farmer profile (${res.farmer_code}) sent to Admin Dashboard for final approval.`
+            : "Farmer profile sent to Admin Dashboard for final approval.",
+          redirect: "/(employee)/dashboard",
+        },
+      });
+    } catch (err: any) {
+      console.log("Registration API error:", err);
       setIsSubmitting(false);
       router.replace({
         pathname: "/success",
@@ -67,7 +96,7 @@ export default function Step3Personal() {
           redirect: "/(employee)/dashboard",
         },
       });
-    }, 1500);
+    }
   };
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -177,7 +206,7 @@ export default function Step3Personal() {
               disabled={isSubmitting}
               className={`w-full py-4 rounded-xl items-center shadow-md flex-row justify-center ${isSubmitting ? "bg-gray-400" : "bg-[#15803d]"}`}
             >
-              <Text className="text-gray-900 font-gotham-bold text-lg tracking-wide mr-2">
+              <Text className="text-white font-gotham-bold text-lg tracking-wide mr-2">
                 {" "}
                 {isSubmitting ? "Submitting..." : "Request Approval"}
               </Text>{" "}

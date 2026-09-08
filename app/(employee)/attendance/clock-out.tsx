@@ -53,8 +53,8 @@ export default function ClockOutScreen() {
       {/* Background Glow */}
       <View className="absolute top-0 left-0 right-0 h-96">
         <LinearGradient
-          colors={["#312e81", "#0A0A0C"]}
-          className="w-full h-full opacity-20"
+          colors={["#e0e7ff", "#f9fafb"]}
+          className="w-full h-full opacity-60"
         />
       </View>
       <KeyboardAvoidingView
@@ -65,10 +65,10 @@ export default function ClockOutScreen() {
         <View className="px-5 pt-4 pb-4 flex-row items-center z-10 pointer-events-box-none">
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-12 h-12 bg-white/90 rounded-full items-center justify-center border border-white/10"
+            className="w-12 h-12 bg-white/90 rounded-full items-center justify-center border border-gray-200 shadow-sm"
             activeOpacity={0.8}
           >
-            <ChevronLeft size={28} color="#fff" />
+            <ChevronLeft size={28} color="#000" />
           </TouchableOpacity>
         </View>
         <View className="flex-1 px-5 justify-center pb-12">
@@ -148,7 +148,7 @@ export default function ClockOutScreen() {
             disabled={loading}
             className="w-full py-5 rounded-full items-center justify-center shadow-lg bg-indigo-600 mb-6"
           >
-            <Text className="font-gotham-bold text-lg tracking-wide uppercase text-gray-900">
+            <Text className="font-gotham-bold text-lg tracking-wide uppercase text-white">
               {loading ? "Clocking out..." : "Clock Out & Go Home"}
             </Text>
           </TouchableOpacity>

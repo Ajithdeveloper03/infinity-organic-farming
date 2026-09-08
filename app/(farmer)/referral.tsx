@@ -19,9 +19,7 @@ import { showToast } from "../../components/ui/ToastMessage";
 import * as Clipboard from "expo-clipboard";
 
 export default function ReferralScreen() {
-  const colorScheme = useColorScheme();
-
-  const isDark = colorScheme === "dark";
+  const isDark = false;
 
   const referralCode = "FARM-KUPPU-089";
 
@@ -142,3 +140,4 @@ export default function ReferralScreen() {
     </SafeAreaView>
   );
 }
+

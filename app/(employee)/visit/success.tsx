@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { ChevronLeft, Check } from 'lucide-react-native';
 import { Button } from '../../../components/ui/Button';

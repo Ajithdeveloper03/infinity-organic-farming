@@ -18,24 +18,24 @@ export default function CheckInScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-[#0A0A0C]">
-      <View className="px-5 pt-16 pb-4 flex-row items-center border-b border-gray-100 dark:border-white/5">
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <View className="px-5 pt-16 pb-4 flex-row items-center border-b border-gray-100">
         <TouchableOpacity onPress={() => router.back()} className="mr-4">
-          <ChevronLeft size={28} className="text-gray-900 dark:text-white" />
+          <ChevronLeft size={28} className="text-gray-900" />
         </TouchableOpacity>
-        <Text className="text-xl font-gotham-bold text-gray-900 dark:text-white">
+        <Text className="text-xl font-gotham-bold text-gray-900">
           Visit Check-In
         </Text>
       </View>
       <ScrollView className="flex-1 px-5 pt-6 content-center">
-        <View className="bg-white dark:bg-[#1C1C1E] rounded-[32px] p-8 items-center justify-center border border-gray-100 dark:border-white/5 shadow-xl mt-10">
+        <View className="bg-white rounded-[32px] p-8 items-center justify-center border border-gray-100 shadow-xl mt-10">
           <View className="w-24 h-24 bg-blue-500/20 rounded-full items-center justify-center mb-6">
             <Camera size={40} color="#3b82f6" />
           </View>
-          <Text className="text-2xl font-gotham-bold text-gray-900 dark:text-white text-center mb-2">
+          <Text className="text-2xl font-gotham-bold text-gray-900 text-center mb-2">
             Location Verified
           </Text>
-          <Text className="text-gray-500 dark:text-white/60 text-center font-brandon mb-8">
+          <Text className="text-gray-500 text-center font-brandon mb-8">
             You are within 50 meters of the farm. Please take a selfie to
             check-in and start the visit report.
           </Text>
@@ -54,3 +54,4 @@ export default function CheckInScreen() {
     </SafeAreaView>
   );
 }
+

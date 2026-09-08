@@ -26,10 +26,14 @@ import {
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Image } from "react-native";
+import { Asset } from "expo-asset";
 import "react-native-reanimated";
 import { ToastMessage } from "../components/ui/ToastMessage";
 import "../global.css";
+
+import { TrackingProvider } from "../context/TrackingContext";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -54,21 +58,50 @@ export default function RootLayout() {
     JosefinSans_700Bold,
   });
 
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
+
   useEffect(() => {
-    if (loaded || error) {
+    async function loadAssets() {
+      try {
+        const images = [
+          require("../assets/images/icon.png"),
+          require("../assets/images/splash-icon.png"),
+        ];
+        
+        const cacheImages = images.map(image => {
+          if (typeof image === 'string') {
+            return Image.prefetch(image);
+          } else {
+            return Asset.fromModule(image).downloadAsync();
+          }
+        });
+
+        await Promise.all(cacheImages);
+      } catch (e) {
+        console.warn("Error preloading assets:", e);
+      } finally {
+        setAssetsLoaded(true);
+      }
+    }
+
+    loadAssets();
+  }, []);
+
+  useEffect(() => {
+    if ((loaded || error) && assetsLoaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, error]);
+  }, [loaded, error, assetsLoaded]);
 
-  if (!loaded && !error) {
+  if ((!loaded && !error) || !assetsLoaded) {
     return null;
   }
 
   return (
-    <>
+    <TrackingProvider>
       <Stack screenOptions={{ headerShown: false }} />
       <ToastMessage />
       <StatusBar style="auto" />
-    </>
+    </TrackingProvider>
   );
 }

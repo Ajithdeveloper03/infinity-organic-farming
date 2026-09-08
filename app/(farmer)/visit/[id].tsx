@@ -17,9 +17,7 @@ import { ChevronLeft, CheckCircle2 } from "lucide-react-native";
 export default function FarmerVisitReportScreen() {
   const { id } = useLocalSearchParams();
 
-  const colorScheme = useColorScheme();
-
-  const isDark = colorScheme === "dark";
+  const isDark = false;
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
@@ -143,3 +141,4 @@ export default function FarmerVisitReportScreen() {
     </SafeAreaView>
   );
 }
+

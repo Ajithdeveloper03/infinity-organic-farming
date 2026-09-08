@@ -48,11 +48,11 @@ export default function SuccessScreen() {
           className="items-center"
         >
           <View className="w-32 h-32 bg-white/20 rounded-full items-center justify-center mb-8">
-            <View className="w-24 h-24 bg-white dark:bg-[#1C1C1E] rounded-full items-center justify-center shadow-2xl">
+            <View className="w-24 h-24 bg-white rounded-full items-center justify-center shadow-2xl">
               <CheckCircle2 size={64} color="#15803d" />
             </View>
           </View>
-          <Text className="text-gray-900 dark:text-white font-gotham-bold text-3xl text-center mb-4 leading-10">
+          <Text className="text-gray-900 font-gotham-bold text-3xl text-center mb-4 leading-10">
             Success!
           </Text>
           <Text className="text-green-50 font-brandon text-lg text-center mb-12 px-4 leading-6">
@@ -64,7 +64,7 @@ export default function SuccessScreen() {
           <Button
             title="Continue"
             onPress={handleContinue}
-            className="bg-white dark:bg-[#1C1C1E]"
+            className="bg-white"
             textClassName="text-[#15803d]"
           />
         </Animated.View>
@@ -72,3 +72,4 @@ export default function SuccessScreen() {
     </SafeAreaView>
   );
 }
+

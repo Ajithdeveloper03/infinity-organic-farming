@@ -21,9 +21,7 @@ export default function RateVisitScreen() {
 
   const [feedback, setFeedback] = useState("");
 
-  const colorScheme = useColorScheme();
-
-  const isDark = colorScheme === "dark";
+  const isDark = false;
 
   const handleSubmit = () => {
     // In the future, this will hit the Laravel backend
@@ -131,3 +129,4 @@ export default function RateVisitScreen() {
     </SafeAreaView>
   );
 }
+

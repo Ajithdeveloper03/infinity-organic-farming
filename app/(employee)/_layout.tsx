@@ -14,12 +14,7 @@ import {
 
 import { BlurView } from "expo-blur";
 
-import { useTranslation, I18nextProvider } from "react-i18next";
-
-import i18n from "../../constants/i18n";
 function CustomTabBar({ state, descriptors, navigation }: any) {
-  const { t } = useTranslation();
-
   const colorScheme = useColorScheme();
 
   const isDark = colorScheme === "dark";
@@ -28,26 +23,15 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
  Insert FAB in the middle  */
   const visibleRoutes = state.routes.filter(
     (route: any) =>
-      ![
-        "visit",
-        "map",
-        "edit-profile",
-        "menu",
-        "register-farmer",
-        "attendance",
-        "attendance/clock-in",
-        "attendance/clock-out",
-      ].includes(route.name) &&
-      !route.name.startsWith("visit/") &&
-      !route.name.startsWith("register-farmer/"),
+      ["dashboard", "visits", "reports", "profile"].includes(route.name)
   );
   return (
     <View style={styles.container}>
       <BlurView
         intensity={80}
-        tint={isDark ? "dark" : "light"}
+        tint="light"
         style={styles.blurView}
-        className="border border-white/20"
+        className="border border-gray-200"
       >
         {visibleRoutes.map((route: any, index: number) => {
           const { options } = descriptors[route.key];
@@ -75,9 +59,9 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           };
 
           const getIcon = () => {
-            const activeColor = isDark ? "#fff" : "#15803d";
+            const activeColor = "#15803d";
 
-            const inactiveColor = isDark ? "#9ca3af" : "#6b7280";
+            const inactiveColor = "#6b7280";
 
             const color = isFocused ? activeColor : inactiveColor;
             switch (route.name) {
@@ -134,9 +118,9 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
             >
               {getIcon()}
               <Text
-                className={`text-[10px] mt-1 font-brandon-medium ${isFocused ? (isDark ? "text-gray-900 font-bold" : "text-green-800 font-bold") : isDark ? "text-gray-400" : "text-gray-500"}`}
+                className={`text-[10px] mt-1 font-brandon-medium ${isFocused ? "text-green-800 font-bold" : "text-gray-500"}`}
               >
-                {t(label)}
+                {label}
               </Text>
             </TouchableOpacity>
           );
@@ -180,7 +164,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 30,
     elevation: 20,
-    backgroundColor: "#1C1C1E", // solid fallback for dark mode
+    backgroundColor: "#ffffff", // solid fallback
   },
   blurView: {
     flexDirection: "row",
@@ -188,9 +172,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "rgba(28, 28, 30, 0.85)",
+    backgroundColor: "rgba(255, 255, 255, 0.85)",
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.05)",
+    borderColor: "rgba(0, 0, 0, 0.05)",
   },
 });
 
@@ -199,11 +183,10 @@ import { TrackingProvider } from "../../context/TrackingContext";
 export default function EmployeeLayout() {
   return (
     <TrackingProvider>
-      <I18nextProvider i18n={i18n}>
-        <Tabs
-          screenOptions={{
-            headerShown: false,
-          }}
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+        }}
           tabBar={(props) => <CustomTabBar {...props} />}
         >
           <Tabs.Screen
@@ -268,7 +251,6 @@ export default function EmployeeLayout() {
             }}
           />
         </Tabs>
-      </I18nextProvider>
     </TrackingProvider>
   );
 }

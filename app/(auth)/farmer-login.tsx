@@ -13,6 +13,7 @@ import {
   Animated,
 } from "react-native";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Phone, ArrowLeft, ArrowRight } from "lucide-react-native";
 import { Button } from "../../components/ui/Button";
@@ -68,7 +69,9 @@ export default function FarmerLoginScreen() {
     }
 
     setLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
+      await AsyncStorage.setItem("isLoggedIn", "true");
+      await AsyncStorage.setItem("role", "farmer");
       setLoading(false);
       router.replace("/(farmer)/dashboard");
     }, 1000);
@@ -97,7 +100,7 @@ export default function FarmerLoginScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-[#1C1C1E]">
+    <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
@@ -118,7 +121,7 @@ export default function FarmerLoginScreen() {
           bounces={false}
           showsVerticalScrollIndicator={false}
         >
-          <View className="flex-1 px-6 bg-white dark:bg-[#1C1C1E] items-center">
+          <View className="flex-1 px-6 bg-white items-center">
             {/* Logo area */}
             <View className="items-center mb-8 w-full mt-4">
               <Image
@@ -145,23 +148,23 @@ export default function FarmerLoginScreen() {
                   }}
                 >
                   <View className="w-full mb-8">
-                    <Text className="text-3xl font-gotham-bold text-gray-900 dark:text-white mb-2 text-center">
+                    <Text className="text-3xl font-gotham-bold text-gray-900 mb-2 text-center">
                       Farmer Login
                     </Text>
-                    <Text className="text-gray-500 dark:text-[#9ca3af] font-brandon text-base text-center">
+                    <Text className="text-gray-500 font-brandon text-base text-center">
                       Enter your registered mobile number
                     </Text>
                   </View>
 
                   <View className="mb-8">
-                    <View className="flex-row items-center border border-gray-200 rounded-xl bg-gray-50 dark:bg-[#0A0A0C] px-4 py-3">
+                    <View className="flex-row items-center border border-gray-200 rounded-xl bg-gray-50 px-4 py-3">
                       <Phone size={24} color="#6b7280" className="mr-3" />
-                      <Text className="text-gray-900 dark:text-white font-gotham-bold text-base mr-2">
+                      <Text className="text-gray-900 font-gotham-bold text-base mr-2">
                         +91
                       </Text>
                       <View className="w-px h-6 bg-gray-300 mr-3" />
                       <TextInput
-                        className="flex-1 text-base font-gotham-bold text-gray-900 dark:text-white p-0 m-0 leading-none"
+                        className="flex-1 text-base font-gotham-bold text-gray-900 p-0 m-0 leading-none"
                         value={mobile}
                         onChangeText={setMobile}
                         placeholder="Mobile Number"
@@ -186,10 +189,10 @@ export default function FarmerLoginScreen() {
               {step === 2 && (
                 <Animated.View style={{ opacity: slideAnim, width: "100%" }}>
                   <View className="w-full mb-8">
-                    <Text className="text-3xl font-gotham-bold text-gray-900 dark:text-white mb-2 text-center">
+                    <Text className="text-3xl font-gotham-bold text-gray-900 mb-2 text-center">
                       Verify OTP
                     </Text>
-                    <Text className="text-gray-500 dark:text-[#9ca3af] font-brandon text-base text-center">
+                    <Text className="text-gray-500 font-brandon text-base text-center">
                       We&apos;ve sent a 4-digit code to
                     </Text>
                     <Text className="text-[#15803d] font-gotham-bold text-base text-center mt-1">
@@ -234,7 +237,7 @@ export default function FarmerLoginScreen() {
                   />
 
                   <View className="flex-row justify-center mt-6">
-                    <Text className="text-gray-500 dark:text-[#9ca3af] font-brandon text-sm">
+                    <Text className="text-gray-500 font-brandon text-sm">
                       Didn&apos;t receive code?
                     </Text>
                     <TouchableOpacity>

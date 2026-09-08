@@ -59,7 +59,7 @@ export default function ErrorScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-[#1C1C1E]">
+    <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 items-center justify-center px-6">
         <Animated.View
           style={{ transform: [{ translateX: shake }], opacity }}
@@ -70,10 +70,10 @@ export default function ErrorScreen() {
               <XCircle size={64} color="#ef4444" />
             </View>
           </View>
-          <Text className="text-gray-900 dark:text-white font-gotham-bold text-3xl text-center mb-4 leading-10">
+          <Text className="text-gray-900 font-gotham-bold text-3xl text-center mb-4 leading-10">
             Oops!
           </Text>
-          <Text className="text-gray-500 dark:text-[#9ca3af] font-brandon text-lg text-center mb-12 px-4 leading-6">
+          <Text className="text-gray-500 font-brandon text-lg text-center mb-12 px-4 leading-6">
             {message}
           </Text>
         </Animated.View>
@@ -85,7 +85,7 @@ export default function ErrorScreen() {
             className="w-full bg-[#ef4444] py-4 rounded-xl shadow-md flex-row justify-center items-center"
           >
             <RefreshCw size={20} color="#fff" className="mr-2" />
-            <Text className="text-gray-900 dark:text-white font-gotham-bold text-lg tracking-wide">
+            <Text className="text-gray-900 font-gotham-bold text-lg tracking-wide">
               Try Again
             </Text>
           </TouchableOpacity>
@@ -94,3 +94,4 @@ export default function ErrorScreen() {
     </SafeAreaView>
   );
 }
+

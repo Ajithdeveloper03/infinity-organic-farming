@@ -38,12 +38,15 @@ export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     
     // Call backend to start session
     try {
-      const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-      await fetch('http://10.0.2.2:8000/api/v1/employee/tracking/session/start', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ session_id: id, latitude: loc.coords.latitude, longitude: loc.coords.longitude })
-      });
+      let loc = await Location.getLastKnownPositionAsync();
+      if (!loc) loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      if (loc) {
+        await fetch('http://10.0.2.2:8000/api/v1/employee/tracking/session/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ session_id: id, latitude: loc.coords.latitude, longitude: loc.coords.longitude })
+        });
+      }
     } catch (e) {
       console.log('Failed to start session on backend', e);
     }
@@ -54,12 +57,15 @@ export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const stopSession = async () => {
     if (sessionId) {
         try {
-            const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-            await fetch('http://10.0.2.2:8000/api/v1/employee/tracking/session/stop', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({ session_id: sessionId, latitude: loc.coords.latitude, longitude: loc.coords.longitude })
-            });
+            let loc = await Location.getLastKnownPositionAsync();
+            if (!loc) loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+            if (loc) {
+                await fetch('http://10.0.2.2:8000/api/v1/employee/tracking/session/stop', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId, latitude: loc.coords.latitude, longitude: loc.coords.longitude })
+                });
+            }
         } catch (e) {
             console.log('Failed to stop session on backend', e);
         }

@@ -58,7 +58,7 @@ export default function ReportsScreen() {
   const [activeTab, setActiveTab] = useState("All");
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50 dark:bg-[#0A0A0C]">
+    <SafeAreaView className="flex-1 bg-gray-50">
       {/* Top Gradient */}
       <View className="absolute top-0 left-0 right-0 h-64">
         <LinearGradient
@@ -71,16 +71,16 @@ export default function ReportsScreen() {
       <View className="px-5 pt-16 pb-4 flex-row justify-between items-center z-10">
         <TouchableOpacity
           onPress={() => router.back()}
-          className="w-12 h-12 bg-white/90 dark:bg-[#1C1C1E]/90 rounded-full items-center justify-center border border-white/10"
+          className="w-12 h-12 bg-white/90 rounded-full items-center justify-center border border-white/10"
           activeOpacity={0.8}
         >
           <ChevronLeft size={28} color="#fff" />
         </TouchableOpacity>
-        <Text className="text-gray-900 dark:text-white text-xl font-gotham-bold">
+        <Text className="text-gray-900 text-xl font-gotham-bold">
           Daily Reports
         </Text>
         <TouchableOpacity
-          className="w-12 h-12 bg-white/90 dark:bg-[#1C1C1E]/90 rounded-full items-center justify-center border border-white/10"
+          className="w-12 h-12 bg-white/90 rounded-full items-center justify-center border border-white/10"
           activeOpacity={0.8}
         >
           <Filter size={20} color="#fff" />
@@ -99,10 +99,10 @@ export default function ReportsScreen() {
               <TouchableOpacity
                 key={tab}
                 onPress={() => setActiveTab(tab)}
-                className={`py-2 px-6 rounded-full border ${activeTab === tab ? "bg-white dark:bg-[#1C1C1E] border-white" : "bg-white dark:bg-[#1C1C1E] border-white/10"}`}
+                className={`py-2 px-6 rounded-full border ${activeTab === tab ? "bg-white border-white" : "bg-white border-white/10"}`}
               >
                 <Text
-                  className={`font-gotham-bold text-sm ${activeTab === tab ? "text-[#0A0A0C]" : "text-gray-900 dark:text-white"}`}
+                  className={`font-gotham-bold text-sm ${activeTab === tab ? "text-[#0A0A0C]" : "text-gray-900"}`}
                 >
                   {tab}
                 </Text>
@@ -125,7 +125,7 @@ export default function ReportsScreen() {
               <TouchableOpacity
                 key={report.id}
                 activeOpacity={0.9}
-                className="bg-white dark:bg-[#1C1C1E] rounded-[24px] p-4 flex-row items-center mb-4 border border-white/5 shadow-lg"
+                className="bg-white rounded-[24px] p-4 flex-row items-center mb-4 border border-white/5 shadow-lg"
               >
                 <Image
                   source={report.image}
@@ -135,7 +135,7 @@ export default function ReportsScreen() {
                 <View className="flex-1 justify-center">
                   <View className="flex-row justify-between items-start mb-1">
                     <Text
-                      className="text-gray-900 dark:text-white font-gotham-bold text-lg leading-tight"
+                      className="text-gray-900 font-gotham-bold text-lg leading-tight"
                       numberOfLines={1}
                     >
                       {report.name}
@@ -158,7 +158,7 @@ export default function ReportsScreen() {
                         {report.status}
                       </Text>
                     </View>
-                    <Text className="text-gray-400 dark:text-white/40 text-[10px] font-gotham-bold uppercase tracking-widest">
+                    <Text className="text-gray-400 text-[10px] font-gotham-bold uppercase tracking-widest">
                       {report.date}
                     </Text>
                   </View>
@@ -170,3 +170,4 @@ export default function ReportsScreen() {
     </SafeAreaView>
   );
 }
+
