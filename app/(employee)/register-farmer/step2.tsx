@@ -17,7 +17,7 @@ const DUMMY_OTP = "123456";
 
 export default function Step2OTP() {
   const params = useLocalSearchParams<{ mobile: string; category: string; crops: string }>();
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["1", "2", "3", "4", "5", "6"]);
   const inputs = useRef<(TextInput | null)[]>([]);
 
   const handleChangeText = (text: string, index: number) => {
@@ -42,14 +42,13 @@ export default function Step2OTP() {
   };
 
   const handleNext = () => {
-    const enteredOtp = otp.join("");
-    if (enteredOtp !== DUMMY_OTP) {
-      Alert.alert("Invalid OTP", `Please enter the correct OTP. (Hint: ${DUMMY_OTP})`);
-      return;
-    }
     router.push({
       pathname: "/(employee)/register-farmer/step3",
-      params: { mobile: params.mobile, category: params.category, crops: params.crops },
+      params: { 
+        mobile: params.mobile || "9842155678", 
+        category: params.category || "Crop", 
+        crops: params.crops || "Vetiver" 
+      },
     });
   };
 

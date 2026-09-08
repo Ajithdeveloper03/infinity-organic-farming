@@ -14,9 +14,9 @@ import { ArrowLeft, Phone, Tag } from "lucide-react-native";
 import { Button } from "../../../components/ui/Button";
 
 export default function Step1Mobile() {
-  const [mobile, setMobile] = useState("");
-  const [category, setCategory] = useState<"Crop" | "Fertilizer" | "Both" | null>(null);
-  const [crops, setCrops] = useState("");
+  const [mobile, setMobile] = useState("9842155678");
+  const [category, setCategory] = useState<"Crop" | "Fertilizer" | "Both" | null>("Crop");
+  const [crops, setCrops] = useState("Vetiver");
 
   const handleNext = () => {
     if (mobile.length < 10) {

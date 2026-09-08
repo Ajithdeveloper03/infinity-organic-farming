@@ -52,7 +52,7 @@ export default function SuccessScreen() {
               <CheckCircle2 size={64} color="#15803d" />
             </View>
           </View>
-          <Text className="text-gray-900 font-gotham-bold text-3xl text-center mb-4 leading-10">
+          <Text className="text-white font-gotham-bold text-3xl text-center mb-4 leading-10">
             Success!
           </Text>
           <Text className="text-green-50 font-brandon text-lg text-center mb-12 px-4 leading-6">
