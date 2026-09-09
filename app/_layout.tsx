@@ -39,6 +39,7 @@ import "react-native-reanimated";
 import { ToastMessage } from "../components/ui/ToastMessage";
 import "../global.css";
 import { TrackingProvider } from "../context/TrackingContext";
+import { LanguageProvider } from "../context/LanguageContext";
 
 // Keep splash screen visible while loading resources
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -213,10 +214,12 @@ export default function RootLayout() {
   }
 
   return (
-    <TrackingProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-      <ToastMessage />
-      <StatusBar style="auto" />
-    </TrackingProvider>
+    <LanguageProvider>
+      <TrackingProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+        <ToastMessage />
+        <StatusBar style="auto" />
+      </TrackingProvider>
+    </LanguageProvider>
   );
 }

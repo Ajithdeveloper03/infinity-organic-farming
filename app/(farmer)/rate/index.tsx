@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { ChevronLeft, Star, CheckCircle2, Award, Sparkles } from "lucide-react-native";
 import { showToast } from "../../../components/ui/ToastMessage";
+import { useLanguage, LanguageTogglePill } from "../../../context/LanguageContext";
 
 const QUICK_TAGS = [
   "Punctual & Polite",
@@ -31,6 +32,7 @@ const RATING_LABELS: Record<number, string> = {
 };
 
 export default function RateFieldOfficerScreen() {
+  const { t, language } = useLanguage();
   const params = useLocalSearchParams<{ id?: string; officerName?: string }>();
   const [rating, setRating] = useState(5);
   const [selectedTags, setSelectedTags] = useState<string[]>([
@@ -53,8 +55,10 @@ export default function RateFieldOfficerScreen() {
     setTimeout(() => {
       setIsSubmitting(false);
       showToast({
-        title: "Rating Submitted!",
-        message: `Thank you for rating ${officerName}. Your feedback helps maintain our high standards.`,
+        title: language === "ta" ? "மதிப்பீடு சமர்ப்பிக்கப்பட்டது!" : "Rating Submitted!",
+        message: language === "ta"
+          ? `${officerName} அவர்களை மதிப்பிட்டமைக்கு நன்றி.`
+          : `Thank you for rating ${officerName}. Your feedback helps maintain our high standards.`,
         type: "success",
       });
       router.replace("/(farmer)/dashboard" as any);
@@ -78,10 +82,10 @@ export default function RateFieldOfficerScreen() {
           </TouchableOpacity>
 
           <Text className="text-lg font-gotham-bold text-slate-900">
-            Rate Field Officer
+            {t("rateOfficer", "Rate Field Officer")}
           </Text>
 
-          <View className="w-10" />
+          <LanguageTogglePill />
         </View>
 
         <KeyboardAvoidingView
@@ -230,7 +234,9 @@ export default function RateFieldOfficerScreen() {
               className="bg-[#15803d] active:bg-[#166534] py-4 rounded-2xl items-center shadow-md border border-emerald-500/30"
             >
               <Text className="text-white font-gotham-bold text-base tracking-wide">
-                {isSubmitting ? "Submitting..." : "Submit Rating & Review"}
+                {isSubmitting
+                  ? (language === "ta" ? "சமர்ப்பிக்கிறது..." : "Submitting...")
+                  : t("submitRating", "Submit Rating & Review")}
               </Text>
             </TouchableOpacity>
           </ScrollView>

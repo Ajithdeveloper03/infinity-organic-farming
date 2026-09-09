@@ -28,9 +28,11 @@ import {
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { mockFarmers, CustomerType } from "../../data/mockData";
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 import { api } from "../../services/api";
 
 export default function MyFarmersScreen() {
+  const { t, language } = useLanguage();
   const [farmers, setFarmers] = useState<any[]>(mockFarmers);
   const [search, setSearch] = useState("");
   const [selectedFilter, setSelectedFilter] = useState<"all" | "both" | "crop" | "fertilizer">("all");
@@ -114,19 +116,22 @@ export default function MyFarmersScreen() {
 
             <View className="items-center">
               <Text className="text-lg font-gotham-bold text-slate-900">
-                Farmer & Client Directory
+                {language === "ta" ? "விவசாயிகள் பட்டியல்" : "Farmer & Client Directory"}
               </Text>
               <Text className="text-[11px] text-emerald-700 font-gotham-bold">
-                Crop Cultivators & Fertilizer Buyers
+                {language === "ta" ? "பயிர் & உர வாடிக்கையாளர்கள்" : "Crop Cultivators & Fertilizer Buyers"}
               </Text>
             </View>
 
-            <TouchableOpacity
-              onPress={() => router.push("/(employee)/register-farmer/step1" as any)}
-              className="w-10 h-10 rounded-full bg-emerald-600 items-center justify-center shadow-md shadow-emerald-700/25"
-            >
-              <UserPlus size={18} color="#ffffff" />
-            </TouchableOpacity>
+            <View className="flex-row items-center gap-2">
+              <LanguageTogglePill />
+              <TouchableOpacity
+                onPress={() => router.push("/(employee)/register-farmer/step1" as any)}
+                className="w-10 h-10 rounded-full bg-emerald-600 items-center justify-center shadow-md shadow-emerald-700/25"
+              >
+                <UserPlus size={18} color="#ffffff" />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <ScrollView
@@ -139,7 +144,7 @@ export default function MyFarmersScreen() {
               <View className="flex-row items-center bg-white px-3.5 py-2.5 rounded-full border border-slate-200 shadow-sm">
                 <Search size={18} color="#64748b" />
                 <TextInput
-                  placeholder="Search by farmer name, crop, or district..."
+                  placeholder={language === "ta" ? "விவசாயி, பயிர் அல்லது மாவட்டம் தேடவும்..." : "Search by farmer name, crop, or district..."}
                   placeholderTextColor="#94a3b8"
                   value={search}
                   onChangeText={setSearch}
@@ -156,10 +161,10 @@ export default function MyFarmersScreen() {
                 contentContainerStyle={{ gap: 8 }}
               >
                 {[
-                  { key: "all", label: `All (${farmers.length})` },
-                  { key: "both", label: `Dual Customers (${bothCount})` },
-                  { key: "crop", label: `Crop Growers (${bothCount + cropCount})` },
-                  { key: "fertilizer", label: `Fertilizer Buyers (${bothCount + fertCount})` },
+                  { key: "all", label: language === "ta" ? `அனைத்தும் (${farmers.length})` : `All (${farmers.length})` },
+                  { key: "both", label: language === "ta" ? `இருவகை வாடிக்கையாளர்கள் (${bothCount})` : `Dual Customers (${bothCount})` },
+                  { key: "crop", label: language === "ta" ? `பயிர் விவசாயிகள் (${bothCount + cropCount})` : `Crop Growers (${bothCount + cropCount})` },
+                  { key: "fertilizer", label: language === "ta" ? `உர வாடிக்கையாளர்கள் (${bothCount + fertCount})` : `Fertilizer Buyers (${bothCount + fertCount})` },
                 ].map((item) => {
                   const isActive = selectedFilter === item.key;
                   return (
@@ -214,22 +219,22 @@ export default function MyFarmersScreen() {
 
                     <View>
                       <Text className="text-white font-gotham-bold text-2xl mb-1">
-                        {farmers.length} Total Enrolled Clients
+                        {farmers.length} {language === "ta" ? "பதிவுசெய்த வாடிக்கையாளர்கள்" : "Total Enrolled Clients"}
                       </Text>
                       <View className="flex-row items-center flex-wrap gap-2 mt-1">
                         <View className="bg-emerald-500/30 px-2.5 py-0.5 rounded-full border border-emerald-400/40">
                           <Text className="text-emerald-200 font-gotham-bold text-[10px]">
-                            {bothCount} Dual (Crop + Fert)
+                            {bothCount} {language === "ta" ? "இருவகை (பயிர் + உரம்)" : "Dual (Crop + Fert)"}
                           </Text>
                         </View>
                         <View className="bg-sky-500/30 px-2.5 py-0.5 rounded-full border border-sky-400/40">
                           <Text className="text-sky-200 font-gotham-bold text-[10px]">
-                            {cropCount} Exclusive Crops
+                            {cropCount} {language === "ta" ? "பயிர் மட்டும்" : "Exclusive Crops"}
                           </Text>
                         </View>
                         <View className="bg-amber-500/30 px-2.5 py-0.5 rounded-full border border-amber-400/40">
                           <Text className="text-amber-200 font-gotham-bold text-[10px]">
-                            {fertCount} Bio-Input Buyers
+                            {fertCount} {language === "ta" ? "உர வாடிக்கையாளர்கள்" : "Bio-Input Buyers"}
                           </Text>
                         </View>
                       </View>
@@ -322,7 +327,7 @@ export default function MyFarmersScreen() {
                         <View className="flex-row items-center bg-emerald-100/90 border border-emerald-300 px-2.5 py-0.5 rounded-full">
                           <Sprout size={11} color="#047857" className="mr-1" />
                           <Text className="text-emerald-900 font-gotham-bold text-[10px] uppercase tracking-wider">
-                            Crop: {farmer.cropType}
+                            {t("cropType", "Crop")}: {farmer.cropType}
                           </Text>
                         </View>
                       )}
@@ -331,7 +336,7 @@ export default function MyFarmersScreen() {
                         <View className="flex-row items-center bg-amber-100/90 border border-amber-300 px-2.5 py-0.5 rounded-full">
                           <Package size={11} color="#b45309" className="mr-1" />
                           <Text className="text-amber-900 font-gotham-bold text-[10px] uppercase tracking-wider">
-                            Fertilizer Buyer
+                            {t("fertilizerCustomer", "Fertilizer Buyer")}
                           </Text>
                         </View>
                       )}
@@ -339,7 +344,7 @@ export default function MyFarmersScreen() {
                       {farmer.customerType === "both" && (
                         <View className="bg-purple-100/90 border border-purple-300 px-2 py-0.5 rounded-full">
                           <Text className="text-purple-900 font-gotham-bold text-[9px] uppercase tracking-widest">
-                            ★ Dual Client
+                            ★ {t("dualClient", "Dual Client")}
                           </Text>
                         </View>
                       )}
@@ -349,7 +354,7 @@ export default function MyFarmersScreen() {
                     <View className="flex-row justify-between items-center pt-2 border-t border-slate-200/70">
                       <View className="flex-row items-center">
                         <Text className="text-[#15803d] font-gotham-bold text-xs mr-1">
-                          View Dossier
+                          {t("viewDossier", "View Dossier")}
                         </Text>
                         <ChevronLeft
                           size={14}

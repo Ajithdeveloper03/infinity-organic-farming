@@ -23,9 +23,11 @@ import {
   CheckCircle2,
 } from "lucide-react-native";
 import { getTodayVisits } from "../../data/mockData";
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 import { api } from "../../services/api";
 
 export default function VisitsScreen() {
+  const { t, language } = useLanguage();
   const [visits, setVisits] = useState<any[]>(getTodayVisits());
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"all" | "pending" | "completed">("all");
@@ -73,14 +75,15 @@ export default function VisitsScreen() {
 
           <View className="items-center">
             <Text className="text-lg font-gotham-bold text-slate-900">
-              Today's Field Visits
+              {t("todaysVisits", "Today's Field Visits")}
             </Text>
             <Text className="text-xs text-emerald-700 font-brandon font-bold">
-              {visits.length} Scheduled • Delta Zone
+              {visits.length} {t("scheduled", "Scheduled")} • Delta Zone
             </Text>
           </View>
 
-          <View className="w-10 items-end">
+          <View className="flex-row items-center gap-1">
+            <LanguageTogglePill />
             {loading && <ActivityIndicator size="small" color="#059669" />}
           </View>
         </View>
@@ -113,23 +116,23 @@ export default function VisitsScreen() {
                   <View className="flex-row items-center bg-emerald-500 px-3 py-1 rounded-full self-start shadow-sm">
                     <ListTodo size={13} color="#ffffff" />
                     <Text className="text-white font-gotham-bold text-[11px] ml-1.5 uppercase tracking-wider">
-                      Daily Route Overview
+                      {language === "ta" ? "தினசரி களப் பாதை" : "Daily Route Overview"}
                     </Text>
                   </View>
 
                   <View>
                     <Text className="text-white font-gotham-bold text-2xl leading-tight">
-                      {completedCount} of {visits.length} Completed
+                      {completedCount} / {visits.length} {t("completed", "Completed")}
                     </Text>
                     <View className="flex-row items-center mt-2">
                       <View className="bg-white/20 px-3 py-1 rounded-full border border-white/25 mr-2">
                         <Text className="text-emerald-300 font-gotham-bold text-xs">
-                          ✓ {completedCount} Done
+                          ✓ {completedCount} {t("completed", "Done")}
                         </Text>
                       </View>
                       <View className="bg-white/20 px-3 py-1 rounded-full border border-white/25">
                         <Text className="text-amber-300 font-gotham-bold text-xs">
-                          ⚡ {pendingCount} Pending
+                          ⚡ {pendingCount} {t("pending", "Pending")}
                         </Text>
                       </View>
                     </View>
@@ -143,6 +146,12 @@ export default function VisitsScreen() {
           <View className="px-5 mb-4 flex-row justify-between">
             {(["all", "pending", "completed"] as const).map((tab) => {
               const isActive = activeTab === tab;
+              const tabText =
+                tab === "all"
+                  ? t("all", "All")
+                  : tab === "pending"
+                  ? t("pending", "Pending")
+                  : t("completed", "Completed");
               return (
                 <TouchableOpacity
                   key={tab}
@@ -158,7 +167,7 @@ export default function VisitsScreen() {
                       isActive ? "text-white" : "text-slate-700"
                     }`}
                   >
-                    {tab}
+                    {tabText}
                   </Text>
                 </TouchableOpacity>
               );
@@ -230,7 +239,9 @@ export default function VisitsScreen() {
                         </Text>
                       </View>
                       <Text className="text-slate-600 font-gotham-medium text-xs">
-                        {isCompleted ? "Completed ✓" : "Upcoming Visit"}
+                        {isCompleted
+                          ? (language === "ta" ? "முடிந்தது ✓" : "Completed ✓")
+                          : (language === "ta" ? "வரவிருக்கும் வருகை" : "Upcoming Visit")}
                       </Text>
                     </View>
 
@@ -263,7 +274,7 @@ export default function VisitsScreen() {
 
                     <View className="flex-row items-center">
                       <Text className={`${theme.actionText} font-gotham-bold text-xs mr-1`}>
-                        View Details
+                        {t("viewDetails", "View Details")}
                       </Text>
                       <ChevronRight size={14} color={theme.iconColor} />
                     </View>

@@ -29,10 +29,12 @@ import {
 } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 
 const { width } = Dimensions.get("window");
 
 export default function FarmerDashboardScreen() {
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<"All" | "Crops" | "Fertilizers">("All");
 
   return (
@@ -104,21 +106,24 @@ export default function FarmerDashboardScreen() {
                 <View className="flex-row items-center mt-1">
                   <View className="bg-emerald-100/95 border border-emerald-300/80 px-2.5 py-0.5 rounded-full flex-row items-center shadow-xs">
                     <Text className="text-emerald-950 font-gotham-bold text-[10px] tracking-wide">
-                      ID: FMR-1002 • Dual Client (Crop + Fert)
+                      ID: FMR-1002 
                     </Text>
                   </View>
                 </View>
               </View>
             </View>
 
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => router.push("/(farmer)/notifications" as any)}
-              className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
-            >
-              <Bell size={18} color="#0f172a" />
-              <View className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white" />
-            </TouchableOpacity>
+            <View className="flex-row items-center">
+              <LanguageTogglePill />
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => router.push("/(farmer)/notifications" as any)}
+                className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm ml-2"
+              >
+                <Bell size={18} color="#0f172a" />
+                <View className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white" />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Quick Dual Switcher Badges (Crop & Fertilizer Mingle) */}
@@ -139,7 +144,7 @@ export default function FarmerDashboardScreen() {
               >
                 <Sparkles size={14} color="#a7f3d0" />
                 <Text className="text-white font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
-                  Vetiver • 2.5 Acres
+                  {t("vetiver", "Vetiver")} • 2.5 {t("acres", "Acres")}
                 </Text>
               </LinearGradient>
             </View>
@@ -160,7 +165,7 @@ export default function FarmerDashboardScreen() {
               >
                 <Package size={14} color="#fef08a" />
                 <Text className="text-white font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
-                  Bio-Input Client
+                  {t("bioInputClient", "Bio-Input Client")}
                 </Text>
               </LinearGradient>
             </View>
@@ -173,57 +178,10 @@ export default function FarmerDashboardScreen() {
           contentContainerStyle={{ paddingBottom: 150, paddingTop: 14 }}
         >
           {/* Active Agronomy & Fertilizer Advisory Card (Medium Brightness & Elegance) */}
-          <View className="px-5 mb-5">
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => router.push("/(farmer)/recommendations" as any)}
-              className="rounded-3xl overflow-hidden shadow-sm border border-emerald-300 bg-emerald-50/95"
-            >
-              <View className="p-5 relative overflow-hidden">
-                <View style={{ position: "absolute", right: -15, bottom: -15, opacity: 0.08 }}>
-                  <Leaf size={140} color="#059669" />
-                </View>
-                <View className="flex-row items-center justify-between mb-2.5">
-                  <View className="bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300 flex-row items-center">
-                    <Sparkles size={12} color="#047857" className="mr-1" />
-                    <Text className="text-emerald-900 font-gotham-bold text-[10px] uppercase tracking-wider">
-                      Advisory • Active Growth Stage
-                    </Text>
-                  </View>
-                  <View className="bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">
-                    <Text className="text-amber-900 font-gotham-bold text-[10px] uppercase tracking-wider">
-                      Due in 3 Days
-                    </Text>
-                  </View>
-                </View>
-
-                <Text className="text-slate-900 font-gotham-bold text-xl mb-1">
-                  Bio-Fertilizer & Soil Nutrition
-                </Text>
-                <Text className="text-slate-700 font-gotham-medium text-xs leading-relaxed mb-3">
-                  Apply 50kg Organic Vermicompost & Neem Cake blend along root irrigation drip lines for maximum rhizosphere elongation.
-                </Text>
-
-                <View className="flex-row items-center justify-between pt-2.5 border-t border-emerald-200">
-                  <View className="flex-row items-center">
-                    <View className="w-2 h-2 rounded-full bg-emerald-600 mr-2" />
-                    <Text className="text-emerald-900 font-gotham-bold text-xs">
-                      Agronomist: Harish (Delta Zone)
-                    </Text>
-                  </View>
-                  <View className="flex-row items-center">
-                    <Text className="text-[#15803d] font-gotham-bold text-xs mr-1">
-                      View Protocol
-                    </Text>
-                    <ChevronRight size={14} color="#15803d" />
-                  </View>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
+         
 
           {/* Category Tabs (All / Crops / Fertilizers) */}
-          <View className="mb-5 px-5">
+          <View className="mt-5 mb-5 px-5">
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -231,6 +189,12 @@ export default function FarmerDashboardScreen() {
             >
               {(["All", "Crops", "Fertilizers"] as const).map((tab) => {
                 const isCurrent = activeTab === tab;
+                const tabLabel =
+                  tab === "All"
+                    ? t("all", "All")
+                    : tab === "Crops"
+                    ? t("crops", "Crops")
+                    : t("fertilizers", "Fertilizers");
                 return (
                   <TouchableOpacity
                     key={tab}
@@ -247,7 +211,7 @@ export default function FarmerDashboardScreen() {
                         isCurrent ? "text-white" : "text-slate-700"
                       }`}
                     >
-                      {tab}
+                      {tabLabel}
                     </Text>
                   </TouchableOpacity>
                 );
@@ -260,11 +224,11 @@ export default function FarmerDashboardScreen() {
             <View className="px-5 mb-5">
               <View className="flex-row justify-between items-center mb-3">
                 <Text className="text-lg font-gotham-bold text-slate-900">
-                  Farm Overview
+                  {t("farmOverview", "Farm Overview")}
                 </Text>
                 <TouchableOpacity onPress={() => router.push("/(farmer)/farm" as any)}>
                   <Text className="text-[#15803d] font-gotham-bold text-xs uppercase tracking-wider">
-                    Details
+                    {t("viewDetails", "Details")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -299,25 +263,25 @@ export default function FarmerDashboardScreen() {
                       2.5
                     </Text>
                     <Text className="text-emerald-800 text-[10px] uppercase font-gotham-bold tracking-widest mt-0.5">
-                      Acres
+                      {t("acres", "Acres")}
                     </Text>
                   </View>
 
                   <View className="flex-1 bg-sky-50/90 border border-sky-200/80 rounded-2xl p-3 items-center">
                     <Text className="text-sky-950 font-gotham-bold text-base">
-                      Vetiver
+                      {t("vetiver", "Vetiver")}
                     </Text>
                     <Text className="text-sky-800 text-[10px] uppercase font-gotham-bold tracking-widest mt-0.5">
-                      Crop Type
+                      {t("cropType", "Crop Type")}
                     </Text>
                   </View>
 
                   <View className="flex-1 bg-amber-50/90 border border-amber-200/80 rounded-2xl p-3 items-center">
                     <Text className="text-amber-800 font-gotham-bold text-base">
-                      Optimal
+                      {t("optimal", "Optimal")}
                     </Text>
                     <Text className="text-amber-800 text-[10px] uppercase font-gotham-bold tracking-widest mt-0.5">
-                      Health
+                      {language === "ta" ? "வளம்" : "Health"}
                     </Text>
                   </View>
                 </View>
@@ -330,11 +294,11 @@ export default function FarmerDashboardScreen() {
             <View className="px-5 mb-5">
               <View className="flex-row justify-between items-center mb-3">
                 <Text className="text-lg font-gotham-bold text-slate-900">
-                  Recent Orders
+                  {t("recentOrders", "Recent Orders")}
                 </Text>
                 <TouchableOpacity onPress={() => router.push("/(farmer)/orders" as any)}>
                   <Text className="text-[#15803d] font-gotham-bold text-xs uppercase tracking-wider">
-                    View All
+                    {t("viewAll", "View All")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -350,10 +314,10 @@ export default function FarmerDashboardScreen() {
                   </View>
                   <View className="flex-1">
                     <Text className="text-slate-900 font-gotham-bold text-sm">
-                      Organic Compost (50kg)
+                      {language === "ta" ? "மண்புழு உரம் (50 கிலோ)" : "Organic Compost (50kg)"}
                     </Text>
                     <Text className="text-amber-900 font-gotham-medium text-xs mt-0.5">
-                      Order #8832 • Dispatched
+                      {language === "ta" ? "ஆர்டர் #8832 • அனுப்பப்பட்டது" : "Order #8832 • Dispatched"}
                     </Text>
                   </View>
                 </View>
@@ -370,13 +334,13 @@ export default function FarmerDashboardScreen() {
           {/* Quick Actions (Visits, Reports, Rate FO, Support) */}
           <View className="px-5 mb-5">
             <Text className="text-lg font-gotham-bold text-slate-900 mb-3.5">
-              Quick Actions
+              {t("quickActions", "Quick Actions")}
             </Text>
             <View className="flex-row justify-between">
               {[
                 {
                   icon: History,
-                  label: "Visits",
+                  label: t("visits", "Visits"),
                   route: "/(farmer)/history",
                   color: "#15803d",
                   bgColor: "#ecfdf5",
@@ -384,7 +348,7 @@ export default function FarmerDashboardScreen() {
                 },
                 {
                   icon: Leaf,
-                  label: "Reports",
+                  label: t("reports", "Reports"),
                   route: "/(farmer)/recommendations",
                   color: "#b45309",
                   bgColor: "#fffbeb",
@@ -392,7 +356,7 @@ export default function FarmerDashboardScreen() {
                 },
                 {
                   icon: Star,
-                  label: "Rate FO",
+                  label: t("rateOfficer", "Rate FO"),
                   route: "/(farmer)/rate/v1",
                   color: "#0369a1",
                   bgColor: "#f0f9ff",
@@ -400,7 +364,7 @@ export default function FarmerDashboardScreen() {
                 },
                 {
                   icon: HeadphonesIcon,
-                  label: "Support",
+                  label: t("support", "Support"),
                   route: "/(farmer)/support",
                   color: "#7e22ce",
                   bgColor: "#faf5ff",
@@ -452,14 +416,16 @@ export default function FarmerDashboardScreen() {
                 <View className="flex-row items-center justify-between">
                   <View className="flex-1 pr-4">
                     <Text className="text-white font-gotham-bold text-xl mb-1">
-                      Refer & Earn
+                      {language === "ta" ? "பரிந்துரைத்து பரிசு வெல்க" : "Refer & Earn"}
                     </Text>
                     <Text className="text-white/85 text-xs leading-relaxed mb-3 font-gotham-medium">
-                      Invite neighboring farmers and get bonus reward points!
+                      {language === "ta"
+                        ? "அண்டை விவசாயிகளை இணைத்து பரிசுகளைப் பெறுங்கள்!"
+                        : "Invite neighboring farmers and get bonus reward points!"}
                     </Text>
                     <View className="bg-white/20 py-1.5 px-4 rounded-full self-start border border-white/30">
                       <Text className="text-white font-gotham-bold text-[11px] uppercase tracking-wider">
-                        Share Invite
+                        {language === "ta" ? "பகிர்க" : "Share Invite"}
                       </Text>
                     </View>
                   </View>

@@ -39,9 +39,11 @@ import {
   getTodayVisits,
 } from "../../data/mockData";
 import { useTracking } from "../../context/TrackingContext";
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 import { api, getAuthUser } from "../../services/api";
 
 export default function DashboardScreen() {
+  const { t, language } = useLanguage();
   const [employeeName, setEmployeeName] = useState<string>(employeeProfile.name);
   const [employeeRegion, setEmployeeRegion] = useState<string>("Delta Zone");
   const [stats, setStats] = useState({
@@ -174,7 +176,7 @@ export default function DashboardScreen() {
         }}
       >
         <Image
-          source={require("../../assets/images/image1.jpg")}
+          source={require("../../assets/images/image8.jpg")}
           style={{ width: "100%", height: "100%", opacity: 0.95 }}
           resizeMode="cover"
         />
@@ -229,21 +231,24 @@ export default function DashboardScreen() {
                 <View className="flex-row items-center mt-2">
                   <View className="bg-emerald-100/90 border border-emerald-300/70 px-2 py-0.5 rounded-full flex-row items-center">
                     <Text className="text-emerald-900 font-gotham-bold text-[10px] tracking-wide">
-                      ID: {employeeProfile.id} • {employeeProfile.role}
+                      ID: {employeeProfile.id} • {t("fieldOfficer", "Field Officer")}
                     </Text>
                   </View>
                 </View>
               </View>
             </View>
 
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => router.push("/(employee)/notifications" as any)}
-              className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
-            >
-              <Bell size={18} color="#0f172a" />
-              <View className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white" />
-            </TouchableOpacity>
+            <View className="flex-row items-center">
+              <LanguageTogglePill />
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => router.push("/(employee)/notifications" as any)}
+                className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm ml-2"
+              >
+                <Bell size={18} color="#0f172a" />
+                <View className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white" />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* JioHotstar Style Dual Glowing Switcher Badges */}
@@ -331,20 +336,18 @@ export default function DashboardScreen() {
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View> */}
-
           {/* JioHotstar Style Featured Spotlight Card (Hero Farmer Visit) */}
           {nextVisit && (
             <View className="px-5 mb-6">
-              <View className="flex-row justify-between items-center mb-2.5">
+              <View className="flex-row items-center justify-between mb-3">
                 <Text className="text-white font-gotham-bold text-lg">
-                  Next Up For You
+                  {t("nextScheduledVisit", "Next Up For You")}
                 </Text>
                 <TouchableOpacity
                   onPress={() => router.push("/(employee)/visits" as any)}
                 >
                   <Text className="text-white bg-green-500 px-3 py-2 rounded-full font-gotham-bold text-xs uppercase tracking-wider">
-                    View All
+                    {t("viewAll", "View All")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -371,7 +374,7 @@ export default function DashboardScreen() {
                     <View className="flex-row items-center self-start bg-emerald-500 px-3 py-1 rounded-full shadow-sm">
                       <Sparkles size={12} color="#ffffff" />
                       <Text className="text-white font-gotham-bold text-[11px] ml-1 uppercase tracking-wider">
-                        Priority Field Visit • {nextVisit.time || "10:30 AM"}
+                        {language === "ta" ? "முக்கிய கள வருகை" : "Priority Field Visit"} • {nextVisit.time || "10:30 AM"}
                       </Text>
                     </View>
 
@@ -385,10 +388,6 @@ export default function DashboardScreen() {
                         <Text className="text-emerald-300 font-gotham font-bold text-xs ml-1">
                           {nextVisit.address || nextVisit.farmer?.address || "Thanjavur Ag-Corridor"}
                         </Text>
-                        {/* <Text className="text-white/40 mx-1.5">•</Text>
-                        <Text className="text-slate-300 font-gotham-medium text-xs">
-                          Soil & Bio-Tonic Audit
-                        </Text> */}
                       </View>
 
                       {/* JioHotstar Style Buttons on Hero Card (+ and Play) */}
@@ -401,7 +400,7 @@ export default function DashboardScreen() {
                             <Plus size={20} color="#ffffff" />
                           </TouchableOpacity>
                           <Text className="text-white font-brandon font-bold text-xs">
-                            Add Note
+                            {language === "ta" ? "குறிப்பு" : "Add Note"}
                           </Text>
                         </View>
 
@@ -414,7 +413,7 @@ export default function DashboardScreen() {
                         >
                           <Play size={16} color="#ffffff" fill="#ffffff" />
                           <Text className="text-white font-gotham-bold text-sm ml-2">
-                            Start Visit
+                            {t("startVisit", "Start Visit")}
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -428,7 +427,7 @@ export default function DashboardScreen() {
           {/* Google Pay Style 4 Vibrant Action Grid (Light Mode) */}
           <View className="px-5 mb-6">
             <Text className="text-slate-900 font-gotham-bold text-lg mb-3">
-              Quick Actions
+              {t("quickActions", "Quick Actions")}
             </Text>
 
             <View className="flex-row justify-between mb-3.5">
@@ -458,7 +457,7 @@ export default function DashboardScreen() {
                   <UserPlus size={26} color="#ffffff" />
                 </LinearGradient>
                 <Text className="text-slate-900 font-gotham-bold text-xs text-center mt-2">
-                  Register{"\n"}Farmer
+                  {language === "ta" ? "விவசாயி\nபதிவு" : "Register\nFarmer"}
                 </Text>
               </TouchableOpacity>
 
@@ -486,7 +485,7 @@ export default function DashboardScreen() {
                   <QrCode size={26} color="#ffffff" />
                 </LinearGradient>
                 <Text className="text-slate-900 font-gotham-bold text-xs text-center mt-2">
-                  Log{"\n"}Visit
+                  {language === "ta" ? "வருகை\nபதிவு" : "Log\nVisit"}
                 </Text>
               </TouchableOpacity>
 
@@ -514,7 +513,7 @@ export default function DashboardScreen() {
                   <Clock size={26} color="#ffffff" />
                 </LinearGradient>
                 <Text className="text-slate-900 font-gotham-bold text-xs text-center mt-2">
-                  Duty{"\n"}Logs
+                  {language === "ta" ? "பணி\nபதிவு" : "Duty\nLogs"}
                 </Text>
               </TouchableOpacity>
 
@@ -542,7 +541,7 @@ export default function DashboardScreen() {
                   <FileCheck2 size={26} color="#ffffff" />
                 </LinearGradient>
                 <Text className="text-slate-900 font-gotham-bold text-xs text-center mt-2">
-                  Field{"\n"}Reports
+                  {language === "ta" ? "கள\nஅறிக்கை" : "Field\nReports"}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -556,7 +555,7 @@ export default function DashboardScreen() {
               >
                 <Zap size={16} color="#0284c7" />
                 <Text className="text-sky-900 font-gotham-bold text-xs ml-1.5">
-                  Clock In
+                  {t("clockIn", "Clock In")}
                 </Text>
               </TouchableOpacity>
 
@@ -567,14 +566,14 @@ export default function DashboardScreen() {
               >
                 <Clock size={16} color="#d97706" />
                 <Text className="text-amber-900 font-gotham-bold text-xs ml-1.5">
-                  Clock Out
+                  {t("clockOut", "Clock Out")}
                 </Text>
               </TouchableOpacity>
 
               <View className="flex-1 ml-1.5 bg-emerald-50/90 p-2.5 rounded-2xl flex-row items-center border border-emerald-200 shadow-sm">
                 <Radio size={16} color="#16a34a" />
                 <Text className="text-emerald-900 font-gotham-bold text-xs ml-1.5">
-                  GPS Live
+                  {language === "ta" ? "நேரலை" : "GPS Live"}
                 </Text>
               </View>
             </View>
@@ -584,18 +583,18 @@ export default function DashboardScreen() {
           <View className="px-5 mb-6">
             <View className="flex-row justify-between items-center mb-1">
               <Text className="text-slate-900 font-gotham-bold text-lg">
-                Farmers & Input Clients
+                {t("assignedFarmers", "Farmers & Input Clients")}
               </Text>
               <TouchableOpacity
                 onPress={() => router.push("/(employee)/my-farmers" as any)}
               >
                 <Text className="text-emerald-700 font-gotham-bold text-xs uppercase tracking-wider">
-                  Directory
+                  {t("directory", "Directory")}
                 </Text>
               </TouchableOpacity>
             </View>
             <Text className="text-slate-500 font-gotham-medium text-xs mb-3">
-              Mingle of Contract Crop Growers & Bio-Fertilizer Buyers
+              {t("mingleSubtext", "Mingle of Contract Crop Growers & Bio-Fertilizer Buyers")}
             </Text>
 
             <ScrollView
@@ -705,11 +704,11 @@ export default function DashboardScreen() {
           <View className="px-5 mb-6">
             <View className="flex-row justify-between items-center mb-3">
               <Text className="text-slate-900 font-gotham-bold text-lg">
-                Today's Field Route ({stats.completed}/{stats.totalVisits})
+                {language === "ta" ? "இன்றைய களப் பாதை" : "Today's Field Route"} ({stats.completed}/{stats.totalVisits})
               </Text>
               <View className="flex-row items-center bg-emerald-100 px-2.5 py-1 rounded-full border border-emerald-200">
                 <Text className="text-emerald-800 font-gotham-bold text-xs">
-                  {stats.pending} Pending
+                  {stats.pending} {t("pending", "Pending")}
                 </Text>
               </View>
             </View>
@@ -781,7 +780,9 @@ export default function DashboardScreen() {
 
                     <View className="p-3 flex-row items-center justify-between border-t border-slate-200/60">
                       <Text className={`${rTheme.text} font-gotham-bold text-xs`}>
-                        {v.status === "completed" ? "✓ Completed" : "Start Inspection"}
+                        {v.status === "completed"
+                          ? (language === "ta" ? "✓ முடிந்தது" : "✓ Completed")
+                          : (language === "ta" ? "ஆய்வைத் தொடங்கு" : "Start Inspection")}
                       </Text>
                       <ChevronRight size={16} color={rTheme.iconColor} />
                     </View>

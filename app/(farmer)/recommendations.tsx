@@ -24,6 +24,7 @@ import {
   Sparkles,
   ChevronRight,
 } from "lucide-react-native";
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 
 const generalTips = [
   {
@@ -112,6 +113,7 @@ const visitReports = [
 ];
 
 export default function FarmerRecommendationsScreen() {
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<"reports" | "tips">("reports");
 
   return (
@@ -135,9 +137,9 @@ export default function FarmerRecommendationsScreen() {
             <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
           <Text className="text-slate-900 text-lg font-gotham-bold">
-            Reports & Guidance
+            {language === "ta" ? "அறிக்கைகள் & வழிகாட்டல்" : "Reports & Guidance"}
           </Text>
-          <View className="w-10" />
+          <LanguageTogglePill />
         </View>
 
         <ScrollView
@@ -157,14 +159,16 @@ export default function FarmerRecommendationsScreen() {
                   <View className="flex-row items-center mb-2">
                     <FileText size={18} color="#86efac" className="mr-2" />
                     <Text className="text-emerald-300 font-gotham-bold text-xs uppercase tracking-widest">
-                      Agronomy Guidance
+                      {language === "ta" ? "பண்ணை வழிகாட்டல்" : "Agronomy Guidance"}
                     </Text>
                   </View>
                   <Text className="text-white font-gotham-bold text-2xl mb-2">
-                    Expert Farm Reports
+                    {language === "ta" ? "நிபுணர் பண்ணை அறிக்கைகள்" : "Expert Farm Reports"}
                   </Text>
                   <Text className="text-white/85 font-gotham-medium text-xs leading-relaxed">
-                    Customized field observations and scientific organic protocols for your land.
+                    {language === "ta"
+                      ? "உங்கள் நிலத்திற்கான களப் பதிவுகள் மற்றும் இயற்கை நெறிமுறைகள்."
+                      : "Customized field observations and scientific organic protocols for your land."}
                   </Text>
                 </View>
               </ImageBackground>
@@ -186,7 +190,7 @@ export default function FarmerRecommendationsScreen() {
                     activeTab === "reports" ? "text-emerald-800" : "text-slate-600"
                   }`}
                 >
-                  Visit Reports ({visitReports.length})
+                  {language === "ta" ? "வருகை அறிக்கைகள்" : "Visit Reports"} ({visitReports.length})
                 </Text>
               </TouchableOpacity>
 
@@ -202,7 +206,7 @@ export default function FarmerRecommendationsScreen() {
                     activeTab === "tips" ? "text-emerald-800" : "text-slate-600"
                   }`}
                 >
-                  Farming Tips ({generalTips.length})
+                  {language === "ta" ? "விவசாயக் குறிப்புகள்" : "Farming Tips"} ({generalTips.length})
                 </Text>
               </TouchableOpacity>
             </View>
@@ -264,7 +268,7 @@ export default function FarmerRecommendationsScreen() {
                       </View>
                       <View className="flex-row items-center">
                         <Text className={`font-gotham-bold text-xs mr-1 ${report.actionText}`}>
-                          View Full Report
+                          {t("viewReport", "View Full Report")}
                         </Text>
                         <ChevronRight size={14} color={report.actionColor} />
                       </View>

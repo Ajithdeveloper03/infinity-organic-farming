@@ -31,8 +31,10 @@ import {
   Sparkles,
 } from "lucide-react-native";
 import { mockFarmers } from "../../../data/mockData";
+import { useLanguage, LanguageTogglePill } from "../../../context/LanguageContext";
 
 export default function FarmerDetailsScreen() {
+  const { t, language } = useLanguage();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   // Find farmer or fallback
@@ -74,22 +76,23 @@ export default function FarmerDetailsScreen() {
             <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
 
-          <Text className="text-lg font-gotham-bold text-slate-900">
-            Farmer Profile Dossier
+          <Text className="text-base font-gotham-bold text-slate-900">
+            {language === "ta" ? "விவசாயி விவரங்கள்" : "Farmer Dossier"}
           </Text>
 
-          <View className="flex-row items-center space-x-2">
+          <View className="flex-row items-center gap-1.5">
+            <LanguageTogglePill />
             <TouchableOpacity
               onPress={handleCall}
-              className="w-10 h-10 rounded-full bg-emerald-50 items-center justify-center border border-emerald-200 mr-2"
+              className="w-8 h-8 rounded-full bg-emerald-50 items-center justify-center border border-emerald-200"
             >
-              <Phone size={17} color="#059669" />
+              <Phone size={14} color="#059669" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleWhatsApp}
-              className="w-10 h-10 rounded-full bg-emerald-600 items-center justify-center shadow-xs"
+              className="w-8 h-8 rounded-full bg-emerald-600 items-center justify-center shadow-xs"
             >
-              <MessageCircle size={17} color="#ffffff" />
+              <MessageCircle size={14} color="#ffffff" />
             </TouchableOpacity>
           </View>
         </View>

@@ -13,9 +13,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "../components/ui/Card";
+import { useLanguage, LanguageTogglePill } from "../context/LanguageContext";
 
 export default function IntroScreen() {
   const [role, setRole] = useState<"farmer" | "employee">("employee");
+  const { t, language } = useLanguage();
 
   return (
     <View className="flex-1 bg-black relative">
@@ -32,8 +34,13 @@ export default function IntroScreen() {
       >
         <View className="flex-1 bg-black/40">
           <SafeAreaView className="flex-1 justify-between">
+            {/* Top Bar with Language Toggle */}
+            <View className="flex-row justify-end items-center px-6 pt-2">
+              <LanguageTogglePill />
+            </View>
+
             {/* Header Section */}
-            <View className="items-center pt-16">
+            <View className="items-center pt-8">
               <View className="bg-white/95 p-4 rounded-3xl mb-4 shadow-lg border border-gray-100">
                 <Image
                   source={require("../assets/images/logo.png")}
@@ -41,31 +48,24 @@ export default function IntroScreen() {
                   resizeMode="contain"
                 />
               </View>
-              {/* <Card className="rounded-full py-3 px-6 shadow-xl bg-white/95">
-                <Text className="text-xl font-gotham-bold text-[#15803d] text-center tracking-wide">
-                  Infinity Organics
-                </Text>
-              </Card> */}
             </View>
 
             {/* Bottom Sheet Card for Role Selection (Glassmorphism) */}
-            <View className="px-4 relative bottom-0 left-0 pb-4 mt-20">
+            <View className="px-4 relative bottom-0 left-0 pb-4 mt-12">
               <BlurView
-                // intensity={80}
-                // tint="light"
-                // style={styles.glassCard}
-                className="bg-transparent overflow-hidden pt-8 pb-6"
+                className="bg-transparent overflow-hidden pt-6 pb-6"
               >
                 <View className="items-center mb-6">
                   <View className="bg-white/80 p-4 rounded-full mb-4 shadow-sm border border-white/60">
                     <Users size={32} color="#15803d" />
                   </View>
-                  <Text className="text-gray-900 font-gotham-bold text-2xl mb-2">
-                    Choose Your Role
+                  <Text className="text-gray-900 font-gotham-bold text-2xl mb-2 text-center">
+                    {t("chooseRole", "Choose Your Role")}
                   </Text>
                   <Text className="text-gray-800 font-brandon text-center px-4">
-                    Select a role to personalize your profile and access your
-                    relevant dashboard.
+                    {language === "ta"
+                      ? "உங்கள் கணக்கைத் தொடர உங்கள் பங்கைத் தேர்ந்தெடுக்கவும்."
+                      : "Select a role to personalize your profile and access your dashboard."}
                   </Text>
                 </View>
 
@@ -91,10 +91,10 @@ export default function IntroScreen() {
                       <Text
                         className={`font-gotham-bold text-lg ${role === "employee" ? "text-[#15803d]" : "text-gray-800"}`}
                       >
-                        Field Officer
+                        {t("fieldOfficer", "Field Officer")}
                       </Text>
                       <Text className="text-gray-800 font-brandon text-xs mt-0.5">
-                        Manage visits & track activities
+                        {language === "ta" ? "வருகைகள் மற்றும் வேலைகளை நிர்வகிக்கவும்" : "Manage visits & track activities"}
                       </Text>
                     </View>
                     {role === "employee" && (
@@ -123,10 +123,10 @@ export default function IntroScreen() {
                       <Text
                         className={`font-gotham-bold text-lg ${role === "farmer" ? "text-[#15803d]" : "text-gray-800"}`}
                       >
-                        Farmer
+                        {t("farmer", "Farmer")}
                       </Text>
                       <Text className="text-gray-600 font-brandon text-xs mt-0.5">
-                        View reports & farm progress
+                        {language === "ta" ? "பண்ணை அறிக்கைகள் மற்றும் முன்னேற்றத்தைக் காண்க" : "View reports & farm progress"}
                       </Text>
                     </View>
                     {role === "farmer" && (
@@ -149,7 +149,7 @@ export default function IntroScreen() {
                     className="w-full bg-[#15803d] py-4 rounded-full items-center shadow-md flex-row justify-center"
                   >
                     <Text className="text-white font-gotham-bold text-lg tracking-wide">
-                      Continue
+                      {t("continue", "Continue")}
                     </Text>
                   </TouchableOpacity>
                 </View>

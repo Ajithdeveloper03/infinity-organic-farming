@@ -20,6 +20,7 @@ import {
   Sparkles,
   Sprout,
 } from "lucide-react-native";
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 
 export const mockReports = [
   {
@@ -97,6 +98,7 @@ export const mockReports = [
 ];
 
 export default function ReportsScreen() {
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState("All");
 
   const filteredReports = mockReports.filter((report) => {
@@ -123,11 +125,11 @@ export default function ReportsScreen() {
           </TouchableOpacity>
 
           <Text className="text-lg font-gotham-bold text-slate-900">
-            Daily Audit Reports
+            {language === "ta" ? "தினசரி ஆய்வறிக்கைகள்" : "Daily Audit Reports"}
           </Text>
 
-          <View className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm">
-            <FileCheck2 size={18} color="#0f172a" />
+          <View className="flex-row items-center gap-1">
+            <LanguageTogglePill />
           </View>
         </View>
 
@@ -158,16 +160,16 @@ export default function ReportsScreen() {
                 <View className="flex-1 p-5 justify-between">
                   <View className="bg-emerald-500 px-3 py-1 rounded-full self-start shadow-sm">
                     <Text className="text-white font-gotham-bold text-[11px] uppercase tracking-wider">
-                      Agronomy Ledger
+                      {language === "ta" ? "பண்ணை பதிவேடு" : "Agronomy Ledger"}
                     </Text>
                   </View>
 
                   <View>
                     <Text className="text-white font-gotham-bold text-2xl leading-tight">
-                      Field Audit Dossiers
+                      {language === "ta" ? "கள ஆய்வு அறிக்கைகள்" : "Field Audit Dossiers"}
                     </Text>
                     <Text className="text-emerald-300 font-brandon text-xs mt-1">
-                      {mockReports.length} Inspection Audits Recorded This Month
+                      {mockReports.length} {language === "ta" ? "ஆய்வுகள் இந்த மாதம் பதிவு செய்யப்பட்டன" : "Inspection Audits Recorded This Month"}
                     </Text>
                   </View>
                 </View>
@@ -179,6 +181,12 @@ export default function ReportsScreen() {
           <View className="px-5 mb-4 flex-row">
             {["All", "Completed", "Pending"].map((tab) => {
               const isActive = activeTab === tab;
+              const tabName =
+                tab === "All"
+                  ? t("all", "All")
+                  : tab === "Completed"
+                  ? t("completed", "Completed")
+                  : t("pending", "Pending");
               return (
                 <TouchableOpacity
                   key={tab}
@@ -194,7 +202,7 @@ export default function ReportsScreen() {
                       isActive ? "text-white" : "text-slate-700"
                     }`}
                   >
-                    {tab}
+                    {tabName}
                   </Text>
                 </TouchableOpacity>
               );
@@ -311,7 +319,7 @@ export default function ReportsScreen() {
 
                     <View className="flex-row items-center">
                       <Text className={`${theme.actionText} font-gotham-bold text-xs mr-1`}>
-                        View Dossier
+                        {t("viewDossier", "View Dossier")}
                       </Text>
                       <ChevronRight size={14} color={theme.iconColor} />
                     </View>

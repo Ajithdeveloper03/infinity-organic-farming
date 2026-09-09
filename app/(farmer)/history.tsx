@@ -19,6 +19,7 @@ import {
   UserCheck,
   Sparkles,
 } from "lucide-react-native";
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 
 const history = [
   {
@@ -75,6 +76,7 @@ const history = [
 ];
 
 export default function FarmerHistoryScreen() {
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState("All");
 
   return (
@@ -98,9 +100,9 @@ export default function FarmerHistoryScreen() {
             <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
           <Text className="text-slate-900 text-lg font-gotham-bold">
-            Visit History
+            {language === "ta" ? "வருகை வரலாறு" : "Visit History"}
           </Text>
-          <View className="w-10" />
+          <LanguageTogglePill />
         </View>
 
         <ScrollView
@@ -120,14 +122,16 @@ export default function FarmerHistoryScreen() {
                   <View className="flex-row items-center mb-2">
                     <UserCheck size={18} color="#86efac" className="mr-2" />
                     <Text className="text-emerald-300 font-gotham-bold text-xs uppercase tracking-widest">
-                      Field Officer Audits
+                      {language === "ta" ? "கள அலுவலர் ஆய்வுகள்" : "Field Officer Audits"}
                     </Text>
                   </View>
                   <Text className="text-white font-gotham-bold text-2xl mb-2">
-                    Regular Inspections
+                    {language === "ta" ? "முறையான கள ஆய்வுகள்" : "Regular Inspections"}
                   </Text>
                   <Text className="text-white/85 font-gotham-medium text-xs leading-relaxed">
-                    Verified field audits by certified Infinity Organics agronomy officers.
+                    {language === "ta"
+                      ? "சான்றளிக்கப்பட்ட கள அலுவலர்களின் முறையான ஆய்வு விவரங்கள்."
+                      : "Verified field audits by certified Infinity Organics agronomy officers."}
                   </Text>
                 </View>
               </ImageBackground>
@@ -137,23 +141,31 @@ export default function FarmerHistoryScreen() {
           {/* Filter Tabs */}
           <View className="px-5 mb-4">
             <View className="flex-row bg-slate-200/80 p-1 rounded-full">
-              {["All", "Completed", "Scheduled"].map((tab) => (
-                <TouchableOpacity
-                  key={tab}
-                  onPress={() => setActiveTab(tab)}
-                  className={`flex-1 py-2.5 rounded-full items-center ${
-                    activeTab === tab ? "bg-white shadow-sm" : ""
-                  }`}
-                >
-                  <Text
-                    className={`font-gotham-bold text-xs ${
-                      activeTab === tab ? "text-emerald-800" : "text-slate-600"
+              {["All", "Completed", "Scheduled"].map((tab) => {
+                const tabText =
+                  tab === "All"
+                    ? t("all", "All")
+                    : tab === "Completed"
+                    ? t("completed", "Completed")
+                    : t("scheduled", "Scheduled");
+                return (
+                  <TouchableOpacity
+                    key={tab}
+                    onPress={() => setActiveTab(tab)}
+                    className={`flex-1 py-2.5 rounded-full items-center ${
+                      activeTab === tab ? "bg-white shadow-sm" : ""
                     }`}
                   >
-                    {tab}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      className={`font-gotham-bold text-xs ${
+                        activeTab === tab ? "text-emerald-800" : "text-slate-600"
+                      }`}
+                    >
+                      {tabText}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </View>
 
@@ -213,7 +225,7 @@ export default function FarmerHistoryScreen() {
 
                 <View className="flex-row items-center justify-between pt-2 border-t border-slate-200/70">
                   <Text className={`${visit.actionText} font-gotham-bold text-xs uppercase tracking-wider`}>
-                    View Complete Audit Log
+                    {t("viewDetails", "View Complete Audit Log")}
                   </Text>
                   <ChevronRight size={15} color={visit.actionColor} />
                 </View>
