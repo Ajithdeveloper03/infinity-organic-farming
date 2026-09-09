@@ -176,7 +176,7 @@ export default function DashboardScreen() {
         }}
       >
         <Image
-          source={require("../../assets/images/image2.jpg")}
+          source={require("../../assets/images/image10.jpg")}
           style={{ width: "100%", height: "100%", opacity: 0.95 }}
           resizeMode="cover"
         />
@@ -326,7 +326,7 @@ export default function DashboardScreen() {
 
               <View className="rounded-[28px] overflow-hidden shadow-xl border border-slate-200 bg-slate-900">
                 <ImageBackground
-                  source={require("../../assets/images/image9.jpg")}
+                  source={require("../../assets/images/image5.jpg")}
                   className="w-full h-72"
                   resizeMode="cover"
                 >

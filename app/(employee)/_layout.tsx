@@ -1,9 +1,6 @@
 import React from "react";
-
 import { Tabs, router } from "expo-router";
-
 import { CalendarDays, FileText, Home, Plus, User } from "lucide-react-native";
-
 import {
   Text,
   TouchableOpacity,
@@ -11,16 +8,10 @@ import {
   StyleSheet,
   useColorScheme,
 } from "react-native";
-
 import { BlurView } from "expo-blur";
-
 function CustomTabBar({ state, descriptors, navigation }: any) {
   const colorScheme = useColorScheme();
-
   const isDark = colorScheme === "dark";
-
-  /*
- Insert FAB in the middle  */
   const visibleRoutes = state.routes.filter(
     (route: any) =>
       ["dashboard", "visits", "reports", "profile"].includes(route.name)
@@ -35,18 +26,15 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
       >
         {visibleRoutes.map((route: any, index: number) => {
           const { options } = descriptors[route.key];
-
           const label =
             options.tabBarLabel !== undefined
               ? options.tabBarLabel
               : options.title !== undefined
                 ? options.title
                 : route.name;
-
           const isFocused =
             state.index ===
             state.routes.findIndex((r: any) => r.key === route.key);
-
           const onPress = () => {
             const event = navigation.emit({
               type: "tabPress",
@@ -57,12 +45,9 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
               navigation.navigate(route.name);
             }
           };
-
           const getIcon = () => {
             const activeColor = "#15803d";
-
             const inactiveColor = "#6b7280";
-
             const color = isFocused ? activeColor : inactiveColor;
             switch (route.name) {
               case "dashboard":
@@ -101,7 +86,6 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
                 return null;
             }
           };
-
           const TabItem = (
             <TouchableOpacity
               key={route.key}
@@ -164,7 +148,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 30,
     elevation: 20,
-    backgroundColor: "#ffffff", // solid fallback
+    backgroundColor: "#ffffff",
   },
   blurView: {
     flexDirection: "row",
@@ -177,9 +161,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0, 0, 0, 0.05)",
   },
 });
-
 import { TrackingProvider } from "../../context/TrackingContext";
-
 export default function EmployeeLayout() {
   return (
     <TrackingProvider>

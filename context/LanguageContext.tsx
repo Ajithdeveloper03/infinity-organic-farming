@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity, Text, View } from "react-native";
 import { Globe } from "lucide-react-native";
+import { setGlobalFontLanguage } from "../utils/fontSetup";
 
 export type AppLanguage = "en" | "ta";
 
@@ -241,6 +242,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
         const savedLang = await AsyncStorage.getItem("app_language");
         if (savedLang === "en" || savedLang === "ta") {
           setLanguageState(savedLang as AppLanguage);
+          setGlobalFontLanguage(savedLang as AppLanguage);
+        } else {
+          setGlobalFontLanguage("en");
         }
       } catch (e) {
         console.log("Language load error:", e);
@@ -250,6 +254,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const setLanguage = async (lang: AppLanguage) => {
     setLanguageState(lang);
+    setGlobalFontLanguage(lang);
     try {
       await AsyncStorage.setItem("app_language", lang);
     } catch (e) {

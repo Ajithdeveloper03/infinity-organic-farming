@@ -1,3 +1,4 @@
+import "../utils/fontSetup";
 import {
   JosefinSans_400Regular,
   JosefinSans_500Medium,
@@ -23,6 +24,7 @@ import {
   Poppins_800ExtraBold,
   useFonts,
 } from "@expo-google-fonts/poppins";
+import { Kavivanar_400Regular } from "@expo-google-fonts/kavivanar";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -41,7 +43,6 @@ import "../global.css";
 import { TrackingProvider } from "../context/TrackingContext";
 import { LanguageProvider } from "../context/LanguageContext";
 
-// Keep splash screen visible while loading resources
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 const REMOTE_ASSETS_TO_PREFETCH = [
@@ -70,6 +71,7 @@ export default function RootLayout() {
     JosefinSans_500Medium,
     JosefinSans_600SemiBold,
     JosefinSans_700Bold,
+    Kavivanar_400Regular,
   });
 
   const [assetsLoaded, setAssetsLoaded] = useState(false);

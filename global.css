@@ -1,33 +1,28 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css";
- 
 @import "nativewind/theme";
-
 @theme {
-  --font-sans: "Montserrat_400Regular", "sans-serif";
-  --font-serif: "Lora_400Regular", "serif";
-  --font-poppins: "Montserrat_400Regular", "sans-serif";
-  --font-lora: "Lora_400Regular", "serif";
-  --font-gotham: "Montserrat_400Regular", "sans-serif";
-  --font-gotham-medium: "Montserrat_500Medium", "sans-serif";
-  --font-gotham-semibold: "Montserrat_600SemiBold", "sans-serif";
-  --font-gotham-bold: "Montserrat_700Bold", "sans-serif";
-  --font-brandon: "Montserrat_400Regular", "sans-serif";
-  --font-brandon-medium: "Montserrat_500Medium", "sans-serif";
-  --font-brandon-semibold: "Montserrat_600SemiBold", "sans-serif";
-  --font-brandon-bold: "Montserrat_700Bold", "sans-serif";
-  
-  /* Primary Theme Colors (Soft Purple / Green) */
+  --font-sans: "Montserrat_400Regular";
+  --font-serif: "Lora_400Regular";
+  --font-poppins: "Montserrat_400Regular";
+  --font-lora: "Lora_400Regular";
+  --font-gotham: "Montserrat_400Regular";
+  --font-gotham-medium: "Montserrat_500Medium";
+  --font-gotham-semibold: "Montserrat_600SemiBold";
+  --font-gotham-bold: "Montserrat_700Bold";
+  --font-brandon: "Montserrat_400Regular";
+  --font-brandon-medium: "Montserrat_500Medium";
+  --font-brandon-semibold: "Montserrat_600SemiBold";
+  --font-brandon-bold: "Montserrat_700Bold";
+  --font-kavivanar: "Kavivanar_400Regular";
+  --font-tamil: "Kavivanar_400Regular";
   --color-primary-100: #e8e8fc;
   --color-primary-500: #15803d;
   --color-primary-600: #7a7ce0;
-  
-  /* Surface Colors Light */
   --color-surface-bg: #f4f5f9;
   --color-surface-card: #ffffff;
 }
-
 @media (prefers-color-scheme: dark) {
   @theme {
     --color-surface-bg: #000000;
