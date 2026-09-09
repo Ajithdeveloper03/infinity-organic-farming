@@ -159,7 +159,7 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
                             <Users className="w-5 h-5 text-white" />
                         </div>
                         <p className="text-xl font-bold text-gray-900 tracking-tight">{t('Total Farmers')}</p>
-                        <p className="text-sm font-medium text-gray-500 mt-1">Easily track and manage all registered farmers...</p>
+                        <p className="text-sm font-medium text-gray-500 mt-1">{t('Easily track and manage all registered farmers...')}</p>
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
@@ -184,7 +184,7 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
                             <Briefcase className="w-5 h-5 text-white" />
                         </div>
                         <p className="text-xl font-bold text-gray-900 tracking-tight">{t('Active Officers')}</p>
-                        <p className="text-sm font-medium text-gray-500 mt-1">Monitor currently active field officers directly...</p>
+                        <p className="text-sm font-medium text-gray-500 mt-1">{t('Monitor currently active field officers directly...')}</p>
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
@@ -209,7 +209,7 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
                             <MapPin className="w-5 h-5 text-white" />
                         </div>
                         <p className="text-xl font-bold text-gray-900 tracking-tight">{t('Visits Logged')}</p>
-                        <p className="text-sm font-medium text-gray-500 mt-1">Review farm visits and officer activity records...</p>
+                        <p className="text-sm font-medium text-gray-500 mt-1">{t('Review farm visits and officer activity records...')}</p>
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
@@ -324,14 +324,14 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
                                             <div className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center mr-3 group-hover:bg-white transition-colors">
                                                 <FileText className="w-4 h-4 text-gray-500" />
                                             </div>
-                                            {row.act}
+                                            {t(row.act)}
                                         </td>
                                         <td className="py-4 px-6 text-xs font-medium text-gray-500">{row.id}</td>
                                         <td className="py-4 px-6 text-xs font-medium text-gray-500">{row.date}</td>
                                         <td className="py-4 px-6">
                                             <span className={`flex items-center text-xs font-bold ${row.color === 'green' ? 'text-slate-800' : row.color === 'red' ? 'text-red-500' : 'text-slate-700'}`}>
                                                 <span className={`w-1.5 h-1.5 rounded-full mr-2 ${row.color === 'green' ? 'bg-slate-800' : row.color === 'red' ? 'bg-red-500' : 'bg-slate-700'}`}></span>
-                                                {row.status}
+                                                {t(row.status)}
                                             </span>
                                         </td>
                                     </tr>

@@ -144,9 +144,9 @@ export default function AdminLayout({ children }) {
                     {/* Left: Breadcrumb */}
                     <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-2 text-sm font-bold text-gray-400">
-                            <span>Admin</span>
+                            <span>{t('Admin')}</span>
                             <span className="text-gray-300">/</span>
-                            <span className="text-gray-900 capitalize">{url.split('/').pop() || 'Dashboard'}</span>
+                            <span className="text-gray-900 capitalize">{t(url.split('/').pop() || 'Dashboard')}</span>
                         </div>
                     </div>
                     
@@ -158,7 +158,7 @@ export default function AdminLayout({ children }) {
                             </div>
                             <input 
                                 type="text" 
-                                placeholder="Search..." 
+                                placeholder={t('Search...')} 
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onFocus={() => setIsSearchFocused(true)}
@@ -176,12 +176,12 @@ export default function AdminLayout({ children }) {
                                             {filteredSearch.map((result, idx) => (
                                                 <div key={idx} className="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer flex items-center justify-between">
                                                     <span className="text-sm font-bold text-gray-900">{result.name}</span>
-                                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{result.type}</span>
+                                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t(result.type)}</span>
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
-                                        <div className="px-4 py-4 text-sm text-gray-500 text-center font-medium">No matches found.</div>
+                                        <div className="px-4 py-4 text-sm text-gray-500 text-center font-medium">{t('No matches found.')}</div>
                                     )}
                                 </div>
                             )}
@@ -190,7 +190,7 @@ export default function AdminLayout({ children }) {
                         <button 
                             onClick={testAlert}
                             className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition"
-                            title="Test Emergency Alert"
+                            title={t('Test Emergency Alert')}
                         >
                             <ShieldAlert className="w-5 h-5" />
                         </button>
@@ -198,7 +198,7 @@ export default function AdminLayout({ children }) {
                         <button 
                             onClick={toggleLanguage}
                             className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-slate-800 hover:border-green-200 hover:bg-slate-50 transition"
-                            title="Toggle Language"
+                            title={t('Toggle Language')}
                         >
                             <Globe className="w-5 h-5" />
                         </button>
@@ -213,8 +213,8 @@ export default function AdminLayout({ children }) {
                                 <img src="/images/logo.png" alt="Profile" className="w-full h-full object-cover rounded-full" />
                             </div>
                             <div className="ml-3 hidden md:block">
-                                <p className="text-sm font-bold text-gray-900 leading-tight">Super Admin</p>
-                                <p className="text-xs font-semibold text-gray-500">HQ Operations</p>
+                                <p className="text-sm font-bold text-gray-900 leading-tight">{t('Super Admin')}</p>
+                                <p className="text-xs font-semibold text-gray-500">{t('HQ Operations')}</p>
                             </div>
                         </div>
                     </div>
