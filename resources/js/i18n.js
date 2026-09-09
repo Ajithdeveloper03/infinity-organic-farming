@@ -224,4 +224,21 @@ i18n
     }
   });
 
+const updateHtmlLanguage = (lng) => {
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = lng;
+    if (lng === 'ta') {
+      document.documentElement.classList.add('lang-ta');
+    } else {
+      document.documentElement.classList.remove('lang-ta');
+    }
+  }
+};
+
+i18n.on('languageChanged', updateHtmlLanguage);
+
+if (typeof document !== 'undefined') {
+  updateHtmlLanguage(i18n.language || 'en');
+}
+
 export default i18n;

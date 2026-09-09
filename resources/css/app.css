@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kavivanar&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -18,8 +18,25 @@
   --color-alert-warning: #F59E0B;
   --color-alert-info: #3B82F6;
 
-  --font-sans: 'Plus Jakarta Sans', sans-serif;
-  --font-heading: 'Poppins', sans-serif;
+  --font-sans: 'Montserrat', 'Kavivanar', sans-serif;
+  --font-heading: 'Montserrat', 'Kavivanar', sans-serif;
+  --font-gotham: 'Montserrat', 'Kavivanar', sans-serif;
+  --font-brandon: 'Montserrat', 'Kavivanar', sans-serif;
+  --font-kavivanar: 'Kavivanar', cursive;
+  --font-tamil: 'Kavivanar', cursive;
+}
+
+/* Global Typography: Montserrat for English, Kavivanar for Tamil */
+body, input, textarea, button, select {
+  font-family: 'Montserrat', 'Kavivanar', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* When in Tamil Language Mode */
+html[lang="ta"] body,
+html.lang-ta body,
+.lang-ta,
+[lang="ta"] {
+  font-family: 'Kavivanar', 'Montserrat', cursive, sans-serif !important;
 }
 
 /* Minimal Elegant Scrollbar */
