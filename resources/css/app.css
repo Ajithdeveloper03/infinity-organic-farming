@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kavivanar&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Tiro+Tamil:ital@0;1&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -18,17 +18,17 @@
   --color-alert-warning: #F59E0B;
   --color-alert-info: #3B82F6;
 
-  --font-sans: 'Montserrat', 'Kavivanar', sans-serif;
-  --font-heading: 'Montserrat', 'Kavivanar', sans-serif;
-  --font-gotham: 'Montserrat', 'Kavivanar', sans-serif;
-  --font-brandon: 'Montserrat', 'Kavivanar', sans-serif;
-  --font-kavivanar: 'Kavivanar', cursive;
-  --font-tamil: 'Kavivanar', cursive;
+  --font-sans: 'Montserrat', 'Tiro Tamil', sans-serif;
+  --font-heading: 'Montserrat', 'Tiro Tamil', sans-serif;
+  --font-gotham: 'Montserrat', 'Tiro Tamil', sans-serif;
+  --font-brandon: 'Montserrat', 'Tiro Tamil', sans-serif;
+  --font-tiro: 'Tiro Tamil', serif;
+  --font-tamil: 'Tiro Tamil', serif;
 }
 
-/* Global Typography: Montserrat for English, Kavivanar for Tamil */
+/* Global Typography: Montserrat for English, Tiro Tamil for Tamil */
 body, input, textarea, button, select {
-  font-family: 'Montserrat', 'Kavivanar', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Montserrat', 'Tiro Tamil', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* When in Tamil Language Mode */
@@ -36,7 +36,7 @@ html[lang="ta"] body,
 html.lang-ta body,
 .lang-ta,
 [lang="ta"] {
-  font-family: 'Kavivanar', 'Montserrat', cursive, sans-serif !important;
+  font-family: 'Tiro Tamil', 'Montserrat', serif, sans-serif !important;
 }
 
 /* Minimal Elegant Scrollbar */
