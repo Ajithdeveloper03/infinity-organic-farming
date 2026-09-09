@@ -176,7 +176,7 @@ export default function DashboardScreen() {
         }}
       >
         <Image
-          source={require("../../assets/images/image8.jpg")}
+          source={require("../../assets/images/image2.jpg")}
           style={{ width: "100%", height: "100%", opacity: 0.95 }}
           resizeMode="cover"
         />
@@ -184,7 +184,7 @@ export default function DashboardScreen() {
         <LinearGradient
           colors={[
             "rgba(248, 250, 252, 0.05)",
-            "rgba(248, 250, 252, 0.35)",
+            "rgba(248, 250, 252, 0.65)",
             "#f8fafc",
           ]}
           locations={[0, 0.65, 1]}
@@ -221,7 +221,7 @@ export default function DashboardScreen() {
               <View className="flex-1 justify-center">
                 <View className="flex-row items-center">
                   <Text
-                    className="text-white font-gotham-bold text-base tracking-tight"
+                    className="text-slate-900 font-gotham-bold text-base tracking-tight"
                     numberOfLines={1}
                   >
                     {employeeName || employeeProfile.name}
@@ -308,39 +308,11 @@ export default function DashboardScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
         >
-          {/* Google Pay Style Celebratory / Motivational Banner (Light Mode) */}
-          {/* Light Multi-Color Target & Achievement Card */}
-          {/* <View className="px-5 mb-5">
-              <View className="rounded-[24px] overflow-hidden border border-amber-200 bg-amber-50/90 shadow-sm p-4 flex-row items-center justify-between">
-                <View className="flex-1 pr-3">
-                  <View className="flex-row items-center mb-1">
-                    <Award size={16} color="#b45309" />
-                    <Text className="text-amber-800 font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
-                      Harvest Target 2026
-                    </Text>
-                  </View>
-                  <Text className="text-amber-950 font-gotham-bold text-base">
-                    72% Achieved • 18 Farmers
-                  </Text>
-                  <Text className="text-amber-800/80 font-brandon text-xs mt-0.5">
-                    Monthly Organic Certification on track
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => router.push("/(employee)/reports" as any)}
-                  className="bg-amber-600 px-3.5 py-2 rounded-full shadow-sm"
-                >
-                  <Text className="text-white font-gotham-bold text-xs">
-                    View
-                  </Text>
-                </TouchableOpacity>
-              </View>
           {/* JioHotstar Style Featured Spotlight Card (Hero Farmer Visit) */}
           {nextVisit && (
-            <View className="px-5 mb-6">
+            <View className="px-5 mt-4 mb-6">
               <View className="flex-row items-center justify-between mb-3">
-                <Text className="text-white font-gotham-bold text-lg">
+                <Text className="text-slate-900 font-gotham-bold text-lg">
                   {t("nextScheduledVisit", "Next Up For You")}
                 </Text>
                 <TouchableOpacity
@@ -354,7 +326,7 @@ export default function DashboardScreen() {
 
               <View className="rounded-[28px] overflow-hidden shadow-xl border border-slate-200 bg-slate-900">
                 <ImageBackground
-                  source={require("../../assets/images/image3.jpg")}
+                  source={require("../../assets/images/image9.jpg")}
                   className="w-full h-72"
                   resizeMode="cover"
                 >
@@ -390,26 +362,14 @@ export default function DashboardScreen() {
                         </Text>
                       </View>
 
-                      {/* JioHotstar Style Buttons on Hero Card (+ and Play) */}
-                      <View className="flex-row items-center justify-between mt-2 pt-2 border-t border-white/20">
-                        <View className="flex-row items-center">
-                          <TouchableOpacity
-                            onPress={() => router.push("/(employee)/reports" as any)}
-                            className="w-10 h-10 rounded-full bg-white/20 items-center justify-center border border-white/30 mr-2.5 shadow-sm"
-                          >
-                            <Plus size={20} color="#ffffff" />
-                          </TouchableOpacity>
-                          <Text className="text-white font-brandon font-bold text-xs">
-                            {language === "ta" ? "குறிப்பு" : "Add Note"}
-                          </Text>
-                        </View>
-
+                      {/* Action Button on Hero Card */}
+                      <View className="flex-row items-center justify-end mt-2 pt-2 border-t border-white/20">
                         <TouchableOpacity
                           activeOpacity={0.85}
                           onPress={() =>
                             router.push(`/(employee)/visit/${nextVisit.id}` as any)
                           }
-                          className="bg-emerald-500 px-5 py-2.5 rounded-full flex-row items-center shadow-md shadow-emerald-700/40"
+                          className="bg-emerald-500 px-6 py-2.5 rounded-full flex-row items-center shadow-md shadow-emerald-700/40"
                         >
                           <Play size={16} color="#ffffff" fill="#ffffff" />
                           <Text className="text-white font-gotham-bold text-sm ml-2">
