@@ -9,13 +9,24 @@ import {
   useColorScheme,
 } from "react-native";
 import { BlurView } from "expo-blur";
+import { useLanguage } from "../../context/LanguageContext";
+
 function CustomTabBar({ state, descriptors, navigation }: any) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
+  const { t } = useLanguage();
   const visibleRoutes = state.routes.filter(
     (route: any) =>
       ["dashboard", "visits", "reports", "profile"].includes(route.name)
   );
+
+  const routeTitleMap: Record<string, string> = {
+    dashboard: t("home", "Home"),
+    visits: t("visits", "Visits"),
+    reports: t("reports", "Reports"),
+    profile: t("profile", "Profile"),
+  };
+
   return (
     <View style={styles.container}>
       <BlurView
@@ -27,11 +38,14 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
         {visibleRoutes.map((route: any, index: number) => {
           const { options } = descriptors[route.key];
           const label =
-            options.tabBarLabel !== undefined
-              ? options.tabBarLabel
+            routeTitleMap[route.name] ||
+            (options.tabBarLabel !== undefined
+              ? typeof options.tabBarLabel === "string"
+                ? t(options.tabBarLabel)
+                : options.tabBarLabel
               : options.title !== undefined
-                ? options.title
-                : route.name;
+                ? t(options.title)
+                : route.name);
           const isFocused =
             state.index ===
             state.routes.findIndex((r: any) => r.key === route.key);

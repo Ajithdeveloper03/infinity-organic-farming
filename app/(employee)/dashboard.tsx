@@ -296,7 +296,7 @@ export default function DashboardScreen() {
               >
                 <Zap size={14} color="#fef08a" />
                 <Text className="text-white font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
-                  Shift {clockInTime}
+                  {language === "ta" ? "பணி நேரம்" : "Shift"} {clockInTime}
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -654,7 +654,7 @@ export default function DashboardScreen() {
                   <ChevronDown size={22} color="#475569" />
                 </View>
                 <Text className="text-slate-700 font-gotham-bold text-xs mt-1.5">
-                  More
+                  {t("more", "More")}
                 </Text>
               </TouchableOpacity>
             </ScrollView>

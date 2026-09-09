@@ -25,8 +25,10 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { employeeProfile } from "../../data/mockData";
 import { getAuthUser } from "../../services/api";
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 
 export default function ProfileScreen() {
+  const { t, language } = useLanguage();
   const [employeeName, setEmployeeName] = useState(employeeProfile.name);
   const [employeeRegion, setEmployeeRegion] = useState("Delta Zone (Thanjavur)");
   const [employeePhone, setEmployeePhone] = useState("+91 98765 43210");
@@ -82,15 +84,18 @@ export default function ProfileScreen() {
             </TouchableOpacity>
 
             <Text className="text-lg font-gotham-bold text-slate-900">
-              Field Officer ID
+              {t("fieldOfficerId", "Field Officer ID")}
             </Text>
 
-            <TouchableOpacity
-              onPress={handleLogout}
-              className="w-10 h-10 rounded-full bg-rose-50 items-center justify-center border border-rose-200 shadow-sm"
-            >
-              <LogOut size={18} color="#e11d48" />
-            </TouchableOpacity>
+            <View className="flex-row items-center gap-1.5">
+              <LanguageTogglePill />
+              <TouchableOpacity
+                onPress={handleLogout}
+                className="w-10 h-10 rounded-full bg-rose-50 items-center justify-center border border-rose-200 shadow-sm ml-1"
+              >
+                <LogOut size={18} color="#e11d48" />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <ScrollView
@@ -137,7 +142,7 @@ export default function ProfileScreen() {
                   <View className="flex-row items-center bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 mt-1.5 mb-2">
                     <ShieldCheck size={14} color="#059669" />
                     <Text className="text-emerald-800 font-gotham-bold text-xs ml-1 uppercase tracking-wider">
-                      Verified Field Officer • EMP-2026-084
+                      {t("verifiedOfficer", "Verified Field Officer • EMP-2026-084")}
                     </Text>
                   </View>
 
@@ -150,7 +155,7 @@ export default function ProfileScreen() {
                 <View className="flex-row justify-between bg-slate-50 border-t border-slate-100 py-3.5 px-4">
                   <View className="items-center flex-1">
                     <Text className="text-slate-500 font-brandon text-[10px] uppercase">
-                      Visits Logged
+                      {t("visitsLogged", "Visits Logged")}
                     </Text>
                     <Text className="text-emerald-700 font-gotham-bold text-base mt-0.5">
                       142
@@ -159,7 +164,7 @@ export default function ProfileScreen() {
                   <View className="w-px bg-slate-200 h-full" />
                   <View className="items-center flex-1">
                     <Text className="text-slate-500 font-brandon text-[10px] uppercase">
-                      Farmers
+                      {t("farmers", "Farmers")}
                     </Text>
                     <Text className="text-blue-700 font-gotham-bold text-base mt-0.5">
                       28
@@ -168,7 +173,7 @@ export default function ProfileScreen() {
                   <View className="w-px bg-slate-200 h-full" />
                   <View className="items-center flex-1">
                     <Text className="text-slate-500 font-brandon text-[10px] uppercase">
-                      Rating
+                      {t("rating", "Rating")}
                     </Text>
                     <Text className="text-amber-700 font-gotham-bold text-base mt-0.5">
                       4.9 ★
@@ -181,14 +186,14 @@ export default function ProfileScreen() {
             {/* Contact & Field Information */}
             <View className="px-5 mb-5">
               <Text className="text-slate-900 font-gotham-bold text-base mb-3">
-                Official Information
+                {t("officialInfo", "Official Information")}
               </Text>
 
               <View className="bg-white rounded-[24px] p-4 border border-slate-200 shadow-sm">
                 <View className="flex-row items-center py-2.5 border-b border-slate-100">
                   <Phone size={16} color="#059669" className="mr-3" />
                   <View className="flex-1 ml-2">
-                    <Text className="text-slate-500 text-[11px] font-brandon">Contact Mobile</Text>
+                    <Text className="text-slate-500 text-[11px] font-brandon">{t("contactMobile", "Contact Mobile")}</Text>
                     <Text className="text-slate-900 font-gotham-bold text-xs">{employeePhone}</Text>
                   </View>
                 </View>
@@ -196,7 +201,7 @@ export default function ProfileScreen() {
                 <View className="flex-row items-center py-2.5 border-b border-slate-100">
                   <Mail size={16} color="#2563eb" className="mr-3" />
                   <View className="flex-1 ml-2">
-                    <Text className="text-slate-500 text-[11px] font-brandon">Corporate Email</Text>
+                    <Text className="text-slate-500 text-[11px] font-brandon">{t("corporateEmail", "Corporate Email")}</Text>
                     <Text className="text-slate-900 font-gotham-bold text-xs">{employeeEmail}</Text>
                   </View>
                 </View>
@@ -204,7 +209,7 @@ export default function ProfileScreen() {
                 <View className="flex-row items-center py-2.5">
                   <MapPin size={16} color="#ea580c" className="mr-3" />
                   <View className="flex-1 ml-2">
-                    <Text className="text-slate-500 text-[11px] font-brandon">HQ Assigned Office</Text>
+                    <Text className="text-slate-500 text-[11px] font-brandon">{t("hqOffice", "HQ Assigned Office")}</Text>
                     <Text className="text-slate-900 font-gotham-bold text-xs">{employeeRegion}</Text>
                   </View>
                 </View>
@@ -220,7 +225,7 @@ export default function ProfileScreen() {
                 <View className="flex-row items-center">
                   <Clock size={18} color="#059669" />
                   <Text className="text-slate-900 font-gotham-bold text-sm ml-3">
-                    Attendance History & Timesheets
+                    {t("attendanceHistoryTimesheets", "Attendance History & Timesheets")}
                   </Text>
                 </View>
                 <ChevronRight size={18} color="#64748b" />
@@ -233,7 +238,7 @@ export default function ProfileScreen() {
                 <View className="flex-row items-center">
                   <FileText size={18} color="#2563eb" />
                   <Text className="text-slate-900 font-gotham-bold text-sm ml-3">
-                    Inspection Reports & Sign-offs
+                    {t("inspectionReportsSignoffs", "Inspection Reports & Sign-offs")}
                   </Text>
                 </View>
                 <ChevronRight size={18} color="#64748b" />
@@ -246,7 +251,7 @@ export default function ProfileScreen() {
               >
                 <LogOut size={18} color="#e11d48" className="mr-2" />
                 <Text className="text-rose-700 font-gotham-bold text-sm ml-2">
-                  Sign Out of Field Duty
+                  {t("signOutFieldDuty", "Sign Out of Field Duty")}
                 </Text>
               </TouchableOpacity>
             </View>

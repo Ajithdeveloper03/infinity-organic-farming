@@ -21,8 +21,10 @@ import {
   Sparkles,
 } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useLanguage, LanguageTogglePill } from "../../../context/LanguageContext";
 
 export default function AttendanceScreen() {
+  const { t, language } = useLanguage();
   const [clockInTime, setClockInTime] = useState<string | null>("09:15 AM");
   const [isClockedIn, setIsClockedIn] = useState<boolean>(true);
 
@@ -62,9 +64,9 @@ export default function AttendanceScreen() {
               <ChevronLeft size={22} color="#0f172a" />
             </TouchableOpacity>
             <Text className="text-lg font-gotham-bold text-slate-900">
-              Duty & Attendance
+              {t("dutyAttendance", "Duty & Attendance")}
             </Text>
-            <View className="w-10" />
+            <LanguageTogglePill />
           </View>
 
           <ScrollView
@@ -95,41 +97,41 @@ export default function AttendanceScreen() {
                       <View className="flex-row items-center bg-emerald-500 px-3 py-1 rounded-full shadow-sm">
                         <CalendarDays size={14} color="#ffffff" />
                         <Text className="text-white font-gotham-bold text-[11px] ml-1.5 uppercase tracking-wider">
-                          Daily Time Tracker
+                          {t("dailyTimeTracker", "Daily Time Tracker")}
                         </Text>
                       </View>
 
                       <View className="bg-white/20 px-3 py-1 rounded-full border border-white/30">
                         <Text className="text-white font-gotham-bold text-xs">
-                          {isClockedIn ? "● On Duty" : "○ Clocked Out"}
+                          {isClockedIn ? t("onDuty", "● On Duty") : t("clockedOut", "○ Clocked Out")}
                         </Text>
                       </View>
                     </View>
 
                     <View>
                       <Text className="text-white font-gotham-bold text-2xl mb-3">
-                        Today's Shift Hours
+                        {t("todaysShiftHours", "Today's Shift Hours")}
                       </Text>
 
                       <View className="flex-row justify-between bg-black/40 rounded-2xl p-3.5 border border-white/20">
                         <View className="items-center flex-1">
-                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">Clock In</Text>
+                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">{t("clockIn", "Clock In")}</Text>
                           <Text className="text-white font-gotham-bold text-sm mt-0.5">
                             {clockInTime || "09:15 AM"}
                           </Text>
                         </View>
                         <View className="w-px bg-white/20 h-full" />
                         <View className="items-center flex-1">
-                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">Shift Duration</Text>
+                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">{t("shiftDuration", "Shift Duration")}</Text>
                           <Text className="text-emerald-300 font-gotham-bold text-sm mt-0.5">
-                            8.0 Hours
+                            8.0 {t("hours", "Hours")}
                           </Text>
                         </View>
                         <View className="w-px bg-white/20 h-full" />
                         <View className="items-center flex-1">
-                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">Geofence</Text>
+                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">{t("geofence", "Geofence")}</Text>
                           <Text className="text-blue-300 font-gotham-bold text-sm mt-0.5">
-                            Verified
+                            {t("verified", "Verified")}
                           </Text>
                         </View>
                       </View>
@@ -156,7 +158,7 @@ export default function AttendanceScreen() {
                   }}
                 >
                   <LogIn size={18} color="#fff" className="mr-2" />
-                  <Text className="text-white font-gotham-bold text-sm ml-2">Clock In</Text>
+                  <Text className="text-white font-gotham-bold text-sm ml-2">{t("clockIn", "Clock In")}</Text>
                 </LinearGradient>
               </TouchableOpacity>
 
@@ -175,7 +177,7 @@ export default function AttendanceScreen() {
                   }}
                 >
                   <LogOut size={18} color="#fff" className="mr-2" />
-                  <Text className="text-white font-gotham-bold text-sm ml-2">Clock Out</Text>
+                  <Text className="text-white font-gotham-bold text-sm ml-2">{t("clockOut", "Clock Out")}</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>
@@ -183,25 +185,25 @@ export default function AttendanceScreen() {
             {/* Past Attendance Logs (White Cards with Crisp Dark Text) */}
             <View className="px-5">
               <Text className="text-slate-900 font-gotham-bold text-base mb-3">
-                Recent Attendance History
+                {t("recentAttendanceHistory", "Recent Attendance History")}
               </Text>
 
               {[
                 {
-                  date: "Today",
+                  date: t("today", "Today"),
                   in: clockInTime || "09:15 AM",
-                  out: "In Progress",
-                  hours: "Active",
-                  status: "Present",
+                  out: language === "ta" ? "செயல்பாட்டில்" : "In Progress",
+                  hours: t("activeShift", "Active"),
+                  status: t("present", "Present"),
                   color: "#059669",
                   location: "Delta Field Office, Thanjavur",
                 },
                 {
-                  date: "Yesterday",
+                  date: t("yesterday", "Yesterday"),
                   in: "09:00 AM",
                   out: "06:10 PM",
                   hours: "9.1 hrs",
-                  status: "Completed",
+                  status: t("completed", "Completed"),
                   color: "#2563eb",
                   location: "Annur Ag-Cluster, Coimbatore",
                 },
@@ -210,7 +212,7 @@ export default function AttendanceScreen() {
                   in: "08:50 AM",
                   out: "05:30 PM",
                   hours: "8.6 hrs",
-                  status: "Completed",
+                  status: t("completed", "Completed"),
                   color: "#7c3aed",
                   location: "Pollachi Organic Belt",
                 },
@@ -238,7 +240,7 @@ export default function AttendanceScreen() {
 
                   <View className="flex-row justify-between py-2 border-t border-slate-100">
                     <Text className="text-slate-500 font-brandon text-xs">
-                      Time: {item.in} → {item.out}
+                      {t("time", "Time")}: {item.in} → {item.out}
                     </Text>
                     <Text className="text-emerald-700 font-gotham-bold text-xs">
                       {item.hours}

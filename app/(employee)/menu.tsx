@@ -27,73 +27,76 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { LinearGradient } from "expo-linear-gradient";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function MenuScreen() {
+  const { t } = useLanguage();
+
   const menuGroups = [
     {
-      title: "Workflow",
+      title: t("workflow", "Workflow"),
       items: [
         {
           icon: CalendarDays,
-          label: "Attendance",
+          label: t("attendance", "Attendance"),
           route: "/(employee)/attendance",
           color: "#10b981",
         },
         {
           icon: MapPin,
-          label: "My Visits",
+          label: t("myVisits", "My Visits"),
           route: "/(employee)/visits",
           color: "#3b82f6",
         },
         {
           icon: FileText,
-          label: "Reports",
+          label: t("reports", "Reports"),
           route: "/(employee)/reports",
           color: "#8b5cf6",
         },
       ],
     },
     {
-      title: "Account & Preferences",
+      title: t("accountPreferences", "Account & Preferences"),
       items: [
         {
           icon: User,
-          label: "My Profile",
+          label: t("myProfile", "My Profile"),
           route: "/(employee)/edit-profile",
           color: "#f59e0b",
         },
         {
           icon: Bell,
-          label: "Notifications",
+          label: t("notifications", "Notifications"),
           route: null,
           color: "#ec4899",
         },
         {
           icon: Settings,
-          label: "App Settings",
+          label: t("appSettings", "App Settings"),
           route: null,
           color: "#64748b",
         },
       ],
     },
     {
-      title: "System & Support",
+      title: t("systemSupport", "System & Support"),
       items: [
         {
           icon: CloudOff,
-          label: "Offline Data",
+          label: t("offlineData", "Offline Data"),
           route: null,
           color: "#14b8a6",
         },
         {
           icon: Database,
-          label: "Storage Usage",
+          label: t("storageUsage", "Storage Usage"),
           route: null,
           color: "#6366f1",
         },
         {
           icon: PhoneCall,
-          label: "Emergency Contact",
+          label: t("emergencyContact", "Emergency Contact"),
           route: null,
           color: "#ef4444",
         },
@@ -111,7 +114,7 @@ export default function MenuScreen() {
         >
           <ChevronLeft size={22} color="#0f172a" />
         </TouchableOpacity>
-        <Text className="text-slate-900 text-lg font-gotham-bold">Menu</Text>
+        <Text className="text-slate-900 text-lg font-gotham-bold">{t("menu", "Menu")}</Text>
         <View className="w-10 h-10" /> {/* Spacer */}
       </View>
       <ScrollView
@@ -164,7 +167,7 @@ export default function MenuScreen() {
         >
           <LogOut size={20} color="#ef4444" className="mr-3" />
           <Text className="text-red-500 font-gotham-bold text-base tracking-wide">
-            Secure Logout
+            {t("secureLogout", "Secure Logout")}
           </Text>
         </TouchableOpacity>
       </ScrollView>
