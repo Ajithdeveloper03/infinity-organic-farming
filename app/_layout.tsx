@@ -24,7 +24,7 @@ import {
   Poppins_800ExtraBold,
   useFonts,
 } from "@expo-google-fonts/poppins";
-import { Kavivanar_400Regular } from "@expo-google-fonts/kavivanar";
+import { TiroTamil_400Regular } from "@expo-google-fonts/tiro-tamil";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -71,7 +71,7 @@ export default function RootLayout() {
     JosefinSans_500Medium,
     JosefinSans_600SemiBold,
     JosefinSans_700Bold,
-    Kavivanar_400Regular,
+    TiroTamil_400Regular,
   });
 
   const [assetsLoaded, setAssetsLoaded] = useState(false);

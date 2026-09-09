@@ -38,7 +38,7 @@ export const resolveFontFamily = (
 
   if (isTamil) {
     return {
-      fontFamily: "Kavivanar_400Regular",
+      fontFamily: "TiroTamil_500Regular",
       fontWeight: "normal",
     };
   }
@@ -53,7 +53,8 @@ export const resolveFontFamily = (
       existingFont.includes("Lora") ||
       existingFont.includes("Josefin") ||
       existingFont.includes("Poppins") ||
-      existingFont.includes("Kavivanar"))
+      existingFont.includes("TiroTamil") ||
+      existingFont.includes("Tiro"))
   ) {
     return {
       fontFamily: existingFont,
@@ -136,7 +137,7 @@ if (OriginalTextInput && !(OriginalTextInput as any).__infinityPatched) {
       hasTamilGlyphs(value);
 
     const font = isTamil
-      ? { fontFamily: "Kavivanar_400Regular", fontWeight: "normal" as const }
+      ? { fontFamily: "TiroTamil_400Regular", fontWeight: "normal" as const }
       : resolveFontFamily(style, placeholder || value, className);
 
     const mergedStyle = [
