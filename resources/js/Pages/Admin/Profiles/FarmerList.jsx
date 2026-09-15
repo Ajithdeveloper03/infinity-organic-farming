@@ -52,32 +52,30 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Farmer Directory')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">{farmers.length} verified farm properties and agricultural profiles.</p>
+                    <p className="text-gray-500 mt-1 font-medium text-sm">{farmers.length} {t('verified farm properties and agricultural profiles.')}</p>
                 </div>
                 <Link href="/admin/farmers/register" className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
-                    <Plus className="w-5 h-5 mr-1" /> Register Farmer
+                    <Plus className="w-5 h-5 mr-1" /> {t('Register Farmer')}
                 </Link>
             </div>
-
-            {/* Category Tabs */}
             <div className="flex space-x-4 mb-6 border-b border-gray-200">
                 <button
                     onClick={() => handleCategoryChange('crop')}
                     className={`pb-4 px-2 text-sm font-bold transition-colors border-b-2 ${category === 'crop' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
                 >
-                    Crop Farmers (Vetiver, etc)
+                    {t('Crop Farmers (Vetiver, etc)')}
                 </button>
                 <button
                     onClick={() => handleCategoryChange('fertilizer')}
                     className={`pb-4 px-2 text-sm font-bold transition-colors border-b-2 ${category === 'fertilizer' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
                 >
-                    Fertilizer Customers
+                    {t('Fertilizer Customers')}
                 </button>
                 <button
                     onClick={() => handleCategoryChange('both')}
                     className={`pb-4 px-2 text-sm font-bold transition-colors border-b-2 ${category === 'both' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
                 >
-                    Both (Crop & Fertilizer)
+                    {t('Both (Crop & Fertilizer)')}
                 </button>
             </div>
 
@@ -89,7 +87,7 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                         type="text"
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        placeholder="Search by FAR ID, Name, or Phone..."
+                        placeholder={t('Search by FAR ID, Name, or Phone...')}
                         className="cursor-pointer w-full pl-10 pr-4 py-2 border border-gray-200 bg-gray-50 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-sm"
                     />
                 </div>
@@ -100,7 +98,7 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                             type="button"
                             onClick={() => setViewMode('grid')}
                             className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm text-slate-900 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
-                            title="Grid View"
+                            title={t('Grid View')}
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         </button>
@@ -108,7 +106,7 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                             type="button"
                             onClick={() => setViewMode('list')}
                             className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm text-slate-900 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
-                            title="List View"
+                            title={t('List View')}
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                         </button>
@@ -122,13 +120,13 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                     ))}
                     <select value={kyc} onChange={e => { setKyc(e.target.value); router.get('/admin/farmers', { search, district, kyc: e.target.value }, { preserveState: true, replace: true }); }}
                         className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-600">
-                        <option value="">All KYC</option>
-                        <option value="verified">Verified</option>
-                        <option value="pending">Pending</option>
-                        <option value="rejected">Rejected</option>
+                        <option value="">{t('All KYC')}</option>
+                        <option value="verified">{t('Verified')}</option>
+                        <option value="pending">{t('Pending')}</option>
+                        <option value="rejected">{t('Rejected')}</option>
                     </select>
                     <button type="submit" className="flex items-center px-4 py-2 bg-green-600 border border-green-600 text-white rounded-xl text-sm font-bold hover:bg-green-700 transition whitespace-nowrap">
-                        <Search className="w-4 h-4 mr-2" /> Search
+                        <Search className="w-4 h-4 mr-2" /> {t('Search')}
                     </button>
                 </div>
             </form>
@@ -136,8 +134,8 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
             {farmers.length === 0 ? (
                 <div className="text-center py-20 text-gray-400">
                     <Leaf className="w-12 h-12 mx-auto mb-4 opacity-30" />
-                    <p className="text-lg font-semibold">No farmers found</p>
-                    <p className="text-sm mt-1">Try adjusting your search or register a new farmer.</p>
+                    <p className="text-lg font-semibold">{t('No farmers found')}</p>
+                    <p className="text-sm mt-1">{t('Try adjusting your search or register a new farmer.')}</p>
                 </div>
             ) : viewMode === 'list' ? (
                 <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm">
@@ -145,11 +143,11 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="bg-slate-50 border-b border-gray-100">
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Farmer</th>
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Acres / Crop</th>
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Location</th>
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">KYC Status</th>
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('Farmer')}</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('Acres / Crop')}</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('Location')}</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('KYC Status')}</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider text-right">{t('Actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -172,7 +170,7 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                                         </td>
                                         <td className="py-4 px-6">
                                             <span className="text-xs font-bold text-slate-700">
-                                                {farm.land_acres || '–'} Acres
+                                                {farm.land_acres || '–'} {t('Acres')}
                                             </span>
                                             <p className="text-[10px] font-medium text-gray-500 mt-0.5">Vetiver</p>
                                         </td>
@@ -183,12 +181,12 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                                         </td>
                                         <td className="py-4 px-6">
                                             <div className={`inline-flex flex-row items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase border ${kycBadge(farm.kyc_status)}`}>
-                                                {kycIcon(farm.kyc_status)} <span className="ml-0.5">{farm.kyc_status}</span>
+                                                {kycIcon(farm.kyc_status)} <span className="ml-0.5">{t(farm.kyc_status)}</span>
                                             </div>
                                         </td>
                                         <td className="py-4 px-6 text-right">
                                             <Link href={`/admin/farmers/${farm.id}`} className="text-sm font-bold text-green-600 hover:text-green-700 transition-colors">
-                                                View
+                                                {t('View')}
                                             </Link>
                                         </td>
                                     </tr>
@@ -215,13 +213,13 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                                     <p className="text-xs font-mono font-bold text-green-300 tracking-wider mt-1">{farm.farmer_code}</p>
                                 </div>
                                 <div className={`absolute top-4 right-4 flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider border ${kycBadge(farm.kyc_status)}`}>
-                                    {kycIcon(farm.kyc_status)} {farm.kyc_status}
+                                    {kycIcon(farm.kyc_status)} {t(farm.kyc_status)}
                                 </div>
                             </div>
                             <div className="p-5 bg-white flex-1 flex flex-col justify-between">
                                 <div className="space-y-2 mb-4">
                                     <div className="flex items-center text-sm font-medium text-gray-700">
-                                        <Leaf className="w-4 h-4 text-green-600 mr-2" /> {farm.land_acres || '–'} Acres · Vetiver
+                                        <Leaf className="w-4 h-4 text-green-600 mr-2" /> {farm.land_acres || '–'} {t('Acres')} · Vetiver
                                     </div>
                                     <div className="flex items-center text-sm font-medium text-gray-700">
                                         <Map className="w-4 h-4 text-slate-700 mr-2" /> {farm.village}, {farm.district}
@@ -232,7 +230,7 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                                     <p className="text-xs text-gray-400 mt-1">Reg. by: {farm.registered_by}</p>
                                 </div>
                                 <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">View Profile</span>
+                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">{t('View Profile')}</span>
                                     <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-slate-800 transition-colors group-hover:translate-x-1" />
                                 </div>
                             </div>

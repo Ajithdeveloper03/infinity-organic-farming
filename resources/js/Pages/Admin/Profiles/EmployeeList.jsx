@@ -9,9 +9,8 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
     const { flash } = usePage().props;
     const [search, setSearch] = useState(filters.search || '');
     const [region, setRegion] = useState(filters.region || '');
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+    const [viewMode, setViewMode] = useState('grid'); 
 
-    // Format designation
     const formatDesignation = (designation) => {
         if (!designation) return 'Field Officer';
         return designation.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -44,14 +43,13 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                 <div>
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Employee Directory')}</h1>
                     <p className="text-gray-500 mt-1 font-medium text-sm">
-                        {employees.length} field staff registered
+                        {employees.length} {t('field staff registered')}
                     </p>
                 </div>
                 <Link href="/admin/employees/create" className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
-                    <Plus className="w-5 h-5 mr-1" /> Register Employee
+                    <Plus className="w-5 h-5 mr-1" /> {t('Register Employee')}
                 </Link>
             </div>
-            {/* Filter Bar */}
             <form onSubmit={handleSearch} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:w-96">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -59,18 +57,17 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                         type="text"
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        placeholder="Search by EMP ID, Name, or Phone..."
+                        placeholder={t('Search by EMP ID, Name, or Phone...')}
                         className="cursor-pointer w-full pl-10 pr-4 py-2 border border-gray-200 bg-gray-50 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-sm"
                     />
                 </div>
                 <div className="flex w-full md:w-auto gap-3 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
-                    {/* Grid / List Toggle */}
                     <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl p-1 mr-2">
                         <button
                             type="button"
                             onClick={() => setViewMode('grid')}
                             className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm text-slate-900 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
-                            title="Grid View"
+                            title={t('Grid View')}
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         </button>
@@ -78,12 +75,11 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                             type="button"
                             onClick={() => setViewMode('list')}
                             className={`p-1.5 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm text-slate-900 font-bold' : 'text-gray-400 hover:text-gray-600'}`}
-                            title="List View"
+                            title={t('List View')}
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                         </button>
                     </div>
-
                     {regions.map(r => (
                         <button
                             key={r}
@@ -99,16 +95,15 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                         </button>
                     ))}
                     <button type="submit" className="flex items-center px-4 py-2 bg-green-600 border border-green-600 text-white rounded-xl text-sm font-bold hover:bg-green-700 transition whitespace-nowrap">
-                        <Search className="w-4 h-4 mr-2" /> Search
+                        <Search className="w-4 h-4 mr-2" /> {t('Search')}
                     </button>
                 </div>
             </form>
-
             {employees.length === 0 ? (
                 <div className="text-center py-20 text-gray-400">
                     <Shield className="w-12 h-12 mx-auto mb-4 opacity-30" />
-                    <p className="text-lg font-semibold">No employees found</p>
-                    <p className="text-sm mt-1">Try adjusting your search or register a new employee.</p>
+                    <p className="text-lg font-semibold">{t('No employees found')}</p>
+                    <p className="text-sm mt-1">{t('Try adjusting your search or register a new employee.')}</p>
                 </div>
             ) : viewMode === 'list' ? (
                 <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm">
@@ -116,12 +111,12 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="bg-slate-50 border-b border-gray-100">
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Employee</th>
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Designation</th>
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Region</th>
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Reports To</th>
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Status</th>
-                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('Employee')}</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('Designation')}</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('Region')}</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('Reports To')}</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t('Status')}</th>
+                                    <th className="py-4 px-6 text-[10px] font-bold text-gray-400 uppercase tracking-wider text-right">{t('Actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,7 +161,7 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                                         </td>
                                         <td className="py-4 px-6 text-right">
                                             <Link href={`/admin/employees/${emp.id}`} className="text-sm font-bold text-green-600 hover:text-green-700 transition-colors">
-                                                View
+                                                {t('View')}
                                             </Link>
                                         </td>
                                     </tr>
@@ -217,7 +212,7 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">View Profile</span>
+                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">{t('View Profile')}</span>
                                     <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-slate-800 transition-colors group-hover:translate-x-1" />
                                 </div>
                             </div>

@@ -33,7 +33,7 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Visit Audits')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">Verify employee engagement, distances, and farm conditions.</p>
+                    <p className="text-gray-500 mt-1 font-medium text-sm">{t('Verify employee engagement, distances, and farm conditions.')}</p>
                 </div>
             </div>
 
@@ -73,7 +73,7 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
                     </div>
                     <button onClick={handleApplyFilters} disabled={processing}
                         className="px-5 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-slate-900/10 transition-all whitespace-nowrap disabled:opacity-50">
-                        {processing ? 'Applying...' : 'Apply Filters'}
+                        {processing ? t('Applying...') : t('Apply Filters')}
                     </button>
                 </div>
             </div>
@@ -82,7 +82,7 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
             <div className="space-y-6">
                 {visitsData.length === 0 && (
                     <div className="bg-white border border-gray-100 rounded-[2rem] p-16 text-center text-gray-400 font-medium shadow-sm">
-                        {searchQuery ? `No visits match "${searchQuery}".` : 'No visits recorded yet.'}
+                        {searchQuery ? `${t('No visits match')} "${searchQuery}".` : t('No visits recorded yet.')}
                     </div>
                 )}
                 {visitsData.map(visit => (
@@ -95,16 +95,16 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
                                     <Leaf className="w-6 h-6" />
                                 </div>
                                 <div>
-                                    <h3 className="font-heading font-bold text-gray-900 text-xl leading-tight">Farm: {visit.farmer.user.name}</h3>
-                                    <p className="text-xs font-bold text-gray-500 mt-1">Inspected by <span className="text-slate-800">{visit.employee.name}</span> on {visit.date}</p>
+                                    <h3 className="font-heading font-bold text-gray-900 text-xl leading-tight">{t('Farm:')} {visit.farmer.user.name}</h3>
+                                    <p className="text-xs font-bold text-gray-500 mt-1">{t('Inspected by')} <span className="text-slate-800">{visit.employee.name}</span> {t('on')} {visit.date}</p>
                                 </div>
                             </div>
                             <div className="flex flex-col items-start md:items-end gap-2">
                                 <div className="inline-flex items-center text-xs font-bold bg-slate-50 text-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
-                                    <Navigation className="w-3 h-3 mr-1.5" /> Travel: {visit.distance_from_previous_farmer_km} km
+                                    <Navigation className="w-3 h-3 mr-1.5" /> {t('Travel:')} {visit.distance_from_previous_farmer_km} {t('km')}
                                 </div>
                                 <div className="text-xs font-bold text-gray-400 flex items-center">
-                                    <Clock className="w-3 h-3 mr-1.5" /> Duration: 1h 30m
+                                    <Clock className="w-3 h-3 mr-1.5" /> {t('Duration: 1h 30m')}
                                 </div>
                             </div>
                         </div>
@@ -116,15 +116,15 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
                             <div className="col-span-1 space-y-6">
                                 <div>
                                     <h4 className="text-[10px] font-bold text-slate-700 uppercase mb-3 flex items-center tracking-wider">
-                                        <Clock className="w-4 h-4 mr-2" /> Visit Timeline
+                                        <Clock className="w-4 h-4 mr-2" /> {t('Visit Timeline')}
                                     </h4>
                                     <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 space-y-3 hover:border-green-200 transition-colors cursor-pointer">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-xs font-bold text-gray-500">Check-in</span>
+                                            <span className="text-xs font-bold text-gray-500">{t('Check-in')}</span>
                                             <span className="text-sm font-heading font-bold text-gray-900">{visit.check_in_time}</span>
                                         </div>
                                         <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
-                                            <span className="text-xs font-bold text-gray-500">Check-out</span>
+                                            <span className="text-xs font-bold text-gray-500">{t('Check-out')}</span>
                                             <span className="text-sm font-heading font-bold text-gray-900">{visit.check_out_time}</span>
                                         </div>
                                     </div>
@@ -132,15 +132,15 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
 
                                 <div>
                                     <h4 className="text-[10px] font-bold text-slate-700 uppercase mb-3 flex items-center tracking-wider">
-                                        <FileText className="w-4 h-4 mr-2" /> Agronomy Log
+                                        <FileText className="w-4 h-4 mr-2" /> {t('Agronomy Log')}
                                     </h4>
                                     <div className="bg-gray-50 border border-gray-100 rounded-2xl p-5 text-sm shadow-inner hover:border-green-200 transition-colors">
                                         <div className="mb-4">
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">Farm Conditions</span>
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">{t('Farm Conditions')}</span>
                                             <p className="font-medium text-gray-700 leading-relaxed text-xs">{visit.farm_condition_notes}</p>
                                         </div>
                                         <div className="pt-4 border-t border-gray-200">
-                                            <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">Recommendations</span>
+                                            <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">{t('Recommendations')}</span>
                                             <p className="font-medium text-gray-700 leading-relaxed text-xs">{visit.recommendations}</p>
                                         </div>
                                     </div>
@@ -150,7 +150,7 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
                             {/* Media Confirmation Grid */}
                             <div className="col-span-1 lg:col-span-2">
                                 <h4 className="text-[10px] font-bold text-slate-700 uppercase mb-3 flex items-center tracking-wider">
-                                    <Camera className="w-4 h-4 mr-2" /> Media Confirmation & Metadata
+                                    <Camera className="w-4 h-4 mr-2" /> {t('Media Confirmation & Metadata')}
                                 </h4>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {visit.media.map((media, index) => (
@@ -159,30 +159,30 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
                                                 <img src={media.url} alt="Farm" className="w-full h-full object-cover transition-transform duration-700 group-hover/media:scale-105" />
                                                 <div className="absolute inset-0 bg-slate-900/80"></div>
                                                 <div className="absolute bottom-3 left-3 text-white">
-                                                    <p className="text-[10px] font-bold tracking-wider uppercase text-gray-300">Capture Time</p>
+                                                    <p className="text-[10px] font-bold tracking-wider uppercase text-gray-300">{t('Capture Time')}</p>
                                                     <p className="font-heading font-bold text-sm">{media.exif_time}</p>
                                                 </div>
                                             </div>
                                             <div className="p-4 flex-1">
                                                 <div className="flex justify-between items-start mb-3">
-                                                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">GPS Data</span>
+                                                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t('GPS Data')}</span>
                                                     {media.verified ? (
                                                         <span className="flex items-center text-[10px] font-bold bg-slate-50 text-slate-800 px-2 py-1 rounded-full border border-slate-200">
-                                                            <CheckCircle2 className="w-3 h-3 mr-1" /> Verified
+                                                            <CheckCircle2 className="w-3 h-3 mr-1" /> {t('Verified')}
                                                         </span>
                                                     ) : (
                                                         <span className="flex items-center text-[10px] font-bold bg-red-50 text-red-500 px-2 py-1 rounded-full border border-red-100">
-                                                            <AlertCircle className="w-3 h-3 mr-1" /> Mismatch
+                                                            <AlertCircle className="w-3 h-3 mr-1" /> {t('Mismatch')}
                                                         </span>
                                                     )}
                                                 </div>
                                                 <div className="flex space-x-2">
                                                     <div className="flex-1 bg-white border border-gray-100 rounded-xl p-2 text-center shadow-sm">
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase mb-0.5">Latitude</p>
+                                                        <p className="text-[9px] font-bold text-gray-400 uppercase mb-0.5">{t('Latitude')}</p>
                                                         <p className="text-xs font-bold text-gray-700">{media.exif_lat}</p>
                                                     </div>
                                                     <div className="flex-1 bg-white border border-gray-100 rounded-xl p-2 text-center shadow-sm">
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase mb-0.5">Longitude</p>
+                                                        <p className="text-[9px] font-bold text-gray-400 uppercase mb-0.5">{t('Longitude')}</p>
                                                         <p className="text-xs font-bold text-gray-700">{media.exif_lon}</p>
                                                     </div>
                                                 </div>

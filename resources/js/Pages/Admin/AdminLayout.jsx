@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { 
     LayoutDashboard, Users, FileCheck2, ShieldAlert, 
@@ -7,7 +7,6 @@ import {
 } from 'lucide-react';
 import { useAlert } from '../../Components/AlertSystem';
 import { useTranslation } from 'react-i18next';
-
 export default function AdminLayout({ children }) {
     const { url } = usePage();
     const { triggerCritical } = useAlert();
@@ -15,93 +14,83 @@ export default function AdminLayout({ children }) {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchFocused, setIsSearchFocused] = useState(false);
-    
-    const dummySearchData = [
-        { name: "Muthusamy", type: "Farmer" },
-        { name: "Anitha R", type: "Employee" },
-        { name: "Senthil Vel", type: "Employee" },
-        { name: "Karthikeyan", type: "Farmer" },
-        { name: "Palanisamy", type: "Employee" },
-        { name: "Arumugam", type: "Farmer" },
-        { name: "Murugan", type: "Farmer" },
-        { name: "Kannan", type: "Employee" }
-    ];
-
-    const filteredSearch = dummySearchData.filter(item => 
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
+    const [searchResults, setSearchResults] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
+    useEffect(() => {
+        if (searchQuery.length < 2) {
+            setSearchResults([]);
+            return;
+        }
+        const delayDebounceFn = setTimeout(() => {
+            setIsSearching(true);
+            fetch(`/admin/search?q=${encodeURIComponent(searchQuery)}`)
+                .then(res => res.json())
+                .then(data => {
+                    setSearchResults(data);
+                    setIsSearching(false);
+                })
+                .catch(err => {
+                    console.error(err);
+                    setIsSearching(false);
+                });
+        }, 300);
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchQuery]);
     const isActive = (path) => url.startsWith(path);
-
     const testAlert = () => {
         triggerCritical("OFFICER JOHN DOE - GPS DISABLED - SECTOR 4");
     };
-
     const toggleLanguage = () => {
         const nextLang = i18n.language === 'en' ? 'ta' : 'en';
         i18n.changeLanguage(nextLang);
     };
-
     return (
         <div className="flex h-screen bg-[#f4f7f4] text-gray-800 font-sans overflow-hidden">
             
-            {/* Left Vertical Sidebar (Desktop Only) */}
             <aside className={`hidden md:flex ${isSidebarCollapsed ? 'w-20' : 'w-64'} bg-white border-r border-gray-100 flex-col z-20 shadow-sm transition-all duration-300 relative`}>
-                
-                {/* Toggle Button */}
                 <button 
                     onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                     className="absolute -right-3 top-8 bg-white border border-gray-200 rounded-full p-1 text-gray-500 hover:text-slate-800 hover:border-green-200 shadow-sm transition-colors z-50 cursor-pointer"
                 >
                     {isSidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
                 </button>
-
                 <div className="h-24 flex items-center justify-center border-b border-gray-50/50 overflow-hidden">
                     <Link href="/admin/dashboard" className="flex items-center justify-center w-full px-4">
                         {isSidebarCollapsed ? (
-                            <img src="/images/logo.png" alt="IO" className="h-10 w-10 object-cover drop-shadow-sm rounded-full" />
+                            <img src="/images/logo.png" alt="IO" className="h-10 w-20 object-cover drop-shadow-sm rounded-full" />
                         ) : (
-                            <img src="/images/logo.png" alt="Infinity Organics" className="h-12 w-auto object-contain drop-shadow-sm" />
+                            <img src="/images/logo.png" alt="Infinity Organics" className="h-20 w-auto object-contain drop-shadow-sm" />
                         )}
                     </Link>
                 </div>
-                
                 <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto overflow-x-hidden">
                     <div className={`px-2 pt-2 pb-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest ${isSidebarCollapsed ? 'text-center' : ''}`}>
                         {isSidebarCollapsed ? '•' : t('Main Menu')}
                     </div>
-                    
                     <Link href="/admin/dashboard" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/dashboard') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                         <LayoutDashboard className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/dashboard') ? 'text-white' : 'text-gray-400'}`} />
                         {!isSidebarCollapsed && <span>{t('Dashboard')}</span>}
                     </Link>
-                    
                     <Link href="/admin/visits" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/visits') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                         <FileCheck2 className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/visits') ? 'text-white' : 'text-gray-400'}`} />
                         {!isSidebarCollapsed && <span>{t('Analytics & Visits')}</span>}
                     </Link>
-                    
-                    {/* Live Monitor - highlighted with pulse indicator */}
                     <Link href="/admin/monitor" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm relative ${isActive('/admin/monitor') ? 'bg-slate-900 text-white shadow-md' : 'text-slate-800 bg-slate-50 hover:bg-slate-100'}`}>
                         <span className={`absolute ${isSidebarCollapsed ? 'top-2 right-2' : 'right-3 top-3.5'} h-2 w-2 rounded-full bg-green-400 ring-2 ring-white animate-pulse`}></span>
                         <ShieldAlert className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/monitor') ? 'text-white' : 'text-slate-700'}`} />
                         {!isSidebarCollapsed && <span>{t('Live Monitor')}</span>}
                     </Link>
-
                     <div className={`px-2 pt-5 pb-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest ${isSidebarCollapsed ? 'text-center' : ''}`}>
                         {isSidebarCollapsed ? '•' : t('Features')}
                     </div>
-                    
                     <Link href="/admin/employees" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/employees') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                         <Briefcase className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/employees') ? 'text-white' : 'text-gray-400'}`} />
                         {!isSidebarCollapsed && <span>{t('Employees')}</span>}
                     </Link>
-                    
                     <Link href="/admin/farmers" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/farmers') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                         <Users className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/farmers') ? 'text-white' : 'text-gray-400'}`} />
                         {!isSidebarCollapsed && <span>{t('Farmers')}</span>}
                     </Link>
-                    
                     <Link href="/admin/pending-farmers" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'justify-between px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/pending-farmers') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'} relative`}>
                         <div className={`flex items-center ${isSidebarCollapsed ? 'justify-center w-full' : ''}`}>
                             <PlusCircle className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/pending-farmers') ? 'text-white' : 'text-gray-400'}`} />
@@ -110,7 +99,6 @@ export default function AdminLayout({ children }) {
                         {!isSidebarCollapsed && <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${isActive('/admin/pending-farmers') ? 'bg-white text-gray-900' : 'bg-red-100 text-red-600'}`}>12</span>}
                         {isSidebarCollapsed && <span className="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>}
                     </Link>
-
                     {/* <Link href="/admin/payments" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/payments') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
                         <Wallet className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/payments') ? 'text-white' : 'text-gray-400'}`} />
                         {!isSidebarCollapsed && <span>{t('Payments')}</span>}
@@ -134,9 +122,12 @@ export default function AdminLayout({ children }) {
                         <MapPin className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/performance') ? 'text-white' : 'text-gray-400'}`} />
                         {!isSidebarCollapsed && <span>{t('Performance')}</span>}
                     </Link>
+                    <Link href="/admin/alerts" className={`cursor-pointer flex items-center ${isSidebarCollapsed ? 'justify-center px-0' : 'px-4'} py-3 rounded-2xl transition-all duration-300 font-bold text-sm ${isActive('/admin/alerts') ? 'bg-gray-900 text-white shadow-md shadow-gray-900/20' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
+                        <Bell className={`w-5 h-5 ${isSidebarCollapsed ? '' : 'mr-3'} ${isActive('/admin/alerts') ? 'text-white' : 'text-gray-400'}`} />
+                        {!isSidebarCollapsed && <span>{t('Alerts & Notifications')}</span>}
+                    </Link>
                 </nav>
             </aside>
-            
             {/* Main Canvas */}
             <main className="flex-1 flex flex-col min-w-0 bg-[#f4f7f4] relative">
                 {/* Top Navigation Bar */}
@@ -149,7 +140,6 @@ export default function AdminLayout({ children }) {
                             <span className="text-gray-900 capitalize">{t(url.split('/').pop() || 'Dashboard')}</span>
                         </div>
                     </div>
-                    
                     {/* Right: Search, Actions, Profile */}
                     <div className="flex items-center space-x-6">
                         <div className="relative group hidden md:block">
@@ -168,16 +158,17 @@ export default function AdminLayout({ children }) {
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
                                 <Search className="h-4 w-4" />
                             </div>
-                            
                             {searchQuery && isSearchFocused && (
                                 <div className="absolute top-full mt-2 w-full bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-50">
-                                    {filteredSearch.length > 0 ? (
+                                    {isSearching ? (
+                                        <div className="px-4 py-4 text-sm text-gray-500 text-center font-medium">{t('Searching...')}</div>
+                                    ) : searchResults.length > 0 ? (
                                         <div className="max-h-64 overflow-y-auto">
-                                            {filteredSearch.map((result, idx) => (
-                                                <div key={idx} className="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer flex items-center justify-between">
+                                            {searchResults.map((result, idx) => (
+                                                <Link href={result.url} key={idx} className="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 cursor-pointer flex items-center justify-between block w-full text-left" onClick={() => setIsSearchFocused(false)}>
                                                     <span className="text-sm font-bold text-gray-900">{result.name}</span>
                                                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t(result.type)}</span>
-                                                </div>
+                                                </Link>
                                             ))}
                                         </div>
                                     ) : (
@@ -203,10 +194,10 @@ export default function AdminLayout({ children }) {
                             <Globe className="w-5 h-5" />
                         </button>
 
-                        <button className="relative w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition">
+                        <Link href="/admin/alerts" className="relative w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition">
                             <Bell className="w-5 h-5" />
                             <span className="absolute top-2 right-2 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-                        </button>
+                        </Link>
                         
                         <div className="flex items-center pl-2 border-l border-gray-200 cursor-pointer group">
                             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-100 group-hover:border-green-500 transition-all bg-white p-0.5">

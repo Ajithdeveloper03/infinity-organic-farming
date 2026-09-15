@@ -1,24 +1,21 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { AlertCircle, CheckCircle, Info, TriangleAlert } from 'lucide-react';
+import { AlertCircle, CheckCircle, Info, TriangleAlert, X } from 'lucide-react';
 
 const AlertContext = createContext(null);
 
 export const useAlert = () => useContext(AlertContext);
 
 export default function AlertSystem({ children }) {
-    // Note: To use real audio files, provide valid paths to the Audio constructor.
-    // E.g., new Audio('/sounds/siren.mp3')
+   
     const playSiren = () => {
         console.log('Playing Critical Siren Audio...');
-        // const audio = new Audio('/sounds/siren.mp3');
-        // audio.play().catch(e => console.error("Audio play blocked by browser:", e));
+        
     };
 
     const playPing = () => {
         console.log('Playing High Alert Ping Audio...');
-        // const audio = new Audio('/sounds/ping.mp3');
-        // audio.play().catch(e => console.error("Audio play blocked by browser:", e));
+        
     };
 
     const triggerCritical = (message) => {
@@ -36,10 +33,18 @@ export default function AlertSystem({ children }) {
                         </div>
                     </div>
                 </div>
+                <div className="flex border-l border-white/20">
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-white hover:bg-white/10 focus:outline-none transition-colors"
+                        title="Dismiss Alert"
+                    >
+                        <X className="h-5 w-5" />
+                    </button>
+                </div>
             </div>
-        ), { duration: Infinity }); // Requires manual dismissal or auto-timeout based on config
+        ), { duration: Infinity });
     };
-
     const triggerHigh = (message) => {
         playPing();
         toast.error(message, {
@@ -48,14 +53,12 @@ export default function AlertSystem({ children }) {
             duration: 8000,
         });
     };
-
     const triggerMedium = (message) => {
         toast(message, {
             icon: <Info className="text-alert-warning h-5 w-5" />,
             style: { background: '#F8FAFC', color: '#334155' },
         });
     };
-
     const triggerInfo = (message) => {
         toast.success(message, {
             icon: <CheckCircle className="text-brand-primary h-5 w-5" />,
@@ -63,7 +66,6 @@ export default function AlertSystem({ children }) {
             duration: 3000,
         });
     };
-
     return (
         <AlertContext.Provider value={{ triggerCritical, triggerHigh, triggerMedium, triggerInfo }}>
             <Toaster position="top-right" reverseOrder={false} />

@@ -24,7 +24,7 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
     }, [searchQuery, regionFilter, employees]);
 
     const handleExport = () => {
-        triggerInfo(`Exporting performance report. Download will begin shortly.`);
+        triggerInfo(t('Exporting performance report. Download will begin shortly.'));
     };
 
     return (
@@ -32,10 +32,10 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
                     <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Performance Analytics')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">Monthly performance scoring for {period}</p>
+                    <p className="text-gray-500 mt-1 font-medium text-sm">{t('Monthly performance scoring for')} {period}</p>
                 </div>
                 <button onClick={handleExport} className="flex items-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-700 hover:bg-gray-50 transition shadow-sm">
-                    <Download className="w-4 h-4 mr-2" /> Export Report
+                    <Download className="w-4 h-4 mr-2" /> {t('Export Report')}
                 </button>
             </div>
 
@@ -59,14 +59,14 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                                 regionFilter !== 'all' ? 'bg-slate-50 border-green-300 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
                             }`}>
                             <Filter className="w-4 h-4 mr-2 text-gray-400" />
-                            {regionFilter === 'all' ? 'Region' : regionFilter} <ChevronDown className="w-3 h-3 ml-2" />
+                            {regionFilter === 'all' ? t('Region') : regionFilter} <ChevronDown className="w-3 h-3 ml-2" />
                         </button>
                         {showRegionDropdown && (
                             <div className="absolute top-full mt-1 right-0 min-w-[140px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
                                 {regions.map(r => (
                                     <button key={r} onClick={() => { setRegionFilter(r); setShowRegionDropdown(false); }}
                                         className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${regionFilter === r ? 'text-slate-800' : 'text-gray-700'}`}>
-                                        {r === 'all' ? 'All Regions' : r}
+                                        {r === 'all' ? t('All Regions') : r}
                                     </button>
                                 ))}
                             </div>
@@ -84,7 +84,7 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                                 <div className="p-2 bg-slate-50 rounded-xl mr-3 border border-slate-200 shadow-sm">
                                     <Trophy className="w-5 h-5 text-slate-800" />
                                 </div>
-                                Performance Leaderboard
+                                {t('Performance Leaderboard')}
                             </h2>
                         </div>
                         
@@ -92,15 +92,15 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="border-b-2 border-gray-100 text-xs font-bold uppercase tracking-wider text-gray-400">
-                                        <th className="pb-4 pl-2">Officer Name</th>
-                                        <th className="pb-4 text-center">Visits (Month)</th>
-                                        <th className="pb-4 text-center">Attendance</th>
-                                        <th className="pb-4 text-right pr-2">Total Score</th>
+                                        <th className="pb-4 pl-2">{t('Officer Name')}</th>
+                                        <th className="pb-4 text-center">{t('Visits (Month)')}</th>
+                                        <th className="pb-4 text-center">{t('Attendance')}</th>
+                                        <th className="pb-4 text-right pr-2">{t('Total Score')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="text-sm">
                                     {filteredData.length === 0 && (
-                                        <tr><td colSpan={4} className="py-8 text-center text-gray-400 font-medium text-sm">No officers match your search.</td></tr>
+                                        <tr><td colSpan={4} className="py-8 text-center text-gray-400 font-medium text-sm">{t('No officers match your search.')}</td></tr>
                                     )}
                                     {filteredData.map((e, i) => (
                                         <tr key={i} className="cursor-pointer border-b border-gray-50 hover:bg-gray-50 transition group/row">
@@ -110,7 +110,7 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                                             </td>
                                             <td className="py-5 text-center font-medium text-gray-500">{e.visits_month} / {e.target_visits}</td>
                                             <td className="py-5 text-center font-medium text-gray-500">{e.attendance_rate}%</td>
-                                            <td className="py-5 text-right font-bold text-slate-800 text-lg pr-2">{e.score} pts</td>
+                                            <td className="py-5 text-right font-bold text-slate-800 text-lg pr-2">{e.score} {t('pts')}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -126,7 +126,7 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                                 <div className="p-2 bg-orange-50 rounded-xl mr-3 border border-orange-100 shadow-sm">
                                     <UserCheck className="w-5 h-5 text-orange-600" />
                                 </div>
-                                Attendance Ledger (Selfie Checks)
+                                {t('Attendance Ledger (Selfie Checks)')}
                             </h2>
                         </div>
 
@@ -157,7 +157,7 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                             <div className="p-2 bg-slate-800 rounded-xl mr-3 shadow-sm text-white">
                                 <Trophy className="w-5 h-5" />
                             </div>
-                            Behavior Matrix
+                            {t('Behavior Matrix')}
                         </h2>
                         
                         <div className="space-y-4 relative z-10">
@@ -171,9 +171,9 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                                         </div>
                                     </div>
                                     <div className="flex justify-between text-[10px] font-bold text-gray-400 mt-4 border-t border-gray-200 pt-3 uppercase tracking-wider">
-                                        <span>Total Visits: {officer.total_visits}</span>
+                                        <span>{t('Total Visits:')} {officer.total_visits}</span>
                                         <span className={`px-2 py-0.5 rounded flex items-center ${officer.score < 50 ? 'bg-red-50 text-red-500 border border-red-100' : 'bg-green-50 text-green-600 border border-green-200'}`}>
-                                            Score: {officer.score}
+                                            {t('Score:')} {officer.score}
                                         </span>
                                     </div>
                                 </div>

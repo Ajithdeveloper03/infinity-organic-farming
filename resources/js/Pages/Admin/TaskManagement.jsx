@@ -115,26 +115,26 @@ export default function TaskManagement({ tasks = [], employees = [], kpis = {} }
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowNewTaskModal(false)}>
                     <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg p-8" onClick={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-extrabold text-gray-900">Create New Task</h2>
+                            <h2 className="text-xl font-extrabold text-gray-900">{t('Create New Task')}</h2>
                             <button onClick={() => setShowNewTaskModal(false)} className="text-gray-400 hover:text-gray-700 transition-colors">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
                         <form onSubmit={handleCreateTask} className="space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Broadcast to All Officers?</label>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t('Broadcast to All Officers?')}</label>
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input type="checkbox" className="w-4 h-4 rounded accent-green-600"
                                         checked={newTask.is_broadcast}
                                         onChange={e => setNewTask(prev => ({ ...prev, is_broadcast: e.target.checked, assignee_id: e.target.checked ? '' : prev.assignee_id }))} />
-                                    <span className="text-sm font-medium text-gray-700">Assign to All Field Officers</span>
+                                    <span className="text-sm font-medium text-gray-700">{t('Assign to All Field Officers')}</span>
                                 </label>
                             </div>
                             {!newTask.is_broadcast && (
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Assignee *</label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t('Assignee *')}</label>
                                     <input type="text" list="employee-list" value={newTask.assignee_id} onChange={e => setNewTask(prev => ({ ...prev, assignee_id: e.target.value }))}
-                                        placeholder="Type to search or select officer..."
+                                        placeholder={t('Type to search or select officer...')}
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
                                     <datalist id="employee-list">
                                         {employees.map(emp => (
@@ -144,28 +144,28 @@ export default function TaskManagement({ tasks = [], employees = [], kpis = {} }
                                 </div>
                             )}
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Task Type / Title</label>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t('Task Type / Title')}</label>
                                 <input type="text" value={newTask.type} onChange={e => setNewTask(prev => ({ ...prev, type: e.target.value }))}
-                                    placeholder="e.g. Farm Visit, Data Collection"
+                                    placeholder={t('e.g. Farm Visit, Data Collection')}
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Description *</label>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t('Description *')}</label>
                                 <input value={newTask.description} onChange={e => setNewTask(prev => ({ ...prev, description: e.target.value }))}
-                                    placeholder="e.g. Visit 5 Farmers" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
+                                    placeholder={t('e.g. Visit 5 Farmers')} className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Priority</label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t('Priority')}</label>
                                     <select value={newTask.priority} onChange={e => setNewTask(prev => ({ ...prev, priority: e.target.value }))}
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500">
-                                        <option>High</option>
-                                        <option>Medium</option>
-                                        <option>Low</option>
+                                        <option value="Low">{t('Low')}</option>
+                                        <option value="Medium">{t('Medium')}</option>
+                                        <option value="High">{t('High')}</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Due Date</label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t('Due Date')}</label>
                                     <input type="date" value={newTask.due_date} onChange={e => setNewTask(prev => ({ ...prev, due_date: e.target.value }))}
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
                                 </div>

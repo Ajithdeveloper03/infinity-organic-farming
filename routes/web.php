@@ -29,6 +29,12 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         Route::get('/', fn() => redirect('/admin/dashboard'));
 
+        // Alerts
+        Route::get('/alerts', [\App\Http\Controllers\Admin\AlertsController::class, 'index'])->name('alerts.index');
+
+        // Global Search
+        Route::get('/search', [\App\Http\Controllers\Admin\GlobalSearchController::class, 'search'])->name('global.search');
+
         // Employee Management
         Route::get('/employees', [EmployeeDirectoryController::class, 'index'])->name('employees.index');
         Route::get('/employees/create', [EmployeeDirectoryController::class, 'create'])->name('employees.create');
