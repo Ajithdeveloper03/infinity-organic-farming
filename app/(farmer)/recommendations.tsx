@@ -128,7 +128,10 @@ export default function FarmerRecommendationsScreen() {
 
       <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
         {/* Header - Transparent */}
-        <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
+        <View
+          style={{ backgroundColor: "transparent" }}
+          className="px-5 pt-3 pb-3 flex-row items-center justify-between z-10"
+        >
           <TouchableOpacity
             onPress={() => router.back()}
             className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
@@ -144,7 +147,7 @@ export default function FarmerRecommendationsScreen() {
 
         <ScrollView
           className="flex-1"
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 6 }}
+          contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Hero Banner with Background Image */}
@@ -252,7 +255,7 @@ export default function FarmerRecommendationsScreen() {
 
                     <View className={`rounded-xl p-3.5 mb-2.5 border ${report.noteBg}`}>
                       <Text className={`font-gotham-bold text-xs uppercase tracking-wider mb-1 ${report.actionText}`}>
-                        Agronomist Recommendation
+                        {language === "ta" ? "வேளாண் நிபுணர் பரிந்துரை" : "Agronomist Recommendation"}
                       </Text>
                       <Text className="text-slate-700 font-gotham-medium text-xs leading-relaxed" numberOfLines={2}>
                         {report.recommendation}
@@ -263,7 +266,7 @@ export default function FarmerRecommendationsScreen() {
                       <View className="flex-row items-center">
                         <Camera size={13} color={report.actionColor} className="mr-1.5" />
                         <Text className={`font-gotham-bold text-xs ${report.actionText}`}>
-                          Photos Attached
+                          {language === "ta" ? "புகைப்படங்கள் உள்ளன" : "Photos Attached"}
                         </Text>
                       </View>
                       <View className="flex-row items-center">

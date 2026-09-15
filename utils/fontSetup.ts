@@ -38,7 +38,7 @@ export const resolveFontFamily = (
 
   if (isTamil) {
     return {
-      fontFamily: "TiroTamil_500Regular",
+      fontFamily: "TiroTamil_400Regular",
       fontWeight: "normal",
     };
   }
@@ -94,11 +94,18 @@ if (OriginalText && !(OriginalText as any).__infinityPatched) {
   const PatchedText = React.forwardRef<any, any>((props, ref) => {
     const { style, className, children, ...rest } = props;
     const font = resolveFontFamily(style, children, className);
+    const isTamil = currentAppLanguage === "ta" || hasTamilGlyphs(children);
+    const flat = StyleSheet.flatten(style) || {};
+
     const mergedStyle = [
       style,
       {
         fontFamily: font.fontFamily,
-        ...(Platform.OS === "android" ? { fontWeight: font.fontWeight } : {}),
+        ...(isTamil
+          ? { fontWeight: "normal" as const }
+          : Platform.OS === "android"
+          ? { fontWeight: font.fontWeight }
+          : {}),
       },
     ];
     return React.createElement(

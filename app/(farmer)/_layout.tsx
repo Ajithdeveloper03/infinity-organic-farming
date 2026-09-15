@@ -13,16 +13,25 @@ import { Tabs } from "expo-router";
 import { CalendarDays, Home, User, FileText } from "lucide-react-native";
 
 import { BlurView } from "expo-blur";
+import { useLanguage } from "../../context/LanguageContext";
 
 function CustomTabBar({ state, descriptors, navigation }: any) {
   const colorScheme = useColorScheme();
-
   const isDark = colorScheme === "dark";
+  const { t } = useLanguage();
 
   const visibleRoutes = state.routes.filter(
     (route: any) =>
       ["dashboard", "documents", "farm", "profile"].includes(route.name)
   );
+
+  const routeTitleMap: Record<string, string> = {
+    dashboard: t("home", "Home"),
+    documents: t("docs", "Docs"),
+    farm: t("myFarm", "My Farm"),
+    profile: t("profile", "Profile"),
+  };
+
   return (
     <View style={styles.container}>
       <BlurView
@@ -35,11 +44,14 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           const { options } = descriptors[route.key];
 
           const label =
-            options.tabBarLabel !== undefined
-              ? options.tabBarLabel
+            routeTitleMap[route.name] ||
+            (options.tabBarLabel !== undefined
+              ? typeof options.tabBarLabel === "string"
+                ? t(options.tabBarLabel)
+                : options.tabBarLabel
               : options.title !== undefined
-                ? options.title
-                : route.name;
+                ? t(options.title)
+                : route.name);
 
           const isFocused =
             state.index ===
@@ -130,23 +142,24 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 20,
+    bottom: 24,
     left: 20,
     right: 20,
-    borderRadius: 35,
+    borderRadius: 32,
     overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 10,
+      height: 20,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    backgroundColor: "#ffffff", // solid fallback
+    shadowOpacity: 0.15,
+    shadowRadius: 30,
+    elevation: 20,
+    backgroundColor: "#ffffff",
   },
   blurView: {
     flexDirection: "row",
-    height: 70,
+    height: 72,
     paddingHorizontal: 10,
     alignItems: "center",
     justifyContent: "space-between",

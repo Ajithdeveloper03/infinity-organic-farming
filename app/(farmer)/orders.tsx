@@ -18,16 +18,19 @@ import {
   Sparkles,
 } from "lucide-react-native";
 import { router } from "expo-router";
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 
 export default function OrdersScreen() {
+  const { t, language } = useLanguage();
+
   const orders = [
     {
       id: "#8831",
-      product: "Certified Vetiver Root Slips",
-      category: "Crop Planting Material",
-      qty: "5,000 Slips (For 2.5 Acres)",
+      product: language === "ta" ? "சான்றளிக்கப்பட்ட வெட்டிவேர் நாற்றுகள்" : "Certified Vetiver Root Slips",
+      category: language === "ta" ? "பயிர் நடவுப் பொருட்கள்" : "Crop Planting Material",
+      qty: language === "ta" ? "5,000 நாற்றுகள் (2.5 ஏக்கருக்கு)" : "5,000 Slips (For 2.5 Acres)",
       price: "₹12,500",
-      status: "Delivered",
+      status: t("delivered", "Delivered"),
       date: "Aug 02, 2026",
       icon: CheckCircle2,
       color: "#15803d",
@@ -40,12 +43,12 @@ export default function OrdersScreen() {
     },
     {
       id: "#8832",
-      product: "Organic Vermicompost (50kg)",
-      category: "Bio-Fertilizer Input",
-      qty: "2 Bags",
+      product: language === "ta" ? "இயற்கை மண்புழு உரம் (50 கிலோ)" : "Organic Vermicompost (50kg)",
+      category: language === "ta" ? "உயிர் உரம்" : "Bio-Fertilizer Input",
+      qty: language === "ta" ? "2 மூட்டைகள்" : "2 Bags",
       price: "₹1,250",
-      status: "Delivered",
-      date: "Today, 09:30 AM",
+      status: t("delivered", "Delivered"),
+      date: language === "ta" ? "இன்று, 09:30 AM" : "Today, 09:30 AM",
       icon: CheckCircle2,
       color: "#15803d",
       cardBg: "bg-emerald-50/80",
@@ -57,12 +60,12 @@ export default function OrdersScreen() {
     },
     {
       id: "#8833",
-      product: "Pure Neem Oil Extract (5L)",
-      category: "Organic Pest Bio-Control",
-      qty: "1 Canister",
+      product: language === "ta" ? "தூய வேப்பெண்ணெய் சாறு (5 லி)" : "Pure Neem Oil Extract (5L)",
+      category: language === "ta" ? "பூச்சி விரட்டி" : "Organic Pest Bio-Control",
+      qty: language === "ta" ? "1 கேன்" : "1 Canister",
       price: "₹850",
-      status: "Processing",
-      date: "Yesterday",
+      status: t("processing", "Processing"),
+      date: t("yesterday", "Yesterday"),
       icon: Clock,
       color: "#b45309",
       cardBg: "bg-amber-50/80",
@@ -74,11 +77,11 @@ export default function OrdersScreen() {
     },
     {
       id: "#8834",
-      product: "Bio-Fertilizer Soil Booster (25kg)",
-      category: "Bio-Fertilizer Input",
-      qty: "1 Bag",
+      product: language === "ta" ? "மண் ஊட்டச்சத்து உரம் (25 கிலோ)" : "Bio-Fertilizer Soil Booster (25kg)",
+      category: language === "ta" ? "உயிர் உரம்" : "Bio-Fertilizer Input",
+      qty: language === "ta" ? "1 மூட்டை" : "1 Bag",
       price: "₹1,350",
-      status: "Dispatched",
+      status: t("dispatched", "Dispatched"),
       date: "Oct 18, 2025",
       icon: Truck,
       color: "#0369a1",
@@ -99,76 +102,34 @@ export default function OrdersScreen() {
         style={StyleSheet.absoluteFill}
         imageStyle={{ opacity: 0.12 }}
         resizeMode="cover"
-      />
-
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Header - Transparent */}
-        <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
-            activeOpacity={0.7}
-          >
-            <ChevronLeft size={22} color="#0f172a" />
-          </TouchableOpacity>
-          <Text className="text-lg font-gotham-bold text-slate-900">
-            My Orders
-          </Text>
-          <View className="w-10" />
-        </View>
-
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 6 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Important Section: Hero Overview Banner with background image */}
-          <View className="p-5">
-            <View className="rounded-3xl overflow-hidden shadow-sm border border-emerald-800/20">
-              <ImageBackground
-                source={require("../../assets/images/image3.jpg")}
-                className="w-full"
-                resizeMode="cover"
-              >
-                <View className="p-6 bg-emerald-950/85">
-                  <View className="flex-row items-center mb-2">
-                    <Package size={18} color="#86efac" className="mr-2" />
-                    <Text className="text-emerald-300 font-gotham-bold text-xs uppercase tracking-widest">
-                      Fertilizer & Supply Orders
-                    </Text>
-                  </View>
-                  <Text className="text-white font-gotham-bold text-2xl mb-4">
-                    Active Deliveries
-                  </Text>
-
-                  <View className="flex-row justify-between bg-white/10 rounded-2xl p-4 border border-white/20">
-                    <View>
-                      <Text className="text-white/75 text-xs font-gotham-medium">Total Orders</Text>
-                      <Text className="text-white font-gotham-bold text-xl mt-0.5">{orders.length} Items</Text>
-                    </View>
-                    <View className="w-px bg-white/20 h-full" />
-                    <View>
-                      <Text className="text-white/75 text-xs font-gotham-medium">Total Value</Text>
-                      <Text className="text-white font-gotham-bold text-xl mt-0.5">₹15,950</Text>
-                    </View>
-                    <View className="w-px bg-white/20 h-full" />
-                    <View>
-                      <Text className="text-white/75 text-xs font-gotham-medium">Logistics</Text>
-                      <Text className="text-emerald-300 font-gotham-bold text-xl mt-0.5">On Track</Text>
-                    </View>
-                  </View>
-                </View>
-              </ImageBackground>
-            </View>
+      >
+        <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
+          {/* Header - Transparent */}
+          <View style={{ backgroundColor: "transparent" }} className="px-5 pt-3 pb-3 flex-row items-center justify-between z-10">
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
+              activeOpacity={0.7}
+            >
+              <ChevronLeft size={22} color="#0f172a" />
+            </TouchableOpacity>
+            <Text className="text-slate-900 text-lg font-gotham-bold">
+              {t("myOrders", "My Orders")}
+            </Text>
+            <LanguageTogglePill />
           </View>
 
-          {/* Orders List Section */}
-          <View className="px-5">
-            <Text className="text-slate-900 font-gotham-bold text-base mb-3.5">
-              Recent Order History (Crops & Bio-Fertilizers)
-            </Text>
+          <ScrollView
+            className="flex-1"
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
+          >
+            <View className="px-5">
+              <Text className="text-slate-900 font-gotham-bold text-base mb-3.5">
+                {language === "ta" ? "சமீபத்திய ஆர்டர் வரலாறு" : "Recent Order History (Crops & Bio-Fertilizers)"}
+              </Text>
 
-            {orders.map((order, index) => {
+              {orders.map((order, index) => {
               const Icon = order.icon;
               return (
                 <View

@@ -196,7 +196,7 @@ export default function DashboardScreen() {
         {/* HEADER - Transparent Background with Employee Name & ID */}
         <View
           style={{ backgroundColor: "transparent" }}
-          className="px-5 pt-2 pb-3 z-10"
+          className="px-5 pt-3 pb-3 z-10"
         >
           {/* Top Officer Profile, Name & ID (Replaces Search Bar) */}
           <View className="flex-row items-center justify-between">
@@ -226,9 +226,9 @@ export default function DashboardScreen() {
                   >
                     {employeeName || employeeProfile.name}
                   </Text>
-                  <BadgeCheck size={16} color="#059669" className="ml-5" />
+                  <BadgeCheck size={16} color="#059669" className="ml-1.5" />
                 </View>
-                <View className="flex-row items-center mt-2">
+                <View className="flex-row items-center mt-1">
                   <View className="bg-emerald-100/90 border border-emerald-300/70 px-2 py-0.5 rounded-full flex-row items-center">
                     <Text className="text-emerald-900 font-gotham-bold text-[10px] tracking-wide">
                       ID: {employeeProfile.id} • {t("fieldOfficer", "Field Officer")}
@@ -306,7 +306,7 @@ export default function DashboardScreen() {
         <ScrollView
           style={{ flex: 1 }}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
+          contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
         >
           {/* JioHotstar Style Featured Spotlight Card (Hero Farmer Visit) */}
           {nextVisit && (

@@ -63,7 +63,7 @@ export default function VisitsScreen() {
         {/* Header - Strictly Transparent Background */}
         <View
           style={{ backgroundColor: "transparent" }}
-          className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
+          className="px-5 pt-3 pb-3 flex-row items-center justify-between z-10"
         >
           <TouchableOpacity
             onPress={() => router.back()}
@@ -90,7 +90,7 @@ export default function VisitsScreen() {
 
         <ScrollView
           className="flex-1"
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
+          contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Hero Banner with DARK Overlay & Enhanced Bright White Text */}

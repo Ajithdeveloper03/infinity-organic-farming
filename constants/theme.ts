@@ -29,5 +29,5 @@ export const Fonts = {
   medium: 'Montserrat_500Medium',
   bold: 'Montserrat_700Bold',
   serif: 'Lora_400Regular',
-  tamil: 'TiroTamil_500Regular',
+  tamil: 'TiroTamil_400Regular',
 };

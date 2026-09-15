@@ -23,84 +23,81 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const menuItems = [
-  {
-    id: "1",
-    title: "My Profile",
-    icon: User,
-    route: "/(farmer)/profile",
-  },
-  {
-    id: "2",
-    title: "My Farm Details",
-    icon: Leaf,
-    route: "/(farmer)/farm",
-  },
-  {
-    id: "3",
-    title: "Visit History",
-    icon: History,
-    route: "/(farmer)/history",
-  },
-  {
-    id: "4",
-    title: "Visit Reports",
-    icon: FileText,
-    route: "/(farmer)/history",
-  },
-  {
-    id: "5",
-    title: "Farming Tips",
-    icon: Lightbulb,
-    route: "/(farmer)/recommendations",
-  },
-  {
-    id: "6",
-    title: "Documents",
-    icon: FileText,
-    route: "/(farmer)/documents",
-  },
-  {
-    id: "7",
-    title: "Complaints",
-    icon: MessageSquare,
-    route: "/(farmer)/support",
-  },
-  {
-    id: "8",
-    title: "Support",
-    icon: HeadphonesIcon,
-    route: "/(farmer)/support",
-  },
-  {
-    id: "9",
-    title: "Settings",
-    icon: Settings,
-    route: null,
-  },
-];
+import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 
 export default function FarmerMenuScreen() {
+  const { t, language } = useLanguage();
+
+  const menuItems = [
+    {
+      id: "1",
+      title: t("myProfile", "My Profile"),
+      icon: User,
+      route: "/(farmer)/profile",
+    },
+    {
+      id: "2",
+      title: t("myFarm", "My Farm Details"),
+      icon: Leaf,
+      route: "/(farmer)/farm",
+    },
+    {
+      id: "3",
+      title: t("visitHistory", "Visit History"),
+      icon: History,
+      route: "/(farmer)/history",
+    },
+    {
+      id: "4",
+      title: t("visitReports", "Visit Reports"),
+      icon: FileText,
+      route: "/(farmer)/history",
+    },
+    {
+      id: "5",
+      title: t("farmingTips", "Farming Tips"),
+      icon: Lightbulb,
+      route: "/(farmer)/recommendations",
+    },
+    {
+      id: "6",
+      title: t("docs", "Documents"),
+      icon: FileText,
+      route: "/(farmer)/documents",
+    },
+    {
+      id: "7",
+      title: t("supportFaq", "Support & FAQ"),
+      icon: HeadphonesIcon,
+      route: "/(farmer)/support",
+    },
+    {
+      id: "8",
+      title: t("feedback", "Feedback"),
+      icon: MessageSquare,
+      route: "/(farmer)/support",
+    },
+  ];
+
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       {/* Header - Transparent */}
-      <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
+      <View style={{ backgroundColor: "transparent" }} className="px-5 pt-3 pb-3 flex-row items-center justify-between z-10">
         <TouchableOpacity
           onPress={() => router.back()}
           className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
         >
           <ChevronRight size={20} color="#0f172a" style={{ transform: [{ rotate: "180deg" }] }} />
         </TouchableOpacity>
-        <Text className="text-gray-900 text-lg font-gotham-bold">Menu</Text>
-        <View className="w-10" />
+        <Text className="text-gray-900 text-lg font-gotham-bold">{t("menu", "Menu")}</Text>
+        <LanguageTogglePill />
       </View>
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
+        contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
       >
-        <View className="bg-white rounded-2xl mx-6 mt-6 shadow-sm border border-gray-50 mb-6 overflow-hidden">
+        <View className="bg-white rounded-2xl mx-5 shadow-sm border border-gray-100 mb-6 overflow-hidden">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -109,7 +106,7 @@ export default function FarmerMenuScreen() {
                 onPress={() => {
                   if (item.route) router.push(item.route as any);
                 }}
-                className="flex-row items-center p-4 border-b border-gray-50"
+                className="flex-row items-center p-4 border-b border-gray-100"
               >
                 <Icon size={20} color="#374151" className="mr-4" />
                 <Text className="flex-1 text-gray-900 font-brandon-medium">
@@ -124,11 +121,11 @@ export default function FarmerMenuScreen() {
             className="flex-row items-center p-4"
           >
             <LogOut size={20} color="#dc2626" className="mr-4" />
-            <Text className="flex-1 text-red-600 font-gotham-bold">Logout</Text>
+            <Text className="flex-1 text-red-600 font-gotham-bold">{t("logout", "Logout")}</Text>
           </TouchableOpacity>
         </View>
         {/* Promo Banner */}
-        <View className="px-6 mb-12">
+        <View className="px-5 mb-8">
           <TouchableOpacity className="h-32 rounded-3xl overflow-hidden shadow-sm">
             <ImageBackground
               source={{
@@ -137,11 +134,11 @@ export default function FarmerMenuScreen() {
               className="w-full h-full justify-end p-5"
             >
               <View className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-              <Text className="text-gray-900 font-gotham-bold text-lg relative z-10">
-                Healthy Vetiver
+              <Text className="text-white font-gotham-bold text-lg relative z-10">
+                {language === "ta" ? "செழிப்பான வெட்டிவேர்" : "Healthy Vetiver"}
               </Text>
               <Text className="text-green-300 text-sm relative z-10">
-                Better Soil. Better Future.
+                {language === "ta" ? "சிறந்த மண் வளம். சிறந்த எதிர்காலம்." : "Better Soil. Better Future."}
               </Text>
             </ImageBackground>
           </TouchableOpacity>

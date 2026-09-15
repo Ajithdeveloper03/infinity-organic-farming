@@ -99,14 +99,14 @@ export default function FarmerDashboardScreen() {
                     className="text-slate-900 font-gotham-bold text-base tracking-tight"
                     numberOfLines={1}
                   >
-                    Kuppusamy
+                    {language === "ta" ? "குப்புசாமி" : "Kuppusamy"}
                   </Text>
                   <BadgeCheck size={16} color="#10b981" className="ml-1.5" />
                 </View>
                 <View className="flex-row items-center mt-1">
                   <View className="bg-emerald-100/95 border border-emerald-300/80 px-2.5 py-0.5 rounded-full flex-row items-center shadow-xs">
                     <Text className="text-emerald-950 font-gotham-bold text-[10px] tracking-wide">
-                      ID: FMR-1002 
+                      ID: FMR-1002 • {t("farmer", "Farmer")}
                     </Text>
                   </View>
                 </View>

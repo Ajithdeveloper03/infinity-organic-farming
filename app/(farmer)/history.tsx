@@ -91,7 +91,10 @@ export default function FarmerHistoryScreen() {
 
       <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
         {/* Header - Transparent */}
-        <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
+        <View
+          style={{ backgroundColor: "transparent" }}
+          className="px-5 pt-3 pb-3 flex-row items-center justify-between z-10"
+        >
           <TouchableOpacity
             onPress={() => router.back()}
             className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
@@ -107,7 +110,7 @@ export default function FarmerHistoryScreen() {
 
         <ScrollView
           className="flex-1"
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 6 }}
+          contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Hero Banner with Background Image */}
@@ -206,7 +209,7 @@ export default function FarmerHistoryScreen() {
                       style={{ color: visit.statusColor }}
                       className="text-[10px] font-gotham-bold uppercase tracking-wider"
                     >
-                      {visit.status}
+                      {visit.status === "Completed" ? t("completed", "Completed") : visit.status}
                     </Text>
                   </View>
                 </View>
@@ -225,7 +228,7 @@ export default function FarmerHistoryScreen() {
 
                 <View className="flex-row items-center justify-between pt-2 border-t border-slate-200/70">
                   <Text className={`${visit.actionText} font-gotham-bold text-xs uppercase tracking-wider`}>
-                    {t("viewDetails", "View Complete Audit Log")}
+                    {language === "ta" ? "முழு ஆய்வு பதிவேடு காண்க" : "View Complete Audit Log"}
                   </Text>
                   <ChevronRight size={15} color={visit.actionColor} />
                 </View>
