@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\EmployeeDetail;
 use App\Models\AttendanceLog;
 use App\Models\FarmerVisit;
-use App\Models\LocationLog;
+use App\Models\LocationPoint;
 use Inertia\Inertia;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -94,28 +94,70 @@ class EmployeeDirectoryController extends Controller
                 'notes'       => $v->farm_condition_notes,
             ]);
 
-        $lastLocation = LocationLog::where('employee_id', $id)
-            ->orderBy('recorded_at', 'desc')
-            ->first();
+        $recentPoints = LocationPoint::where('employee_id', $id)
+            ->whereDate('created_at', Carbon::today())
+            ->orderBy('timestamp', 'desc')
+            ->limit(100)
+            ->get()
+            ->map(fn($p) => [
+                'lat' => $p->latitude,
+                'lng' => $p->longitude,
+            ]);
+
+        // Get Assigned Farmers (Farmers created by this employee)
+        $assignedFarmers = \App\Models\FarmerProfile::where('created_by_employee_id', $id)
+            ->with('user:id,name')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn($f) => [
+                'id' => $f->user_id,
+                'name' => $f->user?->name ?? 'Unknown',
+                'farmer_code' => $f->farmer_code,
+                'photo' => $f->farmer_photo_path ? \Illuminate\Support\Facades\Storage::url($f->farmer_photo_path) : null,
+                'acres' => $f->land_size_acres,
+                'crop' => $f->crop_types ? implode(', ', $f->crop_types) : 'Vetiver',
+                'status' => $f->approval_status,
+            ]);
+
+        // Get Ratings and Performance Data
+        $avgRating = \App\Models\FarmerVisit::join('farmer_reviews', 'farmer_visits.id', '=', 'farmer_reviews.visit_id')
+            ->where('farmer_visits.employee_id', $id)
+            ->avg('farmer_reviews.rating');
+
+        $recentReviews = \App\Models\FarmerVisit::join('farmer_reviews', 'farmer_visits.id', '=', 'farmer_reviews.visit_id')
+            ->where('farmer_visits.employee_id', $id)
+            ->orderBy('farmer_reviews.created_at', 'desc')
+            ->take(5)
+            ->get(['farmer_reviews.rating', 'farmer_reviews.feedback_comments', 'farmer_visits.farmer_id', 'farmer_reviews.created_at'])
+            ->map(function($review) {
+                $farmer = \App\Models\User::find($review->farmer_id);
+                return [
+                    'rating' => $review->rating,
+                    'comment' => $review->feedback_comments,
+                    'farmer_name' => $farmer ? $farmer->name : 'Unknown',
+                    'date' => \Carbon\Carbon::parse($review->created_at)->diffForHumans()
+                ];
+            });
 
         return Inertia::render('Admin/Profiles/EmployeeDetail', [
             'employee' => [
                 'id'            => $user->id,
                 'name'          => $user->name,
                 'phone'         => $user->phone,
-                'email'         => $user->email,
                 'status'        => $user->status,
-                'employee_code' => $user->employeeDetail?->employee_code,
-                'region'        => $user->employeeDetail?->assigned_region,
-                'emergency'     => $user->employeeDetail?->emergency_phone,
-                'joined'        => $user->created_at->format('M d, Y'),
-                'last_latitude' => $lastLocation?->latitude,
-                'last_longitude'=> $lastLocation?->longitude,
-                'last_seen'     => $lastLocation ? Carbon::parse($lastLocation->recorded_at)->diffForHumans() : 'Never',
-                'battery'       => $lastLocation?->battery_level ?? 0,
+                'employee_code' => $user->employeeDetail?->employee_code ?? 'N/A',
+                'region'        => $user->employeeDetail?->assigned_region ?? 'Unassigned',
+                'emergency'     => $user->employeeDetail?->emergency_phone ?? 'N/A',
+                'last_latitude' => $recentPoints->first()['lat'] ?? null,
+                'last_longitude'=> $recentPoints->first()['lng'] ?? null,
+                'recentPath'    => $recentPoints,
+                'last_seen'     => $recentPoints->isNotEmpty() ? 'Recently' : 'Never',
+                'avg_rating'    => $avgRating ? round($avgRating, 1) : null,
             ],
-            'attendance'    => $attendance,
-            'visitsThisWeek'=> $visitsThisWeek,
+            'attendance'      => $attendance,
+            'visitsThisWeek'  => $visitsThisWeek,
+            'assignedFarmers' => $assignedFarmers,
+            'recentReviews'   => $recentReviews,
         ]);
     }
 

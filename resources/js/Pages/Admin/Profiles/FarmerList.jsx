@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AdminLayout from '../AdminLayout';
 import { Link, usePage, router } from '@inertiajs/react';
-import { Map, Leaf, ChevronRight, Search, Phone, Plus, Filter, ChevronDown, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
+import { Map, Leaf, ChevronRight, Search, Phone, Plus, Filter, ChevronDown, CheckCircle2, Clock, AlertCircle, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const kycBadge = (status) => {
@@ -51,7 +51,7 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
-                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Farmer Directory')}</h1>
+                    <h1 className="text-3xl font-heading font-bold text-gray-900">{t('Farmer Directory')}</h1>
                     <p className="text-gray-500 mt-1 font-medium text-sm">{farmers.length} {t('verified farm properties and agricultural profiles.')}</p>
                 </div>
                 <Link href="/admin/farmers/register" className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
@@ -112,12 +112,19 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                         </button>
                     </div>
 
-                    {districts.slice(0, 4).map(d => (
-                        <button key={d} type="button" onClick={() => handleDistrictChange(d)}
-                            className={`flex items-center px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap border ${district === d ? 'bg-slate-900 text-white border-slate-900' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'}`}>
-                            {d}
-                        </button>
-                    ))}
+                    <div className="relative">
+                        <select
+                            value={district}
+                            onChange={(e) => handleDistrictChange(e.target.value)}
+                            className="appearance-none cursor-pointer bg-gray-50 border border-gray-200 text-gray-700 text-sm font-bold rounded-xl px-4 py-2 pr-8 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                        >
+                            <option value="">{t('All Districts')}</option>
+                            {districts.map(d => (
+                                <option key={d} value={d}>{d}</option>
+                            ))}
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
                     <select value={kyc} onChange={e => { setKyc(e.target.value); router.get('/admin/farmers', { search, district, kyc: e.target.value }, { preserveState: true, replace: true }); }}
                         className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-600">
                         <option value="">{t('All KYC')}</option>
@@ -159,7 +166,7 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                                                     {farm.farmer_photo ? (
                                                         <img src={farm.farmer_photo} alt={farm.name} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        farm.name[0]
+                                                        String(farm.name || 'F').charAt(0).toUpperCase()
                                                     )}
                                                 </div>
                                                 <div>
@@ -196,42 +203,43 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                     </div>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                     {farmers.map((farm) => (
-                        <Link key={farm.id} href={`/admin/farmers/${farm.id}`} className="cursor-pointer group bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all hover:border-green-200 flex flex-col">
-                            <div className="relative h-40 bg-gradient-to-br from-slate-800 to-slate-900">
-                                {farm.farmer_photo ? (
-                                    <img src={farm.farmer_photo} alt={farm.name} className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center">
-                                        <Leaf className="w-16 h-16 text-green-400/30" />
-                                    </div>
-                                )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent" />
-                                <div className="absolute bottom-4 left-4 text-white">
-                                    <h3 className="font-heading font-bold text-xl">{farm.name}</h3>
-                                    <p className="text-xs font-mono font-bold text-green-300 tracking-wider mt-1">{farm.farmer_code}</p>
-                                </div>
-                                <div className={`absolute top-4 right-4 flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider border ${kycBadge(farm.kyc_status)}`}>
-                                    {kycIcon(farm.kyc_status)} {t(farm.kyc_status)}
-                                </div>
+                        <Link key={farm.id} href={`/admin/farmers/${farm.id}`} className="cursor-pointer group relative h-72 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col">
+                            {farm.farmer_photo ? (
+                                <img src={farm.farmer_photo} alt={farm.name} className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-1000" />
+                            ) : (
+                                <img src={`/images/image${(farm.id % 12) + 1}.jpg`} alt="Cover" className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-1000" />
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                            
+                            <div className={`absolute top-4 right-4 flex items-center gap-1 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider bg-slate-900/50 backdrop-blur-md text-white shadow-sm border border-white/20`}>
+                                {kycIcon(farm.kyc_status)} {t(farm.kyc_status)}
                             </div>
-                            <div className="p-5 bg-white flex-1 flex flex-col justify-between">
-                                <div className="space-y-2 mb-4">
-                                    <div className="flex items-center text-sm font-medium text-gray-700">
-                                        <Leaf className="w-4 h-4 text-green-600 mr-2" /> {farm.land_acres || '–'} {t('Acres')} · Vetiver
+                            
+                            <div className="absolute bottom-5 left-5 right-5 z-10">
+                                <h3 className="font-heading font-bold text-2xl text-white mb-1 group-hover:text-green-300 transition-colors">{farm.name}</h3>
+                                <p className="text-xs font-medium text-slate-300 flex items-center mb-4">
+                                    <MapPin className="w-3 h-3 mr-1" /> {farm.village}, {farm.district}
+                                </p>
+                                
+                                <div className="flex items-center justify-between border-t border-white/20 pt-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+                                            {farm.farmer_photo ? (
+                                                <img src={farm.farmer_photo} alt={farm.name} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(farm.name)}&background=random`} alt={farm.name} className="w-full h-full object-cover" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-bold text-white uppercase tracking-wider">{farm.land_acres || '–'} {t('Acres')}</p>
+                                            <p className="text-[10px] font-mono text-emerald-400 mt-0.5">{farm.farmer_code}</p>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center text-sm font-medium text-gray-700">
-                                        <Map className="w-4 h-4 text-slate-700 mr-2" /> {farm.village}, {farm.district}
+                                    <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:bg-green-500 transition-colors">
+                                        <ChevronRight className="w-4 h-4 text-white" />
                                     </div>
-                                    <div className="flex items-center text-sm font-medium text-gray-700">
-                                        <Phone className="w-4 h-4 text-slate-700 mr-2" /> {farm.phone}
-                                    </div>
-                                    <p className="text-xs text-gray-400 mt-1">Reg. by: {farm.registered_by}</p>
-                                </div>
-                                <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">{t('View Profile')}</span>
-                                    <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-slate-800 transition-colors group-hover:translate-x-1" />
                                 </div>
                             </div>
                         </Link>

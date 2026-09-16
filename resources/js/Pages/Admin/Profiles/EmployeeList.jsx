@@ -41,7 +41,7 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
             )}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
-                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Employee Directory')}</h1>
+                    <h1 className="text-3xl font-heading font-bold text-gray-900">{t('Employee Directory')}</h1>
                     <p className="text-gray-500 mt-1 font-medium text-sm">
                         {employees.length} {t('field staff registered')}
                     </p>
@@ -80,21 +80,20 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                         </button>
                     </div>
-                    {regions.map(r => (
-                        <button
-                            key={r}
-                            type="button"
-                            onClick={() => handleRegionChange(r)}
-                            className={`flex items-center px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap border ${
-                                region === r
-                                    ? 'bg-slate-900 text-white border-slate-900'
-                                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
-                            }`}
+                    <div className="relative">
+                        <select
+                            value={region}
+                            onChange={(e) => handleRegionChange(e.target.value)}
+                            className="appearance-none cursor-pointer bg-gray-50 border border-gray-200 text-gray-700 text-sm font-bold rounded-xl px-4 py-2 pr-8 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500/20"
                         >
-                            {r}
-                        </button>
-                    ))}
-                    <button type="submit" className="flex items-center px-4 py-2 bg-green-600 border border-green-600 text-white rounded-xl text-sm font-bold hover:bg-green-700 transition whitespace-nowrap">
+                            <option value="">{t('All Regions')}</option>
+                            {regions.map(r => (
+                                <option key={r} value={r}>{r}</option>
+                            ))}
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                    <button type="submit" className="flex items-center px-4 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition whitespace-nowrap shadow-sm shadow-slate-900/10">
                         <Search className="w-4 h-4 mr-2" /> {t('Search')}
                     </button>
                 </div>
@@ -171,49 +170,43 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                     </div>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                     {employees.map((emp) => (
-                        <Link key={emp.id} href={`/admin/employees/${emp.id}`} className="cursor-pointer group bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all hover:border-green-200 flex flex-col">
-                            <div className="p-6 border-b border-gray-100 bg-slate-50 relative">
-                                <div className="absolute top-4 right-4 flex items-center gap-2">
-                                    {emp.checked_in ? (
-                                        <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider bg-green-50 text-green-700 border border-green-200">
-                                            <CheckCircle2 className="w-3 h-3" /> Present
-                                        </span>
-                                    ) : (
-                                        <span className="text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider bg-gray-50 text-gray-400 border border-gray-200">
-                                            Not Checked In
-                                        </span>
-                                    )}
-                                    <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${emp.status === 'active' ? 'bg-slate-50 text-slate-800 border border-slate-200' : 'bg-amber-50 text-amber-600 border border-amber-100'}`}>
-                                        {emp.status}
+                        <Link key={emp.id} href={`/admin/employees/${emp.id}`} className="cursor-pointer group relative h-72 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col">
+                            <img src={`/images/image${(emp.id % 12) + 1}.jpg`} alt="Cover" className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-1000" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
+                            
+                            <div className="absolute top-4 right-4 flex items-center gap-2">
+                                {emp.checked_in ? (
+                                    <span className="flex items-center gap-1 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider bg-emerald-500/90 backdrop-blur-md text-white shadow-sm border border-emerald-400/50">
+                                        <CheckCircle2 className="w-3 h-3 text-white" /> {t('Present')}
                                     </span>
-                                </div>
-                                <div className="flex items-center space-x-4 mt-2">
-                                    <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center border-2 border-white shadow-sm group-hover:scale-105 transition-transform">
-                                        <span className="text-white font-bold text-xl">{emp.name[0]}</span>
-                                    </div>
-                                    <div>
-                                        <h3 className="font-heading font-bold text-lg text-gray-900 group-hover:text-slate-800 transition-colors">{emp.name}</h3>
-                                        <p className="text-[10px] font-bold text-gray-500 font-mono bg-white px-2 py-0.5 rounded-lg inline-block mt-1 border border-gray-200 shadow-sm">{emp.employee_code}</p>
-                                    </div>
-                                </div>
+                                ) : (
+                                    <span className="text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider bg-slate-900/50 backdrop-blur-md text-white shadow-sm border border-white/20">
+                                        {t('Absent')}
+                                    </span>
+                                )}
                             </div>
-                            <div className="p-5 bg-white flex-1 flex flex-col justify-between">
-                                <div className="space-y-3 mb-6">
-                                    <div className="flex items-center text-sm font-medium text-gray-700">
-                                        <Shield className="w-4 h-4 text-slate-700 mr-2" /> {formatDesignation(emp.designation)}
+                            
+                            <div className="absolute bottom-5 left-5 right-5 z-10">
+                                <h3 className="font-heading font-bold text-2xl text-white mb-1 group-hover:text-emerald-300 transition-colors">{emp.name}</h3>
+                                <p className="text-xs font-medium text-slate-300 flex items-center mb-4">
+                                    <MapPin className="w-3 h-3 mr-1" /> {emp.region}
+                                </p>
+                                
+                                <div className="flex items-center justify-between border-t border-white/20 pt-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+                                            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(emp.name)}&background=random`} alt={emp.name} className="w-full h-full object-cover" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-bold text-white uppercase tracking-wider">{formatDesignation(emp.designation)}</p>
+                                            <p className="text-[10px] font-mono text-emerald-400 mt-0.5">{emp.employee_code}</p>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center text-sm font-medium text-gray-700">
-                                        <MapPin className="w-4 h-4 text-slate-700 mr-2" /> {emp.region}
+                                    <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:bg-emerald-500 transition-colors">
+                                        <ChevronRight className="w-4 h-4 text-white" />
                                     </div>
-                                    <div className="flex items-center text-sm font-medium text-gray-700">
-                                        <Phone className="w-4 h-4 text-slate-700 mr-2" /> {emp.phone}
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider group-hover:text-slate-700 transition-colors">{t('View Profile')}</span>
-                                    <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-slate-800 transition-colors group-hover:translate-x-1" />
                                 </div>
                             </div>
                         </Link>

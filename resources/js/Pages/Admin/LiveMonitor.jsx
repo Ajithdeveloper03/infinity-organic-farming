@@ -2,7 +2,23 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import AdminLayout from './AdminLayout';
 import { Head, router } from '@inertiajs/react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow, Polyline } from '@react-google-maps/api';
+import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix Leaflet's default icon path issues
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
+
+function ChangeView({ center, zoom }) {
+  const map = useMap();
+  map.setView(center, zoom);
+  return null;
+}
 import {
     ShieldAlert, MapPin, Clock, Activity, Search,
     CheckCircle2, AlertTriangle, Wifi, WifiOff, Phone,
@@ -36,51 +52,7 @@ const mapContainerStyle = {
   borderRadius: '2rem'
 };
 
-const midnightMapStyle = [
-  { elementType: 'geometry', stylers: [{ color: '#0F172A' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
-  {
-    featureType: 'administrative.locality',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#d59563' }],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#d59563' }],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry',
-    stylers: [{ color: '#1E293B' }],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry.stroke',
-    stylers: [{ color: '#212a37' }],
-  },
-  {
-    featureType: 'road',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#9ca5b3' }],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry',
-    stylers: [{ color: '#334155' }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'geometry',
-    stylers: [{ color: '#0B1120' }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#515c6d' }],
-  },
-];
+// Map styling removed as OpenFreeMap uses its own style url
 
 export default function LiveMonitor({ employees: propEmployees = [] }) {
     const { t } = useTranslation();
@@ -150,7 +122,11 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
         }
     ];
 
-    const employees = propEmployees;
+    const [employees, setEmployees] = useState(propEmployees);
+    
+    useEffect(() => {
+        setEmployees(propEmployees);
+    }, [propEmployees]);
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [regionFilter, setRegionFilter] = useState('all');
@@ -160,10 +136,7 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
     const [lastRefreshed, setLastRefreshed] = useState(new Date().toLocaleTimeString());
     const [isMapFullscreen, setIsMapFullscreen] = useState(false);
 
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
-    });
+    // MapLibre doesn't require script loading hook
 
     const regions = ['all', ...Array.from(new Set(employees.map(e => e.region)))];
 
@@ -187,10 +160,51 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
     };
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            router.reload({ only: ['employees'], preserveScroll: true, preserveState: true, onSuccess: () => setLastRefreshed(new Date().toLocaleTimeString()) });
-        }, 30000); // 30-second real-time polling
-        return () => clearInterval(interval);
+        
+        if (window.Echo) {
+            window.Echo.channel('live-tracking')
+                .listen('.LocationUpdated', (e) => {
+                    setEmployees(prev => {
+                        const newEmps = [...prev];
+                        const index = newEmps.findIndex(emp => emp.id === e.employeeId);
+                        if (index !== -1) {
+                            newEmps[index] = {
+                                ...newEmps[index],
+                                latitude: e.latitude,
+                                longitude: e.longitude,
+                                lastSeen: 'Just now',
+                                battery: e.batteryLevel,
+                                gps: e.isGpsEnabled ? 'enabled' : 'disabled'
+                            };
+                            return newEmps;
+                        }
+                        return prev;
+                    });
+                    
+                    // Also update selected employee if they are currently being viewed
+                    setSelectedEmployee(prev => {
+                        if (prev && prev.id === e.employeeId) {
+                            return {
+                                ...prev,
+                                latitude: e.latitude,
+                                longitude: e.longitude,
+                                lastSeen: 'Just now',
+                                battery: e.batteryLevel,
+                                gps: e.isGpsEnabled ? 'enabled' : 'disabled'
+                            };
+                        }
+                        return prev;
+                    });
+                    
+                    setLastRefreshed(new Date().toLocaleTimeString());
+                });
+        }
+        
+        return () => {
+            if (window.Echo) {
+                window.Echo.leaveChannel('live-tracking');
+            }
+        };
     }, []);
 
     return (
@@ -369,89 +383,90 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
                                         {isMapFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
                                     </button>
                                     
-                                    {isLoaded ? (
-                                        <div className="flex-1 w-full h-full relative rounded-2xl overflow-hidden">
-                                            <GoogleMap
-                                                mapContainerStyle={mapContainerStyle}
-                                                center={{
-                                                    lat: parseFloat(selectedEmployee.latitude) || 12.9716,
-                                                    lng: parseFloat(selectedEmployee.longitude) || 77.5946
-                                                }}
-                                                zoom={14}
-                                                options={{
-                                                    styles: midnightMapStyle,
-                                                    disableDefaultUI: true,
-                                                    zoomControl: true,
-                                                }}
-                                            >
-                                                {selectedEmployee.recentPath && selectedEmployee.recentPath.length > 1 && (
-                                                    <Polyline
-                                                        path={selectedEmployee.recentPath.map(p => ({ lat: p.lat, lng: p.lng }))}
-                                                        options={{
-                                                            strokeColor: '#10B981',
-                                                            strokeOpacity: 0.8,
-                                                            strokeWeight: 4,
-                                                            geodesic: true,
-                                                        }}
-                                                    />
-                                                )}
-                                                {selectedEmployee.latitude && selectedEmployee.longitude && (
-                                                    <Marker
-                                                        position={{
-                                                            lat: parseFloat(selectedEmployee.latitude),
-                                                            lng: parseFloat(selectedEmployee.longitude)
-                                                        }}
-                                                        icon={{
-                                                            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white"/><circle cx="12" cy="12" r="8" fill="#10B981"/></svg>'),
-                                                            scaledSize: { width: 32, height: 32, equals: () => false }
-                                                        }}
-                                                    />
-                                                )}
-                                            </GoogleMap>
-                                        </div>
-                                    ) : (
-                                        <div className="w-full h-full bg-slate-900 rounded-[1.5rem] flex items-center justify-center">
-                                            <p className="text-gray-400 font-medium">Loading Map...</p>
-                                        </div>
-                                    )}
+                                    <div className="flex-1 w-full h-full relative rounded-2xl overflow-hidden">
+                                        <MapContainer
+                                            center={[parseFloat(selectedEmployee.latitude) || 12.9716, parseFloat(selectedEmployee.longitude) || 77.5946]}
+                                            zoom={14}
+                                            style={{ width: '100%', height: '100%', zIndex: 0 }}
+                                        >
+                                            <ChangeView center={[parseFloat(selectedEmployee.latitude) || 12.9716, parseFloat(selectedEmployee.longitude) || 77.5946]} zoom={14} />
+                                            <TileLayer
+                                                attribution='&copy; Google Maps'
+                                                url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+                                            />
+                                            {selectedEmployee.recentPath && selectedEmployee.recentPath.length > 1 && (
+                                                <Polyline 
+                                                    positions={selectedEmployee.recentPath.map(p => [p.lat, p.lng])} 
+                                                    color="#10B981" 
+                                                    weight={4} 
+                                                    opacity={0.8}
+                                                    lineCap="round"
+                                                    lineJoin="round"
+                                                />
+                                            )}
+                                            {selectedEmployee.latitude && selectedEmployee.longitude && (
+                                                <Marker
+                                                    position={[parseFloat(selectedEmployee.latitude), parseFloat(selectedEmployee.longitude)]}
+                                                    icon={L.divIcon({
+                                                        className: 'custom-icon',
+                                                        html: `
+                                                            <div style="width: 32px; height: 32px; background: transparent; display: flex; align-items: center; justify-content: center;">
+                                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white"/><circle cx="12" cy="12" r="8" fill="#10B981"/></svg>
+                                                            </div>
+                                                        `,
+                                                        iconSize: [32, 32],
+                                                        iconAnchor: [16, 16],
+                                                    })}
+                                                />
+                                            )}
+                                        </MapContainer>
+                                    </div>
                                 </div>
                             );
 
                             return isMapFullscreen ? createPortal(mapComponent, document.body) : mapComponent;
                         })()}
 
-                        {/* Profile Header */}
-                        <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                <div className={`w-16 h-16 rounded-2xl flex-shrink-0 flex items-center justify-center text-white font-extrabold text-xl bg-gradient-to-br ${selectedEmployee.status === 'active' ? 'bg-slate-800 shadow-lg shadow-slate-900/10' : 'from-gray-400 to-gray-500'}`}>
-                                    {selectedEmployee.name.charAt(0)}
-                                </div>
-                                <div className="flex-1">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <h2 className="text-xl font-extrabold text-gray-900">{selectedEmployee.name}</h2>
-                                        <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${getStatusStyle(selectedEmployee.status).badge}`}>
-                                            {selectedEmployee.status}
-                                        </span>
-                                    </div>
-                                    <p className="text-sm text-gray-500 font-medium mt-0.5">{selectedEmployee.role} • {selectedEmployee.region}</p>
-                                    <div className="flex flex-wrap gap-4 mt-2">
-                                        <span className="flex items-center text-xs font-bold text-gray-500">
-                                            <MapPin className="w-3.5 h-3.5 mr-1 text-green-400" /> {selectedEmployee.currentLocation}
-                                        </span>
-                                        <span className="flex items-center text-xs font-bold text-gray-500">
-                                            <Clock className="w-3.5 h-3.5 mr-1 text-green-400" /> Check-in: {selectedEmployee.checkInTime}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="flex gap-2 flex-shrink-0">
-                                    <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-slate-800 hover:bg-slate-50 transition-colors" title="Call">
-                                        <Phone className="w-5 h-5" />
+                        {/* Maximalist Profile Header */}
+                        <div className="bg-white rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-200/50 border border-slate-100 relative group">
+                            {/* Cover Image */}
+                            <div className="h-32 relative overflow-hidden">
+                                <img src={`/images/image${(selectedEmployee.id % 12) + 1}.jpg`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Cover" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+                                <div className="absolute top-4 right-4 flex gap-2">
+                                    <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-slate-900 transition-colors" title="Call">
+                                        <Phone className="w-4 h-4" />
                                     </button>
-                                    <button className="w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-orange-600 hover:bg-orange-50 transition-colors" title="Message">
-                                        <MessageSquare className="w-5 h-5" />
+                                    <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-slate-900 transition-colors" title="Message">
+                                        <MessageSquare className="w-4 h-4" />
                                     </button>
                                 </div>
                             </div>
+                            
+                            <div className="px-6 pb-6 pt-0 relative">
+                                <div className="flex flex-col items-start">
+                                    <div className="w-20 h-20 rounded-2xl flex-shrink-0 flex items-center justify-center bg-white shadow-xl border-4 border-white -mt-10 relative z-10 overflow-hidden">
+                                        <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(selectedEmployee.name)}&background=random`} alt={selectedEmployee.name} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="mt-3 w-full">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <h2 className="text-2xl font-black text-gray-900">{selectedEmployee.name}</h2>
+                                            <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-xl shadow-sm ${getStatusStyle(selectedEmployee.status).badge}`}>
+                                                {selectedEmployee.status}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{selectedEmployee.role} • {selectedEmployee.region}</p>
+                                        
+                                        <div className="flex flex-col gap-2 mt-4 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                                            <span className="flex items-center text-xs font-bold text-slate-700">
+                                                <MapPin className="w-4 h-4 mr-2 text-emerald-500" /> {selectedEmployee.currentLocation}
+                                            </span>
+                                            <span className="flex items-center text-xs font-bold text-slate-700">
+                                                <Clock className="w-4 h-4 mr-2 text-blue-500" /> Check-in: {selectedEmployee.checkInTime}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
 
 
                             {/* Progress Bar */}
@@ -469,6 +484,7 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
                                 <div className="flex items-center justify-between mt-1.5">
                                     <span className="text-[10px] text-gray-400 font-medium">{Math.round((selectedEmployee.visitsDone / selectedEmployee.visitsTarget) * 100)}% complete</span>
                                     <span className="text-[10px] text-gray-400 font-medium">{selectedEmployee.visitsTarget - selectedEmployee.visitsDone} remaining</span>
+                                </div>
                                 </div>
                             </div>
                         </div>

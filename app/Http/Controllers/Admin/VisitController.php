@@ -54,4 +54,24 @@ class VisitController extends Controller
             'filters'   => ['search' => $search, 'days' => $days, 'employee_id' => $employeeId],
         ]);
     }
+
+    public function show($id)
+    {
+        $visit = FarmerVisit::with(['employee:id,name', 'farmer:id,name'])->findOrFail($id);
+
+        return Inertia::render('Admin/VisitDetail', [
+            'visit' => [
+                'id'       => $visit->id,
+                'farmer'   => ['user' => ['name' => $visit->farmer?->name ?? 'Unknown Farmer']],
+                'employee' => ['name' => $visit->employee?->name ?? 'Unknown Employee'],
+                'distance_from_previous_farmer_km' => $visit->distance_from_previous_farmer_km ?? 0,
+                'check_in_time'  => $visit->check_in_time ? Carbon::parse($visit->check_in_time)->format('h:i A') : 'N/A',
+                'check_out_time' => $visit->check_out_time ? Carbon::parse($visit->check_out_time)->format('h:i A') : 'N/A',
+                'date'           => $visit->created_at->format('M d, Y'),
+                'farm_condition_notes' => $visit->farm_condition_notes ?? 'No notes provided.',
+                'recommendations'      => $visit->recommendations ?? 'No recommendations.',
+                'media'          => [],
+            ]
+        ]);
+    }
 }

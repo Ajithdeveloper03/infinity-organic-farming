@@ -33,4 +33,9 @@ class LocationPoint extends Model
     {
         return $this->belongsTo(TrackingSession::class);
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(User::class, 'employee_id');
+    }
 }

@@ -51,12 +51,13 @@ Route::prefix('admin')->group(function () {
 
         // Pending Farmer Approvals
         Route::get('/pending-farmers', [FarmerController::class, 'pending'])->name('farmers.pending');
+        Route::get('/pending-farmers/{id}', [FarmerController::class, 'showPending'])->name('farmers.pending.show');
         Route::post('/pending-farmers/{id}/approve', [FarmerController::class, 'approve'])->name('farmers.approve');
         Route::post('/pending-farmers/{id}/reject', [FarmerController::class, 'reject'])->name('farmers.reject');
 
         // Visit Audits
         Route::get('/visits', [VisitController::class, 'index'])->name('visits.index');
-
+        Route::get('/visits/{id}', [VisitController::class, 'show'])->name('visits.show');
         // Performance Analytics
         Route::get('/performance', [PerformanceController::class, 'index'])->name('performance.index');
 

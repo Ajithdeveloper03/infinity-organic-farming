@@ -24,8 +24,12 @@ Route::prefix('v1')->group(function () {
     // Translation Route for Mobile App
     Route::get('/translations', [TranslationController::class, 'index']);
 
-    // ── Protected: Sanctum token required ────────────────────────────────────
-    Route::middleware('auth:sanctum')->group(function () {
+    // ── Demo Authentication Middleware ──
+    // Because the mobile app is in demo mode and doesn't generate real Sanctum tokens,
+    // we bypass Sanctum by automatically authenticating the user via the phone number stored in AsyncStorage.
+
+    // ── Protected Routes ──
+    Route::middleware([\App\Http\Middleware\DemoAuthMiddleware::class])->group(function () {
 
         // Current user info
         Route::get('/user', fn(Request $request) => $request->user());
@@ -41,7 +45,12 @@ Route::prefix('v1')->group(function () {
             Route::post('/visit/submit', [EmployeeController::class, 'submitVisit']);
             Route::post('/visit/{id}/checkout', [EmployeeController::class, 'checkoutVisit']);
 
-            // Tracking endpoints (Moved below, out of Sanctum for testing)
+            // Tracking endpoints
+            Route::prefix('tracking')->group(function () {
+                Route::post('/session/start', [TrackingController::class, 'startSession']);
+                Route::post('/session/stop', [TrackingController::class, 'stopSession']);
+                Route::post('/sync', [TrackingController::class, 'sync']);
+            });
         });
 
         // Farmer endpoints
@@ -54,11 +63,6 @@ Route::prefix('v1')->group(function () {
         });
     });
 
-    // Tracking & field registration endpoints (accessible with or without token for testing/demo)
+    // Field registration endpoint (accessible with or without token for testing/demo)
     Route::post('/employee/farmer/register', [EmployeeController::class, 'registerFarmer']);
-    Route::prefix('employee/tracking')->group(function () {
-        Route::post('/session/start', [TrackingController::class, 'startSession']);
-        Route::post('/session/stop', [TrackingController::class, 'stopSession']);
-        Route::post('/sync', [TrackingController::class, 'sync']);
-    });
 });

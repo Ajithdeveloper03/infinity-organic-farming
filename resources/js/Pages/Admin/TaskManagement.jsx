@@ -13,26 +13,24 @@ import { useAlert } from '../../Components/AlertSystem';
 export default function TaskManagement({ tasks = [], employees = [], kpis = {} }) {
     const { t } = useTranslation();
     const { triggerInfo, triggerSuccess, triggerCritical } = useAlert();
-    const [activeTab, setActiveTab] = useState('tasks');
+    const [showNewTaskModal, setShowNewTaskModal] = useState(false);
+    const [newTask, setNewTask] = useState({ assignee_id: '', type: 'Farm Visit', description: '', priority: 'Medium', due_date: '', is_broadcast: false });
+    const [processing, setProcessing] = useState(false);
+
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [priorityFilter, setPriorityFilter] = useState('all');
     const [showStatusDropdown, setShowStatusDropdown] = useState(false);
     const [showPriorityDropdown, setShowPriorityDropdown] = useState(false);
-    const [showNewTaskModal, setShowNewTaskModal] = useState(false);
-    const [scheduleForm, setScheduleForm] = useState({ officer: 'Rajesh Kumar', n: 5, date: '' });
-    const [targetForm, setTargetForm] = useState({ period: 'Daily', metric: 'Farmers Onboarded', value: '' });
-    const [newTask, setNewTask] = useState({ assignee_id: '', type: 'Farm Visit', description: '', priority: 'Medium', due_date: '', is_broadcast: false });
-    const [processing, setProcessing] = useState(false);
 
     const filteredTasks = useMemo(() => {
         return tasks.filter(t => {
             const assigneeName = t.assignee?.name || 'All Officers';
-            const matchSearch = assigneeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                t.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                t.task_code.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchStatus = statusFilter === 'all' || t.status === statusFilter.toLowerCase();
-            const matchPriority = priorityFilter === 'all' || t.priority === priorityFilter.toLowerCase();
+            const matchSearch = String(assigneeName).toLowerCase().includes(searchQuery.toLowerCase()) ||
+                String(t.type || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                String(t.task_code || '').toLowerCase().includes(searchQuery.toLowerCase());
+            const matchStatus = statusFilter === 'all' || String(t.status || '').toLowerCase() === statusFilter.toLowerCase();
+            const matchPriority = priorityFilter === 'all' || String(t.priority || '').toLowerCase() === priorityFilter.toLowerCase();
             return matchSearch && matchStatus && matchPriority;
         });
     }, [tasks, searchQuery, statusFilter, priorityFilter]);
@@ -85,25 +83,6 @@ export default function TaskManagement({ tasks = [], employees = [], kpis = {} }
             },
             onError: () => setProcessing(false)
         });
-    };
-
-    const handleScheduleSubmit = (e) => {
-        e.preventDefault();
-        if (!scheduleForm.date) {
-            triggerCritical('Please select a target date.');
-            return;
-        }
-        triggerSuccess(`Visit route generated for ${scheduleForm.officer}: ${scheduleForm.n} farmers on ${scheduleForm.date}.`);
-    };
-
-    const handleTargetSubmit = (e) => {
-        e.preventDefault();
-        if (!targetForm.value) {
-            triggerCritical('Please enter a target value.');
-            return;
-        }
-        triggerSuccess(`${targetForm.period} target set: ${targetForm.metric} = ${targetForm.value}. Notified all officers.`);
-        setTargetForm(prev => ({ ...prev, value: '' }));
     };
 
     return (
@@ -226,223 +205,111 @@ export default function TaskManagement({ tasks = [], employees = [], kpis = {} }
                 </div>
             </div>
 
-            {/* Main Tabs */}
+            {/* Task Feed */}
             <div className="bg-white border border-gray-100 rounded-[2rem] shadow-sm overflow-visible flex flex-col min-h-[500px]">
-                <div className="flex border-b border-gray-100 px-6 overflow-x-auto">
-                    {[
-                        { key: 'tasks', label: 'Task Feed', icon: ClipboardList },
-                        { key: 'scheduler', label: 'Visit Scheduler', icon: CalendarClock },
-                        { key: 'targets', label: 'Target Settings', icon: Target },
-                        { key: 'analytics', label: 'Activity Analytics', icon: BarChart2 },
-                    ].map(({ key, label, icon: Icon }) => (
-                        <button key={key} onClick={() => setActiveTab(key)}
-                            className={`flex items-center py-5 px-4 font-bold text-sm border-b-2 transition-colors whitespace-nowrap ${activeTab === key ? 'border-green-600 text-slate-800' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>
-                            <Icon className="w-4 h-4 mr-2" /> {label}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Task Feed Tab */}
-                {activeTab === 'tasks' && (
-                    <>
-                        <div className="p-5 border-b border-gray-50 bg-gray-50/30 flex flex-col md:flex-row gap-4 justify-between items-center">
-                            <div className="relative w-full md:w-96">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                                    placeholder="Search by ID, assignee, or type..."
-                                    className="w-full pl-10 pr-8 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all" />
-                                {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>}
-                            </div>
-                            <div className="flex gap-3 w-full md:w-auto">
-                                {/* Status Dropdown */}
-                                <div className="relative">
-                                    <button onClick={() => { setShowStatusDropdown(!showStatusDropdown); setShowPriorityDropdown(false); }}
-                                        className={`flex items-center px-3 py-2.5 border rounded-xl text-sm font-bold transition-colors ${statusFilter !== 'all' ? 'bg-slate-50 border-green-300 text-green-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
-                                        <Filter className="w-4 h-4 mr-1.5" /> {statusFilter === 'all' ? 'Status' : statusFilter}
-                                    </button>
-                                    {showStatusDropdown && (
-                                        <div className="absolute top-full mt-1 left-0 min-w-[150px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
-                                            {['all', 'In Progress', 'Pending', 'To Do', 'Completed'].map(s => (
-                                                <button key={s} onClick={() => { setStatusFilter(s); setShowStatusDropdown(false); }}
-                                                    className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${statusFilter === s ? 'text-slate-800' : 'text-gray-700'}`}>
-                                                    {s === 'all' ? 'All Status' : s}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
+                <div className="p-5 border-b border-gray-50 bg-gray-50/30 flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <div className="relative w-full md:w-96">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                            placeholder="Search by ID, assignee, or type..."
+                            className="w-full pl-10 pr-8 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all" />
+                        {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>}
+                    </div>
+                    <div className="flex gap-3 w-full md:w-auto">
+                        {/* Status Dropdown */}
+                        <div className="relative">
+                            <button onClick={() => { setShowStatusDropdown(!showStatusDropdown); setShowPriorityDropdown(false); }}
+                                className={`flex items-center px-3 py-2.5 border rounded-xl text-sm font-bold transition-colors ${statusFilter !== 'all' ? 'bg-slate-50 border-green-300 text-green-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
+                                <Filter className="w-4 h-4 mr-1.5" /> {statusFilter === 'all' ? 'Status' : statusFilter}
+                            </button>
+                            {showStatusDropdown && (
+                                <div className="absolute top-full mt-1 left-0 min-w-[150px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
+                                    {['all', 'In Progress', 'Pending', 'To Do', 'Completed'].map(s => (
+                                        <button key={s} onClick={() => { setStatusFilter(s); setShowStatusDropdown(false); }}
+                                            className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${statusFilter === s ? 'text-slate-800' : 'text-gray-700'}`}>
+                                            {s === 'all' ? 'All Status' : s}
+                                        </button>
+                                    ))}
                                 </div>
-                                {/* Priority Dropdown */}
-                                <div className="relative">
-                                    <button onClick={() => { setShowPriorityDropdown(!showPriorityDropdown); setShowStatusDropdown(false); }}
-                                        className={`flex items-center px-3 py-2.5 border rounded-xl text-sm font-bold transition-colors ${priorityFilter !== 'all' ? 'bg-orange-50 border-orange-300 text-orange-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
-                                        <ChevronDown className="w-4 h-4 mr-1.5" /> {priorityFilter === 'all' ? 'Priority' : priorityFilter}
-                                    </button>
-                                    {showPriorityDropdown && (
-                                        <div className="absolute top-full mt-1 left-0 min-w-[130px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
-                                            {['all', 'High', 'Medium', 'Low'].map(p => (
-                                                <button key={p} onClick={() => { setPriorityFilter(p); setShowPriorityDropdown(false); }}
-                                                    className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${priorityFilter === p ? 'text-orange-600' : 'text-gray-700'}`}>
-                                                    {p === 'all' ? 'All Priority' : p}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+                            )}
                         </div>
-                        <div className="overflow-x-auto flex-1">
-                            <table className="w-full text-left border-collapse">
-                                <thead>
-                                    <tr className="border-b border-gray-100 bg-gray-50/50">
-                                        {['Task ID', 'Assignee', 'Type / Target', 'Due Date', 'Priority', 'Status', 'Actions'].map(h => (
-                                            <th key={h} className="py-4 px-5 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{h}</th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-50">
-                                    {filteredTasks.length === 0 && (
-                                        <tr><td colSpan={7} className="py-12 text-center text-gray-400 font-medium text-sm">No tasks match your filters.</td></tr>
+                        {/* Priority Dropdown */}
+                        <div className="relative">
+                            <button onClick={() => { setShowPriorityDropdown(!showPriorityDropdown); setShowStatusDropdown(false); }}
+                                className={`flex items-center px-3 py-2.5 border rounded-xl text-sm font-bold transition-colors ${priorityFilter !== 'all' ? 'bg-orange-50 border-orange-300 text-orange-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
+                                <ChevronDown className="w-4 h-4 mr-1.5" /> {priorityFilter === 'all' ? 'Priority' : priorityFilter}
+                            </button>
+                            {showPriorityDropdown && (
+                                <div className="absolute top-full mt-1 left-0 min-w-[130px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
+                                    {['all', 'High', 'Medium', 'Low'].map(p => (
+                                        <button key={p} onClick={() => { setPriorityFilter(p); setShowPriorityDropdown(false); }}
+                                            className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${priorityFilter === p ? 'text-orange-600' : 'text-gray-700'}`}>
+                                            {p === 'all' ? 'All Priority' : p}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className="flex-1 overflow-x-auto p-2">
+                    <div className="flex gap-6 min-w-max h-full pb-4">
+                        {['pending', 'in-progress', 'completed'].map(statusColumn => (
+                            <div key={statusColumn} className="w-80 flex flex-col h-full">
+                                <div className="flex items-center justify-between mb-4 px-2">
+                                    <h3 className="font-extrabold text-gray-900 capitalize flex items-center">
+                                        {statusColumn === 'pending' && <Clock className="w-4 h-4 mr-2 text-yellow-500" />}
+                                        {statusColumn === 'in-progress' && <Activity className="w-4 h-4 mr-2 text-blue-500" />}
+                                        {statusColumn === 'completed' && <CheckCircle2 className="w-4 h-4 mr-2 text-green-500" />}
+                                        {statusColumn.replace('-', ' ')}
+                                    </h3>
+                                    <span className="bg-gray-100 text-gray-600 text-xs font-bold px-2 py-0.5 rounded-full">
+                                        {filteredTasks.filter(t => t.status === statusColumn).length}
+                                    </span>
+                                </div>
+                                <div className="bg-gray-50/50 rounded-2xl p-3 flex-1 flex flex-col gap-3 min-h-[300px] border border-gray-100">
+                                    {filteredTasks.filter(t => t.status === statusColumn).length === 0 && (
+                                        <div className="flex-1 flex items-center justify-center text-gray-400 text-sm font-medium border-2 border-dashed border-gray-200 rounded-xl">
+                                            No Tasks
+                                        </div>
                                     )}
-                                    {filteredTasks.map(task => (
-                                        <tr key={task.id} className="hover:bg-gray-50/50 transition-colors">
-                                            <td className="py-4 px-5"><span className="font-mono text-sm font-bold text-slate-800 bg-slate-50 px-2 py-1 rounded-md">{task.task_code}</span></td>
-                                            <td className="py-4 px-5">
+                                    {filteredTasks.filter(t => t.status === statusColumn).map(task => (
+                                        <div key={task.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-green-200 transition-all group relative cursor-pointer flex flex-col">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold capitalize ${getPriorityStyle(task.priority)}`}>{task.priority}</span>
+                                                <span className="font-mono text-[10px] font-bold text-gray-400">{task.task_code}</span>
+                                            </div>
+                                            <h4 className="font-bold text-gray-900 mb-1">{task.type}</h4>
+                                            <p className="text-xs text-gray-500 mb-4 flex-1">{task.description}</p>
+                                            <div className="flex items-center justify-between border-t border-gray-50 pt-3 mt-auto">
                                                 <div className="flex items-center gap-2">
-                                                    {task.is_broadcast ? <Users className="w-4 h-4 text-slate-700" /> : <UserPlus className="w-4 h-4 text-gray-400" />}
-                                                    <span className="font-bold text-sm text-gray-900">{task.is_broadcast ? 'All Field Officers' : task.assignee?.name}</span>
+                                                    <div className="w-6 h-6 rounded-full bg-slate-800 text-white flex items-center justify-center text-[10px] font-bold">
+                                                        {task.is_broadcast ? <Users className="w-3 h-3" /> : String(task.assignee?.name || 'U').charAt(0)}
+                                                    </div>
+                                                    <span className="text-xs font-bold text-gray-700 truncate max-w-[100px]">
+                                                        {task.is_broadcast ? 'All Officers' : task.assignee?.name}
+                                                    </span>
                                                 </div>
-                                            </td>
-                                            <td className="py-4 px-5">
-                                                <p className="font-bold text-sm text-gray-900">{task.type}</p>
-                                                <p className="text-xs text-gray-500">{task.description}</p>
-                                            </td>
-                                            <td className="py-4 px-5 text-sm text-gray-500 font-medium">{task.due_date || '—'}</td>
-                                            <td className="py-4 px-5"><span className={`px-2.5 py-1 rounded-full text-xs font-bold capitalize ${getPriorityStyle(task.priority)}`}>{task.priority}</span></td>
-                                            <td className="py-4 px-5"><span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${getStatusStyle(task.status)}`}>{task.status.replace('-', ' ')}</span></td>
-                                            <td className="py-4 px-5">
-                                                <div className="flex gap-1">
+                                                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                     {task.status !== 'completed' && (
                                                         <button onClick={() => handleMarkComplete(task.id, task.task_code)} title="Mark Complete" disabled={processing}
-                                                            className="p-2 text-gray-400 hover:text-slate-800 hover:bg-slate-50 rounded-lg transition-colors disabled:opacity-50">
-                                                            <CheckCircle2 className="w-4 h-4" />
+                                                            className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+                                                            <CheckCircle2 className="w-3.5 h-3.5" />
                                                         </button>
                                                     )}
                                                     <button onClick={() => handleDeleteTask(task.id, task.task_code)} title="Delete Task" disabled={processing}
-                                                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50">
-                                                        <Trash2 className="w-4 h-4" />
+                                                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                                        <Trash2 className="w-3.5 h-3.5" />
                                                     </button>
                                                 </div>
-                                            </td>
-                                        </tr>
+                                            </div>
+                                        </div>
                                     ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </>
-                )}
-
-                {/* Visit Scheduler Tab */}
-                {activeTab === 'scheduler' && (
-                    <div className="p-6">
-                        <form onSubmit={handleScheduleSubmit} className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm max-w-2xl">
-                            <h3 className="text-lg font-bold text-gray-900 mb-5 border-b border-gray-100 pb-3">Schedule N Farmers Visit</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Assign Field Officer</label>
-                                    <input type="text" list="officer-list" placeholder="Type officer name..." value={scheduleForm.officer} onChange={e => setScheduleForm(p => ({ ...p, officer: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
-                                    <datalist id="officer-list">
-                                        <option value="Rajesh Kumar (Coimbatore)" />
-                                        <option value="Priya D. (Salem)" />
-                                        <option value="Suresh V. (Erode)" />
-                                        <option value="Kavitha S. (Madurai)" />
-                                        <option value="Murugan P. (Trichy)" />
-                                    </datalist>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Number of Farmers to Visit (N)</label>
-                                    <input type="number" min="1" max="20" value={scheduleForm.n} onChange={e => setScheduleForm(p => ({ ...p, n: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Target Date *</label>
-                                    <input type="date" value={scheduleForm.date} onChange={e => setScheduleForm(p => ({ ...p, date: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
-                                </div>
-                                <div className="flex items-end">
-                                    <button type="submit" className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:shadow-lg transition-all">
-                                        Generate Route & Schedule
-                                    </button>
                                 </div>
                             </div>
-                        </form>
+                        ))}
                     </div>
-                )}
-
-                {/* Target Settings Tab */}
-                {activeTab === 'targets' && (
-                    <div className="p-6">
-                        <form onSubmit={handleTargetSubmit} className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm max-w-2xl">
-                            <h3 className="text-lg font-bold text-gray-900 mb-5 border-b border-gray-100 pb-3">Set Performance Targets</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Period</label>
-                                    <select value={targetForm.period} onChange={e => setTargetForm(p => ({ ...p, period: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500">
-                                        <option>Daily</option>
-                                        <option>Weekly</option>
-                                        <option>Monthly</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Metric</label>
-                                    <select value={targetForm.metric} onChange={e => setTargetForm(p => ({ ...p, metric: e.target.value }))}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500">
-                                        <option>Farmers Onboarded</option>
-                                        <option>Acres Inspected</option>
-                                        <option>Seeds Distributed (Kg)</option>
-                                        <option>Farms Visited</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Target Value *</label>
-                                    <input type="number" min="1" value={targetForm.value} onChange={e => setTargetForm(p => ({ ...p, value: e.target.value }))}
-                                        placeholder="e.g. 20"
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-500" />
-                                </div>
-                                <div className="md:col-span-3">
-                                    <button type="submit" className="px-8 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-colors">
-                                        Set Target & Notify Team
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                )}
-
-                {/* Activity Analytics Tab */}
-                {activeTab === 'analytics' && (
-                    <div className="p-6 space-y-4">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {[
-                                { label: 'Check-Ins Today', value: '8/10', color: 'indigo' },
-                                { label: 'Avg. Visit Duration', value: '1h 24m', color: 'violet' },
-                                { label: 'Forms Submitted', value: '23', color: 'green' },
-                                { label: 'GPS Gaps Today', value: '2', color: 'red' },
-                            ].map(({ label, value, color }) => (
-                                <div key={label} className="bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center">
-                                    <p className={`text-2xl font-extrabold text-${color}-600`}>{value}</p>
-                                    <p className="text-xs font-bold text-gray-500 mt-1">{label}</p>
-                                </div>
-                            ))}
-                        </div>
-                        <div className="bg-gray-50 rounded-2xl border border-gray-200 p-8 text-center flex flex-col items-center justify-center h-48">
-                            <BarChart2 className="w-10 h-10 text-green-300 mb-3" />
-                            <p className="font-bold text-gray-700">Detailed activity heatmap connects to live GPS & check-in telemetry.</p>
-                            <p className="text-sm text-gray-400 mt-1">Data streams in from the mobile app in real-time.</p>
-                        </div>
-                    </div>
-                )}
+                </div>
             </div>
         </AdminLayout>
     );

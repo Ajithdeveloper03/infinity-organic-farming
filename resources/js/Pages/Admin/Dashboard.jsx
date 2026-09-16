@@ -5,9 +5,19 @@ import { router } from '@inertiajs/react';
 import { 
     Users, Activity, MapPin, BatteryWarning, 
     TrendingUp, TrendingDown, Clock, ChevronRight, CheckCircle2, ShieldAlert, Maximize, Minimize,
-    Wallet, PiggyBank, Briefcase, ArrowRight, MoreHorizontal, Filter, Search, FileText, PieChart, Activity as ActivityIcon
+    Wallet, PiggyBank, Briefcase, ArrowRight, MoreHorizontal, Filter, Search, FileText, PieChart, Activity as ActivityIcon, Leaf, Map, AlertCircle
 } from 'lucide-react';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix Leaflet's default icon path issues
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
 import { useTranslation } from 'react-i18next';
 
 const mapContainerStyle = {
@@ -16,31 +26,55 @@ const mapContainerStyle = {
   borderRadius: '1.5rem'
 };
 
-const midnightMapStyle = [
-  { elementType: 'geometry', stylers: [{ color: '#0F172A' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
-  // ... omitting all the styles for brevity as we already have it in LiveMonitor, or let's include a few basics
-  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0B1120' }] },
-];
+// Map styling removed as OpenFreeMap uses its own style url
 
-export default function Dashboard({ locationLogs = [], stats = {}, recentVisits = [] }) {
+export default function Dashboard({ locationLogs = [], stats = {}, recentVisits = [], recentFarmers = [], pendingApprovals = [], agriStats = {} }) {
     const [drawerOpen, setDrawerOpen] = useState(true);
     const [isMapFullscreen, setIsMapFullscreen] = useState(false);
     const { t } = useTranslation();
 
-    // 30-second auto-refresh for live location data and stats
+    const [liveLocationLogs, setLiveLocationLogs] = useState(locationLogs);
+    
     useEffect(() => {
-        const interval = setInterval(() => {
-            router.reload({ only: ['locationLogs', 'stats', 'recentVisits'], preserveScroll: true });
-        }, 30000);
-        return () => clearInterval(interval);
+        setLiveLocationLogs(locationLogs);
+    }, [locationLogs]);
+
+    // WebSocket real-time update instead of full page polling
+    useEffect(() => {
+        if (window.Echo) {
+            window.Echo.channel('live-tracking')
+                .listen('LocationUpdated', (e) => {
+                    setLiveLocationLogs(prev => {
+                        // Find if log for this employee already exists
+                        const newLogs = [...prev];
+                        const index = newLogs.findIndex(log => log.employee?.id === e.employeeId || log.employee_id === e.employeeId);
+                        
+                        const newLog = {
+                            id: Date.now(), // temporary ID
+                            latitude: e.latitude,
+                            longitude: e.longitude,
+                            employee_id: e.employeeId,
+                            employee: prev[index]?.employee || { id: e.employeeId, name: 'Officer' }
+                        };
+
+                        if (index !== -1) {
+                            newLogs[index] = newLog;
+                        } else {
+                            newLogs.push(newLog);
+                        }
+                        return newLogs;
+                    });
+                });
+        }
+        
+        return () => {
+            if (window.Echo) {
+                window.Echo.leaveChannel('live-tracking');
+            }
+        };
     }, []);
 
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
-    });
+    // MapLibre doesn't require script loading hook
 
     const mapContent = (
         <div className={`transition-all duration-300 ease-in-out bg-white overflow-hidden shadow-sm ${isMapFullscreen ? 'fixed top-0 left-0 right-0 bottom-0 z-[99999] w-[100vw] h-[100vh] m-0 p-0 rounded-none' : 'relative w-full h-full rounded-[2rem]'}`}>
@@ -56,37 +90,32 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
             </button>
 
             <div className="absolute inset-0 bg-gray-50 flex flex-col items-center justify-center">
-                {isLoaded ? (
-                    <GoogleMap
-                        mapContainerStyle={mapContainerStyle}
-                        center={locationLogs.length > 0 ? { lat: parseFloat(locationLogs[0].latitude), lng: parseFloat(locationLogs[0].longitude) } : { lat: 12.9716, lng: 77.5946 }}
-                        zoom={10}
-                        options={{
-                            styles: midnightMapStyle,
-                            disableDefaultUI: true,
-                            zoomControl: true,
-                        }}
-                    >
-                        {locationLogs.map((log) => (
-                            <Marker
-                                key={log.id}
-                                position={{ lat: parseFloat(log.latitude), lng: parseFloat(log.longitude) }}
-                                title={log.employee?.name || 'Officer'}
-                                icon={{
-                                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent('<svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white"/><circle cx="12" cy="12" r="8" fill="#10B981"/></svg>'),
-                                    scaledSize: { width: 32, height: 32, equals: () => false }
-                                }}
-                            />
-                        ))}
-                    </GoogleMap>
-                ) : (
-                    <div className="flex flex-col items-center justify-center h-full">
-                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-green-500/20 mb-4 animate-bounce">
-                            <MapPin className="w-8 h-8 text-slate-800" />
-                        </div>
-                        <h2 className="text-xl font-heading font-bold text-gray-900 mb-2">{t('Loading Map...')}</h2>
-                    </div>
-                )}
+                <MapContainer
+                    center={liveLocationLogs.length > 0 ? [parseFloat(liveLocationLogs[0].latitude), parseFloat(liveLocationLogs[0].longitude)] : [12.9716, 77.5946]}
+                    zoom={10}
+                    style={{ width: '100%', height: '100%', zIndex: 0 }}
+                >
+                    <TileLayer
+                        attribution='&copy; Google Maps'
+                        url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+                    />
+                    {liveLocationLogs.map((log) => (
+                        <Marker
+                            key={log.id}
+                            position={[parseFloat(log.latitude), parseFloat(log.longitude)]}
+                            icon={L.divIcon({
+                                className: 'custom-icon',
+                                html: `
+                                    <div style="width: 32px; height: 32px; background: transparent; display: flex; align-items: center; justify-content: center;">
+                                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="white"/><circle cx="12" cy="12" r="8" fill="#10B981"/></svg>
+                                    </div>
+                                `,
+                                iconSize: [32, 32],
+                                iconAnchor: [16, 16],
+                            })}
+                        />
+                    ))}
+                </MapContainer>
             </div>
             
         </div>
@@ -99,7 +128,7 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
 
                 
                 <img
-                    src="/images/image1.jpg"
+                    src="/images/image9.jpg"
                     alt="Organic farm background"
                     className="absolute inset-0 w-full h-full object-cover object-center scale-105"
                     style={{ filter: 'brightness(0.90) saturate(1.3)' }}
@@ -129,19 +158,19 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
                                 </div>
                                 <span className="text-green-200 text-sm font-bold tracking-wide">{t('Good morning, Super Admin')}</span>
                             </div>
-                            <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                            <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
                                 {t('Overview')}
                                 <span className="block text-lg font-medium text-green-300 mt-1">{t('Here is the summary of overall data')}</span>
                             </h1>
                         </div>
-                        {/* Quick actions */}
+                        {/* Quick metrics */}
                         <div className="flex flex-wrap gap-3">
-                            <button className="flex items-center px-5 py-2.5 bg-white/10 border border-white/20 backdrop-blur-md rounded-2xl text-sm font-bold text-white hover:bg-white/20 transition-colors">
-                                {t('This Month')} <ChevronRight className="w-4 h-4 ml-2 rotate-90" />
-                            </button>
-                            <button className="flex items-center px-5 py-2.5 bg-white text-green-900 rounded-2xl text-sm font-bold hover:bg-slate-50 transition-colors shadow-lg">
-                                <Activity className="w-4 h-4 mr-2" /> {t('Export Report')}
-                            </button>
+                            <div className="flex items-center px-5 py-2.5 bg-white/10 border border-white/20 backdrop-blur-md rounded-2xl text-sm font-bold text-white shadow-sm">
+                                <Activity className="w-4 h-4 mr-2 text-green-300" /> {t('Today\'s Attendance')}: {stats?.todayAttendance ?? 0}
+                            </div>
+                            <div className="flex items-center px-5 py-2.5 bg-white text-green-900 rounded-2xl text-sm font-bold shadow-lg">
+                                <ShieldAlert className="w-4 h-4 mr-2 text-orange-500" /> {t('Pending Approvals')}: {stats?.pendingFarmers ?? 0}
+                            </div>
                         </div>
                     </div>
 
@@ -163,17 +192,7 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
-                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats?.totalFarmers || 150}</p>
-                        <span className="flex items-center text-xs font-bold text-emerald-700 bg-white border border-emerald-100 px-2.5 py-1 rounded-full shadow-sm">
-                            <TrendingUp className="w-3 h-3 mr-1" /> +23%
-                        </span>
-                    </div>
-
-                    <div className="mt-4 pt-4 border-t border-gray-100/50 flex items-center justify-between">
-                        <div className="w-full bg-emerald-50 rounded-full h-1.5 overflow-hidden">
-                            <div className="h-1.5 rounded-full bg-emerald-600" style={{ width: '72%' }}></div>
-                        </div>
-                        <span className="text-xs font-bold text-slate-800 ml-3 flex-shrink-0">72%</span>
+                        <p className="text-3xl font-bold text-gray-900 tracking-tight">{stats?.totalFarmers ?? 0}</p>
                     </div>
                 </div>
 
@@ -188,46 +207,28 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
-                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats?.activeEmployees || 45}</p>
-                        <span className="flex items-center text-xs font-bold text-orange-600 bg-white border border-orange-100 px-2.5 py-1 rounded-full shadow-sm">
-                            <TrendingUp className="w-3 h-3 mr-1" /> +15%
-                        </span>
-                    </div>
-
-                    <div className="mt-4 pt-4 border-t border-gray-100/50 flex items-center justify-between">
-                        <div className="w-full bg-orange-50 rounded-full h-1.5 overflow-hidden">
-                            <div className="h-1.5 rounded-full bg-slate-700" style={{ width: '88%' }}></div>
-                        </div>
-                        <span className="text-xs font-bold text-slate-700 ml-3 flex-shrink-0">88%</span>
+                        <p className="text-3xl font-bold text-gray-900 tracking-tight">{stats?.activeEmployees ?? 0}</p>
                     </div>
                 </div>
 
-                {/* Card 3: Visits Logged */}
+                {/* Card 3: Pending Approvals */}
                 <div className="group relative bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer">
                     <div className="flex flex-col mb-4">
-                        <div className="w-10 h-10 bg-sky-600 rounded-full flex items-center justify-center shadow-lg shadow-sky-600/30 group-hover:scale-110 transition-transform mb-4">
-                            <MapPin className="w-5 h-5 text-white" />
+                        <div className="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center shadow-lg shadow-amber-600/30 group-hover:scale-110 transition-transform mb-4">
+                            <ShieldAlert className="w-5 h-5 text-white" />
                         </div>
-                        <p className="text-xl font-bold text-gray-900 tracking-tight">{t('Visits Logged')}</p>
-                        <p className="text-sm font-medium text-gray-500 mt-1">{t('Review farm visits and officer activity records...')}</p>
+                        <p className="text-xl font-bold text-gray-900 tracking-tight">{t('Pending Approvals')}</p>
+                        <p className="text-sm font-medium text-gray-500 mt-1">{t('Farmers and documents awaiting review...')}</p>
                     </div>
                     
                     <div className="flex items-center justify-between mb-2">
-                        <p className="text-3xl font-extrabold text-gray-900 tracking-tight">{stats?.totalVisits || 320}</p>
-                        <span className="flex items-center text-xs font-bold text-sky-700 bg-white border border-sky-100 px-2.5 py-1 rounded-full shadow-sm">
-                            <TrendingUp className="w-3 h-3 mr-1" /> +3.2%
-                        </span>
-                    </div>
-
-                    <div className="mt-4 pt-4 border-t border-gray-100/50 flex items-center justify-between">
-                        <div className="w-full bg-sky-50 rounded-full h-1.5 overflow-hidden">
-                            <div className="h-1.5 rounded-full bg-sky-600" style={{ width: '56%' }}></div>
-                        </div>
-                        <span className="text-xs font-bold text-sky-600 ml-3 flex-shrink-0">56%</span>
+                        <p className="text-3xl font-bold text-gray-900 tracking-tight">{stats?.pendingFarmers ?? 0}</p>
                     </div>
                 </div>
 
             </div>
+
+            {/* Removed Agricultural Stats Tier as requested */}
 
             {/* Middle Tier: Analytical Chart & Stream */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -255,28 +256,33 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
                     </div>
                     
                     <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
-                        {[
-                            { time: '09:42 AM', user: 'Senthil Vel', event: t('Turned OFF GPS. Red Alert Triggered.'), type: 'critical', icon: ShieldAlert },
-                            { time: '09:40 AM', user: 'Anitha R', event: t('Checked in at Farm #294 (Muthusamy)'), type: 'success', icon: CheckCircle2 },
-                            { time: '09:39 AM', user: 'Anitha R', event: t('Travel Distance Logged: 12.4 km'), type: 'info', icon: MapPin },
-                            { time: '09:35 AM', user: 'Karthikeyan', event: t('Marked Morning Attendance. GPS Started.'), type: 'info', icon: Clock },
-                            { time: '09:30 AM', user: 'Palanisamy', event: t('System booted successfully.'), type: 'info', icon: ActivityIcon },
-                        ].map((log, i) => (
-                            <div key={i} className="flex items-start p-3 rounded-2xl hover:bg-gray-50 transition-colors cursor-pointer group">
-                                <div className={`p-2.5 rounded-xl mr-3 shadow-sm ${log.type === 'success' ? 'bg-slate-50 text-slate-800' : log.type === 'critical' ? 'bg-red-50 text-red-500' : 'bg-gray-50 text-gray-500 border border-gray-100 group-hover:border-gray-200'}`}>
-                                    <log.icon className="w-4 h-4" />
-                                </div>
-                                <div className="flex-1 pt-1">
-                                    <div className="flex justify-between items-center mb-0.5">
-                                        <p className="text-sm font-bold text-gray-900">{log.user}</p>
-                                        <span className="text-[10px] font-bold text-gray-400">
-                                            {log.time}
-                                        </span>
+                        {(() => {
+                            const combinedLogs = [
+                                ...recentVisits.map(v => ({ time: v.time, user: v.employee, event: t('Visited') + ' ' + v.farmer, type: 'success', icon: CheckCircle2 })),
+                                ...liveLocationLogs.slice(0, 5).map(l => ({ time: 'Just now', user: l.employee?.name || 'Officer', event: t('Location Pinged'), type: 'info', icon: MapPin }))
+                            ].slice(0, 5);
+
+                            if (combinedLogs.length === 0) {
+                                return <div className="text-center text-gray-400 text-sm mt-4">{t('No live logs currently available.')}</div>;
+                            }
+
+                            return combinedLogs.map((log, i) => (
+                                <div key={i} className="flex items-start p-3 rounded-2xl hover:bg-gray-50 transition-colors cursor-pointer group">
+                                    <div className={`p-2.5 rounded-xl mr-3 shadow-sm ${log.type === 'success' ? 'bg-slate-50 text-slate-800' : log.type === 'critical' ? 'bg-red-50 text-red-500' : 'bg-gray-50 text-gray-500 border border-gray-100 group-hover:border-gray-200'}`}>
+                                        <log.icon className="w-4 h-4" />
                                     </div>
-                                    <p className={`text-xs font-medium ${log.type === 'critical' ? 'text-red-500' : 'text-gray-500'}`}>{log.event}</p>
+                                    <div className="flex-1 pt-1">
+                                        <div className="flex justify-between items-center mb-0.5">
+                                            <p className="text-sm font-bold text-gray-900">{log.user}</p>
+                                            <span className="text-[10px] font-bold text-gray-400">
+                                                {log.time}
+                                            </span>
+                                        </div>
+                                        <p className={`text-xs font-medium ${log.type === 'critical' ? 'text-red-500' : 'text-gray-500'}`}>{log.event}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ));
+                        })()}
                     </div>
                 </div>
             </div>
@@ -313,33 +319,115 @@ export default function Dashboard({ locationLogs = [], stats = {}, recentVisits 
                                 </tr>
                             </thead>
                             <tbody>
-                                {[
-                                    { act: 'Farm Visit Audit', id: 'VIS_001', date: '17 Apr, 2026', status: 'Completed', color: 'green' },
-                                    { act: 'New Registration', id: 'REG_089', date: '16 Apr, 2026', status: 'Pending', color: 'orange' },
-                                    { act: 'Issue Reported', id: 'ISS_042', date: '15 Apr, 2026', status: 'Active', color: 'red' },
-                                    { act: 'Management Meeting', id: 'MET_011', date: '14 Apr, 2026', status: 'Completed', color: 'green' },
-                                ].map((row, i) => (
-                                    <tr key={i} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors group cursor-pointer">
-                                        <td className="py-4 px-6 text-sm font-bold text-gray-900 flex items-center">
-                                            <div className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center mr-3 group-hover:bg-white transition-colors">
-                                                <FileText className="w-4 h-4 text-gray-500" />
-                                            </div>
-                                            {t(row.act)}
-                                        </td>
-                                        <td className="py-4 px-6 text-xs font-medium text-gray-500">{row.id}</td>
-                                        <td className="py-4 px-6 text-xs font-medium text-gray-500">{row.date}</td>
-                                        <td className="py-4 px-6">
-                                            <span className={`flex items-center text-xs font-bold ${row.color === 'green' ? 'text-slate-800' : row.color === 'red' ? 'text-red-500' : 'text-slate-700'}`}>
-                                                <span className={`w-1.5 h-1.5 rounded-full mr-2 ${row.color === 'green' ? 'bg-slate-800' : row.color === 'red' ? 'bg-red-500' : 'bg-slate-700'}`}></span>
-                                                {t(row.status)}
-                                            </span>
+                                {recentVisits.length > 0 ? (
+                                    recentVisits.map((visit, i) => (
+                                        <tr key={i} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors group cursor-pointer">
+                                            <td className="py-4 px-6 text-sm font-bold text-gray-900 flex items-center">
+                                                <div className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center mr-3 group-hover:bg-white transition-colors">
+                                                    <FileText className="w-4 h-4 text-gray-500" />
+                                                </div>
+                                                {t('Farm Visit')}: {visit.farmer}
+                                            </td>
+                                            <td className="py-4 px-6 text-xs font-medium text-gray-500">VIS_{visit.id}</td>
+                                            <td className="py-4 px-6 text-xs font-medium text-gray-500">{visit.date}</td>
+                                            <td className="py-4 px-6">
+                                                <span className={`flex items-center text-xs font-bold text-slate-800`}>
+                                                    <span className={`w-1.5 h-1.5 rounded-full mr-2 bg-slate-800`}></span>
+                                                    {t('Completed')}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" className="py-8 text-center text-gray-400 font-medium text-sm">
+                                            {t('No recent activities found.')}
                                         </td>
                                     </tr>
-                                ))}
+                                )}
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+
+            {/* Mobile Data Tier: Farmers & Approvals */}
+            <div className={`grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 ${isMapFullscreen ? 'hidden' : ''}`}>
+                
+                {/* Recent Farmers Widget */}
+                <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm flex flex-col">
+                    <div className="p-6 border-b border-gray-50 flex justify-between items-center">
+                        <h2 className="text-lg font-bold text-gray-900 leading-none flex items-center">
+                            <Users className="w-5 h-5 mr-2 text-emerald-600" /> {t('Recently Onboarded Farmers')}
+                        </h2>
+                        <button onClick={() => router.visit('/admin/farmers')} className="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center transition-colors">
+                            {t('View All')} <ArrowRight className="w-3 h-3 ml-1" />
+                        </button>
+                    </div>
+                    <div className="p-4 space-y-3">
+                        {recentFarmers.length > 0 ? (
+                            recentFarmers.map((farmer, i) => (
+                                <div key={i} onClick={() => router.visit(`/admin/farmers/${farmer.id}`)} className="flex items-center p-3 rounded-2xl hover:bg-gray-50 transition-colors cursor-pointer border border-transparent hover:border-gray-100">
+                                    <div className="w-12 h-12 rounded-xl bg-slate-100 mr-4 overflow-hidden flex-shrink-0">
+                                        <img 
+                                            src={farmer.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(farmer.name)}&background=random`} 
+                                            onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(farmer.name)}&background=random`; }}
+                                            alt={farmer.name} 
+                                            className="w-full h-full object-cover" 
+                                        />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-bold text-gray-900 truncate">{farmer.name}</p>
+                                        <p className="text-[10px] font-bold text-gray-400 mt-0.5 uppercase tracking-wider">{farmer.farmer_code}</p>
+                                    </div>
+                                    <div className="text-right ml-4">
+                                        <p className="text-sm font-bold text-slate-800">{farmer.crop}</p>
+                                        <p className="text-xs font-medium text-gray-500">{farmer.acres} {t('Acres')}</p>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-center text-gray-400 text-sm py-8">{t('No farmers onboarded yet.')}</div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Pending Approvals Widget */}
+                <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm flex flex-col">
+                    <div className="p-6 border-b border-gray-50 flex justify-between items-center">
+                        <h2 className="text-lg font-bold text-gray-900 leading-none flex items-center">
+                            <AlertCircle className="w-5 h-5 mr-2 text-amber-500" /> {t('Pending Approvals')}
+                        </h2>
+                        <span className="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded-lg">
+                            {pendingApprovals.length} {t('Pending')}
+                        </span>
+                    </div>
+                    <div className="p-4 space-y-3">
+                        {pendingApprovals.length > 0 ? (
+                            pendingApprovals.map((approval, i) => (
+                                <div key={i} className="flex items-center justify-between p-3 rounded-2xl bg-orange-50/50 border border-orange-100/50 hover:bg-orange-50 transition-colors">
+                                    <div className="flex flex-col">
+                                        <p className="text-sm font-bold text-gray-900">{approval.name}</p>
+                                        <div className="flex items-center mt-1 space-x-2">
+                                            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{approval.farmer_code}</span>
+                                            <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                                            <span className="text-xs font-medium text-gray-600">{approval.district}</span>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => router.visit(`/admin/pending-farmers`)} className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:text-emerald-600 hover:border-emerald-200 transition-colors shadow-sm">
+                                        {t('Review')}
+                                    </button>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-center text-gray-400 text-sm py-8 flex flex-col items-center">
+                                <CheckCircle2 className="w-8 h-8 text-emerald-400 mb-2 opacity-50" />
+                                {t('All caught up! No pending approvals.')}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
             </div>
             
         </AdminLayout>

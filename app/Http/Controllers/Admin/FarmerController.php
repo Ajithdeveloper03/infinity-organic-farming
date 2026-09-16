@@ -38,6 +38,24 @@ class FarmerController extends Controller
         ]);
     }
 
+    public function showPending($id)
+    {
+        $farmer = User::where('id', $id)
+            ->where('role', 'farmer')
+            ->firstOrFail();
+
+        $profile = FarmerProfile::where('user_id', $id)
+            ->with('createdBy:id,name')
+            ->firstOrFail();
+
+        return Inertia::render('Admin/Profiles/PendingFarmerDetail', [
+            'farmer' => array_merge($farmer->toArray(), $profile->toArray(), [
+                'registered_by' => $profile->createdBy?->name ?? 'Admin',
+                'farmer_photo_url' => $profile->farmer_photo_path ? \Illuminate\Support\Facades\Storage::url($profile->farmer_photo_path) : null,
+            ]),
+        ]);
+    }
+
     public function approve(Request $request, $id)
     {
         $user = User::where('id', $id)->where('role', 'farmer')->firstOrFail();

@@ -1,9 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState } from 'react';
 import AdminLayout from './AdminLayout';
-import { router } from '@inertiajs/react';
-import { 
-    CalendarCheck, Clock, MapPin, Camera, 
-    Leaf, FileText, CheckCircle2, AlertCircle, Navigation, Search, Filter, ChevronDown, X
+import { router, Link } from '@inertiajs/react';
+import {
+    Clock, MapPin, Camera, Leaf, FileText, CheckCircle2, AlertCircle, Navigation, Search, ChevronDown, X, User, Image as ImageIcon, Star, ChevronRight
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,10 +11,14 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
     const [searchQuery, setSearchQuery] = useState(filters.search || '');
     const [dateRange, setDateRange] = useState(filters.days || '30');
     const [showDateDropdown, setShowDateDropdown] = useState(false);
-    const [activeCategory, setActiveCategory] = useState('all');
     const [processing, setProcessing] = useState(false);
+    const [viewMode, setViewMode] = useState('grid');
 
     const visitsData = visits.data || [];
+    
+    const totalVisits = visits.total || visitsData.length;
+    const avgDistance = visitsData.length ? (visitsData.reduce((acc, v) => acc + parseFloat(v.distance_from_previous_farmer_km || 0), 0) / visitsData.length).toFixed(1) : 0;
+    
     const handleApplyFilters = () => {
         setProcessing(true);
         router.get('/admin/visits', { search: searchQuery, days: dateRange }, {
@@ -25,176 +28,153 @@ export default function Visits({ visits = {}, employees = [], filters = {} }) {
         });
     };
 
-    const dateRangeOptions = [{ label: 'Last 7 Days', value: '7' }, { label: 'Last 30 Days', value: '30' }, { label: 'Last 3 Months', value: '90' }, { label: 'All Time', value: 'all' }];
+    const dateRangeOptions = [
+        { label: 'Last 7 Days', value: '7' }, 
+        { label: 'Last 30 Days', value: '30' }, 
+        { label: 'Last 3 Months', value: '90' }, 
+        { label: 'All Time', value: 'all' }
+    ];
+
+    // Helper to get a random cover image from public/images
+    const getCoverImage = (id) => `/images/image${(id % 12) + 1}.jpg`;
 
     return (
         <AdminLayout>
-            {/* Header & Analytics Summary Tier */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                <div>
-                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Visit Audits')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">{t('Verify employee engagement, distances, and farm conditions.')}</p>
-                </div>
-            </div>
-
-            {/* Filter Bar */}
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
-                <div className="relative w-full md:w-96">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input 
-                        type="text"
-                        value={searchQuery}
-                        onChange={e => setSearchQuery(e.target.value)}
-                        onKeyDown={e => e.key === 'Enter' && handleApplyFilters()}
-                        placeholder={t('Search by officer or farmer...')} 
-                        className="w-full pl-10 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all"
-                    />
-                    {searchQuery && <button onClick={() => { setSearchQuery(''); handleApplyFilters(); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"><X className="w-4 h-4" /></button>}
-                </div>
-                <div className="flex w-full md:w-auto gap-3 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
-                    {/* Date Range Dropdown */}
-                    <div className="relative">
-                        <button onClick={() => setShowDateDropdown(!showDateDropdown)}
-                            className={`flex items-center px-4 py-2 border rounded-xl text-sm font-bold transition-colors ${
-                                dateRange !== '30' ? 'bg-slate-50 border-green-300 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
-                            } whitespace-nowrap`}>
-                            {dateRangeOptions.find(o => o.value === dateRange)?.label} <ChevronDown className="w-3 h-3 ml-2" />
-                        </button>
-                        {showDateDropdown && (
-                            <div className="absolute top-full mt-1 left-0 min-w-[150px] bg-white border border-gray-200 rounded-xl shadow-lg z-30 overflow-hidden">
-                                {dateRangeOptions.map(opt => (
-                                    <button key={opt.value} onClick={() => { setDateRange(opt.value); setShowDateDropdown(false); }}
-                                        className={`w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-gray-50 ${dateRange === opt.value ? 'text-slate-800' : 'text-gray-700'}`}>
-                                        {opt.label}
-                                    </button>
-                                ))}
+            <div className="max-w-7xl mx-auto space-y-8">
+                
+                {/* Maximalist Header Section */}
+                <div className="relative rounded-[3rem] overflow-hidden bg-slate-900/60 text-white p-10 md:p-14 shadow-2xl">
+                    <img src="/images/image5.jpg" className="absolute inset-0 w-full h-full object-cover opacity-90 mix-blend-overlay" alt="Header Background" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-slate-900/20 via-slate-900/20 to-transparent"></div>
+                    
+                    <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-10">
+                        <div className="max-w-2xl">
+                            <span className="inline-block py-1.5 px-4 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px] uppercase tracking-widest mb-4 border border-emerald-500/30">
+                                {t('Field Operations')}
+                            </span>
+                            <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-4 leading-tight">
+                                {t('Visit Analytics')}
+                            </h1>
+                            <p className="text-slate-300 font-medium text-lg max-w-xl leading-relaxed">
+                                {t('Dive into the rich visual data of your field officers. Track agronomy conditions, travel routes, and real-time farmer engagement.')}
+                            </p>
+                        </div>
+                        
+                        <div className="flex gap-4">
+                            <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl text-center min-w-[140px]">
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">{t('Total Visits')}</p>
+                                <p className="text-4xl font-bold text-white">{totalVisits}</p>
                             </div>
+                            <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl text-center min-w-[140px]">
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">{t('Avg Travel')}</p>
+                                <p className="text-4xl font-bold text-emerald-400">{avgDistance}<span className="text-lg text-emerald-600/50 ml-1">km</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Streamlined Filter Bar */}
+                <div className="bg-white rounded-3xl p-3 shadow-xl shadow-slate-200/40 border border-slate-100 flex flex-col md:flex-row gap-3 items-center">
+                    <div className="relative w-full md:flex-1">
+                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            onKeyDown={e => e.key === 'Enter' && handleApplyFilters()}
+                            placeholder={t('Search by officer or farmer...')}
+                            className="w-full pl-14 pr-10 py-4 bg-transparent border-none text-base font-bold focus:ring-0 text-slate-900 placeholder-slate-300 outline-none"
+                        />
+                        {searchQuery && (
+                            <button onClick={() => { setSearchQuery(''); handleApplyFilters(); }} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-600 transition-colors bg-slate-100 rounded-full p-1">
+                                <X className="w-4 h-4" />
+                            </button>
                         )}
                     </div>
-                    <button onClick={handleApplyFilters} disabled={processing}
-                        className="px-5 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-slate-900/10 transition-all whitespace-nowrap disabled:opacity-50">
-                        {processing ? t('Applying...') : t('Apply Filters')}
-                    </button>
-                </div>
-            </div>
-
-            {/* Visits List */}
-            <div className="space-y-6">
-                {visitsData.length === 0 && (
-                    <div className="bg-white border border-gray-100 rounded-[2rem] p-16 text-center text-gray-400 font-medium shadow-sm">
-                        {searchQuery ? `${t('No visits match')} "${searchQuery}".` : t('No visits recorded yet.')}
-                    </div>
-                )}
-                {visitsData.map(visit => (
-                    <div key={visit.id} className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-                        
-                        {/* Elegant Header with Gradient Background */}
-                        <div className="bg-slate-50 p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between md:items-center">
-                            <div className="flex items-center space-x-4 mb-4 md:mb-0">
-                                <div className="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm group-hover:scale-105 transition-transform text-slate-800">
-                                    <Leaf className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <h3 className="font-heading font-bold text-gray-900 text-xl leading-tight">{t('Farm:')} {visit.farmer.user.name}</h3>
-                                    <p className="text-xs font-bold text-gray-500 mt-1">{t('Inspected by')} <span className="text-slate-800">{visit.employee.name}</span> {t('on')} {visit.date}</p>
-                                </div>
-                            </div>
-                            <div className="flex flex-col items-start md:items-end gap-2">
-                                <div className="inline-flex items-center text-xs font-bold bg-slate-50 text-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
-                                    <Navigation className="w-3 h-3 mr-1.5" /> {t('Travel:')} {visit.distance_from_previous_farmer_km} {t('km')}
-                                </div>
-                                <div className="text-xs font-bold text-gray-400 flex items-center">
-                                    <Clock className="w-3 h-3 mr-1.5" /> {t('Duration: 1h 30m')}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Content Grid */}
-                        <div className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            
-                            {/* Timing & Logs Column */}
-                            <div className="col-span-1 space-y-6">
-                                <div>
-                                    <h4 className="text-[10px] font-bold text-slate-700 uppercase mb-3 flex items-center tracking-wider">
-                                        <Clock className="w-4 h-4 mr-2" /> {t('Visit Timeline')}
-                                    </h4>
-                                    <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 space-y-3 hover:border-green-200 transition-colors cursor-pointer">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-xs font-bold text-gray-500">{t('Check-in')}</span>
-                                            <span className="text-sm font-heading font-bold text-gray-900">{visit.check_in_time}</span>
-                                        </div>
-                                        <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
-                                            <span className="text-xs font-bold text-gray-500">{t('Check-out')}</span>
-                                            <span className="text-sm font-heading font-bold text-gray-900">{visit.check_out_time}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h4 className="text-[10px] font-bold text-slate-700 uppercase mb-3 flex items-center tracking-wider">
-                                        <FileText className="w-4 h-4 mr-2" /> {t('Agronomy Log')}
-                                    </h4>
-                                    <div className="bg-gray-50 border border-gray-100 rounded-2xl p-5 text-sm shadow-inner hover:border-green-200 transition-colors">
-                                        <div className="mb-4">
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1.5">{t('Farm Conditions')}</span>
-                                            <p className="font-medium text-gray-700 leading-relaxed text-xs">{visit.farm_condition_notes}</p>
-                                        </div>
-                                        <div className="pt-4 border-t border-gray-200">
-                                            <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider block mb-1.5">{t('Recommendations')}</span>
-                                            <p className="font-medium text-gray-700 leading-relaxed text-xs">{visit.recommendations}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Media Confirmation Grid */}
-                            <div className="col-span-1 lg:col-span-2">
-                                <h4 className="text-[10px] font-bold text-slate-700 uppercase mb-3 flex items-center tracking-wider">
-                                    <Camera className="w-4 h-4 mr-2" /> {t('Media Confirmation & Metadata')}
-                                </h4>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    {visit.media.map((media, index) => (
-                                        <div key={index} className="bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden flex flex-col hover:border-green-200 transition-colors group/media">
-                                            <div className="relative overflow-hidden h-40">
-                                                <img src={media.url} alt="Farm" className="w-full h-full object-cover transition-transform duration-700 group-hover/media:scale-105" />
-                                                <div className="absolute inset-0 bg-slate-900/80"></div>
-                                                <div className="absolute bottom-3 left-3 text-white">
-                                                    <p className="text-[10px] font-bold tracking-wider uppercase text-gray-300">{t('Capture Time')}</p>
-                                                    <p className="font-heading font-bold text-sm">{media.exif_time}</p>
-                                                </div>
-                                            </div>
-                                            <div className="p-4 flex-1">
-                                                <div className="flex justify-between items-start mb-3">
-                                                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t('GPS Data')}</span>
-                                                    {media.verified ? (
-                                                        <span className="flex items-center text-[10px] font-bold bg-slate-50 text-slate-800 px-2 py-1 rounded-full border border-slate-200">
-                                                            <CheckCircle2 className="w-3 h-3 mr-1" /> {t('Verified')}
-                                                        </span>
-                                                    ) : (
-                                                        <span className="flex items-center text-[10px] font-bold bg-red-50 text-red-500 px-2 py-1 rounded-full border border-red-100">
-                                                            <AlertCircle className="w-3 h-3 mr-1" /> {t('Mismatch')}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <div className="flex space-x-2">
-                                                    <div className="flex-1 bg-white border border-gray-100 rounded-xl p-2 text-center shadow-sm">
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase mb-0.5">{t('Latitude')}</p>
-                                                        <p className="text-xs font-bold text-gray-700">{media.exif_lat}</p>
-                                                    </div>
-                                                    <div className="flex-1 bg-white border border-gray-100 rounded-xl p-2 text-center shadow-sm">
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase mb-0.5">{t('Longitude')}</p>
-                                                        <p className="text-xs font-bold text-gray-700">{media.exif_lon}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                    
+                    <div className="w-px h-10 bg-slate-100 hidden md:block"></div>
+                    
+                    <div className="flex w-full md:w-auto gap-3 px-3 pb-3 md:pb-0 overflow-x-auto hide-scrollbar">
+                        <div className="relative min-w-[160px]">
+                            <button onClick={() => setShowDateDropdown(!showDateDropdown)}
+                                className="w-full flex items-center justify-between px-5 py-4 bg-slate-50 hover:bg-slate-100 rounded-2xl text-sm font-bold text-slate-700 transition-colors border border-slate-200/50">
+                                {dateRangeOptions.find(o => o.value === dateRange)?.label} <ChevronDown className="w-4 h-4 text-slate-400" />
+                            </button>
+                            {showDateDropdown && (
+                                <div className="absolute top-full mt-2 left-0 right-0 bg-white border border-slate-100 rounded-2xl shadow-2xl z-30 overflow-hidden py-2">
+                                    {dateRangeOptions.map(opt => (
+                                        <button key={opt.value} onClick={() => { setDateRange(opt.value); setShowDateDropdown(false); }}
+                                            className={`w-full text-left px-5 py-3 text-sm font-bold hover:bg-slate-50 transition-colors ${dateRange === opt.value ? 'text-emerald-600 bg-emerald-50/50' : 'text-slate-600'}`}>
+                                            {opt.label}
+                                        </button>
                                     ))}
                                 </div>
-                            </div>
-
+                            )}
                         </div>
+                        <button onClick={handleApplyFilters} disabled={processing}
+                            className="px-8 py-4 bg-slate-900 text-white rounded-2xl text-sm font-bold hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-900/20 transition-all disabled:opacity-50 flex items-center whitespace-nowrap">
+                            {processing ? t('Applying...') : t('Apply Filters')}
+                        </button>
                     </div>
-                ))}
+                    
+                </div>
+
+                {/* Maximalist Grid Layout for Visits */}
+                {visitsData.length === 0 ? (
+                    <div className="bg-white rounded-[3rem] p-20 text-center shadow-2xl shadow-slate-200/40 border border-slate-100">
+                        <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                            <Leaf className="w-10 h-10 text-slate-300" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-slate-800 mb-2">{t('No visits found')}</h2>
+                        <p className="text-slate-500 font-medium text-lg">
+                            {searchQuery ? `${t('No visits match')} "${searchQuery}".` : t('No visits recorded yet.')}
+                        </p>
+                    </div>
+                ) : (
+                    <div className="flex flex-col gap-4">
+                        {visitsData.map(visit => (
+                            <Link key={visit.id} href={`/admin/visits/${visit.id}`} className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-8 hover:shadow-md hover:border-emerald-200 transition-all group">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-200 shadow-sm border border-slate-100 flex-shrink-0">
+                                        <img src={getCoverImage(visit.id)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Farm Cover" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">{visit.farmer.user.name}</h3>
+                                        <p className="text-xs font-medium text-slate-500 mt-1 flex items-center">
+                                            <MapPin className="w-3 h-3 mr-1" /> {t('Farm Profile')}
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex-1 flex flex-col md:flex-row md:items-center md:justify-end gap-4 md:gap-12 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 border-slate-100">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-100">
+                                            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(visit.employee.name)}&background=random`} alt={visit.employee.name} className="w-full h-full object-cover" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('Inspected By')}</p>
+                                            <p className="text-sm font-bold text-slate-700">{visit.employee.name}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col justify-center">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md">{visit.date}</span>
+                                            <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md flex items-center">
+                                                <Clock className="w-3 h-3 mr-1" /> {visit.check_in_time} - {visit.check_out_time}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="hidden md:flex items-center justify-center text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all">
+                                        <ChevronRight className="w-5 h-5" />
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                )}
+                
             </div>
         </AdminLayout>
     );

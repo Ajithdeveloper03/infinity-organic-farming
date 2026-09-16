@@ -1,17 +1,36 @@
 import React from 'react';
 import AdminLayout from '../AdminLayout';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Map, Smartphone, FileText, CheckCircle2, Leaf, Clock, Navigation, Image as ImageIcon, Briefcase, FileSignature, CircleDollarSign } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
-export default function FarmerDetail({ farmer = {}, visits = [] }) {
+export default function PendingFarmerDetail({ farmer = {}, visits = [] }) {
     const { t } = useTranslation();
+    const [processing, setProcessing] = useState(false);
+
+    const handleApprove = () => {
+        if (processing) return;
+        setProcessing(true);
+        router.post(`/admin/pending-farmers/${farmer.id}/approve`, {}, {
+            onFinish: () => setProcessing(false),
+        });
+    };
+
+    const handleReject = () => {
+        if (processing) return;
+        if (!confirm(t('Are you sure you want to reject this application?'))) return;
+        setProcessing(true);
+        router.post(`/admin/pending-farmers/${farmer.id}/reject`, {}, {
+            onFinish: () => setProcessing(false),
+        });
+    };
 
     return (
         <AdminLayout>
             <div className="mb-6">
-                <Link href="/admin/farmers" className="cursor-pointer inline-flex items-center text-sm font-bold text-gray-500 hover:text-slate-800 transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Back to Directory
+                <Link href="/admin/pending-farmers" className="cursor-pointer inline-flex items-center text-sm font-bold text-gray-500 hover:text-slate-800 transition-colors">
+                    <ArrowLeft className="w-4 h-4 mr-1" /> {t('Back to Pending Approvals')}
                 </Link>
             </div>
 
@@ -43,34 +62,32 @@ export default function FarmerDetail({ farmer = {}, visits = [] }) {
                 </div>
                 
                 <div className="px-6 pb-8 pt-4">
-                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{farmer.name}'s Farm</h1>
+                    <h1 className="text-3xl font-heading font-bold text-gray-900">{farmer.name}'s Farm</h1>
                     <p className="text-sm font-medium flex items-center justify-center mt-2 text-slate-500">
                         <Map className="w-4 h-4 mr-1.5 text-slate-400" /> {farmer.village}, {farmer.district}
                     </p>
                 </div>
                 
                 {/* Approval Banner for Pending Farmers */}
-                {farmer.approval_status === 'pending' && (
-                    <div className="bg-amber-50 border-b border-amber-100 p-4 flex justify-between items-center">
-                        <div className="flex items-center">
-                            <FileSignature className="w-5 h-5 text-amber-600 mr-2" />
-                            <p className="text-sm font-bold text-amber-900">{t('This profile is pending approval.')}</p>
-                        </div>
-                        <div className="flex space-x-2">
-                            <button className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm">{t('Reject')}</button>
-                            <button className="px-4 py-2 bg-emerald-600 border border-emerald-700 rounded-xl text-xs font-bold text-white hover:bg-emerald-700 transition-colors shadow-sm">{t('Approve Farmer')}</button>
-                        </div>
+                <div className="bg-amber-50 border-b border-amber-100 p-4 flex justify-between items-center">
+                    <div className="flex items-center">
+                        <FileSignature className="w-5 h-5 text-amber-600 mr-2" />
+                        <p className="text-sm font-bold text-amber-900">{t('This profile is pending approval.')}</p>
                     </div>
-                )}
+                    <div className="flex space-x-2">
+                        <button onClick={handleReject} disabled={processing} className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm disabled:opacity-50">{t('Reject')}</button>
+                        <button onClick={handleApprove} disabled={processing} className="px-4 py-2 bg-emerald-600 border border-emerald-700 rounded-xl text-xs font-bold text-white hover:bg-emerald-700 transition-colors shadow-sm disabled:opacity-50">{t('Approve Farmer')}</button>
+                    </div>
+                </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100 bg-white">
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t('Total Land Size')}</p>
-                        <p className="font-heading font-bold text-2xl text-gray-900">{farmer.land_acres || '–'} {t('Acres')}</p>
+                        <p className="font-heading font-bold text-2xl text-gray-900">{farmer.land_acres || 'â€“'} {t('Acres')}</p>
                     </div>
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t('Primary Crop')}</p>
-                        <p className="font-heading font-bold text-2xl text-slate-800">{Array.isArray(farmer.crop_types) ? farmer.crop_types.join(', ') : (farmer.crop_types || 'Vetiver')}</p>
+                        <p className="font-heading font-bold text-2xl text-slate-800">{farmer.crop_types?.length > 0 ? farmer.crop_types.join(', ') : 'Vetiver'}</p>
                     </div>
                     <div className="p-5 text-center hover:bg-gray-50 transition-colors">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t('Current Stage')}</p>
@@ -131,7 +148,7 @@ export default function FarmerDetail({ farmer = {}, visits = [] }) {
                             <div className="flex justify-between items-center p-2 rounded-xl hover:bg-gray-50 transition-colors border-t border-gray-100 pt-3">
                                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Planned Investment')}</span>
                                 <span className="text-sm font-bold text-amber-600 flex items-center">
-                                    <CircleDollarSign className="w-4 h-4 mr-1" /> ₹{farmer.planned_investment || 0}
+                                    <CircleDollarSign className="w-4 h-4 mr-1" /> â‚¹{farmer.planned_investment || 0}
                                 </span>
                             </div>
                         </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TrackingSession;
 use App\Models\LocationPoint;
+use App\Events\LocationUpdated;
 
 class TrackingController extends Controller
 {
@@ -104,6 +105,18 @@ class TrackingController extends Controller
 
         if (count($pointsToInsert) > 0) {
             LocationPoint::insert($pointsToInsert);
+
+            // Broadcast the latest point for real-time live monitor
+            $latestPoint = collect($validated['points'])->sortByDesc('timestamp')->first();
+            if ($latestPoint) {
+                broadcast(new LocationUpdated(
+                    $employeeId,
+                    $latestPoint['latitude'],
+                    $latestPoint['longitude'],
+                    true, // isGpsEnabled
+                    100   // batteryLevel placeholder
+                ));
+            }
         }
 
         return response()->json([

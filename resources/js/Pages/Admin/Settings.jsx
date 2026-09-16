@@ -99,6 +99,7 @@ export default function Settings() {
                                 </div>
                             </div>
                         </div>
+                    </div>
 
                     {/* RBAC */}
                     <div className="cursor-pointer bg-gray-50 border border-gray-100 rounded-[2rem] p-8 shadow-inner opacity-80 hover:opacity-100 transition-opacity group">
