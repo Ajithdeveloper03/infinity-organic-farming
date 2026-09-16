@@ -1,6 +1,7 @@
 import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { api } from '../services/api';
 
 export const LOCATION_TASK_NAME = 'BACKGROUND_LOCATION_TASK';
 const STORAGE_KEY = '@offline_location_queue';
@@ -42,7 +43,7 @@ export const saveLocationLocally = async (locations: Location.LocationObject[], 
       console.log(`Saved ${newPoints.length} points locally. Total queue length: ${queue.length}`);
       
       // Attempt to sync immediately if internet is available
-      // syncLocations();
+      syncLocations();
     }
   } catch (error) {
     console.error('Error saving location locally:', error);
@@ -128,25 +129,10 @@ export const syncLocations = async () => {
         }));
 
         try {
-          // Send to the newly created backend endpoint
-          // Note: Needs valid Sanctum auth token in production
-          const response = await fetch('http://10.0.2.2:8000/api/v1/employee/tracking/sync', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              // 'Authorization': `Bearer ${token}` // TODO: Add real token
-            },
-            body: JSON.stringify({ points }),
-          });
-
-          if (response.ok) {
-            // Clear queue only on success
-            await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([]));
-            console.log('Sync complete.');
-          } else {
-             console.log('Sync failed with status:', response.status);
-          }
+          await api.post('/employee/tracking/sync', { points });
+          // Clear queue only on success
+          await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+          console.log('Sync complete.');
         } catch (apiError) {
           console.error('API sync error:', apiError);
         }

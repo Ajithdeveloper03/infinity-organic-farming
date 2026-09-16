@@ -199,8 +199,8 @@ export default function OrdersScreen() {
             })}
           </View>
         </ScrollView>
-      </SafeAreaView>
+        </SafeAreaView>
+      </ImageBackground>
     </View>
   );
 }
-

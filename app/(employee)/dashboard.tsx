@@ -164,7 +164,7 @@ export default function DashboardScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      {/* Agricultural Hero Background for Top to Main Section with Bottom-to-Top Overlay */}
+      
       <View
         style={{
           position: "absolute",
@@ -180,7 +180,7 @@ export default function DashboardScreen() {
           style={{ width: "100%", height: "100%", opacity: 0.95 }}
           resizeMode="cover"
         />
-        {/* Bottom-to-top overlay blending from solid #f8fafc at bottom into translucent top */}
+        
         <LinearGradient
           colors={[
             "rgba(248, 250, 252, 0.05)",
@@ -303,12 +303,15 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        <ScrollView
-          style={{ flex: 1 }}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
-        >
-          {/* JioHotstar Style Featured Spotlight Card (Hero Farmer Visit) */}
+          {/* MAIN SCROLLABLE CONTENT */}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 160 }}
+            className="flex-1 mt-2"
+          >
+            {/* We wrap the content in a container with extra padding for neatness */}
+            <View className="px-5 space-y-6">
+              {/* JioHotstar Style Featured Spotlight Card (Hero Farmer Visit) */}
           {nextVisit && (
             <View className="px-5 mt-4 mb-6">
               <View className="flex-row items-center justify-between mb-3">
@@ -750,6 +753,7 @@ export default function DashboardScreen() {
                 );
               })}
             </ScrollView>
+          </View>
           </View>
         </ScrollView>
 

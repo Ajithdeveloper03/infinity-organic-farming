@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { startBackgroundTracking, stopBackgroundTracking } from '../utils/trackingManager';
+import { api } from '../services/api';
 import * as Location from 'expo-location';
 
 interface TrackingContextType {
@@ -41,10 +42,10 @@ export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       let loc = await Location.getLastKnownPositionAsync();
       if (!loc) loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
       if (loc) {
-        await fetch('http://10.0.2.2:8000/api/v1/employee/tracking/session/start', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ session_id: id, latitude: loc.coords.latitude, longitude: loc.coords.longitude })
+        await api.post('/employee/tracking/session/start', {
+          session_id: id,
+          latitude: loc.coords.latitude,
+          longitude: loc.coords.longitude
         });
       }
     } catch (e) {
@@ -60,10 +61,10 @@ export const TrackingProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             let loc = await Location.getLastKnownPositionAsync();
             if (!loc) loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
             if (loc) {
-                await fetch('http://10.0.2.2:8000/api/v1/employee/tracking/session/stop', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ session_id: sessionId, latitude: loc.coords.latitude, longitude: loc.coords.longitude })
+                await api.post('/employee/tracking/session/stop', {
+                    session_id: sessionId,
+                    latitude: loc.coords.latitude,
+                    longitude: loc.coords.longitude
                 });
             }
         } catch (e) {

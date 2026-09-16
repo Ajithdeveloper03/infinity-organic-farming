@@ -1,6 +1,7 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Animated,
@@ -12,17 +13,10 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
-import MapView, {
-    AnimatedRegion,
-    Circle,
-    Marker,
-    Polyline,
-    PROVIDER_GOOGLE,
-} from './components/MapView';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import { employeeProfile } from './data/mockData';
 
 // --- Constants & Types ---
-
 interface Coordinate {
   latitude: number;
   longitude: number;
@@ -38,6 +32,12 @@ interface TelemetryData {
 const GEOFENCE_RADIUS = 100; // meters
 const MAX_ACCEPTABLE_ACCURACY_METERS = 25;
 const MIN_MOVEMENT_METERS = 5;
+const LOCATION_TASK_NAME = 'background-location-task';
+
+const farmLocation: Coordinate = {
+  latitude: 12.9786,
+  longitude: 77.5996,
+};
 
 // --- Helper Functions ---
 const haversineMeters = (a: Coordinate, b: Coordinate) => {
@@ -54,75 +54,48 @@ const haversineMeters = (a: Coordinate, b: Coordinate) => {
   return radius * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
 };
 
-// --- Map Styles ---
-const midnightMapStyle = [
-  { elementType: 'geometry', stylers: [{ color: '#0F172A' }] },
-  { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
-  { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
-  {
-    featureType: 'administrative.locality',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#d59563' }],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#d59563' }],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry',
-    stylers: [{ color: '#1E293B' }],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry.stroke',
-    stylers: [{ color: '#212a37' }],
-  },
-  {
-    featureType: 'road',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#9ca5b3' }],
-  },
-  {
-    featureType: 'road.highway',
-    elementType: 'geometry',
-    stylers: [{ color: '#334155' }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'geometry',
-    stylers: [{ color: '#0B1120' }],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#515c6d' }],
-  },
-];
+// --- Background Task Definition ---
+TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
+  if (error) {
+    console.error("Background Location Error:", error);
+    return;
+  }
+  if (data) {
+    const { locations } = data as { locations: Location.LocationObject[] };
+    const location = locations[0];
 
-const farmLocation: Coordinate = {
-  latitude: 12.9786,
-  longitude: 77.5996,
-};
+    if (location) {
+      const { latitude, longitude, accuracy, speed, heading } = location.coords;
+      
+      // --- SEND REAL-TIME PING TO BACKEND FOR ADMIN DASHBOARD ---
+      // This runs even when the app is in the background!
+      try {
+        fetch('http://10.0.2.2:8000/api/v1/employee/tracking/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            points: [{
+              session_id: 'live_tracking_session',
+              latitude: latitude,
+              longitude: longitude,
+              accuracy: accuracy,
+              speed: speed,
+              heading: heading,
+              timestamp: location.timestamp,
+            }]
+          })
+        }).catch(e => console.log('Silent sync error:', e));
+      } catch (e) {
+        // Ignore fetch errors to not block background task
+      }
+    }
+  }
+});
 
 // --- Components ---
-const SmoothMarker = ({
-  coordinate,
-}: {
-  coordinate: Coordinate;
-}) => {
-  const animatedCoordinate = useRef(
-    new AnimatedRegion({
-      latitude: coordinate.latitude,
-      longitude: coordinate.longitude,
-      latitudeDelta: 0,
-      longitudeDelta: 0,
-    })
-  ).current;
+const SmoothMarker = ({ coordinate }: { coordinate: Coordinate }) => {
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
-  // Pulse effect
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -140,28 +113,11 @@ const SmoothMarker = ({
         }),
       ])
     ).start();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    animatedCoordinate
-      .timing({
-        latitude: coordinate.latitude,
-        longitude: coordinate.longitude,
-        duration: 1500,
-        useNativeDriver: false,
-      } as unknown as Parameters<typeof animatedCoordinate.timing>[0])
-      .start();
-  }, [animatedCoordinate, coordinate.latitude, coordinate.longitude]);
-
   return (
-    <Marker.Animated
-      coordinate={animatedCoordinate as unknown as Coordinate}
-      anchor={{ x: 0.5, y: 0.5 }}
-      flat={true}
-    >
+    <Marker coordinate={coordinate} anchor={{ x: 0.5, y: 0.5 }}>
       <View style={styles.markerContainer}>
-        {/* Pulsing Aura */}
         <Animated.View
           style={[
             styles.pulseAura,
@@ -174,7 +130,6 @@ const SmoothMarker = ({
             },
           ]}
         />
-        {/* Profile Image & Icon */}
         <View style={styles.markerCore}>
           <Image 
             source={{ uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(employeeProfile.name)}&background=10B981&color=fff&size=64` }}
@@ -185,7 +140,7 @@ const SmoothMarker = ({
           <Text style={styles.markerLabel}>{employeeProfile.name}</Text>
         </View>
       </View>
-    </Marker.Animated>
+    </Marker>
   );
 };
 
@@ -205,17 +160,34 @@ export default function LiveTrackingMapScreen() {
   const [breadcrumbRoute, setBreadcrumbRoute] = useState<Coordinate[]>([]);
   const lastAcceptedRef = useRef<{ coordinate: Coordinate; timestamp: number } | null>(null);
 
-  // Real GPS tracking
+  // Real GPS tracking (Foreground UI updates + Background setup)
   useEffect(() => {
     let subscription: Location.LocationSubscription | null = null;
     let isMounted = true;
 
     const startTracking = async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (!isMounted || status !== 'granted') {
+      const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+      if (!isMounted || foregroundStatus !== 'granted') {
         return;
       }
 
+      // Request background permissions for secure live tracking
+      const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
+      if (backgroundStatus === 'granted') {
+        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+          accuracy: Location.Accuracy.BestForNavigation,
+          timeInterval: 2000,
+          distanceInterval: MIN_MOVEMENT_METERS,
+          showsBackgroundLocationIndicator: true,
+          foregroundService: {
+            notificationTitle: "Live Tracking Active",
+            notificationBody: "Your location is being securely shared with the admin.",
+            notificationColor: "#10B981",
+          }
+        });
+      }
+
+      // UI Update Subscription (Foreground)
       subscription = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.BestForNavigation,
@@ -226,10 +198,7 @@ export default function LiveTrackingMapScreen() {
           if (!isMounted) return;
 
           const { latitude, longitude, accuracy, speed, heading } = location.coords;
-          const newCoord = {
-            latitude,
-            longitude,
-          };
+          const newCoord = { latitude, longitude };
           const lastAccepted = lastAcceptedRef.current;
 
           if (accuracy != null && accuracy > MAX_ACCEPTABLE_ACCURACY_METERS) {
@@ -244,12 +213,7 @@ export default function LiveTrackingMapScreen() {
             haversineMeters(lastAccepted.coordinate, newCoord) <
               Math.max(MIN_MOVEMENT_METERS, accuracy ?? MIN_MOVEMENT_METERS)
           ) {
-            setTelemetry((prev) => ({
-              ...prev,
-              speed: 0,
-              accuracy,
-              isOnline: true,
-            }));
+            setTelemetry((prev) => ({ ...prev, speed: 0, accuracy, isOnline: true }));
             return;
           }
 
@@ -264,10 +228,11 @@ export default function LiveTrackingMapScreen() {
             isOnline: true,
           }));
 
-          mapRef.current?.animateCamera(
-            { center: newCoord, heading: heading != null && heading >= 0 ? heading : 0 },
-            { duration: 700 }
-          );
+          // Smoothly animate map camera
+          mapRef.current?.animateCamera({
+            center: newCoord,
+            heading: heading != null && heading >= 0 ? heading : 0,
+          }, { duration: 700 });
 
           // Geofence check
           const latDiff = Math.abs(farmLocation.latitude - newCoord.latitude);
@@ -299,26 +264,24 @@ export default function LiveTrackingMapScreen() {
       if (subscription) {
         subscription.remove();
       }
+      // Note: We deliberately do NOT stop the background task (Location.stopLocationUpdatesAsync)
+      // here because we want tracking to continue securely when the user leaves this screen or apps.
     };
   }, []);
 
   const recenterCamera = () => {
     if (!currentLocation) return;
-
-    mapRef.current?.animateCamera(
-      {
-        center: currentLocation,
-        pitch: is3D ? 45 : 0,
-        heading: 0,
-        zoom: 17,
-      },
-      { duration: 1000 }
-    );
+    mapRef.current?.animateCamera({
+      center: currentLocation,
+      pitch: is3D ? 45 : 0,
+      heading: 0,
+      zoom: 17,
+    }, { duration: 1000 });
   };
 
   const toggle3D = () => {
     setIs3D(!is3D);
-    mapRef.current?.animateCamera({ pitch: !is3D ? 45 : 0 });
+    mapRef.current?.animateCamera({ pitch: !is3D ? 45 : 0 }, { duration: 500 });
   };
 
   return (
@@ -326,32 +289,24 @@ export default function LiveTrackingMapScreen() {
       <MapView
         ref={mapRef}
         style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        customMapStyle={midnightMapStyle}
+        showsUserLocation={false} // Custom marker handles this
         showsTraffic={showTraffic}
-        initialCamera={{
-          center: farmLocation,
-          pitch: 45,
-          heading: 0,
-          zoom: 17,
-          altitude: 1000,
+        showsCompass={false}
+        initialRegion={{
+          latitude: farmLocation.latitude,
+          longitude: farmLocation.longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
         }}
       >
-        {/* Geofence */}
-        <Circle
-          center={farmLocation}
-          radius={GEOFENCE_RADIUS}
-          fillColor={inGeofence ? '#10B98155' : '#10B98122'}
-          strokeColor="#10B981"
-          strokeWidth={2}
-        />
-
         {/* Breadcrumb Route */}
-        <Polyline
-          coordinates={breadcrumbRoute}
-          strokeColor="#10B981" // Ideally gradient, but MapView polyline doesn't support direct gradient easily without custom components. Falling back to solid Emerald.
-          strokeWidth={5}
-        />
+        {breadcrumbRoute.length > 1 && (
+          <Polyline
+            coordinates={breadcrumbRoute}
+            strokeColor="#10B981"
+            strokeWidth={5}
+          />
+        )}
 
         {/* Moving Marker */}
         {currentLocation && <SmoothMarker coordinate={currentLocation} />}
@@ -434,19 +389,13 @@ export default function LiveTrackingMapScreen() {
         </View>
 
         <View style={styles.actionRow}>
-          <TouchableOpacity
-            style={[styles.actionBtn, { backgroundColor: '#10B981' }]}
-          >
+          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#10B981' }]}>
             <Text style={styles.actionBtnText}>Check-in Farm</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.actionBtn, { backgroundColor: '#F59E0B' }]}
-          >
+          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#F59E0B' }]}>
             <Text style={styles.actionBtnText}>Traffic</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.actionBtn, { backgroundColor: '#EF4444' }]}
-          >
+          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#EF4444' }]}>
             <Text style={styles.actionBtnText}>SOS</Text>
           </TouchableOpacity>
         </View>

@@ -175,7 +175,7 @@ export default function FarmerDashboardScreen() {
         <ScrollView
           style={{ flex: 1 }}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 14 }}
+          contentContainerStyle={{ paddingBottom: 190, paddingTop: 20 }}
         >
           {/* Active Agronomy & Fertilizer Advisory Card (Medium Brightness & Elegance) */}
          
