@@ -72,8 +72,10 @@ export default function EmployeeVisitsScreen() {
               <View style={{ position: "absolute", top: 40, bottom: 40, width: 2, backgroundColor: "rgba(255,255,255,0.1)", left: "50%", marginLeft: -1, zIndex: 0 }} />
 
               {visits.map((visit) => (
-                <View 
+                <TouchableOpacity 
                   key={visit.id} 
+                  activeOpacity={0.9}
+                  onPress={() => router.push(`/(employee)/visit/${visit.id}` as any)}
                   style={{ width: "100%", flexDirection: "row", alignItems: "center", marginVertical: 32, zIndex: 10 }}
                 >
                   
@@ -98,8 +100,7 @@ export default function EmployeeVisitsScreen() {
                       <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 13, marginLeft: 4 }}>{visit.farmer}</Text>
                     </View>
                   </View>
-                  
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
           </ScrollView>

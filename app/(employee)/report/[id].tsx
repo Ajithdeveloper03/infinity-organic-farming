@@ -4,245 +4,116 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  ImageBackground,
+  Image,
   StyleSheet,
-  Share,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useLocalSearchParams } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
+import { useLocalSearchParams, router } from "expo-router";
 import {
   ChevronLeft,
+  FileText,
   MapPin,
   Calendar,
-  Droplets,
-  Share2,
-  CheckCircle2,
-  Sprout,
   ShieldCheck,
-  FileCheck2,
-  ArrowDownCircle,
+  AlertTriangle,
+  Beaker,
+  ThermometerSun,
+  Share2
 } from "lucide-react-native";
-const mockReports = [
-  { 
-    id: "1", 
-    name: "Farm A", 
-    date: "Oct 7, 2026", 
-    location: "North Delta", 
-    moisture: "70%", 
-    ph: "6.5", 
-    status: "Optimal",
-    image: require("../../../assets/images/image2.jpg"),
-    tagBg: "rgba(74,222,128,0.2)",
-    tagBorder: "rgba(74,222,128,0.4)",
-    tagText: "#16a34a",
-    acres: "15",
-    nitrogen: "45 ppm",
-    rootDepth: "12 inches",
-    recommendation: "Maintain current irrigation schedule. Soil nutrients are at peak levels."
-  }
-];
-import { showToast } from "../../../components/ui/ToastMessage";
 
-export default function ReportDetailsScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const report = mockReports.find((r: any) => r.id === id) || mockReports[0];
-
-  const handleShare = async () => {
-    try {
-      await Share.share({
-        message: `Field Audit Report for ${report.name} (${report.date})\nLocation: ${report.location}\nMoisture: ${report.moisture}\npH: ${report.ph}\nStatus: ${report.status}\nInfinity Organics Agronomy Division`,
-      });
-    } catch (e) {
-      console.log("Share error", e);
-    }
-  };
-
-  const handleDownload = () => {
-    showToast({
-      title: "PDF Audit Downloaded",
-      message: `Inspection certificate for ${report.name} saved to device.`,
-      type: "success",
-    });
-  };
+export default function EmployeeReportDetailScreen() {
+  const { id } = useLocalSearchParams();
 
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Header - Strictly Transparent Background */}
-        <View
-          style={{ backgroundColor: "transparent" }}
-          className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
-        >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm"
-            activeOpacity={0.7}
-          >
-            <ChevronLeft size={22} color="#0f172a" />
+      <StatusBar barStyle="dark-content" />
+
+      <SafeAreaView style={{ flex: 1 }}>
+        
+        {/* HEADER */}
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingTop: 12, paddingBottom: 16 }}>
+          <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace("/(employee)/reports")} style={{ padding: 8, backgroundColor: "#ffffff", borderRadius: 999, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 }}>
+            <ChevronLeft size={24} color="#0f172a" />
           </TouchableOpacity>
-
-          <Text className="text-lg font-brandon-bold text-slate-900">
-            Audit Dossier Details
-          </Text>
-
-          <TouchableOpacity
-            onPress={handleShare}
-            className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm"
-          >
-            <Share2 size={18} color="#0f172a" />
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20 }}>Report #{id || "8842"}</Text>
+          <TouchableOpacity style={{ padding: 8, backgroundColor: "#ffffff", borderRadius: 999, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 }}>
+            <Share2 size={20} color="#0f172a" />
           </TouchableOpacity>
         </View>
 
-        <ScrollView
-          className="flex-1 px-5 pt-2"
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
-        >
-          {/* Detailed Hero Image with DARK Bottom-to-Top Overlay & Enhanced Bright White Text */}
-          <View className="rounded-[28px] overflow-hidden shadow-md bg-slate-900 mb-4">
-            <ImageBackground
-              source={report.image}
-              className="w-full h-52"
-              resizeMode="cover"
-            >
-              {/* Dark Overlay */}
-              <LinearGradient
-                colors={[
-                  "transparent",
-                  "rgba(0, 0, 0, 0.45)",
-                  "rgba(10, 15, 25, 0.94)",
-                ]}
-                locations={[0, 0.3, 1]}
-                style={StyleSheet.absoluteFill}
-              />
-
-              <View className="flex-1 p-5 justify-between">
-                <View className="flex-row items-center justify-between">
-                  <View
-                    style={{ backgroundColor: report.tagBg, borderColor: report.tagBorder }}
-                    className="px-3 py-1 rounded-full border shadow-sm"
-                  >
-                    <Text style={{ color: report.tagText }} className="font-brandon-bold text-[11px] uppercase tracking-wider">
-                      {report.status}
-                    </Text>
-                  </View>
-
-                  <View className="bg-black/60 px-3 py-1 rounded-full border border-white/20">
-                    <Text className="text-white font-brandon-bold text-xs">
-                      {report.date}
-                    </Text>
-                  </View>
-                </View>
-
-                <View>
-                  <Text className="text-white font-brandon-bold text-2xl leading-tight">
-                    {report.name}
-                  </Text>
-                  <View className="flex-row items-center mt-1">
-                    <MapPin size={13} color="#34d399" />
-                    <Text className="text-emerald-300 font-brandon text-xs ml-1">
-                      {report.location} • {report.acres}
-                    </Text>
-                  </View>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100 }}>
+          
+          {/* Metadata Card */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, marginBottom: 24, marginTop: 8 }}>
+            
+            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
+              <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "#e2e8f0", overflow: "hidden", marginRight: 16 }}>
+                <Image source={{ uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" }} style={{ width: "100%", height: "100%" }} />
+              </View>
+              <View>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18 }}>Ramesh Kumar</Text>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Farmer ID: FMR-201</Text>
+              </View>
+              <View style={{ flex: 1, alignItems: "flex-end" }}>
+                <View style={{ backgroundColor: "#dcfce7", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 }}>
+                  <Text style={{ color: "#16a34a", fontFamily: "Brandon-Bold", fontSize: 11 }}>APPROVED</Text>
                 </View>
               </View>
-            </ImageBackground>
+            </View>
+
+            <View style={{ backgroundColor: "#f8fafc", borderRadius: 16, padding: 16, gap: 12 }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Calendar size={16} color="#64748b" style={{ width: 24 }} />
+                <Text style={{ color: "#475569", fontFamily: "Brandon-Medium", fontSize: 14 }}>Submitted: 12 Jan 2026, 11:45 AM</Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <MapPin size={16} color="#64748b" style={{ width: 24 }} />
+                <Text style={{ color: "#475569", fontFamily: "Brandon-Medium", fontSize: 14 }}>Location: Annur North, Farm A</Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <ShieldCheck size={16} color="#64748b" style={{ width: 24 }} />
+                <Text style={{ color: "#475569", fontFamily: "Brandon-Medium", fontSize: 14 }}>Auditor: Field Officer (FO-902)</Text>
+              </View>
+            </View>
+
           </View>
 
-          {/* 4 Agronomic Key Metrics Gauges (Darkish Rich Cards, High Contrast) */}
-          <View className="flex-row justify-between mb-4">
-            <View className="w-[48%] bg-[#062c1e] p-4 rounded-2xl border border-emerald-500/40 shadow-md">
-              <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-emerald-300/80 font-brandon-semibold text-[11px] uppercase tracking-wider">
-                  Soil Moisture
-                </Text>
-                <Droplets size={16} color="#34d399" />
-              </View>
-              <Text className="text-white font-brandon-bold text-2xl my-0.5">
-                {report.moisture}
-              </Text>
-              <Text className="text-emerald-300 font-brandon-medium text-xs">
-                Optimal Field Range
-              </Text>
-            </View>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginBottom: 16 }}>Advisory Details</Text>
 
-            <View className="w-[48%] bg-[#08203e] p-4 rounded-2xl border border-sky-500/40 shadow-md">
-              <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-sky-300/80 font-brandon-semibold text-[11px] uppercase tracking-wider">
-                  Soil pH
-                </Text>
-                <Sprout size={16} color="#38bdf8" />
-              </View>
-              <Text className="text-white font-brandon-bold text-2xl my-0.5">
-                {report.ph}
-              </Text>
-              <Text className="text-sky-300 font-brandon-medium text-xs">
-                Neutral Balance
-              </Text>
+          {/* Issue Section */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, marginBottom: 16, borderWidth: 1, borderColor: "#fee2e2" }}>
+            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+              <AlertTriangle size={20} color="#ef4444" />
+              <Text style={{ color: "#ef4444", fontFamily: "Brandon-Bold", fontSize: 16, marginLeft: 8 }}>Observed Issues</Text>
             </View>
-          </View>
-
-          <View className="flex-row justify-between mb-4">
-            <View className="w-[48%] bg-[#200a35] p-4 rounded-2xl border border-purple-500/40 shadow-md">
-              <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-purple-300/80 font-brandon-semibold text-[11px] uppercase tracking-wider">
-                  Nitrogen Index
-                </Text>
-                <ShieldCheck size={16} color="#c084fc" />
-              </View>
-              <Text className="text-white font-brandon-bold text-lg my-0.5">
-                {report.nitrogen}
-              </Text>
-              <Text className="text-purple-300 font-brandon-medium text-xs">
-                Bio-Enriched
-              </Text>
-            </View>
-
-            <View className="w-[48%] bg-[#2a1705] p-4 rounded-2xl border border-amber-500/40 shadow-md">
-              <View className="flex-row items-center justify-between mb-1">
-                <Text className="text-amber-300/80 font-brandon-semibold text-[11px] uppercase tracking-wider">
-                  Root Depth
-                </Text>
-                <FileCheck2 size={16} color="#fbbf24" />
-              </View>
-              <Text className="text-white font-brandon-bold text-lg my-0.5">
-                {report.rootDepth}
-              </Text>
-              <Text className="text-amber-300 font-brandon-medium text-xs">
-                Healthy Taproots
-              </Text>
-            </View>
-          </View>
-
-          {/* Agronomist Observations & Recommendations */}
-          <View className="bg-slate-900 rounded-[26px] p-5 shadow-md border border-slate-700/60 mb-4">
-            <Text className="text-white font-brandon-bold text-base mb-2">
-              Agronomist Recommendations
+            <Text style={{ color: "#334155", fontFamily: "Brandon-Medium", fontSize: 15, lineHeight: 24 }}>
+              Found early signs of leaf spot disease in the southern sector. The humidity levels have been high (78%) which is contributing to the fungal spread. The soil moisture is optimal at 70%, so irrigation should be paused.
             </Text>
-            <Text className="text-slate-200 text-xs font-brandon-medium leading-relaxed mb-4">
-              {report.recommendation}
+          </View>
+
+          {/* Recommendation Section */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, marginBottom: 16, borderWidth: 1, borderColor: "#dcfce7" }}>
+            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+              <Beaker size={20} color="#10b981" />
+              <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 16, marginLeft: 8 }}>Agronomy Recommendations</Text>
+            </View>
+            <Text style={{ color: "#334155", fontFamily: "Brandon-Medium", fontSize: 15, lineHeight: 24, marginBottom: 16 }}>
+              1. Pause all drip irrigation for the next 48 hours.{"\n"}
+              2. Apply a 1% Bordeaux mixture spray to the affected leaves immediately.{"\n"}
+              3. Proceed with the scheduled Nitrogen top-dressing using organic neem-cake mix next week.
             </Text>
 
-            <View className="bg-emerald-500/20 rounded-xl p-3 border border-emerald-400/40 flex-row items-center">
-              <CheckCircle2 size={18} color="#34d399" />
-              <Text className="text-emerald-300 text-xs font-brandon-bold ml-2 flex-1">
-                Digital Sign-off: Certified by Regional Officer
-              </Text>
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <View style={{ width: 80, height: 80, borderRadius: 12, overflow: "hidden" }}>
+                <Image source={require("../../../assets/images/image2.jpg")} style={{ width: "100%", height: "100%" }} />
+              </View>
+              <View style={{ width: 80, height: 80, borderRadius: 12, overflow: "hidden" }}>
+                <Image source={require("../../../assets/images/image5.jpg")} style={{ width: "100%", height: "100%" }} />
+              </View>
             </View>
           </View>
 
-          {/* Action Button: Download Certified PDF */}
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={handleDownload}
-            className="w-full bg-emerald-600 py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-700/25 flex-row mb-3"
-          >
-            <ArrowDownCircle size={18} color="#ffffff" className="mr-2" />
-            <Text className="text-white font-brandon-bold text-base uppercase tracking-wider ml-1">
-              Download Certified PDF Audit
-            </Text>
-          </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     </View>

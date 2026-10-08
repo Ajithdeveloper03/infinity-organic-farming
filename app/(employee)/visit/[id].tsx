@@ -1,236 +1,121 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   Image,
-  ImageBackground,
   StyleSheet,
-  Linking,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   ChevronLeft,
-  Calendar,
-  Clock,
   MapPin,
-  Leaf,
-  History,
-  CheckCircle2,
-  Phone,
-  ArrowRight,
-  ShieldCheck,
-  FileSpreadsheet,
+  CalendarDays,
+  Target,
+  ClipboardList,
+  Navigation,
+  Camera,
+  AlertTriangle
 } from "lucide-react-native";
-import { getVisitWithFarmer } from "../../../data/mockData";
 
-export default function VisitDetailsScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const visit = id ? getVisitWithFarmer(id) : null;
-
-  if (!visit || !visit.farmer) {
-    return (
-      <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-        <SafeAreaView style={{ flex: 1 }} className="items-center justify-center px-5">
-          <Text className="text-slate-900 font-brandon-bold text-lg mb-2">
-            Visit Dossier Not Found
-          </Text>
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="mt-4 bg-emerald-600 px-6 py-3 rounded-full shadow-sm"
-          >
-            <Text className="text-white font-brandon-bold">Go Back</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </View>
-    );
-  }
-
-  const InfoRow = ({ icon: Icon, label, value, color }: any) => (
-    <View className="flex-row items-center py-3.5 border-b border-white/10">
-      <View
-        className="w-10 h-10 rounded-2xl items-center justify-center mr-3.5 shadow-sm"
-        style={{
-          backgroundColor: `${color}25`,
-          borderColor: `${color}50`,
-          borderWidth: 1,
-        }}
-      >
-        <Icon size={18} color={color} />
-      </View>
-      <View className="flex-1">
-        <Text className="text-slate-400 font-brandon-semibold text-[10px] uppercase tracking-wider">
-          {label}
-        </Text>
-        <Text className="text-white font-brandon-bold text-sm mt-0.5">
-          {value}
-        </Text>
-      </View>
-    </View>
-  );
+export default function EmployeeVisitPurposeScreen() {
+  const { id } = useLocalSearchParams();
 
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Header - Strictly Transparent Background */}
-        <View
-          style={{ backgroundColor: "transparent" }}
-          className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
-        >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm"
-            activeOpacity={0.7}
-          >
-            <ChevronLeft size={22} color="#0f172a" />
-          </TouchableOpacity>
+      <StatusBar barStyle="dark-content" />
 
-          <Text className="text-lg font-brandon-bold text-slate-900">
-            Inspection Dossier
-          </Text>
+      {/* Hero Header Gradient */}
+      <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: 250 }}>
+        <LinearGradient
+          colors={["#0f172a", "#1e293b", "#f8fafc"]}
+          style={StyleSheet.absoluteFill}
+        />
+      </View>
 
-          <TouchableOpacity
-            onPress={() =>
-              Linking.openURL(`tel:${visit.farmer?.phone || "9411111111"}`)
-            }
-            className="w-10 h-10 rounded-full bg-emerald-50 items-center justify-center border border-emerald-200"
-          >
-            <Phone size={18} color="#059669" />
+      <SafeAreaView style={{ flex: 1 }}>
+        
+        {/* HEADER */}
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24 }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ padding: 8, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 999 }}>
+            <ChevronLeft size={24} color="#ffffff" />
           </TouchableOpacity>
+          <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 20 }}>Visit Details</Text>
+          <View style={{ width: 40 }} />
         </View>
 
-        <ScrollView
-          className="flex-1 px-5 pt-2"
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
-        >
-          {/* Detailed Hero Image Card with DARK Overlay & Enhanced Bright White Text */}
-          <View className="rounded-[28px] overflow-hidden shadow-md bg-slate-900 mb-4">
-            <ImageBackground
-              source={require("../../../assets/images/image3.jpg")}
-              className="w-full h-48"
-              resizeMode="cover"
-            >
-              {/* Dark Bottom-to-Top Overlay */}
-              <LinearGradient
-                colors={[
-                  "transparent",
-                  "rgba(0, 0, 0, 0.45)",
-                  "rgba(10, 15, 25, 0.94)",
-                ]}
-                locations={[0, 0.3, 1]}
-                style={StyleSheet.absoluteFill}
-              />
-
-              <View className="flex-1 p-5 justify-between">
-                <View className="flex-row items-center justify-between">
-                  <View className="bg-emerald-500 px-3 py-1 rounded-full">
-                    <Text className="text-white font-brandon-bold text-[11px] uppercase tracking-wider">
-                      {visit.time || "10:30 AM"} Slot
-                    </Text>
-                  </View>
-
-                  <View className="bg-black/60 px-3 py-1 rounded-full border border-white/20">
-                    <Text className="text-white font-brandon-bold text-xs">
-                      {visit.status === "completed" ? "Completed" : "Action Needed"}
-                    </Text>
-                  </View>
-                </View>
-
-                <View>
-                  <Text className="text-white font-brandon-bold text-2xl leading-tight">
-                    {visit.farmer.name}
-                  </Text>
-                  <View className="flex-row items-center mt-1">
-                    <MapPin size={13} color="#34d399" />
-                    <Text
-                      className="text-emerald-300 font-brandon text-xs ml-1"
-                      numberOfLines={1}
-                    >
-                      {visit.farmer.address || "Thanjavur Ag-Corridor"}
-                    </Text>
-                  </View>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100 }}>
+          
+          {/* Target Profile Card */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 32, padding: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 20, elevation: 10, marginBottom: 24 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
+              <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: "#e2e8f0", overflow: "hidden", marginRight: 16 }}>
+                <Image source={{ uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" }} style={{ width: "100%", height: "100%" }} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 22 }}>Ramesh Kumar</Text>
+                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 4 }}>
+                  <MapPin size={14} color="#64748b" />
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginLeft: 4 }}>Annur North • 12km away</Text>
                 </View>
               </View>
-            </ImageBackground>
+            </View>
+
+            <View style={{ flexDirection: "row", backgroundColor: "#f8fafc", padding: 16, borderRadius: 16, alignItems: "center" }}>
+              <CalendarDays size={20} color="#0284c7" style={{ marginRight: 12 }} />
+              <View>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Today, 11:30 AM</Text>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Scheduled Appointment</Text>
+              </View>
+            </View>
           </View>
 
-          {/* Full Audit Detailed Parameters (Darkish Rich Card) */}
-          <View className="bg-slate-900 rounded-[28px] p-5 shadow-md border border-slate-700/60 mb-6">
-            <Text className="text-white font-brandon-bold text-base mb-2">
-              Agronomic Parameters
+          {/* VISIT PURPOSE */}
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginBottom: 16 }}>Purpose of Visit</Text>
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, marginBottom: 24, borderWidth: 1, borderColor: "#e0f2fe" }}>
+            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+              <Target size={24} color="#0284c7" />
+              <Text style={{ color: "#0284c7", fontFamily: "Brandon-Bold", fontSize: 18, marginLeft: 12 }}>Routine Crop Health Check</Text>
+            </View>
+            <Text style={{ color: "#475569", fontFamily: "Brandon-Medium", fontSize: 15, lineHeight: 24 }}>
+              The farmer reported slight discoloration in the Vetiver leaves. You are required to physically inspect the northern sector of the farm, take high-resolution macro photos of the affected leaves, and test the soil moisture levels.
             </Text>
-
-            <InfoRow
-              icon={Calendar}
-              label="Audit Scheduled Date"
-              value={visit.date}
-              color="#34d399"
-            />
-            <InfoRow
-              icon={Clock}
-              label="Target Time Window"
-              value={visit.time}
-              color="#38bdf8"
-            />
-            <InfoRow
-              icon={MapPin}
-              label="Registered Parcel Size"
-              value={visit.farmer.farmArea || "5.0 Acres"}
-              color="#fbbf24"
-            />
-            <InfoRow
-              icon={Leaf}
-              label="Cultivated Crops"
-              value={visit.farmer.cropType || "Organic Vetiver & Turmeric"}
-              color="#c084fc"
-            />
-            <InfoRow
-              icon={History}
-              label="Previous Field Log"
-              value={visit.previousVisitDate || "Initial Onboarding Audit"}
-              color="#f472b6"
-            />
-
-            <View className="pt-4">
-              <Text className="text-slate-400 font-brandon-bold text-[10px] uppercase tracking-wider mb-1">
-                Field Instructions & Notes
-              </Text>
-              <Text className="text-slate-200 text-xs leading-relaxed font-brandon-medium">
-                {visit.remarks ||
-                  "Conduct root depth inspection, test soil moisture levels, inspect bio-tonic spray efficacy, and record geo-coordinates."}
-              </Text>
-            </View>
           </View>
 
-          {/* Action Trigger */}
-          {visit.status !== "completed" ? (
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() =>
-                router.push({
-                  pathname: "/(employee)/visit/check-in",
-                  params: { id: visit.id },
-                } as any)
-              }
-              className="w-full bg-emerald-600 py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-700/25 flex-row"
-            >
-              <Text className="text-white font-brandon-bold text-base uppercase tracking-wider mr-2">
-                Start Field Check-In Workflow
-              </Text>
-              <ArrowRight size={18} color="#ffffff" />
+          {/* REQUIRED TASKS CHECKLIST */}
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginBottom: 16 }}>Required Action Items</Text>
+          <View style={{ gap: 12, marginBottom: 32 }}>
+            {[
+              { text: "Verify Geofence Check-in", icon: MapPin, color: "#10b981" },
+              { text: "Take 3 macro photos of affected leaves", icon: Camera, color: "#8b5cf6" },
+              { text: "Log Soil Moisture readings", icon: ClipboardList, color: "#f59e0b" },
+              { text: "Check for fungal spread in Sector 2", icon: AlertTriangle, color: "#ef4444" },
+            ].map((task, idx) => (
+              <View key={idx} style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#ffffff", padding: 16, borderRadius: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8 }}>
+                <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: `${task.color}15`, alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                  <task.icon size={18} color={task.color} />
+                </View>
+                <Text style={{ color: "#334155", fontFamily: "Brandon-Bold", fontSize: 15, flex: 1 }}>{task.text}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* START VISIT ACTIONS */}
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <TouchableOpacity onPress={() => router.push("/(employee)/visit/tracking")} style={{ flex: 1, backgroundColor: "#0f172a", borderRadius: 16, paddingVertical: 16, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+              <Navigation size={18} color="#ffffff" style={{ marginRight: 8 }} />
+              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Start GPS</Text>
             </TouchableOpacity>
-          ) : (
-            <View className="bg-emerald-50 border border-emerald-200 py-4 rounded-2xl flex-row items-center justify-center">
-              <CheckCircle2 size={20} color="#059669" className="mr-2" />
-              <Text className="text-emerald-800 font-brandon-bold text-sm uppercase tracking-wider">
-                Audit Completed & Submitted
-              </Text>
-            </View>
-          )}
+            <TouchableOpacity onPress={() => router.push("/(employee)/visit/check-in")} style={{ flex: 1, backgroundColor: "#10b981", borderRadius: 16, paddingVertical: 16, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+              <Camera size={18} color="#ffffff" style={{ marginRight: 8 }} />
+              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Check-In</Text>
+            </TouchableOpacity>
+          </View>
+
         </ScrollView>
       </SafeAreaView>
     </View>

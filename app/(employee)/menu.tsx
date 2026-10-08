@@ -31,7 +31,7 @@ export default function MenuScreen() {
     {
       title: "Field Operations",
       items: [
-        { icon: ClipboardList, label: "Daily Attendance", route: "/(employee)/attendance", color: "#10b981" },
+        { icon: ClipboardList, label: "Daily Attendance", route: "/(employee)/attendance-hub", color: "#10b981" },
         { icon: MapPin, label: "Assigned Territories", route: "/(employee)/my-farmers", color: "#3b82f6" },
       ],
     },
@@ -39,17 +39,6 @@ export default function MenuScreen() {
       title: "Account & Preferences",
       items: [
         { icon: User, label: "Edit Profile", route: "/(employee)/edit-profile", color: "#f59e0b" },
-        { icon: Globe, label: "Language Settings", route: "/(employee)/language", color: "#6366f1" },
-        { icon: Bell, label: "Push Notifications", route: null, color: "#ec4899" },
-      ],
-    },
-    {
-      title: "System",
-      items: [
-        { icon: CloudOff, label: "Offline Sync", route: null, color: "#14b8a6" },
-        { icon: Database, label: "Storage Management", route: null, color: "#64748b" },
-        { icon: Shield, label: "Privacy & Security", route: null, color: "#0f172a" },
-        { icon: PhoneCall, label: "IT Support", route: null, color: "#ef4444" },
       ],
     },
   ];

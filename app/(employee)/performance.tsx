@@ -4,135 +4,146 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Image,
+  StyleSheet,
   StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 import {
-  ChevronLeft,
-  Award,
-  Target,
-  TrendingUp,
-  Activity,
+  Hexagon,
+  Calendar,
+  CheckCircle2,
+  PlusCircle,
+  BarChart3,
+  User
 } from "lucide-react-native";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function EmployeePerformanceScreen() {
-  const kpis = [
-    { label: "Tasks Completed", value: "85%", target: "90%", icon: <Target size={20} color="#0284c7" />, color: "#e0f2fe" },
-    { label: "Farmer Onboarded", value: "12", target: "15/mo", icon: <Award size={20} color="#16a34a" />, color: "#dcfce7" },
-    { label: "Avg Visit Time", value: "45m", target: "60m", icon: <Activity size={20} color="#9333ea" />, color: "#f3e8ff" },
-    { label: "Compliance Score", value: "98%", target: "100%", icon: <TrendingUp size={20} color="#ea580c" />, color: "#ffedd5" },
-  ];
-
-  const rankings = [
-    { rank: "4", name: "Yvonne Brown", pts: "174 pts", trend: "up", image: require("../../assets/images/image1.jpg") },
-    { rank: "5", name: "Paul King", pts: "172 pts", trend: "up", image: require("../../assets/images/image2.jpg") },
-    { rank: "6", name: "Robert Hernandez", pts: "141 pts", trend: "down", image: require("../../assets/images/image10.jpg") },
-    { rank: "7", name: "Shirley Morgan", pts: "136 pts", trend: "up", image: require("../../assets/images/image6.jpg") },
-  ];
+  const { userName } = useLanguage();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#ea580c" }}>
+    <View style={{ flex: 1, backgroundColor: "#0284c7" }}>
       <StatusBar barStyle="light-content" />
+
+      {/* Top Gradient Background */}
+      <LinearGradient
+        colors={["#0ea5e9", "#0284c7", "#0369a1"]}
+        style={StyleSheet.absoluteFill}
+      />
 
       <SafeAreaView style={{ flex: 1 }}>
         
         {/* HEADER */}
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
-          <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace("/(employee)/dashboard")} style={{ padding: 8, backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 999 }}>
-            <ChevronLeft size={24} color="#ffffff" />
+          <View>
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 32 }}>Hello, Officer</Text>
+            <Text style={{ color: "rgba(255,255,255,0.8)", fontFamily: "Brandon-Medium", fontSize: 16, marginTop: 4 }}>You're on track to...</Text>
+          </View>
+          <TouchableOpacity onPress={() => router.back()} style={{ padding: 8 }}>
+            <Hexagon size={28} color="#ffffff" />
           </TouchableOpacity>
-          <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18 }}>Performance & KPIs</Text>
-          <View style={{ width: 40 }} />
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 0 }}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
           
-          {/* YOUR KPI SECTION */}
-          <View style={{ paddingHorizontal: 24, marginTop: 32, marginBottom: 24 }}>
-            <Text style={{ color: "rgba(255,255,255,0.8)", fontFamily: "Brandon-Medium", fontSize: 14, letterSpacing: 1, marginBottom: 16 }}>YOUR MONTHLY TARGETS</Text>
-            
-            <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: 16 }}>
-              {kpis.map((kpi, idx) => (
-                <View key={idx} style={{ width: "47%", backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 20, padding: 16, borderWidth: 1, borderColor: "rgba(255,255,255,0.2)" }}>
-                  <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: kpi.color, alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
-                    {kpi.icon}
-                  </View>
-                  <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Bold", fontSize: 12 }}>{kpi.label}</Text>
-                  <View style={{ flexDirection: "row", alignItems: "baseline", marginTop: 4 }}>
-                    <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 24 }}>{kpi.value}</Text>
-                    <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 12, marginLeft: 4 }}>/ {kpi.target}</Text>
-                  </View>
+          {/* MASSIVE CIRCULAR RING (Image 3 Inspiration) */}
+          <View style={{ alignItems: "center", marginTop: 40, marginBottom: 40 }}>
+            <View style={{ width: 260, height: 260, borderRadius: 130, borderWidth: 2, borderColor: "rgba(255,255,255,0.2)", alignItems: "center", justifyContent: "center" }}>
+              {/* Outer Progress Ring Simulation */}
+              <View style={{ position: "absolute", width: 260, height: 260, borderRadius: 130, borderLeftWidth: 4, borderTopWidth: 4, borderColor: "#6ee7b7", transform: [{ rotate: "45deg" }] }} />
+              
+              {/* Inner Content */}
+              <View style={{ alignItems: "center", transform: [{ translateY: -10 }] }}>
+                <Hexagon size={24} color="#ffffff" style={{ marginBottom: 12 }} />
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Medium", fontSize: 16, textAlign: "center", lineHeight: 22 }}>
+                  Achieve Monthly{"\n"}Visit Quota
+                </Text>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 64, marginTop: 8, letterSpacing: -2 }}>
+                  86<Text style={{ fontSize: 24, color: "rgba(255,255,255,0.6)" }}>%</Text>
+                </Text>
+                <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 14, marginTop: 8 }}>Efficiency Level</Text>
+              </View>
+
+              {/* Dots at bottom inside ring */}
+              <View style={{ position: "absolute", bottom: 24, flexDirection: "row", gap: 6 }}>
+                <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: "#ffffff" }} />
+                <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: "rgba(255,255,255,0.4)" }} />
+                <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: "rgba(255,255,255,0.4)" }} />
+              </View>
+            </View>
+          </View>
+
+          {/* HORIZONTAL CALENDAR STRIP */}
+          <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 32, marginBottom: 32 }}>
+            {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => {
+              const isToday = index === 2; // W is active
+              return (
+                <View key={index} style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: isToday ? "#ffffff" : "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center", borderWidth: index === 0 || index === 1 ? 1 : 0, borderColor: "rgba(255,255,255,0.3)", borderStyle: index === 0 || index === 1 ? "dashed" : "solid" }}>
+                  <Text style={{ color: isToday ? "#0284c7" : "rgba(255,255,255,0.6)", fontFamily: "Brandon-Bold", fontSize: 14 }}>{day}</Text>
                 </View>
-              ))}
-            </View>
+              );
+            })}
           </View>
 
-          {/* PODIUM SECTION */}
-          <View style={{ paddingHorizontal: 24, marginTop: 16 }}>
-            <Text style={{ color: "rgba(255,255,255,0.8)", fontFamily: "Brandon-Medium", fontSize: 14, letterSpacing: 1, marginBottom: 16 }}>REGIONAL LEADERBOARD</Text>
-          </View>
-
-          <View style={{ height: 260, flexDirection: "row", alignItems: "flex-end", justifyContent: "center", paddingHorizontal: 16 }}>
+          {/* BOTTOM WHITE CARD AGENDA */}
+          <View style={{ backgroundColor: "#ffffff", borderTopLeftRadius: 40, borderTopRightRadius: 40, padding: 32, minHeight: 400 }}>
             
-            {/* Rank 2 (Left) */}
-            <View style={{ flex: 1, alignItems: "center" }}>
-              <View style={{ width: 56, height: 56, borderRadius: 28, overflow: "hidden", borderWidth: 3, borderColor: "#ffffff", marginBottom: 8, zIndex: 10 }}>
-                <Image source={require("../../assets/images/image14.jpg")} style={{ width: "100%", height: "100%" }} />
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
+              <View>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20 }}>Today, 26 Jan 2026</Text>
+                <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 14, marginTop: 4 }}>1/3 • 2h 23m mins gap</Text>
               </View>
-              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 12 }}>Lois Parker</Text>
-              <View style={{ backgroundColor: "#ffffff", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, marginVertical: 8, zIndex: 10 }}>
-                <Text style={{ color: "#ea580c", fontFamily: "Brandon-Bold", fontSize: 10 }}>311 pts</Text>
-              </View>
-              <View style={{ width: "90%", height: 100, backgroundColor: "#f97316", borderTopLeftRadius: 16, borderTopRightRadius: 16, alignItems: "center", justifyContent: "center" }}>
-                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 32 }}>2</Text>
+              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#f1f5f9", alignItems: "center", justifyContent: "center" }}>
+                <Calendar size={18} color="#0f172a" />
               </View>
             </View>
 
-            {/* Rank 1 (Center) */}
-            <View style={{ flex: 1, alignItems: "center" }}>
-              <View style={{ width: 72, height: 72, borderRadius: 36, overflow: "hidden", borderWidth: 3, borderColor: "#ffffff", marginBottom: 8, zIndex: 10 }}>
-                <Image source={require("../../assets/images/image12.jpg")} style={{ width: "100%", height: "100%" }} />
+            {/* Timeline Item 1 */}
+            <View style={{ flexDirection: "row", marginBottom: 24 }}>
+              <View style={{ flex: 1, backgroundColor: "#f8fafc", borderRadius: 24, padding: 20, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                <View>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18 }}>Morning Inspection <Text style={{ color: "#10b981" }}>(+2)</Text></Text>
+                  <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 4 }}>Farm A • Soil Test • Report</Text>
+                </View>
+                <CheckCircle2 size={24} color="#0f172a" />
               </View>
-              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>Lydia Price</Text>
-              <View style={{ backgroundColor: "#ffffff", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 999, marginVertical: 8, zIndex: 10 }}>
-                <Text style={{ color: "#ea580c", fontFamily: "Brandon-Bold", fontSize: 12 }}>413 pts</Text>
-              </View>
-              <View style={{ width: "95%", height: 140, backgroundColor: "#fb923c", borderTopLeftRadius: 16, borderTopRightRadius: 16, alignItems: "center", justifyContent: "center" }}>
-                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 40 }}>1</Text>
-              </View>
-            </View>
-
-            {/* Rank 3 (Right) */}
-            <View style={{ flex: 1, alignItems: "center" }}>
-              <View style={{ width: 56, height: 56, borderRadius: 28, overflow: "hidden", borderWidth: 3, borderColor: "#ffffff", marginBottom: 8, zIndex: 10 }}>
-                <Image source={require("../../assets/images/image15.jpg")} style={{ width: "100%", height: "100%" }} />
-              </View>
-              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 12 }}>Mary Clark</Text>
-              <View style={{ backgroundColor: "#ffffff", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, marginVertical: 8, zIndex: 10 }}>
-                <Text style={{ color: "#ea580c", fontFamily: "Brandon-Bold", fontSize: 10 }}>227 pts</Text>
-              </View>
-              <View style={{ width: "90%", height: 80, backgroundColor: "#f97316", borderTopLeftRadius: 16, borderTopRightRadius: 16, alignItems: "center", justifyContent: "center" }}>
-                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 32 }}>3</Text>
+              <View style={{ width: 60, alignItems: "center" }}>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 12, marginBottom: 8 }}>09:01</Text>
+                <View style={{ width: 2, flex: 1, backgroundColor: "#e2e8f0" }} />
               </View>
             </View>
 
-          </View>
-
-          {/* REMAINING LIST SHEET */}
-          <View style={{ backgroundColor: "#ffffff", borderTopLeftRadius: 32, borderTopRightRadius: 32, padding: 24, paddingBottom: 100, minHeight: 400 }}>
-            {rankings.map((r, i) => (
-              <View key={i} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: "#f1f5f9" }}>
-                <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Bold", fontSize: 16, width: 30 }}>{r.rank}</Text>
-                <Image source={r.image} style={{ width: 44, height: 44, borderRadius: 22, marginRight: 16 }} />
-                <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>{r.name}</Text>
-                <Text style={{ color: "#ea580c", fontFamily: "Brandon-Bold", fontSize: 14 }}>{r.pts}</Text>
+            {/* Timeline Item 2 */}
+            <View style={{ flexDirection: "row", marginBottom: 24 }}>
+              <View style={{ flex: 1, backgroundColor: "#f8fafc", borderRadius: 24, padding: 20, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                <View>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18 }}>Afternoon Visit</Text>
+                </View>
+                <PlusCircle size={24} color="#cbd5e1" style={{ borderStyle: "dashed", borderWidth: 1, borderColor: "#cbd5e1", borderRadius: 12 }} />
               </View>
-            ))}
+              <View style={{ width: 60, alignItems: "center" }}>
+                <View style={{ width: 12, height: 12, borderRadius: 6, borderWidth: 2, borderColor: "#e2e8f0", backgroundColor: "#ffffff", marginBottom: 8 }} />
+                <View style={{ width: 2, flex: 1, backgroundColor: "#e2e8f0" }} />
+              </View>
+            </View>
+
           </View>
 
         </ScrollView>
+
+        {/* Floating Bottom Nav Bar embedded in card */}
+        <View style={{ position: "absolute", bottom: 40, left: 24, right: 24, backgroundColor: "#1e293b", borderRadius: 32, paddingVertical: 20, paddingHorizontal: 32, flexDirection: "row", justifyContent: "space-between", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 10 }}>
+          <View style={{ alignItems: "center" }}>
+            <Calendar size={24} color="#ffffff" />
+            <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: "#ffffff", marginTop: 4 }} />
+          </View>
+          <View style={{ alignItems: "center" }}><BarChart3 size={24} color="#64748b" /></View>
+          <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center" }}><PlusCircle size={24} color="#ffffff" /></View>
+          <View style={{ alignItems: "center" }}><User size={24} color="#64748b" /></View>
+        </View>
+
       </SafeAreaView>
     </View>
   );

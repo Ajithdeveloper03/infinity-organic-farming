@@ -4,195 +4,139 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Image,
+  ImageBackground,
   StyleSheet,
   StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import {
-  Bell,
-  ThermometerSun,
+  ChevronLeft,
+  Sprout,
   Droplets,
   Wind,
-  CloudRain,
-  ChevronRight,
-  MoreVertical,
-  CheckCircle2,
+  Sun,
+  ShieldCheck,
+  AlertTriangle,
+  Beaker,
+  ThermometerSun
 } from "lucide-react-native";
 import { useLanguage } from "../../context/LanguageContext";
 
 export default function FarmerRecommendationsScreen() {
   const { t, language } = useLanguage();
 
-  const commodities = [
-    { id: 1, name: "Rice", image: require("../../assets/images/image1.jpg") },
-    { id: 2, name: "Corn", image: require("../../assets/images/image2.jpg") },
-    { id: 3, name: "Grapes", image: require("../../assets/images/image5.jpg") },
-    { id: 4, name: "Potato", image: require("../../assets/images/image6.jpg") },
-  ];
-
-  const tasks = [
-    { id: 1, title: "Morning Field Inspection", desc: "Assess crop health, identify issues.", time: "Today, 10 AM", priority: "High Priority", image: require("../../assets/images/image10.jpg") },
-    { id: 2, title: "Soil Moisture Monitoring", desc: "Check current water levels in sector B.", time: "Today, 2 PM", priority: "Normal", image: require("../../assets/images/image14.jpg") },
-  ];
-
   return (
-    <View style={{ flex: 1, backgroundColor: "#0f0f0f" }}>
+    <View style={{ flex: 1, backgroundColor: "#062214" }}>
       <StatusBar barStyle="light-content" />
-      <SafeAreaView style={{ flex: 1 }}>
-        
-        {/* HEADER */}
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
-          <View>
-            <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 16 }}>
-              {language === "ta" ? "வணக்கம்" : "Hello"}, <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold" }}>Kuppusamy</Text>
-            </Text>
-            <View style={{ flexDirection: "row", alignItems: "center", marginTop: 4 }}>
-              <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: "#fbbf24", marginRight: 6 }} />
-              <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 12 }}>Central Valley</Text>
-            </View>
+
+      {/* AMBIENT BACKGROUND */}
+      <ImageBackground
+        source={require("../../assets/images/image6.jpg")}
+        style={{ flex: 1 }}
+        resizeMode="cover"
+      >
+        <LinearGradient
+          colors={["rgba(6, 34, 20, 0.6)", "rgba(6, 34, 20, 0.95)", "#062214"]}
+          locations={[0, 0.4, 0.8]}
+          style={StyleSheet.absoluteFill}
+        />
+
+        <SafeAreaView style={{ flex: 1 }}>
+          
+          {/* HEADER */}
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
+            <TouchableOpacity
+              onPress={() => router.canGoBack() ? router.back() : router.replace("/(farmer)/dashboard")}
+              style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.15)", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)" }}
+            >
+              <ChevronLeft size={24} color="#ffffff" />
+            </TouchableOpacity>
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18 }}>Expert Advisory</Text>
+            <View style={{ width: 44 }} />
           </View>
-          <TouchableOpacity
-            style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center" }}
-            onPress={() => router.push("/(farmer)/dashboard")}
+
+          <ScrollView 
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 40, paddingBottom: 100 }}
           >
-            <Bell size={20} color="#ffffff" />
-          </TouchableOpacity>
-        </View>
+            {/* BIG HERO TEXT */}
+            <View style={{ marginBottom: 40 }}>
+              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 44, lineHeight: 48, letterSpacing: -1 }}>
+                {language === "ta" ? "உங்கள்\nபரிந்துரைகள்" : "Tailored\nAgronomy"}
+              </Text>
+              <View style={{ flexDirection: "row", alignItems: "center", marginTop: 12 }}>
+                <ShieldCheck size={18} color="#4ade80" />
+                <Text style={{ color: "#4ade80", fontFamily: "Brandon-Medium", fontSize: 14, marginLeft: 8 }}>Verified by Field Officer Ramesh</Text>
+              </View>
+              <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 14, marginTop: 16, lineHeight: 24 }}>
+                These recommendations are specifically generated for your 2.5 acre Vetiver crop based on yesterday's soil sample analysis and the upcoming week's meteorological forecast. 
+              </Text>
+            </View>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
-          
-          {/* BIG WEATHER WIDGET */}
-          <View style={{ paddingHorizontal: 24, marginTop: 32 }}>
-            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 24 }}>
-              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 56, letterSpacing: -2, lineHeight: 60 }}>32°</Text>
-              <View style={{ marginLeft: 16 }}>
-                <ThermometerSun size={32} color="#fbbf24" />
-                <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 12, marginTop: 4 }}>Sonoma County</Text>
+            {/* DETAILED ADVISORY: PEST CONTROL */}
+            <View style={{ backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 32, padding: 24, borderWidth: 1, borderColor: "rgba(239,68,68,0.3)", marginBottom: 24 }}>
+              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}>
+                <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "rgba(239,68,68,0.2)", alignItems: "center", justifyContent: "center" }}>
+                  <AlertTriangle size={24} color="#ef4444" />
+                </View>
+                <View style={{ marginLeft: 16, flex: 1 }}>
+                  <Text style={{ color: "#ef4444", fontFamily: "Brandon-Bold", fontSize: 12, letterSpacing: 1 }}>IMMEDIATE ACTION</Text>
+                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 20 }}>Fungal Prevention</Text>
+                </View>
+              </View>
+
+              <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 14, lineHeight: 24, marginBottom: 20 }}>
+                Due to the sudden spike in humidity (currently at 78%) combined with high daytime temperatures, there is a severe risk of early-stage root rot and fungal sporulation in the dense areas of your Vetiver crop. 
+                {"\n\n"}
+                We strongly advise preparing a 1% Bordeaux mixture (Copper Sulphate and Slaked Lime) and applying it as a foliar spray across the northern sector of your estate. Do not apply during peak sunlight hours; aim for application post 4:30 PM to prevent leaf scorching.
+              </Text>
+
+              <TouchableOpacity style={{ backgroundColor: "#ef4444", borderRadius: 16, paddingVertical: 14, alignItems: "center", shadowColor: "#ef4444", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 }}>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>Order Bordeaux Components</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* DETAILED ADVISORY: NUTRITION */}
+            <View style={{ backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 32, padding: 24, borderWidth: 1, borderColor: "rgba(167,243,208,0.2)", marginBottom: 24 }}>
+              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}>
+                <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "rgba(167,243,208,0.1)", alignItems: "center", justifyContent: "center" }}>
+                  <Beaker size={24} color="#a7f3d0" />
+                </View>
+                <View style={{ marginLeft: 16, flex: 1 }}>
+                  <Text style={{ color: "#a7f3d0", fontFamily: "Brandon-Bold", fontSize: 12, letterSpacing: 1 }}>NUTRITION SCHEDULE</Text>
+                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 20 }}>Nitrogen Top-Dressing</Text>
+                </View>
+              </View>
+
+              <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 14, lineHeight: 24, marginBottom: 20 }}>
+                The lab results from your recent soil test indicate a mild nitrogen deficiency (N-level: 110 kg/ha, whereas optimal is 140 kg/ha for the maturation phase). To ensure maximum aromatic oil yield in the roots, a gentle top-dressing is required.
+                {"\n\n"}
+                Apply 50kg of enriched Organic Vermicompost mixed with neem cake per acre. The neem cake will act as a slow-release mechanism for the nitrogen while simultaneously warding off root nematodes.
+              </Text>
+
+              <TouchableOpacity style={{ backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 16, paddingVertical: 14, alignItems: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.2)" }}>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>Purchase Enriched Vermicompost</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* DETAILED ADVISORY: WEATHER IMPACT */}
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 24, marginTop: 16, marginBottom: 16 }}>Meteorological Impact</Text>
+            
+            <View style={{ flexDirection: "row", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 24, padding: 20, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" }}>
+              <ThermometerSun size={32} color="#fbbf24" style={{ marginRight: 16 }} />
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 8 }}>Incoming Heatwave</Text>
+                <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Medium", fontSize: 13, lineHeight: 20 }}>
+                  Temperatures are expected to rise to 38°C over the weekend. Ensure your drip irrigation lines are flushed and functioning. Do not overwater; maintain a 60% soil moisture threshold.
+                </Text>
               </View>
             </View>
 
-            {/* Weather 4-Grid */}
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 16 }}>
-              <View style={{ width: "47%", flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 100, padding: 8 }}>
-                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center", marginRight: 12 }}>
-                  <ThermometerSun size={18} color="#000000" />
-                </View>
-                <View>
-                  <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11 }}>Soil temp</Text>
-                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 13 }}>+23 C</Text>
-                </View>
-              </View>
-
-              <View style={{ width: "47%", flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 100, padding: 8 }}>
-                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center", marginRight: 12 }}>
-                  <Droplets size={18} color="#000000" />
-                </View>
-                <View>
-                  <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11 }}>Humidity</Text>
-                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 13 }}>78%</Text>
-                </View>
-              </View>
-
-              <View style={{ width: "47%", flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 100, padding: 8 }}>
-                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center", marginRight: 12 }}>
-                  <Wind size={18} color="#000000" />
-                </View>
-                <View>
-                  <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11 }}>Wind</Text>
-                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 13 }}>7 m/s</Text>
-                </View>
-              </View>
-
-              <View style={{ width: "47%", flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 100, padding: 8 }}>
-                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center", marginRight: 12 }}>
-                  <CloudRain size={18} color="#000000" />
-                </View>
-                <View>
-                  <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11 }}>Precipitation</Text>
-                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 13 }}>0 mm</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          {/* COMMODITIES & FOOD HORIZONTAL SCROLL */}
-          <View style={{ marginTop: 40 }}>
-            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18, paddingHorizontal: 24, marginBottom: 16 }}>
-              Commodities & Food
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, gap: 20 }}>
-              {commodities.map((item) => (
-                <View key={item.id} style={{ alignItems: "center" }}>
-                  <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: "rgba(255,255,255,0.05)", alignItems: "center", justifyContent: "center", marginBottom: 8, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" }}>
-                    <Image source={item.image} style={{ width: 40, height: 40, borderRadius: 20 }} />
-                  </View>
-                  <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 12 }}>{item.name}</Text>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-
-          {/* FARMER'S TASKS */}
-          <View style={{ paddingHorizontal: 24, marginTop: 40 }}>
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 22 }}>Farmer's Tasks</Text>
-              <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 13 }}>Today ▼</Text>
-            </View>
-
-            <View style={{ flexDirection: "row", gap: 12, marginBottom: 20 }}>
-              <View style={{ backgroundColor: "#ffffff", paddingHorizontal: 20, paddingVertical: 8, borderRadius: 999 }}>
-                <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 13 }}>Today Task</Text>
-              </View>
-              <View style={{ backgroundColor: "rgba(255,255,255,0.1)", paddingHorizontal: 20, paddingVertical: 8, borderRadius: 999 }}>
-                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Medium", fontSize: 13 }}>Team</Text>
-              </View>
-              <View style={{ backgroundColor: "rgba(255,255,255,0.1)", paddingHorizontal: 20, paddingVertical: 8, borderRadius: 999 }}>
-                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Medium", fontSize: 13 }}>Programs</Text>
-              </View>
-            </View>
-
-            <View style={{ gap: 20 }}>
-              {tasks.map((task) => (
-                <TouchableOpacity 
-                  key={task.id}
-                  activeOpacity={0.9}
-                  style={{ backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 24, padding: 20, borderWidth: 1, borderColor: "rgba(255,255,255,0.08)" }}
-                >
-                  <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                      <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center", marginRight: 12 }}>
-                        <CheckCircle2 size={20} color="#000000" />
-                      </View>
-                      <View>
-                        <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>{task.title}</Text>
-                        <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 12, marginTop: 2 }}>{task.desc}</Text>
-                      </View>
-                    </View>
-                    <MoreVertical size={20} color="rgba(255,255,255,0.5)" />
-                  </View>
-                  
-                  <Image source={task.image} style={{ width: "100%", height: 140, borderRadius: 16, marginBottom: 16 }} />
-                  
-                  <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderTopWidth: 1, borderTopColor: "rgba(255,255,255,0.1)", paddingTop: 16 }}>
-                    <View>
-                      <Text style={{ color: "rgba(255,255,255,0.4)", fontFamily: "Brandon-Medium", fontSize: 11 }}>Important Deadlin</Text>
-                      <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 13, marginTop: 2 }}>{task.time}</Text>
-                    </View>
-                    <View style={{ alignItems: "flex-end" }}>
-                      <Text style={{ color: "rgba(255,255,255,0.4)", fontFamily: "Brandon-Medium", fontSize: 11 }}>Scheduled</Text>
-                      <Text style={{ color: "#fbbf24", fontFamily: "Brandon-Bold", fontSize: 13, marginTop: 2 }}>{task.priority}</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-          
-        </ScrollView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
+      </ImageBackground>
     </View>
   );
 }

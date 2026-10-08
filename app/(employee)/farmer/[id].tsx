@@ -5,347 +5,147 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  ImageBackground,
   StyleSheet,
-  Linking,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   ChevronLeft,
   MapPin,
   Phone,
-  MessageCircle,
+  MessageSquare,
   Sprout,
-  Package,
-  Layers,
   Calendar,
-  CheckCircle2,
-  ShieldCheck,
-  Award,
-  Droplets,
-  Truck,
-  ArrowRight,
+  Activity,
+  FileText,
   Clock,
-  Sparkles,
+  MoreVertical
 } from "lucide-react-native";
-import { mockFarmers } from "../../../data/mockData";
-import { useLanguage, LanguageTogglePill } from "../../../context/LanguageContext";
 
-export default function FarmerDetailsScreen() {
-  const { t, language } = useLanguage();
-  const { id } = useLocalSearchParams<{ id: string }>();
-
-  // Find farmer or fallback
-  const farmer =
-    mockFarmers.find(
-      (f) =>
-        f.id === id ||
-        f.id === `f${id}` ||
-        f.id.replace("f", "") === id
-    ) || mockFarmers[0];
-
-  const handleCall = () => {
-    Linking.openURL(`tel:${farmer.phone}`);
-  };
-
-  const handleWhatsApp = () => {
-    Linking.openURL(
-      `https://wa.me/${farmer.phone.replace(/[^0-9]/g, "")}?text=Hello%20${farmer.name},%20Infinity%20Organics%20Field%20Team`
-    );
-  };
-
-  const isDual = farmer.customerType === "both";
-  const isFert = farmer.customerType === "fertilizer";
-  const isCrop = farmer.customerType === "crop";
+export default function EmployeeFarmerProfileScreen() {
+  const { id } = useLocalSearchParams();
 
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Header - Transparent */}
-        <View
-          style={{ backgroundColor: "transparent" }}
-          className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
-        >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm"
-            activeOpacity={0.7}
-          >
-            <ChevronLeft size={22} color="#0f172a" />
-          </TouchableOpacity>
+      <StatusBar barStyle="light-content" />
 
-          <Text className="text-base font-brandon-bold text-slate-900">
-            {language === "ta" ? "விவசாயி விவரங்கள்" : "Farmer Dossier"}
-          </Text>
-
-          <View className="flex-row items-center gap-1.5">
-            <LanguageTogglePill />
-            <TouchableOpacity
-              onPress={handleCall}
-              className="w-8 h-8 rounded-full bg-emerald-50 items-center justify-center border border-emerald-200"
-            >
-              <Phone size={14} color="#059669" />
+      {/* Hero Header with Farm Image */}
+      <View style={{ height: 300 }}>
+        <Image source={require("../../../assets/images/image5.jpg")} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+        <LinearGradient
+          colors={["rgba(0,0,0,0.6)", "rgba(0,0,0,0.2)", "#f8fafc"]}
+          locations={[0, 0.5, 1]}
+          style={StyleSheet.absoluteFill}
+        />
+        <SafeAreaView>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingTop: 12 }}>
+            <TouchableOpacity onPress={() => router.back()} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.2)", alignItems: "center", justifyContent: "center" }}>
+              <ChevronLeft size={24} color="#ffffff" />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleWhatsApp}
-              className="w-8 h-8 rounded-full bg-emerald-600 items-center justify-center shadow-xs"
-            >
-              <MessageCircle size={14} color="#ffffff" />
+            <TouchableOpacity style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.2)", alignItems: "center", justifyContent: "center" }}>
+              <MoreVertical size={24} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, marginTop: -60 }}>
+        
+        {/* Profile Card */}
+        <View style={{ backgroundColor: "#ffffff", borderRadius: 32, padding: 24, marginHorizontal: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 20, elevation: 10, alignItems: "center" }}>
+          <View style={{ width: 100, height: 100, borderRadius: 50, borderWidth: 4, borderColor: "#ffffff", overflow: "hidden", backgroundColor: "#e2e8f0", marginTop: -60, marginBottom: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8 }}>
+            <Image source={{ uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" }} style={{ width: "100%", height: "100%" }} />
+          </View>
+          
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 28, marginBottom: 4 }}>Ramesh Kumar</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}>
+            <MapPin size={14} color="#64748b" />
+            <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, marginLeft: 6 }}>Annur North, Block A • 12km</Text>
+          </View>
+
+          <View style={{ flexDirection: "row", gap: 12, width: "100%" }}>
+            <TouchableOpacity style={{ flex: 1, backgroundColor: "#10b981", borderRadius: 16, paddingVertical: 12, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+              <Phone size={18} color="#ffffff" style={{ marginRight: 8 }} />
+              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>Call</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flex: 1, backgroundColor: "#f1f5f9", borderRadius: 16, paddingVertical: 12, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+              <MessageSquare size={18} color="#0f172a" style={{ marginRight: 8 }} />
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>Message</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <ScrollView
-          className="flex-1 px-5 pt-2"
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 160, paddingTop: 6 }}
-        >
-          {/* Profile Overview Card (Medium Brightness Elegance) */}
-          <View className="bg-emerald-50/90 rounded-3xl p-5 mb-4 border border-emerald-200/90 shadow-sm">
-            <View className="flex-row items-center mb-4">
-              <View
-                style={{
-                  width: 76,
-                  height: 76,
-                  borderRadius: 38,
-                  overflow: "hidden",
-                  borderWidth: 3,
-                  borderColor: "#10b981",
-                  backgroundColor: "#ffffff",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginRight: 14,
-                  shadowColor: "#059669",
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.15,
-                  shadowRadius: 6,
-                  elevation: 3,
-                }}
-              >
-                <Image
-                  source={{
-                    uri:
-                      farmer.photo ||
-                      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-                  }}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="cover"
-                />
-              </View>
+        {/* Farm & Crop Info */}
+        <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginHorizontal: 24, marginTop: 32, marginBottom: 16 }}>Farm Details</Text>
+        <View style={{ flexDirection: "row", marginHorizontal: 20, gap: 16 }}>
+          <View style={{ flex: 1, backgroundColor: "#ffffff", borderRadius: 24, padding: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12 }}>
+            <Sprout size={24} color="#10b981" style={{ marginBottom: 12 }} />
+            <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 13 }}>Primary Crop</Text>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginTop: 4 }}>Vetiver</Text>
+          </View>
+          <View style={{ flex: 1, backgroundColor: "#ffffff", borderRadius: 24, padding: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12 }}>
+            <Activity size={24} color="#3b82f6" style={{ marginBottom: 12 }} />
+            <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 13 }}>Crop Health</Text>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginTop: 4 }}>Optimal</Text>
+          </View>
+        </View>
 
-              <View className="flex-1">
-                <View className="flex-row items-center">
-                  <Text className="text-slate-900 font-brandon-bold text-xl">
-                    {farmer.name}
-                  </Text>
-                  <ShieldCheck size={18} color="#059669" className="ml-1.5" />
-                </View>
+        {/* Recent Reports Timeline */}
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginHorizontal: 24, marginTop: 32, marginBottom: 16 }}>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20 }}>Visit History</Text>
+          <TouchableOpacity onPress={() => router.push("/(employee)/reports")}>
+            <Text style={{ color: "#0284c7", fontFamily: "Brandon-Bold", fontSize: 13 }}>View All</Text>
+          </TouchableOpacity>
+        </View>
 
-                <View className="flex-row items-center mt-1">
-                  <MapPin size={13} color="#047857" />
-                  <Text className="text-slate-700 font-brandon-medium text-xs ml-1" numberOfLines={1}>
-                    {farmer.address}
-                  </Text>
-                </View>
-
-                <Text className="text-emerald-800 font-brandon-bold text-xs mt-1">
-                  Phone: {farmer.phone}
-                </Text>
-              </View>
+        <View style={{ marginHorizontal: 20, backgroundColor: "#ffffff", borderRadius: 24, padding: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12 }}>
+          
+          <View style={{ flexDirection: "row", marginBottom: 20 }}>
+            <View style={{ alignItems: "center", marginRight: 16 }}>
+              <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: "#10b981", marginBottom: 4 }} />
+              <View style={{ width: 2, flex: 1, backgroundColor: "#e2e8f0" }} />
             </View>
-
-            {/* Customer Mingle Badges */}
-            <View className="flex-row flex-wrap items-center gap-2 pt-3 border-t border-emerald-200/80">
-              {isDual && (
-                <View className="bg-purple-100 border border-purple-300 px-3 py-1 rounded-full flex-row items-center">
-                  <Sparkles size={13} color="#7e22ce" className="mr-1" />
-                  <Text className="text-purple-900 font-brandon-bold text-xs uppercase tracking-wider">
-                    ★ Dual Client (Crops & Inputs)
-                  </Text>
-                </View>
-              )}
-
-              {(isDual || isCrop) && (
-                <View className="bg-emerald-100 border border-emerald-300 px-3 py-1 rounded-full flex-row items-center">
-                  <Sprout size={13} color="#047857" className="mr-1" />
-                  <Text className="text-emerald-900 font-brandon-bold text-xs uppercase tracking-wider">
-                    Crop Cultivator • {farmer.cropType}
-                  </Text>
-                </View>
-              )}
-
-              {(isDual || isFert) && (
-                <View className="bg-amber-100 border border-amber-300 px-3 py-1 rounded-full flex-row items-center">
-                  <Package size={13} color="#b45309" className="mr-1" />
-                  <Text className="text-amber-900 font-brandon-bold text-xs uppercase tracking-wider">
-                    Bio-Fertilizer Buyer
-                  </Text>
-                </View>
-              )}
+            <View style={{ flex: 1, paddingBottom: 20 }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 4 }}>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Routine Inspection</Text>
+                <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 12 }}>12 Jan</Text>
+              </View>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, lineHeight: 20 }}>
+                Soil moisture is excellent. Recommended mild nitrogen top-dressing.
+              </Text>
+              <TouchableOpacity onPress={() => router.push("/(employee)/report/1")} style={{ flexDirection: "row", alignItems: "center", marginTop: 12, alignSelf: "flex-start", backgroundColor: "#f1f5f9", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8 }}>
+                <FileText size={14} color="#0284c7" />
+                <Text style={{ color: "#0284c7", fontFamily: "Brandon-Bold", fontSize: 12, marginLeft: 6 }}>Open Report</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
-          {/* Farm Land & Agronomy Metrics (Sky Pastel Medium Card) */}
-          <View className="bg-sky-50/90 rounded-3xl p-5 mb-4 border border-sky-200/90 shadow-sm">
-            <View className="flex-row items-center justify-between mb-3.5">
-              <View className="flex-row items-center">
-                <View className="w-8 h-8 rounded-full bg-sky-100 items-center justify-center border border-sky-200 mr-2">
-                  <Layers size={16} color="#0284c7" />
-                </View>
-                <Text className="text-slate-900 font-brandon-bold text-base">
-                  Land & Soil Specifications
-                </Text>
-              </View>
-              <View className="bg-sky-200/80 px-2.5 py-0.5 rounded-full">
-                <Text className="text-sky-900 font-brandon-bold text-xs">
-                  {farmer.farmArea}
-                </Text>
-              </View>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ alignItems: "center", marginRight: 16 }}>
+              <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: "#cbd5e1" }} />
             </View>
-
-            <View className="flex-row gap-2.5 mb-3">
-              <View className="flex-1 bg-white p-3 rounded-2xl border border-sky-100 items-center">
-                <Text className="text-sky-950 font-brandon-bold text-lg">6.8</Text>
-                <Text className="text-slate-600 text-[10px] font-brandon-bold uppercase tracking-wider">
-                  Soil pH (Optimal)
-                </Text>
+            <View style={{ flex: 1 }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 4 }}>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Initial Assessment</Text>
+                <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 12 }}>28 Dec</Text>
               </View>
-              <View className="flex-1 bg-white p-3 rounded-2xl border border-sky-100 items-center">
-                <Text className="text-sky-950 font-brandon-bold text-lg">68%</Text>
-                <Text className="text-slate-600 text-[10px] font-brandon-bold uppercase tracking-wider">
-                  Moisture Index
-                </Text>
-              </View>
-              <View className="flex-1 bg-white p-3 rounded-2xl border border-sky-100 items-center">
-                <Text className="text-sky-950 font-brandon-bold text-lg">42 cm</Text>
-                <Text className="text-slate-600 text-[10px] font-brandon-bold uppercase tracking-wider">
-                  Root Depth
-                </Text>
-              </View>
-            </View>
-
-            <View className="bg-white rounded-2xl p-3 border border-sky-100">
-              <View className="flex-row items-center justify-between mb-2">
-                <Text className="text-slate-600 text-xs font-brandon-medium">Irrigation System</Text>
-                <Text className="text-slate-900 text-xs font-brandon-bold">Automated Root Drip</Text>
-              </View>
-              <View className="flex-row items-center justify-between">
-                <Text className="text-slate-600 text-xs font-brandon-medium">Organic Certification</Text>
-                <Text className="text-emerald-700 text-xs font-brandon-bold">NPOP Certified Organic</Text>
-              </View>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, lineHeight: 20 }}>
+                First registration visit. Mapped farm boundaries.
+              </Text>
             </View>
           </View>
 
-          {/* Active Crop Portfolio (Emerald Medium Card) */}
-          <View className="bg-emerald-50/90 rounded-3xl p-5 mb-4 border border-emerald-200/90 shadow-sm">
-            <View className="flex-row items-center justify-between mb-3.5">
-              <View className="flex-row items-center">
-                <View className="w-8 h-8 rounded-full bg-emerald-100 items-center justify-center border border-emerald-200 mr-2">
-                  <Sprout size={16} color="#059669" />
-                </View>
-                <Text className="text-slate-900 font-brandon-bold text-base">
-                  Crop Cultivation Details
-                </Text>
-              </View>
-              <View className="bg-emerald-200/80 px-2.5 py-0.5 rounded-full">
-                <Text className="text-emerald-900 font-brandon-bold text-xs">
-                  Active Cycle
-                </Text>
-              </View>
-            </View>
+        </View>
 
-            <View className="bg-white rounded-2xl p-4 border border-emerald-100 mb-3">
-              <Text className="text-slate-900 font-brandon-bold text-sm mb-1">
-                {farmer.cropType}
-              </Text>
-              <Text className="text-slate-700 text-xs font-brandon-medium leading-relaxed mb-3">
-                {farmer.cropDetails || "Vegetative growth stage under organic protocols. Healthy leaf canopy and fibrous root network."}
-              </Text>
+        {/* Schedule Next Visit Button */}
+        <TouchableOpacity style={{ marginHorizontal: 20, marginTop: 24, backgroundColor: "#0f172a", borderRadius: 16, paddingVertical: 16, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+          <Calendar size={20} color="#ffffff" style={{ marginRight: 12 }} />
+          <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Schedule Next Visit</Text>
+        </TouchableOpacity>
 
-              <View className="flex-row justify-between pt-2.5 border-t border-slate-100">
-                <View>
-                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Planting Date</Text>
-                  <Text className="text-slate-900 text-xs font-brandon-bold">Mar 15, 2026</Text>
-                </View>
-                <View>
-                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Expected Harvest</Text>
-                  <Text className="text-slate-900 text-xs font-brandon-bold">Dec 2026</Text>
-                </View>
-                <View>
-                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Buyback Status</Text>
-                  <Text className="text-emerald-700 text-xs font-brandon-bold">Guaranteed</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          {/* Bio-Fertilizer & Soil Nutrition Status (Amber Medium Card) */}
-          <View className="bg-amber-50/90 rounded-3xl p-5 mb-4 border border-amber-200/90 shadow-sm">
-            <View className="flex-row items-center justify-between mb-3.5">
-              <View className="flex-row items-center">
-                <View className="w-8 h-8 rounded-full bg-amber-100 items-center justify-center border border-amber-200 mr-2">
-                  <Package size={16} color="#d97706" />
-                </View>
-                <Text className="text-slate-900 font-brandon-bold text-base">
-                  Bio-Inputs & Fertilizer Plan
-                </Text>
-              </View>
-              <View className="bg-amber-200/80 px-2.5 py-0.5 rounded-full">
-                <Text className="text-amber-900 font-brandon-bold text-xs">
-                  Active
-                </Text>
-              </View>
-            </View>
-
-            <View className="bg-white rounded-2xl p-4 border border-amber-100 mb-3">
-              <Text className="text-slate-900 font-brandon-bold text-sm mb-1">
-                Prescribed Nutrition Protocol
-              </Text>
-              <Text className="text-slate-700 text-xs font-brandon-medium leading-relaxed mb-3">
-                {farmer.fertilizerDetails || "Organic Vermicompost, Bio-NPK Granules, and Neem Cake applied along root irrigation drip lines."}
-              </Text>
-
-              <View className="flex-row justify-between pt-2.5 border-t border-slate-100">
-                <View>
-                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Recent Order</Text>
-                  <Text className="text-slate-900 text-xs font-brandon-bold">{farmer.recentOrder || "50kg Bio-NPK"}</Text>
-                </View>
-                <View>
-                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Next Application</Text>
-                  <Text className="text-amber-700 text-xs font-brandon-bold">In 12 Days</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          {/* Action Buttons */}
-          <View className="gap-3 mt-2">
-            <TouchableOpacity
-              activeOpacity={0.88}
-              onPress={() => router.push(`/(employee)/visit/check-in` as any)}
-              className="w-full bg-[#15803d] active:bg-[#166534] py-4 rounded-2xl items-center shadow-md flex-row justify-center"
-            >
-              <Calendar size={18} color="#ffffff" className="mr-2" />
-              <Text className="text-white font-brandon-bold text-base tracking-wide">
-                Start / Log Field Visit
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              activeOpacity={0.88}
-              onPress={handleCall}
-              className="w-full bg-white border border-slate-200 py-3.5 rounded-2xl items-center shadow-xs flex-row justify-center"
-            >
-              <Phone size={16} color="#059669" className="mr-2" />
-              <Text className="text-emerald-800 font-brandon-bold text-sm uppercase tracking-wider">
-                Call Farmer ({farmer.phone})
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      </ScrollView>
     </View>
   );
 }
