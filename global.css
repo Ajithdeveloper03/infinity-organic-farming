@@ -3,33 +3,35 @@
 @import "tailwindcss/utilities.css";
 @import "nativewind/theme";
 @theme {
-  --font-sans: "Montserrat_400Regular";
-  --font-serif: "Lora_400Regular";
-  --font-poppins: "Montserrat_400Regular";
-  --font-lora: "Lora_400Regular";
-  --font-gotham: "Montserrat_400Regular";
-  --font-gotham-medium: "Montserrat_500Medium";
-  --font-gotham-semibold: "Montserrat_600SemiBold";
-  --font-gotham-bold: "Montserrat_700Bold";
-  --font-brandon: "Montserrat_400Regular";
-  --font-brandon-medium: "Montserrat_500Medium";
-  --font-brandon-semibold: "Montserrat_600SemiBold";
-  --font-brandon-bold: "Montserrat_700Bold";
-  --font-tiro: "TiroTamil_400Regular";
-  --font-tiro-tamil: "TiroTamil_400Regular";
-  --font-tamil: "TiroTamil_400Regular";
-  --color-primary-100: #e8e8fc;
-  --color-primary-500: #15803d;
-  --color-primary-600: #7a7ce0;
-  --color-surface-bg: #f4f5f9;
+  --font-sans: DMSans_400Regular;
+  --font-serif: Spectral_700Bold;
+  --font-poppins: DMSans_400Regular;
+  --font-lora: Spectral_700Bold;
+  --font-gotham: DMSans_400Regular;
+  --font-gotham-medium: DMSans_500Medium;
+  --font-gotham-semibold: DMSans_700Bold;
+  --font-gotham-bold: DMSans_700Bold;
+  --font-brandon: DMSans_400Regular;
+  --font-brandon-medium: DMSans_500Medium;
+  --font-brandon-semibold: DMSans_700Bold;
+  --font-brandon-bold: DMSans_700Bold;
+  --font-tiro: TiroTamil_400Regular;
+  --font-tiro-tamil: TiroTamil_400Regular;
+  --font-tamil: TiroTamil_400Regular;
+  --color-primary-100: #f0fdf4; /* green-50 */
+  --color-primary-500: #15803d; /* green-700 */
+  --color-primary-600: #166534; /* green-800 */
+  --color-accent-500: #d97706; /* amber-600 */
+  --color-surface-bg: #f8fafc;
   --color-surface-card: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
   @theme {
-    --color-surface-bg: #000000;
-    --color-surface-card: #121212;
-    --color-primary-100: #1a1a24;
-    --color-primary-500: #16a34a;
-    --color-primary-600: #5a5bb5;
+    --color-surface-bg: #0f172a;
+    --color-surface-card: #1e293b;
+    --color-primary-100: #022c22;
+    --color-primary-500: #15803d;
+    --color-primary-600: #166534;
+    --color-accent-500: #d97706;
   }
 }

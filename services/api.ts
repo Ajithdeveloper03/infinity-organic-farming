@@ -5,7 +5,7 @@ const getApiUrl = () => {
   if (Platform.OS === 'web') {
     return 'http://localhost:8000/api/v1';
   }
-  return process.env.EXPO_PUBLIC_API_URL || 'http://10.152.189.194:8000/api/v1';
+  return process.env.EXPO_PUBLIC_API_URL || 'http://10.149.146.194:8000/api/v1';
 };
 
 const TOKEN_KEY = '@auth_token';

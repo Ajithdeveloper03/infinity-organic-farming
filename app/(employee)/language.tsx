@@ -20,13 +20,13 @@ export default function LanguageScreen() {
         {/* Header - Transparent */}
         <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
           <TouchableOpacity
-            onPress={() => router.back()}
+            onPress={() => router.push("/(employee)/dashboard")}
             className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
             accessibilityRole="button"
           >
             <ChevronLeft size={22} color="#111827" />
           </TouchableOpacity>
-          <Text className="text-lg font-gotham-bold text-gray-900">
+          <Text className="text-lg font-brandon-bold text-gray-900">
             Select Language
           </Text>
           <View className="w-10" />
@@ -46,7 +46,7 @@ export default function LanguageScreen() {
                 }`}
                 accessibilityRole="button"
               >
-                <Text className={`text-base font-brandon ${selectedLang === lang.id ? 'text-blue-600 font-bold' : 'text-gray-900'}`}>
+                <Text className={`text-base font-brandon ${selectedLang === lang.id ? 'text-blue-600 font-brandon-bold' : 'text-gray-900'}`}>
                   {lang.name}
                 </Text>
                 {selectedLang === lang.id && (

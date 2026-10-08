@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
   View,
   Text,
@@ -7,7 +6,9 @@ import {
   ScrollView,
   ImageBackground,
   StyleSheet,
+  StatusBar,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -15,13 +16,13 @@ import {
   Clock,
   CalendarDays,
   CheckCircle2,
+  MapPin,
   LogIn,
   LogOut,
-  MapPin,
-  Sparkles,
+  Fingerprint,
 } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLanguage, LanguageTogglePill } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/LanguageContext";
 
 export default function AttendanceScreen() {
   const { t, language } = useLanguage();
@@ -38,224 +39,102 @@ export default function AttendanceScreen() {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+    <View style={{ flex: 1, backgroundColor: "#0f172a" }}>
+      <StatusBar barStyle="light-content" />
+
+      {/* IMMERSIVE BACKGROUND */}
       <ImageBackground
-        source={require("../../../assets/images/image7.jpg")}
+        source={require("../../../assets/images/image12.jpg")}
         style={StyleSheet.absoluteFill}
-        imageStyle={{ opacity: 0.12 }}
         resizeMode="cover"
       >
         <LinearGradient
-          colors={["rgba(255, 255, 255, 0.4)", "rgba(248, 250, 252, 0.85)", "#f8fafc"]}
+          colors={["rgba(15,23,42,0.6)", "rgba(15,23,42,0.9)", "#0f172a"]}
           style={StyleSheet.absoluteFill}
         />
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-          {/* Header - Strictly Transparent Background (Light Mode) */}
-          <View
-            style={{ backgroundColor: "transparent" }}
-            className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
-          >
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm"
-              activeOpacity={0.7}
-            >
-              <ChevronLeft size={22} color="#0f172a" />
+        <SafeAreaView style={{ flex: 1 }}>
+          
+          {/* HEADER */}
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
+            <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace("/(employee)/dashboard")} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)" }}>
+              <ChevronLeft size={24} color="#ffffff" />
             </TouchableOpacity>
-            <Text className="text-lg font-gotham-bold text-slate-900">
-              {t("dutyAttendance", "Duty & Attendance")}
-            </Text>
-            <LanguageTogglePill />
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18 }}>Duty & Attendance</Text>
+            <View style={{ width: 44 }} />
           </View>
 
-          <ScrollView
-            className="flex-1"
-            contentContainerStyle={{ paddingBottom: 150, paddingTop: 10 }}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Hero Banner with DARK Overlay & Enhanced Bright White Text */}
-            <View className="p-5">
-              <View className="rounded-[28px] overflow-hidden shadow-md border border-slate-200 bg-slate-900">
-                <ImageBackground
-                  source={require("../../../assets/images/image1.jpg")}
-                  className="w-full h-52"
-                  resizeMode="cover"
-                >
-                  <LinearGradient
-                    colors={[
-                      "transparent",
-                      "rgba(0, 0, 0, 0.45)",
-                      "rgba(10, 15, 25, 0.94)",
-                    ]}
-                    locations={[0, 0.25, 1]}
-                    style={StyleSheet.absoluteFill}
-                  />
-
-                  <View className="flex-1 p-5 justify-between">
-                    <View className="flex-row items-center justify-between">
-                      <View className="flex-row items-center bg-emerald-500 px-3 py-1 rounded-full shadow-sm">
-                        <CalendarDays size={14} color="#ffffff" />
-                        <Text className="text-white font-gotham-bold text-[11px] ml-1.5 uppercase tracking-wider">
-                          {t("dailyTimeTracker", "Daily Time Tracker")}
-                        </Text>
-                      </View>
-
-                      <View className="bg-white/20 px-3 py-1 rounded-full border border-white/30">
-                        <Text className="text-white font-gotham-bold text-xs">
-                          {isClockedIn ? t("onDuty", "● On Duty") : t("clockedOut", "○ Clocked Out")}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <View>
-                      <Text className="text-white font-gotham-bold text-2xl mb-3">
-                        {t("todaysShiftHours", "Today's Shift Hours")}
-                      </Text>
-
-                      <View className="flex-row justify-between bg-black/40 rounded-2xl p-3.5 border border-white/20">
-                        <View className="items-center flex-1">
-                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">{t("clockIn", "Clock In")}</Text>
-                          <Text className="text-white font-gotham-bold text-sm mt-0.5">
-                            {clockInTime || "09:15 AM"}
-                          </Text>
-                        </View>
-                        <View className="w-px bg-white/20 h-full" />
-                        <View className="items-center flex-1">
-                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">{t("shiftDuration", "Shift Duration")}</Text>
-                          <Text className="text-emerald-300 font-gotham-bold text-sm mt-0.5">
-                            8.0 {t("hours", "Hours")}
-                          </Text>
-                        </View>
-                        <View className="w-px bg-white/20 h-full" />
-                        <View className="items-center flex-1">
-                          <Text className="text-slate-300 text-[11px] font-brandon uppercase">{t("geofence", "Geofence")}</Text>
-                          <Text className="text-blue-300 font-gotham-bold text-sm mt-0.5">
-                            {t("verified", "Verified")}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </ImageBackground>
-              </View>
-            </View>
-
-            {/* Quick Actions (Clock In / Clock Out Buttons) */}
-            <View className="px-5 mb-5 flex-row justify-between">
-              <TouchableOpacity
-                onPress={() => router.push("/(employee)/attendance/clock-in" as any)}
-                className="w-[48%] rounded-2xl overflow-hidden shadow-md"
-                activeOpacity={0.8}
-              >
-                <LinearGradient
-                  colors={["#059669", "#047857"]}
-                  style={{
-                    paddingVertical: 14,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <LogIn size={18} color="#fff" className="mr-2" />
-                  <Text className="text-white font-gotham-bold text-sm ml-2">{t("clockIn", "Clock In")}</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => router.push("/(employee)/attendance/clock-out" as any)}
-                className="w-[48%] rounded-2xl overflow-hidden shadow-md"
-                activeOpacity={0.8}
-              >
-                <LinearGradient
-                  colors={["#ea580c", "#c2410c"]}
-                  style={{
-                    paddingVertical: 14,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <LogOut size={18} color="#fff" className="mr-2" />
-                  <Text className="text-white font-gotham-bold text-sm ml-2">{t("clockOut", "Clock Out")}</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-
-            {/* Past Attendance Logs (White Cards with Crisp Dark Text) */}
-            <View className="px-5">
-              <Text className="text-slate-900 font-gotham-bold text-base mb-3">
-                {t("recentAttendanceHistory", "Recent Attendance History")}
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 120 }}>
+            
+            <View style={{ marginTop: 40, marginBottom: 32, alignItems: "center" }}>
+              <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 14, letterSpacing: 1, marginBottom: 8 }}>CURRENT STATUS</Text>
+              <Text style={{ color: isClockedIn ? "#4ade80" : "#f87171", fontFamily: "Brandon-Bold", fontSize: 48, lineHeight: 54 }}>
+                {isClockedIn ? "ON DUTY" : "OFF DUTY"}
               </Text>
+              {isClockedIn && (
+                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}>
+                  <Clock size={16} color="#94a3b8" />
+                  <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 14, marginLeft: 6 }}>Started at {clockInTime}</Text>
+                </View>
+              )}
+            </View>
 
+            {/* ACTION CARD */}
+            <View style={{ backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 32, padding: 24, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)", backdropFilter: "blur(20px)", shadowColor: "#000", shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.2, shadowRadius: 24, marginBottom: 32 }}>
+              
+              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 24 }}>
+                <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "rgba(59,130,246,0.2)", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                  <MapPin size={24} color="#60a5fa" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Location Verification</Text>
+                  <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Medium", fontSize: 13 }}>Delta Zone A • GPS Active</Text>
+                </View>
+                <CheckCircle2 size={24} color="#4ade80" />
+              </View>
+
+              {!isClockedIn ? (
+                <TouchableOpacity onPress={() => router.push("/(employee)/attendance/clock-in")} style={{ backgroundColor: "#16a34a", borderRadius: 999, paddingVertical: 18, flexDirection: "row", alignItems: "center", justifyContent: "center", shadowColor: "#16a34a", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.4, shadowRadius: 16, elevation: 8 }}>
+                  <LogIn size={20} color="#ffffff" style={{ marginRight: 8 }} />
+                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Clock In Now</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => router.push("/(employee)/attendance/clock-out")} style={{ backgroundColor: "#ef4444", borderRadius: 999, paddingVertical: 18, flexDirection: "row", alignItems: "center", justifyContent: "center", shadowColor: "#ef4444", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.4, shadowRadius: 16, elevation: 8 }}>
+                  <LogOut size={20} color="#ffffff" style={{ marginRight: 8 }} />
+                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Clock Out Securely</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {/* WEEKLY LOG */}
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 16 }}>This Week's Log</Text>
+            
+            <View style={{ gap: 12 }}>
               {[
-                {
-                  date: t("today", "Today"),
-                  in: clockInTime || "09:15 AM",
-                  out: language === "ta" ? "செயல்பாட்டில்" : "In Progress",
-                  hours: t("activeShift", "Active"),
-                  status: t("present", "Present"),
-                  color: "#059669",
-                  location: "Delta Field Office, Thanjavur",
-                },
-                {
-                  date: t("yesterday", "Yesterday"),
-                  in: "09:00 AM",
-                  out: "06:10 PM",
-                  hours: "9.1 hrs",
-                  status: t("completed", "Completed"),
-                  color: "#2563eb",
-                  location: "Annur Ag-Cluster, Coimbatore",
-                },
-                {
-                  date: "Sep 06, 2026",
-                  in: "08:50 AM",
-                  out: "05:30 PM",
-                  hours: "8.6 hrs",
-                  status: t("completed", "Completed"),
-                  color: "#7c3aed",
-                  location: "Pollachi Organic Belt",
-                },
-              ].map((item, idx) => (
-                <View
-                  key={idx}
-                  className="bg-white rounded-[22px] p-4 mb-3 border border-slate-200 shadow-sm"
-                >
-                  <View className="flex-row justify-between items-center mb-2">
-                    <View className="flex-row items-center">
-                      <Clock size={16} color={item.color} className="mr-2" />
-                      <Text className="text-slate-900 font-gotham-bold text-sm ml-2">
-                        {item.date}
-                      </Text>
-                    </View>
-                    <View
-                      style={{ backgroundColor: `${item.color}15`, borderColor: `${item.color}35` }}
-                      className="px-2.5 py-0.5 rounded-full border"
-                    >
-                      <Text style={{ color: item.color }} className="text-xs font-gotham-bold">
-                        {item.status}
-                      </Text>
-                    </View>
+                { day: "Today", date: "Oct 8", in: "09:15 AM", out: "--", status: "active" },
+                { day: "Yesterday", date: "Oct 7", in: "08:50 AM", out: "05:30 PM", status: "completed" },
+                { day: "Monday", date: "Oct 6", in: "09:00 AM", out: "06:00 PM", status: "completed" },
+              ].map((log, index) => (
+                <View key={index} style={{ flexDirection: "row", alignItems: "center", backgroundColor: "rgba(255,255,255,0.05)", padding: 16, borderRadius: 20, borderWidth: 1, borderColor: "rgba(255,255,255,0.05)" }}>
+                  <View style={{ width: 56, alignItems: "center", marginRight: 16, borderRightWidth: 1, borderRightColor: "rgba(255,255,255,0.1)", paddingRight: 16 }}>
+                    <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>{log.day}</Text>
+                    <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11 }}>{log.date}</Text>
                   </View>
-
-                  <View className="flex-row justify-between py-2 border-t border-slate-100">
-                    <Text className="text-slate-500 font-brandon text-xs">
-                      {t("time", "Time")}: {item.in} → {item.out}
-                    </Text>
-                    <Text className="text-emerald-700 font-gotham-bold text-xs">
-                      {item.hours}
-                    </Text>
-                  </View>
-
-                  <View className="flex-row items-center mt-1">
-                    <MapPin size={12} color="#64748b" />
-                    <Text className="text-slate-600 font-brandon text-xs ml-1">
-                      {item.location}
-                    </Text>
+                  
+                  <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
+                    <View>
+                      <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11, marginBottom: 2 }}>Clock In</Text>
+                      <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>{log.in}</Text>
+                    </View>
+                    <View style={{ alignItems: "flex-end" }}>
+                      <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11, marginBottom: 2 }}>Clock Out</Text>
+                      <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>{log.out}</Text>
+                    </View>
                   </View>
                 </View>
               ))}
             </View>
+
           </ScrollView>
         </SafeAreaView>
       </ImageBackground>

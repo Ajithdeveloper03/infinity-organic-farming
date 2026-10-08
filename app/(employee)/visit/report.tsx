@@ -88,7 +88,7 @@ export default function SubmitReportScreen() {
           >
             <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
-          <Text className="text-gray-900 font-gotham-bold text-lg">
+          <Text className="text-gray-900 font-brandon-bold text-lg">
             Submit Report
           </Text>
           <View className="w-10" />
@@ -110,7 +110,7 @@ export default function SubmitReportScreen() {
             ))}
           </View>
           {/* Form Fields */}
-          <Text className="text-gray-900 font-gotham-bold mb-2 ml-1">
+          <Text className="text-gray-900 font-brandon-bold mb-2 ml-1">
             Crop Condition
           </Text>
           <TouchableOpacity
@@ -122,7 +122,7 @@ export default function SubmitReportScreen() {
             </Text>
             <ChevronDown size={20} color="#6b7280" />
           </TouchableOpacity>
-          <Text className="text-gray-900 font-gotham-bold mb-2 ml-1">
+          <Text className="text-gray-900 font-brandon-bold mb-2 ml-1">
             Observations / Notes *
           </Text>
           <View className="border border-gray-200 rounded-xl px-4 py-3 mb-6 bg-gray-50 h-28 shadow-sm">
@@ -139,7 +139,7 @@ export default function SubmitReportScreen() {
           <View className="bg-orange-50 rounded-2xl p-5 mb-6 border border-orange-100 shadow-sm">
             <View className="flex-row items-center mb-4">
               <IndianRupee size={20} color="#ea580c" className="mr-2" />
-              <Text className="text-gray-900 font-gotham-bold text-base">
+              <Text className="text-gray-900 font-brandon-bold text-base">
                 Payment / Collection Details
               </Text>
             </View>
@@ -151,7 +151,7 @@ export default function SubmitReportScreen() {
                   className={`flex-1 py-2 rounded-lg items-center border mx-1 ${paymentMode === mode ? "bg-orange-500 border-orange-500" : "bg-white border-gray-200"}`}
                 >
                   <Text
-                    className={`font-gotham-bold text-sm ${paymentMode === mode ? "text-gray-900" : "text-gray-500"}`}
+                    className={`font-brandon-bold text-sm ${paymentMode === mode ? "text-gray-900" : "text-gray-500"}`}
                   >
                     {mode}
                   </Text>
@@ -160,11 +160,11 @@ export default function SubmitReportScreen() {
             </View>
             {paymentMode !== "None" && (
               <View className="border border-gray-200 rounded-xl px-4 py-3 bg-white flex-row items-center">
-                <Text className="text-gray-500 font-gotham-bold text-lg mr-2">
+                <Text className="text-gray-500 font-brandon-bold text-lg mr-2">
                   ₹
                 </Text>
                 <TextInput
-                  className="flex-1 text-gray-900 font-gotham-bold text-lg"
+                  className="flex-1 text-gray-900 font-brandon-bold text-lg"
                   placeholder="Amount Collected"
                   keyboardType="numeric"
                   value={amountCollected}
@@ -174,7 +174,7 @@ export default function SubmitReportScreen() {
             )}
           </View>
           {/* Photos */}
-          <Text className="text-gray-900 font-gotham-bold mb-2 ml-1">
+          <Text className="text-gray-900 font-brandon-bold mb-2 ml-1">
             Attach Evidence
           </Text>
           <ScrollView
@@ -199,7 +199,7 @@ export default function SubmitReportScreen() {
               <Plus size={28} color="#15803d" />
             </TouchableOpacity>
           </ScrollView>
-          <Text className="text-gray-900 font-gotham-bold mb-2 ml-1">
+          <Text className="text-gray-900 font-brandon-bold mb-2 ml-1">
             Recommendations
           </Text>
           <View className="border border-gray-200 rounded-xl px-4 py-3 mb-8 bg-gray-50 h-28 shadow-sm">

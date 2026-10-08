@@ -22,7 +22,7 @@ import {
   Sprout,
   Users,
 } from "lucide-react-native";
-import { api } from "../../../services/api";
+import { apiClient } from "../../../api/client";
 import { showToast } from "../../../components/ui/ToastMessage";
 
 export default function RegisterStep5Screen() {
@@ -44,27 +44,20 @@ export default function RegisterStep5Screen() {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      // Simulate API registration call or actual backend endpoint
-      const newId = `FM-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-      
-      try {
-        await api.post("/employee/farmers", {
-          name: params.fullName || "Ramesh Kumar",
-          phone: params.mobile || "9687846895",
-          email: params.email || "rameshkumar@gmail.com",
-          village: params.village || "Thottipalayam",
-          taluk: params.taluk || "Coimbatore",
-          district: params.district || "Coimbatore",
-          state: params.state || "Tamilnadu",
-          pincode: params.pincode || "641045",
-          land_acres: totalLand.replace(/[^0-9.]/g, "") || "5",
-          survey_no: surveyNumber,
-        });
-      } catch (e) {
-        console.log("Mock offline sync notice:", e);
-      }
+      const response = await apiClient.post("/employee/farmer/register", {
+        name: params.fullName || "Ramesh Kumar",
+        phone: params.mobile || "9687846895",
+        email: params.email || "rameshkumar@gmail.com",
+        village: params.village || "Thottipalayam",
+        taluk: params.taluk || "Coimbatore",
+        district: params.district || "Coimbatore",
+        state: params.state || "Tamilnadu",
+        pincode: params.pincode || "641045",
+        land_acres: totalLand.replace(/[^0-9.]/g, "") || "5",
+        survey_no: surveyNumber,
+      });
 
-      setRegisteredFarmerId(newId);
+      setRegisteredFarmerId(response.farmer?.farmer_id || `FM-2026-${Math.floor(1000 + Math.random() * 9000)}`);
     } catch (err) {
       showToast({
         title: "Registration Error",
@@ -88,7 +81,7 @@ export default function RegisterStep5Screen() {
           <ChevronLeft size={22} color="#0f172a" />
         </TouchableOpacity>
         <View>
-          <Text className="text-xl font-gotham-bold text-slate-900">
+          <Text className="text-xl font-brandon-bold text-slate-900">
             Farmer Registration
           </Text>
           <Text className="text-slate-500 font-brandon text-xs">
@@ -105,24 +98,24 @@ export default function RegisterStep5Screen() {
         {/* 4-Step Stepper */}
         <View className="flex-row items-center justify-center my-4 px-4">
           <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">✓</Text>
+            <Text className="text-white font-brandon-bold text-xs">✓</Text>
           </View>
           <View className="flex-1 h-0.5 bg-[#2f6f36] mx-2" />
           <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">✓</Text>
+            <Text className="text-white font-brandon-bold text-xs">✓</Text>
           </View>
           <View className="flex-1 h-0.5 bg-[#2f6f36] mx-2" />
           <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">✓</Text>
+            <Text className="text-white font-brandon-bold text-xs">✓</Text>
           </View>
           <View className="flex-1 h-0.5 bg-[#2f6f36] mx-2" />
           <View className="w-8 h-8 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">4</Text>
+            <Text className="text-white font-brandon-bold text-xs">4</Text>
           </View>
         </View>
 
         {/* SECTION 1: Farm Details */}
-        <Text className="text-slate-900 font-gotham-bold text-base mt-2 mb-3">
+        <Text className="text-slate-900 font-brandon-bold text-base mt-2 mb-3">
           Farm Details
         </Text>
 
@@ -132,7 +125,7 @@ export default function RegisterStep5Screen() {
               Total Land Owned
             </Text>
             <TextInput
-              className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+              className="text-base font-brandon-bold text-slate-900 p-0 m-0"
               value={totalLand}
               onChangeText={setTotalLand}
             />
@@ -143,7 +136,7 @@ export default function RegisterStep5Screen() {
               Land for Vetiver
             </Text>
             <TextInput
-              className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+              className="text-base font-brandon-bold text-slate-900 p-0 m-0"
               value={landForVetiver}
               onChangeText={setLandForVetiver}
             />
@@ -154,7 +147,7 @@ export default function RegisterStep5Screen() {
               Survey Number
             </Text>
             <TextInput
-              className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+              className="text-base font-brandon-bold text-slate-900 p-0 m-0"
               value={surveyNumber}
               onChangeText={setSurveyNumber}
             />
@@ -165,7 +158,7 @@ export default function RegisterStep5Screen() {
               Location
             </Text>
             <TextInput
-              className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+              className="text-base font-brandon-bold text-slate-900 p-0 m-0"
               value={location}
               onChangeText={setLocation}
             />
@@ -208,7 +201,7 @@ export default function RegisterStep5Screen() {
         </View>
 
         {/* SECTION 2: Farming Information */}
-        <Text className="text-slate-900 font-gotham-bold text-base mt-2 mb-3">
+        <Text className="text-slate-900 font-brandon-bold text-base mt-2 mb-3">
           Farming Information
         </Text>
 
@@ -218,7 +211,7 @@ export default function RegisterStep5Screen() {
               Seeds/Bags Required
             </Text>
             <TextInput
-              className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+              className="text-base font-brandon-bold text-slate-900 p-0 m-0"
               value={seedsBags}
               onChangeText={setSeedsBags}
             />
@@ -229,7 +222,7 @@ export default function RegisterStep5Screen() {
               Planned Investment
             </Text>
             <TextInput
-              className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+              className="text-base font-brandon-bold text-slate-900 p-0 m-0"
               value={plannedInvestment}
               onChangeText={setPlannedInvestment}
             />
@@ -241,7 +234,7 @@ export default function RegisterStep5Screen() {
               <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
                 Irrigation Type
               </Text>
-              <Text className="text-base font-gotham-bold text-slate-900">
+              <Text className="text-base font-brandon-bold text-slate-900">
                 {irrigationType}
               </Text>
             </View>
@@ -254,7 +247,7 @@ export default function RegisterStep5Screen() {
               <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
                 Soil Type
               </Text>
-              <Text className="text-base font-gotham-bold text-slate-900">
+              <Text className="text-base font-brandon-bold text-slate-900">
                 {soilType}
               </Text>
             </View>
@@ -267,7 +260,7 @@ export default function RegisterStep5Screen() {
               <Text className="text-slate-400 text-[11px] font-brandon-medium mb-1">
                 Expected Plantation Date
               </Text>
-              <Text className="text-base font-gotham-bold text-slate-900">
+              <Text className="text-base font-brandon-bold text-slate-900">
                 {plantationDate}
               </Text>
             </View>
@@ -282,7 +275,7 @@ export default function RegisterStep5Screen() {
             onPress={() => router.back()}
             className="flex-1 bg-white border border-[#2f6f36] py-4 rounded-2xl items-center justify-center shadow-sm mr-2"
           >
-            <Text className="text-[#2f6f36] font-gotham-bold text-base tracking-wide">
+            <Text className="text-[#2f6f36] font-brandon-bold text-base tracking-wide">
               Back
             </Text>
           </TouchableOpacity>
@@ -296,7 +289,7 @@ export default function RegisterStep5Screen() {
             {submitting ? (
               <ActivityIndicator size="small" color="#ffffff" />
             ) : (
-              <Text className="text-white font-gotham-bold text-base tracking-wide">
+              <Text className="text-white font-brandon-bold text-base tracking-wide">
                 Next
               </Text>
             )}
@@ -313,12 +306,12 @@ export default function RegisterStep5Screen() {
                 <CheckCircle2 size={42} color="#059669" />
               </View>
 
-              <Text className="text-slate-900 font-gotham-bold text-2xl text-center mb-1">
+              <Text className="text-slate-900 font-brandon-bold text-2xl text-center mb-1">
                 Registration Complete!
               </Text>
 
               <View className="bg-emerald-50 px-3.5 py-1.5 rounded-full border border-emerald-200 my-2">
-                <Text className="text-emerald-800 font-gotham-bold text-xs uppercase tracking-wider">
+                <Text className="text-emerald-800 font-brandon-bold text-xs uppercase tracking-wider">
                   Farmer ID: {registeredFarmerId}
                 </Text>
               </View>
@@ -335,7 +328,7 @@ export default function RegisterStep5Screen() {
                 }}
                 className="w-full bg-[#2f6f36] py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-900/20 mt-2"
               >
-                <Text className="text-white font-gotham-bold text-base">
+                <Text className="text-white font-brandon-bold text-base">
                   View in Directory
                 </Text>
               </TouchableOpacity>

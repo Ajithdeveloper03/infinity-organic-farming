@@ -116,7 +116,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
             >
               {getIcon()}
               <Text
-                className={`text-[10px] mt-1 font-brandon-medium ${isFocused ? "text-green-800 font-bold" : "text-gray-500"}`}
+                className={`text-[10px] mt-1 font-brandon-medium ${isFocused ? "text-green-800 font-brandon-bold" : "text-gray-500"}`}
               >
                 {label}
               </Text>

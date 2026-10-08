@@ -69,68 +69,42 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           };
 
           const getIcon = () => {
-            const activeColor = "#15803d";
-
-            const inactiveColor = "#6b7280";
+            const activeColor = "#059669";
+            const inactiveColor = "#ffffff";
 
             const color = isFocused ? activeColor : inactiveColor;
             switch (route.name) {
               case "dashboard":
-                return (
-                  <Home
-                    size={24}
-                    color={color}
-                    strokeWidth={isFocused ? 2.5 : 2}
-                  />
-                );
+                return <Home size={22} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
               case "documents":
-                return (
-                  <FileText
-                    size={24}
-                    color={color}
-                    strokeWidth={isFocused ? 2.5 : 2}
-                  />
-                );
+                return <FileText size={22} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
               case "farm":
-                return (
-                  <CalendarDays
-                    size={24}
-                    color={color}
-                    strokeWidth={isFocused ? 2.5 : 2}
-                  />
-                );
+                return <CalendarDays size={22} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
               case "profile":
-                return (
-                  <User
-                    size={24}
-                    color={color}
-                    strokeWidth={isFocused ? 2.5 : 2}
-                  />
-                );
+                return <User size={22} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
               default:
                 return null;
             }
           };
+          
           return (
             <TouchableOpacity
               key={route.key}
               accessibilityRole="button"
-              accessibilityState={
-                isFocused
-                  ? {
-                      selected: true,
-                    }
-                  : {}
-              }
+              accessibilityState={isFocused ? { selected: true } : {}}
               onPress={onPress}
-              className="flex-1 items-center justify-center pt-1 group h-full"
+              className="flex-1 items-center justify-center h-full"
             >
-              {getIcon()}
-              <Text
-                className={`text-[10px] mt-1 font-brandon-medium ${isFocused ? "text-green-800 font-bold" : "text-gray-500"}`}
-              >
-                {label}
-              </Text>
+              <View style={{
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                backgroundColor: isFocused ? "#ffffff" : "transparent",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+                {getIcon()}
+              </View>
             </TouchableOpacity>
           );
         })}
@@ -145,27 +119,24 @@ const styles = StyleSheet.create({
     bottom: 24,
     left: 20,
     right: 20,
-    borderRadius: 32,
+    borderRadius: 40,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 20,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 30,
+    shadowColor: "#059669",
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: 0.2,
+    shadowRadius: 24,
     elevation: 20,
-    backgroundColor: "#ffffff",
+    backgroundColor: "transparent",
   },
   blurView: {
     flexDirection: "row",
-    height: 72,
-    paddingHorizontal: 10,
+    height: 76,
+    paddingHorizontal: 8,
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "rgba(255, 255, 255, 0.85)",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.05)",
+    borderColor: "rgba(255, 255, 255, 0.4)",
   },
 });
 

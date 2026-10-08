@@ -50,7 +50,7 @@ export default function Step1Mobile() {
         </TouchableOpacity>
 
         <View className="items-center">
-          <Text className="text-lg font-gotham-bold text-slate-900">
+          <Text className="text-lg font-brandon-bold text-slate-900">
             Register Farmer
           </Text>
           <Text className="text-slate-500 font-brandon text-xs">
@@ -69,19 +69,19 @@ export default function Step1Mobile() {
         {/* 4-Step Stepper */}
         <View className="flex-row items-center justify-center my-4 px-6">
           <View className="w-8 h-8 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">1</Text>
+            <Text className="text-white font-brandon-bold text-xs">1</Text>
           </View>
           <View className="flex-1 h-0.5 bg-slate-200 mx-2" />
           <View className="w-8 h-8 rounded-full bg-white border border-slate-300 items-center justify-center">
-            <Text className="text-slate-400 font-gotham-bold text-xs">2</Text>
+            <Text className="text-slate-400 font-brandon-bold text-xs">2</Text>
           </View>
           <View className="flex-1 h-0.5 bg-slate-200 mx-2" />
           <View className="w-8 h-8 rounded-full bg-white border border-slate-300 items-center justify-center">
-            <Text className="text-slate-400 font-gotham-bold text-xs">3</Text>
+            <Text className="text-slate-400 font-brandon-bold text-xs">3</Text>
           </View>
           <View className="flex-1 h-0.5 bg-slate-200 mx-2" />
           <View className="w-8 h-8 rounded-full bg-white border border-slate-300 items-center justify-center">
-            <Text className="text-slate-400 font-gotham-bold text-xs">4</Text>
+            <Text className="text-slate-400 font-brandon-bold text-xs">4</Text>
           </View>
         </View>
 
@@ -94,7 +94,7 @@ export default function Step1Mobile() {
               resizeMode="contain"
             />
           </View>
-          <Text className="text-xl font-gotham-bold text-slate-900 mt-3 text-center">
+          <Text className="text-xl font-brandon-bold text-slate-900 mt-3 text-center">
             Farmer Identity & Category
           </Text>
           <Text className="text-slate-500 font-brandon text-xs text-center mt-1 px-4">
@@ -104,16 +104,16 @@ export default function Step1Mobile() {
 
         {/* Mobile Input Card */}
         <View className="bg-emerald-50/70 rounded-2xl p-4 border border-emerald-200/90 shadow-sm mb-4">
-          <Text className="text-emerald-900 text-xs font-gotham-bold uppercase tracking-wider mb-2">
+          <Text className="text-emerald-900 text-xs font-brandon-bold uppercase tracking-wider mb-2">
             Mobile Number
           </Text>
           <View className="flex-row items-center bg-white rounded-xl px-3.5 py-3 border border-slate-200">
             <Phone size={18} color="#059669" />
-            <Text className="text-slate-900 font-gotham-bold text-base ml-2.5 mr-1.5">
+            <Text className="text-slate-900 font-brandon-bold text-base ml-2.5 mr-1.5">
               +91
             </Text>
             <TextInput
-              className="flex-1 text-base font-gotham-bold text-slate-900 p-0 m-0"
+              className="flex-1 text-base font-brandon-bold text-slate-900 p-0 m-0"
               placeholder="98765 43210"
               placeholderTextColor="#94a3b8"
               keyboardType="phone-pad"
@@ -126,7 +126,7 @@ export default function Step1Mobile() {
 
         {/* Customer Category Selection Card */}
         <View className="bg-sky-50/70 rounded-2xl p-4 border border-sky-200/90 shadow-sm mb-4">
-          <Text className="text-sky-950 text-xs font-gotham-bold uppercase tracking-wider mb-2.5">
+          <Text className="text-sky-950 text-xs font-brandon-bold uppercase tracking-wider mb-2.5">
             Customer Category
           </Text>
           <View className="flex-row justify-between">
@@ -137,16 +137,14 @@ export default function Step1Mobile() {
                   key={cat}
                   onPress={() => setCategory(cat)}
                   activeOpacity={0.8}
-                  className={`flex-1 py-3 px-2 rounded-xl mx-1 border items-center shadow-sm ${
-                    selected
+                  className={`flex-1 py-3 px-2 rounded-xl mx-1 border items-center shadow-sm ${selected
                       ? "bg-[#2f6f36] border-[#2f6f36]"
                       : "bg-white border-slate-200"
-                  }`}
+                    }`}
                 >
                   <Text
-                    className={`font-gotham-bold text-xs ${
-                      selected ? "text-white" : "text-slate-700"
-                    }`}
+                    className={`font-brandon-bold text-xs ${selected ? "text-white" : "text-slate-700"
+                      }`}
                   >
                     {cat}
                   </Text>
@@ -159,13 +157,13 @@ export default function Step1Mobile() {
         {/* Crops Input Card */}
         {(category === "Crop" || category === "Both") && (
           <View className="bg-amber-50/70 rounded-2xl p-4 border border-amber-200/90 shadow-sm mb-6">
-            <Text className="text-amber-950 text-xs font-gotham-bold uppercase tracking-wider mb-2">
+            <Text className="text-amber-950 text-xs font-brandon-bold uppercase tracking-wider mb-2">
               Cultivated Crop Varieties
             </Text>
             <View className="flex-row items-center bg-white rounded-xl px-3.5 py-3 border border-slate-200">
               <Tag size={18} color="#d97706" />
               <TextInput
-                className="flex-1 ml-2.5 text-base font-gotham-bold text-slate-900 p-0 m-0"
+                className="flex-1 ml-2.5 text-base font-brandon-bold text-slate-900 p-0 m-0"
                 placeholder="e.g. Vetiver, Turmeric, Pepper"
                 placeholderTextColor="#94a3b8"
                 value={crops}
@@ -181,7 +179,7 @@ export default function Step1Mobile() {
           onPress={handleNext}
           className="w-full bg-[#2f6f36] py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-900/20 flex-row mt-2"
         >
-          <Text className="text-white font-gotham-bold text-base tracking-wide mr-2">
+          <Text className="text-white font-brandon-bold text-base tracking-wide mr-2">
             Continue to Personal Details
           </Text>
           <ArrowRight size={18} color="#ffffff" />

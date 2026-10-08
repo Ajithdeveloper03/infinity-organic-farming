@@ -76,7 +76,7 @@ export default function FarmerDetailsScreen() {
             <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
 
-          <Text className="text-base font-gotham-bold text-slate-900">
+          <Text className="text-base font-brandon-bold text-slate-900">
             {language === "ta" ? "விவசாயி விவரங்கள்" : "Farmer Dossier"}
           </Text>
 
@@ -137,7 +137,7 @@ export default function FarmerDetailsScreen() {
 
               <View className="flex-1">
                 <View className="flex-row items-center">
-                  <Text className="text-slate-900 font-gotham-bold text-xl">
+                  <Text className="text-slate-900 font-brandon-bold text-xl">
                     {farmer.name}
                   </Text>
                   <ShieldCheck size={18} color="#059669" className="ml-1.5" />
@@ -145,12 +145,12 @@ export default function FarmerDetailsScreen() {
 
                 <View className="flex-row items-center mt-1">
                   <MapPin size={13} color="#047857" />
-                  <Text className="text-slate-700 font-gotham-medium text-xs ml-1" numberOfLines={1}>
+                  <Text className="text-slate-700 font-brandon-medium text-xs ml-1" numberOfLines={1}>
                     {farmer.address}
                   </Text>
                 </View>
 
-                <Text className="text-emerald-800 font-gotham-bold text-xs mt-1">
+                <Text className="text-emerald-800 font-brandon-bold text-xs mt-1">
                   Phone: {farmer.phone}
                 </Text>
               </View>
@@ -161,7 +161,7 @@ export default function FarmerDetailsScreen() {
               {isDual && (
                 <View className="bg-purple-100 border border-purple-300 px-3 py-1 rounded-full flex-row items-center">
                   <Sparkles size={13} color="#7e22ce" className="mr-1" />
-                  <Text className="text-purple-900 font-gotham-bold text-xs uppercase tracking-wider">
+                  <Text className="text-purple-900 font-brandon-bold text-xs uppercase tracking-wider">
                     ★ Dual Client (Crops & Inputs)
                   </Text>
                 </View>
@@ -170,7 +170,7 @@ export default function FarmerDetailsScreen() {
               {(isDual || isCrop) && (
                 <View className="bg-emerald-100 border border-emerald-300 px-3 py-1 rounded-full flex-row items-center">
                   <Sprout size={13} color="#047857" className="mr-1" />
-                  <Text className="text-emerald-900 font-gotham-bold text-xs uppercase tracking-wider">
+                  <Text className="text-emerald-900 font-brandon-bold text-xs uppercase tracking-wider">
                     Crop Cultivator • {farmer.cropType}
                   </Text>
                 </View>
@@ -179,7 +179,7 @@ export default function FarmerDetailsScreen() {
               {(isDual || isFert) && (
                 <View className="bg-amber-100 border border-amber-300 px-3 py-1 rounded-full flex-row items-center">
                   <Package size={13} color="#b45309" className="mr-1" />
-                  <Text className="text-amber-900 font-gotham-bold text-xs uppercase tracking-wider">
+                  <Text className="text-amber-900 font-brandon-bold text-xs uppercase tracking-wider">
                     Bio-Fertilizer Buyer
                   </Text>
                 </View>
@@ -194,12 +194,12 @@ export default function FarmerDetailsScreen() {
                 <View className="w-8 h-8 rounded-full bg-sky-100 items-center justify-center border border-sky-200 mr-2">
                   <Layers size={16} color="#0284c7" />
                 </View>
-                <Text className="text-slate-900 font-gotham-bold text-base">
+                <Text className="text-slate-900 font-brandon-bold text-base">
                   Land & Soil Specifications
                 </Text>
               </View>
               <View className="bg-sky-200/80 px-2.5 py-0.5 rounded-full">
-                <Text className="text-sky-900 font-gotham-bold text-xs">
+                <Text className="text-sky-900 font-brandon-bold text-xs">
                   {farmer.farmArea}
                 </Text>
               </View>
@@ -207,20 +207,20 @@ export default function FarmerDetailsScreen() {
 
             <View className="flex-row gap-2.5 mb-3">
               <View className="flex-1 bg-white p-3 rounded-2xl border border-sky-100 items-center">
-                <Text className="text-sky-950 font-gotham-bold text-lg">6.8</Text>
-                <Text className="text-slate-600 text-[10px] font-gotham-bold uppercase tracking-wider">
+                <Text className="text-sky-950 font-brandon-bold text-lg">6.8</Text>
+                <Text className="text-slate-600 text-[10px] font-brandon-bold uppercase tracking-wider">
                   Soil pH (Optimal)
                 </Text>
               </View>
               <View className="flex-1 bg-white p-3 rounded-2xl border border-sky-100 items-center">
-                <Text className="text-sky-950 font-gotham-bold text-lg">68%</Text>
-                <Text className="text-slate-600 text-[10px] font-gotham-bold uppercase tracking-wider">
+                <Text className="text-sky-950 font-brandon-bold text-lg">68%</Text>
+                <Text className="text-slate-600 text-[10px] font-brandon-bold uppercase tracking-wider">
                   Moisture Index
                 </Text>
               </View>
               <View className="flex-1 bg-white p-3 rounded-2xl border border-sky-100 items-center">
-                <Text className="text-sky-950 font-gotham-bold text-lg">42 cm</Text>
-                <Text className="text-slate-600 text-[10px] font-gotham-bold uppercase tracking-wider">
+                <Text className="text-sky-950 font-brandon-bold text-lg">42 cm</Text>
+                <Text className="text-slate-600 text-[10px] font-brandon-bold uppercase tracking-wider">
                   Root Depth
                 </Text>
               </View>
@@ -228,12 +228,12 @@ export default function FarmerDetailsScreen() {
 
             <View className="bg-white rounded-2xl p-3 border border-sky-100">
               <View className="flex-row items-center justify-between mb-2">
-                <Text className="text-slate-600 text-xs font-gotham-medium">Irrigation System</Text>
-                <Text className="text-slate-900 text-xs font-gotham-bold">Automated Root Drip</Text>
+                <Text className="text-slate-600 text-xs font-brandon-medium">Irrigation System</Text>
+                <Text className="text-slate-900 text-xs font-brandon-bold">Automated Root Drip</Text>
               </View>
               <View className="flex-row items-center justify-between">
-                <Text className="text-slate-600 text-xs font-gotham-medium">Organic Certification</Text>
-                <Text className="text-emerald-700 text-xs font-gotham-bold">NPOP Certified Organic</Text>
+                <Text className="text-slate-600 text-xs font-brandon-medium">Organic Certification</Text>
+                <Text className="text-emerald-700 text-xs font-brandon-bold">NPOP Certified Organic</Text>
               </View>
             </View>
           </View>
@@ -245,37 +245,37 @@ export default function FarmerDetailsScreen() {
                 <View className="w-8 h-8 rounded-full bg-emerald-100 items-center justify-center border border-emerald-200 mr-2">
                   <Sprout size={16} color="#059669" />
                 </View>
-                <Text className="text-slate-900 font-gotham-bold text-base">
+                <Text className="text-slate-900 font-brandon-bold text-base">
                   Crop Cultivation Details
                 </Text>
               </View>
               <View className="bg-emerald-200/80 px-2.5 py-0.5 rounded-full">
-                <Text className="text-emerald-900 font-gotham-bold text-xs">
+                <Text className="text-emerald-900 font-brandon-bold text-xs">
                   Active Cycle
                 </Text>
               </View>
             </View>
 
             <View className="bg-white rounded-2xl p-4 border border-emerald-100 mb-3">
-              <Text className="text-slate-900 font-gotham-bold text-sm mb-1">
+              <Text className="text-slate-900 font-brandon-bold text-sm mb-1">
                 {farmer.cropType}
               </Text>
-              <Text className="text-slate-700 text-xs font-gotham-medium leading-relaxed mb-3">
+              <Text className="text-slate-700 text-xs font-brandon-medium leading-relaxed mb-3">
                 {farmer.cropDetails || "Vegetative growth stage under organic protocols. Healthy leaf canopy and fibrous root network."}
               </Text>
 
               <View className="flex-row justify-between pt-2.5 border-t border-slate-100">
                 <View>
-                  <Text className="text-slate-500 text-[10px] font-gotham-bold uppercase">Planting Date</Text>
-                  <Text className="text-slate-900 text-xs font-gotham-bold">Mar 15, 2026</Text>
+                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Planting Date</Text>
+                  <Text className="text-slate-900 text-xs font-brandon-bold">Mar 15, 2026</Text>
                 </View>
                 <View>
-                  <Text className="text-slate-500 text-[10px] font-gotham-bold uppercase">Expected Harvest</Text>
-                  <Text className="text-slate-900 text-xs font-gotham-bold">Dec 2026</Text>
+                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Expected Harvest</Text>
+                  <Text className="text-slate-900 text-xs font-brandon-bold">Dec 2026</Text>
                 </View>
                 <View>
-                  <Text className="text-slate-500 text-[10px] font-gotham-bold uppercase">Buyback Status</Text>
-                  <Text className="text-emerald-700 text-xs font-gotham-bold">Guaranteed</Text>
+                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Buyback Status</Text>
+                  <Text className="text-emerald-700 text-xs font-brandon-bold">Guaranteed</Text>
                 </View>
               </View>
             </View>
@@ -288,33 +288,33 @@ export default function FarmerDetailsScreen() {
                 <View className="w-8 h-8 rounded-full bg-amber-100 items-center justify-center border border-amber-200 mr-2">
                   <Package size={16} color="#d97706" />
                 </View>
-                <Text className="text-slate-900 font-gotham-bold text-base">
+                <Text className="text-slate-900 font-brandon-bold text-base">
                   Bio-Inputs & Fertilizer Plan
                 </Text>
               </View>
               <View className="bg-amber-200/80 px-2.5 py-0.5 rounded-full">
-                <Text className="text-amber-900 font-gotham-bold text-xs">
+                <Text className="text-amber-900 font-brandon-bold text-xs">
                   Active
                 </Text>
               </View>
             </View>
 
             <View className="bg-white rounded-2xl p-4 border border-amber-100 mb-3">
-              <Text className="text-slate-900 font-gotham-bold text-sm mb-1">
+              <Text className="text-slate-900 font-brandon-bold text-sm mb-1">
                 Prescribed Nutrition Protocol
               </Text>
-              <Text className="text-slate-700 text-xs font-gotham-medium leading-relaxed mb-3">
+              <Text className="text-slate-700 text-xs font-brandon-medium leading-relaxed mb-3">
                 {farmer.fertilizerDetails || "Organic Vermicompost, Bio-NPK Granules, and Neem Cake applied along root irrigation drip lines."}
               </Text>
 
               <View className="flex-row justify-between pt-2.5 border-t border-slate-100">
                 <View>
-                  <Text className="text-slate-500 text-[10px] font-gotham-bold uppercase">Recent Order</Text>
-                  <Text className="text-slate-900 text-xs font-gotham-bold">{farmer.recentOrder || "50kg Bio-NPK"}</Text>
+                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Recent Order</Text>
+                  <Text className="text-slate-900 text-xs font-brandon-bold">{farmer.recentOrder || "50kg Bio-NPK"}</Text>
                 </View>
                 <View>
-                  <Text className="text-slate-500 text-[10px] font-gotham-bold uppercase">Next Application</Text>
-                  <Text className="text-amber-700 text-xs font-gotham-bold">In 12 Days</Text>
+                  <Text className="text-slate-500 text-[10px] font-brandon-bold uppercase">Next Application</Text>
+                  <Text className="text-amber-700 text-xs font-brandon-bold">In 12 Days</Text>
                 </View>
               </View>
             </View>
@@ -328,7 +328,7 @@ export default function FarmerDetailsScreen() {
               className="w-full bg-[#15803d] active:bg-[#166534] py-4 rounded-2xl items-center shadow-md flex-row justify-center"
             >
               <Calendar size={18} color="#ffffff" className="mr-2" />
-              <Text className="text-white font-gotham-bold text-base tracking-wide">
+              <Text className="text-white font-brandon-bold text-base tracking-wide">
                 Start / Log Field Visit
               </Text>
             </TouchableOpacity>
@@ -339,7 +339,7 @@ export default function FarmerDetailsScreen() {
               className="w-full bg-white border border-slate-200 py-3.5 rounded-2xl items-center shadow-xs flex-row justify-center"
             >
               <Phone size={16} color="#059669" className="mr-2" />
-              <Text className="text-emerald-800 font-gotham-bold text-sm uppercase tracking-wider">
+              <Text className="text-emerald-800 font-brandon-bold text-sm uppercase tracking-wider">
                 Call Farmer ({farmer.phone})
               </Text>
             </TouchableOpacity>

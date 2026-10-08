@@ -5,245 +5,164 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  ImageBackground,
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  Image,
+  ImageBackground,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
-  CheckCircle2,
-  Moon,
-  Target,
-  Route,
   ChevronLeft,
+  CheckCircle2,
+  MapPin,
   Clock,
   LogOut,
+  Moon,
+  ShieldCheck,
 } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { showToast } from "../../../components/ui/ToastMessage";
-import { employeeProfile, dashboardStats } from "../../../data/mockData";
-import { useTracking } from "../../../context/TrackingContext";
-import { api, getAuthUser } from "../../../services/api";
+import { useLanguage } from "../../../context/LanguageContext";
 
 export default function ClockOutScreen() {
+  const { t, language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [clockInTime, setClockInTime] = useState<string>("09:15 AM");
-  const [officerName, setOfficerName] = useState(employeeProfile.name);
-  const { stopSession } = useTracking();
+  const [locationVerified, setLocationVerified] = useState(false);
+  const [isLocating, setIsLocating] = useState(true);
 
   useEffect(() => {
     (async () => {
-      try {
-        const storedName = await AsyncStorage.getItem("userName");
-        const storedClockIn = await AsyncStorage.getItem("clockInTime");
-        if (storedName) setOfficerName(storedName);
-        if (storedClockIn) setClockInTime(storedClockIn);
-      } catch (e) {
-        console.log("Clock out init notice:", e);
-      }
+      const storedClockIn = await AsyncStorage.getItem("clockInTime");
+      if (storedClockIn) setClockInTime(storedClockIn);
     })();
+
+    // Mock Location
+    const timer = setTimeout(() => {
+      setIsLocating(false);
+      setLocationVerified(true);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClockOut = async () => {
+    if (!locationVerified) return;
+    
     setLoading(true);
-
-    try {
-      await api.post("/employee/attendance", {
-        action: "check_out",
-        latitude: 10.7870,
-        longitude: 79.1378,
-      }).catch((e) => console.log("Clock out sync catch:", e));
-    } catch (e) {
-      console.log("Clock out API notice:", e);
-    }
-
-    try {
-      await stopSession();
-    } catch (e) {
-      console.log("Tracking stop notice:", e);
-    }
-
-    await AsyncStorage.setItem("isClockedIn", "false");
-
-    setTimeout(() => {
+    setTimeout(async () => {
+      await AsyncStorage.setItem("isClockedIn", "false");
+      await AsyncStorage.removeItem("clockInTime");
       setLoading(false);
-      showToast({
-        title: "Shift Completed! 🌟",
-        message: "Great work today. Have a peaceful evening!",
-        type: "success",
-      });
-      router.replace("/(employee)/dashboard" as any);
-    }, 1200);
+      router.replace("/(employee)/dashboard");
+    }, 1500);
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      {/* Background Agriculture Image with Bottom-to-Top White Gradient */}
+    <View style={{ flex: 1, backgroundColor: "#062214" }}>
+      <StatusBar barStyle="light-content" />
+
+      {/* DRONE MAP BACKGROUND - TINTED DARK FOR EVENING/CLOCKOUT */}
       <ImageBackground
-        source={require("../../../assets/images/image2.jpg")}
-        style={StyleSheet.absoluteFill}
-        imageStyle={{ opacity: 0.12 }}
+        source={require("../../../assets/images/image1.jpg")}
+        style={{ flex: 1 }}
         resizeMode="cover"
       >
         <LinearGradient
-          colors={[
-            "rgba(255, 255, 255, 0.4)",
-            "rgba(248, 250, 252, 0.85)",
-            "#f8fafc",
-          ]}
-          locations={[0, 0.25, 1]}
+          colors={["rgba(6, 34, 20, 0.7)", "rgba(0, 0, 0, 0.9)", "#000000"]}
           style={StyleSheet.absoluteFill}
         />
 
-        <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-          {/* Header - Strictly Transparent Background (Light Mode) */}
-          <View
-            style={{ backgroundColor: "transparent" }}
-            className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
-          >
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className="w-11 h-11 bg-white rounded-full items-center justify-center border border-slate-200 shadow-sm"
-              activeOpacity={0.8}
-            >
-              <ChevronLeft size={24} color="#0f172a" />
+        <SafeAreaView style={{ flex: 1 }}>
+          
+          {/* HEADER */}
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
+            <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace("/(employee)/dashboard")} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)" }}>
+              <ChevronLeft size={24} color="#ffffff" />
             </TouchableOpacity>
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18 }}>Shift Checkout</Text>
+            <View style={{ width: 44 }} />
+          </View>
 
-            <View className="flex-row items-center bg-indigo-50 px-3.5 py-1.5 rounded-full border border-indigo-200 shadow-sm">
-              <Moon size={14} color="#4f46e5" />
-              <Text className="text-indigo-900 font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
-                End of Shift
+          <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 40, justifyContent: "center", flexGrow: 1 }}>
+            
+            {/* TIME */}
+            <View style={{ alignItems: "center", marginBottom: 32 }}>
+              <Moon size={32} color="#fca5a5" style={{ marginBottom: 16 }} />
+              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 56, lineHeight: 60, letterSpacing: -2 }}>
+                {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </Text>
+              <Text style={{ color: "#fca5a5", fontFamily: "Brandon-Bold", fontSize: 16, marginTop: 4 }}>
+                End of Day • {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
               </Text>
             </View>
 
-            <View className="w-11" />
-          </View>
+            <View style={{ backgroundColor: "rgba(255,255,255,0.05)", borderRadius: 32, padding: 24, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)", backdropFilter: "blur(20px)" }}>
+              
+              <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Medium", fontSize: 14, letterSpacing: 1, marginBottom: 20 }}>SHIFT SUMMARY</Text>
 
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{ flex: 1 }}
-          >
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 150, paddingTop: 10 }}
-            >
-              {/* Header Greeting */}
-              <View className="items-center mt-2 mb-6">
-                <View className="w-20 h-20 bg-indigo-100 rounded-full items-center justify-center mb-3 border border-indigo-200 shadow-md">
-                  <Moon size={36} color="#4f46e5" />
+              {/* TIMELINE */}
+              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 32, backgroundColor: "rgba(0,0,0,0.3)", padding: 16, borderRadius: 20 }}>
+                <View style={{ alignItems: "center", flex: 1 }}>
+                  <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 12 }}>Clock In</Text>
+                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18, marginTop: 4 }}>{clockInTime}</Text>
                 </View>
-                <Text className="text-indigo-700 font-brandon font-bold text-xs uppercase tracking-widest mb-1">
-                  Shift Wrap-Up
-                </Text>
-                <Text className="text-slate-900 font-gotham-bold text-3xl text-center">
-                  {officerName}
-                </Text>
-                <Text className="text-slate-500 font-brandon text-xs mt-1">
-                  Started at {clockInTime} • Delta Zone Field Operations
-                </Text>
-              </View>
-
-              {/* Shift Metrics Cards (Multi-Color Informative Grid on White Cards) */}
-              <View className="mb-6">
-                {/* 1. Visits Metric */}
-                <View className="bg-white rounded-[24px] p-4 mb-3 border border-slate-200 shadow-sm flex-row items-center">
-                  <View className="w-12 h-12 bg-emerald-50 rounded-2xl items-center justify-center mr-4 border border-emerald-200">
-                    <CheckCircle2 size={24} color="#059669" />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-slate-900 font-gotham-bold text-base mb-0.5">
-                      Field Visits Completed
-                    </Text>
-                    <Text className="text-slate-500 font-brandon text-xs">
-                      {dashboardStats.completed} out of {dashboardStats.totalVisits} visits logged
-                    </Text>
-                  </View>
-                  <Text className="text-emerald-700 font-gotham-bold text-2xl">
-                    {dashboardStats.completed}
-                  </Text>
-                </View>
-
-                {/* 2. Route Distance Metric */}
-                <View className="bg-white rounded-[24px] p-4 mb-3 border border-slate-200 shadow-sm flex-row items-center">
-                  <View className="w-12 h-12 bg-orange-50 rounded-2xl items-center justify-center mr-4 border border-orange-200">
-                    <Route size={24} color="#ea580c" />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-slate-900 font-gotham-bold text-base mb-0.5">
-                      GPS Field Distance
-                    </Text>
-                    <Text className="text-slate-500 font-brandon text-xs">
-                      Live geotracking distance logged
-                    </Text>
-                  </View>
-                  <Text className="text-orange-600 font-gotham-bold text-2xl">
-                    38.4<Text className="text-sm font-brandon">km</Text>
-                  </Text>
-                </View>
-
-                {/* 3. Monthly Goal Metric */}
-                <View className="bg-white rounded-[24px] p-4 border border-slate-200 shadow-sm flex-row items-center">
-                  <View className="w-12 h-12 bg-blue-50 rounded-2xl items-center justify-center mr-4 border border-blue-200">
-                    <Target size={24} color="#2563eb" />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-slate-900 font-gotham-bold text-base mb-0.5">
-                      Monthly Inspection Goal
-                    </Text>
-                    <Text className="text-slate-500 font-brandon text-xs">
-                      {dashboardStats.adminTarget.currentProgress} / {dashboardStats.adminTarget.monthlyGoal} targets met
-                    </Text>
-                  </View>
-                  <Text className="text-blue-600 font-gotham-bold text-2xl">
-                    72%
-                  </Text>
+                <View style={{ width: 1, height: 32, backgroundColor: "rgba(255,255,255,0.2)" }} />
+                <View style={{ alignItems: "center", flex: 1 }}>
+                  <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 12 }}>Total Hours</Text>
+                  <Text style={{ color: "#4ade80", fontFamily: "Brandon-Bold", fontSize: 18, marginTop: 4 }}>~ 8h 15m</Text>
                 </View>
               </View>
 
-              {/* Clock Out Action Button */}
-              <TouchableOpacity
-                activeOpacity={0.85}
-                onPress={handleClockOut}
-                disabled={loading}
-                className="w-full rounded-2xl overflow-hidden shadow-lg shadow-indigo-600/25 mb-3"
-              >
-                <LinearGradient
-                  colors={["#4f46e5", "#4338ca"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={{
-                    paddingVertical: 18,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {loading ? (
-                    <ActivityIndicator size="small" color="#ffffff" />
+              <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Medium", fontSize: 14, letterSpacing: 1, marginBottom: 20 }}>VERIFICATION</Text>
+
+              {/* STEP 1: LOCATION */}
+              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 32, backgroundColor: "rgba(0,0,0,0.3)", padding: 16, borderRadius: 20 }}>
+                <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: locationVerified ? "rgba(74,222,128,0.2)" : "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                  <MapPin size={24} color={locationVerified ? "#4ade80" : "#ffffff"} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Final GPS Ping</Text>
+                  {isLocating ? (
+                    <View style={{ flexDirection: "row", alignItems: "center", marginTop: 4 }}>
+                      <ActivityIndicator size="small" color="#94a3b8" style={{ marginRight: 6 }} />
+                      <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 13 }}>Acquiring signal...</Text>
+                    </View>
                   ) : (
-                    <>
-                      <LogOut size={20} color="#ffffff" className="mr-2" />
-                      <Text className="text-white font-gotham-bold text-base uppercase tracking-wider ml-2">
-                        Clock Out & End Shift
-                      </Text>
-                    </>
+                    <Text style={{ color: "#4ade80", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 4 }}>Delta Zone A • Verified</Text>
                   )}
-                </LinearGradient>
-              </TouchableOpacity>
+                </View>
+                {locationVerified && <CheckCircle2 size={24} color="#4ade80" />}
+              </View>
 
-              <TouchableOpacity
-                onPress={() => router.back()}
-                className="items-center py-2"
+              {/* CLOCK OUT BUTTON */}
+              <TouchableOpacity 
+                disabled={!locationVerified || loading}
+                style={{ 
+                  backgroundColor: (!locationVerified) ? "rgba(255,255,255,0.1)" : "#ef4444", 
+                  borderRadius: 16, paddingVertical: 18, 
+                  flexDirection: "row", alignItems: "center", justifyContent: "center",
+                  shadowColor: (!locationVerified) ? "transparent" : "#ef4444", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.4, shadowRadius: 16, elevation: 8
+                }}
+                onPress={handleClockOut}
               >
-                <Text className="text-slate-500 font-brandon text-xs uppercase tracking-wider">
-                  Cancel • Return to field dashboard
-                </Text>
+                {loading ? (
+                  <ActivityIndicator color="#ffffff" />
+                ) : (
+                  <>
+                    <LogOut size={20} color={(!locationVerified) ? "rgba(255,255,255,0.3)" : "#ffffff"} style={{ marginRight: 8 }} />
+                    <Text style={{ color: (!locationVerified) ? "rgba(255,255,255,0.3)" : "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16, letterSpacing: 1 }}>
+                      SECURE CHECK OUT
+                    </Text>
+                  </>
+                )}
               </TouchableOpacity>
-            </ScrollView>
-          </KeyboardAvoidingView>
+              
+            </View>
+
+          </ScrollView>
         </SafeAreaView>
       </ImageBackground>
     </View>

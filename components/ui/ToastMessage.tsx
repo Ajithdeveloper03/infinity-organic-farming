@@ -78,7 +78,7 @@ export function ToastMessage() {
           {getIcon()}
         </View>
         <View className="flex-1">
-          <Text className="text-gray-900 font-gotham-bold text-base mb-0.5">{toast.title}</Text>
+          <Text className="text-gray-900 font-brandon-bold text-base mb-0.5">{toast.title}</Text>
           <Text className="text-gray-500 font-brandon text-sm leading-5">{toast.message}</Text>
         </View>
       </View>

@@ -25,7 +25,7 @@ export const Button = ({
   const baseStyle = 'flex-row justify-center items-center rounded-full py-4 px-6';
   
   let variantStyle = '';
-  let textStyle = 'text-base font-gotham-bold text-center';
+  let textStyle = 'text-base font-brandon-bold text-center';
 
   switch (variant) {
     case 'primary':

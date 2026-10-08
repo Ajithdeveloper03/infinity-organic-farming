@@ -1,122 +1,122 @@
 import React from "react";
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ScrollView, TouchableOpacity, Image, useColorScheme } from "react-native";
-import { ChevronLeft, ShoppingBag, Star, Shield, Leaf } from "lucide-react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  StatusBar,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
+import * as Haptics from "expo-haptics";
+import {
+  ChevronLeft,
+  Bell,
+  Minus,
+  Plus,
+  Star,
+} from "lucide-react-native";
+import { useLanguage } from "../../../context/LanguageContext";
 
-export default function ProductDetailsScreen() {
-  const isDark = useColorScheme() === "dark";
+export default function FarmerProductDetailScreen() {
   const { id } = useLocalSearchParams();
-
-  // Dummy product data
-  const product = {
-    id,
-    name: "Organic Fertilizer & Nutrient Boost",
-    category: "Nutrients",
-    price: "₹850",
-    rating: 4.8,
-    reviews: 124,
-    description: "Premium organic fertilizer enriched with essential macro and micro nutrients. Perfect for enhancing soil health and boosting crop yield naturally without harmful chemicals.",
-    features: [
-      "100% Organic certified",
-      "Improves soil structure",
-      "Increases water retention",
-      "Safe for all crop types"
-    ]
-  };
+  const { t, language } = useLanguage();
 
   return (
-    <SafeAreaView className={`flex-1 ${isDark ? "bg-[#0A0A0C]" : "bg-gray-50"}`}>
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-        <View className="relative h-80">
-          <Image
-            source={require("../../../assets/images/image3.jpg")}
-            className="w-full h-full"
-            resizeMode="cover"
-          />
-          <LinearGradient
-            colors={["rgba(0,0,0,0.5)", "transparent"]}
-            className="absolute top-0 left-0 right-0 h-24"
-          />
-          <TouchableOpacity 
-            onPress={() => router.back()} 
-            className="absolute top-12 left-5 w-10 h-10 bg-white/20 rounded-full items-center justify-center backdrop-blur-md border border-white/30"
+    <View style={{ flex: 1, backgroundColor: "#e8f2ec" }}>
+      <StatusBar barStyle="dark-content" />
+
+      {/* HEADER */}
+      <SafeAreaView>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}
           >
-            <ChevronLeft size={24} color="#fff" />
+            <ChevronLeft size={24} color="#000000" />
+          </TouchableOpacity>
+          <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 18 }}>Farm Details</Text>
+          <TouchableOpacity
+            style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}
+          >
+            <Bell size={20} color="#000000" />
+            <View style={{ position: "absolute", top: 12, right: 12, width: 6, height: 6, borderRadius: 3, backgroundColor: "#ef4444" }} />
           </TouchableOpacity>
         </View>
+      </SafeAreaView>
 
-        <View className={`-mt-8 rounded-t-[32px] px-6 pt-8 pb-32 ${isDark ? "bg-[#0A0A0C]" : "bg-white"}`}>
-          <View className="flex-row justify-between items-start mb-2">
-            <Text className="text-blue-500 font-gotham-bold text-xs uppercase tracking-widest">
-              {product.category}
-            </Text>
-            <View className="flex-row items-center bg-yellow-500/10 px-2 py-1 rounded-lg">
-              <Star size={12} color="#f59e0b" fill="#f59e0b" />
-              <Text className="text-yellow-600 font-gotham-bold text-xs ml-1">
-                {product.rating} <Text className="font-brandon">({product.reviews})</Text>
-              </Text>
-            </View>
-          </View>
-
-          <Text className={`text-2xl font-gotham-bold mb-4 ${isDark ? "text-white" : "text-gray-900"}`}>
-            {product.name}
-          </Text>
-
-          <Text className="text-green-500 font-gotham-bold text-3xl mb-6">
-            {product.price}
-          </Text>
-
-          <Text className={`text-lg font-gotham-bold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>
-            Description
-          </Text>
-          <Text className={`font-brandon text-base leading-6 mb-6 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-            {product.description}
-          </Text>
-
-          <View className="mb-6 flex-row items-center">
-            <View className="w-12 h-12 rounded-full bg-green-50 items-center justify-center mr-4">
-              <Leaf size={24} color="#10b981" />
-            </View>
-            <View className="flex-1">
-              <Text className={`font-gotham-bold text-base ${isDark ? "text-white" : "text-gray-900"}`}>
-                Eco-Friendly
-              </Text>
-              <Text className={`font-brandon text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-                Sustainably sourced ingredients
-              </Text>
-            </View>
-          </View>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+        
+        {/* PRODUCT SHOWCASE (360 Carousel style from Image 3) */}
+        <View style={{ alignItems: "center", marginTop: 24, marginBottom: 32 }}>
+          <Image
+            source={require("../../../assets/images/image14.jpg")} // Use a placeholder for the plant
+            style={{ width: 240, height: 240, borderRadius: 120 }}
+            resizeMode="cover"
+          />
+          {/* Floating Platform effect */}
+          <View style={{ width: 200, height: 20, borderRadius: 100, backgroundColor: "rgba(0,0,0,0.05)", transform: [{ scaleY: 0.3 }], marginTop: -10 }} />
           
-          <View className="mb-6 flex-row items-center">
-            <View className="w-12 h-12 rounded-full bg-blue-50 items-center justify-center mr-4">
-              <Shield size={24} color="#3b82f6" />
-            </View>
-            <View className="flex-1">
-              <Text className={`font-gotham-bold text-base ${isDark ? "text-white" : "text-gray-900"}`}>
-                Quality Assured
-              </Text>
-              <Text className={`font-brandon text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}>
-                Tested and certified
-              </Text>
-            </View>
+          <View style={{ flexDirection: "row", gap: 12, marginTop: 24, paddingHorizontal: 24 }}>
+            {[1,2,3,4].map((item, idx) => (
+              <TouchableOpacity key={item} style={{ width: 64, height: 64, borderRadius: 16, backgroundColor: "#ffffff", padding: 4, borderWidth: idx === 0 ? 2 : 0, borderColor: "#059669", alignItems: "center", justifyContent: "center" }}>
+                 <Image source={require("../../../assets/images/image2.jpg")} style={{ width: "100%", height: "100%", borderRadius: 12 }} />
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
+
+        {/* BOTTOM SHEET INFO */}
+        <View style={{ flex: 1, backgroundColor: "#ffffff", borderTopLeftRadius: 40, borderTopRightRadius: 40, padding: 32 }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+            <View>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 26, letterSpacing: -0.5 }}>Lime Seedlings</Text>
+              <Text style={{ color: "#059669", fontFamily: "Brandon-Bold", fontSize: 13, marginTop: 4 }}>Available in stock</Text>
+              <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}>
+                <Star size={14} color="#d1d5db" fill="#d1d5db" />
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginLeft: 6 }}>4.9 (192)</Text>
+              </View>
+            </View>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 22 }}>$30<Text style={{ color: "#64748b", fontSize: 14 }}>/pcs</Text></Text>
+          </View>
+
+          {/* Quantity Selector */}
+          <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginBottom: 24 }}>
+            <TouchableOpacity style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: "#059669", alignItems: "center", justifyContent: "center" }}>
+              <Minus size={16} color="#ffffff" />
+            </TouchableOpacity>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginHorizontal: 16 }}>1pcs</Text>
+            <TouchableOpacity style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: "#059669", alignItems: "center", justifyContent: "center" }}>
+              <Plus size={16} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 8 }}>Description</Text>
+          <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, lineHeight: 22, marginBottom: 24 }}>
+            Limes are closely related to lemons. They even look similar to them. Lime tree harvest is... <Text style={{ color: "#059669", fontFamily: "Brandon-Bold" }}>Read More</Text>
+          </Text>
+
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 16 }}>Related Products</Text>
+          <View style={{ flexDirection: "row", gap: 12 }}>
+            {[1,2,3,4].map((item) => (
+              <View key={item} style={{ flex: 1, height: 80, borderRadius: 16, overflow: "hidden" }}>
+                <Image source={require("../../../assets/images/image10.jpg")} style={{ width: "100%", height: "100%" }} />
+              </View>
+            ))}
+          </View>
+        </View>
+
       </ScrollView>
 
-      {/* Sticky Bottom Bar */}
-      <View className={`absolute bottom-0 left-0 right-0 p-5 pb-8 ${isDark ? "bg-[#0A0A0C]/90" : "bg-white/90"} backdrop-blur-lg border-t ${isDark ? "border-white/10" : "border-gray-100"}`}>
-        <TouchableOpacity 
-          className="bg-green-600 rounded-full py-4 flex-row justify-center items-center shadow-lg shadow-green-600/30"
-          activeOpacity={0.9}
-        >
-          <ShoppingBag size={20} color="#fff" />
-          <Text className="text-white font-gotham-bold text-lg ml-2">
-            Buy Now
-          </Text>
+      {/* STICKY ADD TO CART */}
+      <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "#ffffff", paddingHorizontal: 24, paddingTop: 16, paddingBottom: 32 }}>
+        <TouchableOpacity style={{ backgroundColor: "#059669", borderRadius: 999, paddingVertical: 18, alignItems: "center", flexDirection: "row", justifyContent: "center" }}>
+          <Plus size={20} color="#ffffff" />
+          <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16, marginLeft: 8 }}>Add To Cart</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

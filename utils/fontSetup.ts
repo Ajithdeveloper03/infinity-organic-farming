@@ -34,33 +34,18 @@ export const resolveFontFamily = (
   className?: string
 ): { fontFamily: string; fontWeight?: "normal" | "400" | "500" | "600" | "700" | "bold" } => {
   const flat = StyleSheet.flatten(style) || {};
-  const isTamil = currentAppLanguage === "ta" || hasTamilGlyphs(children);
-
-  if (isTamil) {
-    return {
-      fontFamily: "TiroTamil_400Regular",
-      fontWeight: "normal",
-    };
-  }
 
   const existingFont = flat.fontFamily;
   if (
     existingFont &&
-    existingFont !== "sans-serif" &&
-    existingFont !== "System" &&
-    existingFont !== "normal" &&
-    (existingFont.includes("Montserrat") ||
-      existingFont.includes("Lora") ||
-      existingFont.includes("Josefin") ||
-      existingFont.includes("Poppins") ||
-      existingFont.includes("TiroTamil") ||
-      existingFont.includes("Tiro"))
+    (existingFont.includes("Spectral") || existingFont.includes("DMSans"))
   ) {
     return {
       fontFamily: existingFont,
       fontWeight: Platform.OS === "android" ? "normal" : flat.fontWeight,
     };
   }
+
   const isBold =
     flat.fontWeight === "bold" ||
     flat.fontWeight === "700" ||
@@ -71,20 +56,44 @@ export const resolveFontFamily = (
     flat.fontWeight === "500" ||
     flat.fontWeight === "600" ||
     (className && /font-(medium|semibold|gotham-medium|gotham-semibold|brandon-medium|brandon-semibold)/.test(className));
-  if (isBold) {
+
+  // If a serif font was specifically requested via class or existing style, or it's a title
+  if (
+    existingFont?.includes("serif") ||
+    existingFont?.includes("lora") ||
+    (className && /font-(serif|lora)/.test(className)) ||
+    (className && /text-(lg|xl|2xl|3xl|4xl|5xl|6xl)/.test(className))
+  ) {
     return {
-      fontFamily: "Montserrat_700Bold",
+      fontFamily: "Spectral_700Bold",
       fontWeight: Platform.OS === "android" ? "normal" : "bold",
     };
   }
-  if (isMedium) {
+
+  // Bold cases
+  if (
+    existingFont?.includes("Bold") ||
+    isBold
+  ) {
     return {
-      fontFamily: "Montserrat_500Medium",
+      fontFamily: "DMSans_700Bold",
+      fontWeight: Platform.OS === "android" ? "normal" : "bold",
+    };
+  }
+
+  // Medium/SemiBold cases
+  if (
+    existingFont?.includes("Medium") ||
+    isMedium
+  ) {
+    return {
+      fontFamily: "DMSans_500Medium",
       fontWeight: Platform.OS === "android" ? "normal" : "500",
     };
   }
+
   return {
-    fontFamily: "Montserrat_400Regular",
+    fontFamily: "DMSans_400Regular",
     fontWeight: Platform.OS === "android" ? "normal" : "normal",
   };
 };

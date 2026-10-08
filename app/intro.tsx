@@ -1,170 +1,130 @@
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
-import { CheckCircle2, Leaf, Users } from "lucide-react-native";
+import { Users, Sprout, Leaf } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Image,
-  ImageBackground,
   StatusBar,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  ImageBackground
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Card } from "../components/ui/Card";
 import { useLanguage, LanguageTogglePill } from "../context/LanguageContext";
-
 export default function IntroScreen() {
   const [role, setRole] = useState<"farmer" | "employee">("employee");
   const { t, language } = useLanguage();
-
   return (
-    <View className="flex-1 bg-black relative">
-      <StatusBar
-        barStyle="light-content"
-        translucent
-        backgroundColor="transparent"
-      />
-
-      <ImageBackground
-        source={require("../assets/images/intro_bg.png")}
-        style={StyleSheet.absoluteFill}
-        resizeMode="contain"
+    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <StatusBar barStyle="light-content" />
+      <ImageBackground 
+        source={require("../assets/images/image18.jpg")} 
+        style={{ flex: 1 }}
+        imageStyle={{ opacity: 0.9 }}
       >
-        <View className="flex-1 bg-black/40">
-          <SafeAreaView className="flex-1 justify-between">
-            {/* Top Bar with Language Toggle */}
-            <View className="flex-row justify-end items-center px-6 pt-2">
+        <View style={{ flex: 1, backgroundColor: "rgba(21,128,61,0.15)" }}>
+          <SafeAreaView style={{ flex: 1, justifyContent: "space-between" }}>
+            {/* TOP FLOATING TOGGLE */}
+            <View style={{ flexDirection: "row", justifyContent: "flex-end", paddingHorizontal: 24, paddingTop: 16 }}>
               <LanguageTogglePill />
             </View>
-
-            {/* Header Section */}
-            <View className="items-center pt-8">
-              <View className="bg-white/95 p-4 rounded-3xl mb-4 shadow-lg border border-gray-100">
-                <Image
-                  source={require("../assets/images/logo.png")}
-                  style={{ width: 180, height: 180 }}
-                  resizeMode="contain"
-                />
+            {/* MASSIVE CENTRAL ILLUSTRATION */}
+            <View style={{ alignItems: "center", justifyContent: "center", flex: 1, paddingHorizontal: 24, zIndex: 0 }}>
+              <View style={{ width: 260, height: 260, alignItems: "center", justifyContent: "center" }}>
+                <View style={{ width: 240, height: 240, borderRadius: 120, backgroundColor: "#ffffff", borderWidth: 8, borderColor: "rgba(255,255,255,0.2)", shadowColor: "#000", shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.15, shadowRadius: 24, alignItems: "center", justifyContent: "center" }}>
+                  <Image 
+                    source={require("../assets/images/logo.png")} 
+                    style={{ width: 160, height: 160 }} 
+                    resizeMode="contain"
+                  />
+                </View>
+                {/* Floating flower/star accents */}
+                
               </View>
             </View>
 
-            {/* Bottom Sheet Card for Role Selection (Glassmorphism) */}
-            <View className="px-4 relative bottom-0 left-0 pb-4 mt-12">
-              <BlurView
-                className="bg-transparent overflow-hidden pt-6 pb-6"
-              >
-                <View className="items-center mb-6">
-                  <View className="bg-white/80 p-4 rounded-full mb-4 shadow-sm border border-white/60">
-                    <Users size={32} color="#15803d" />
-                  </View>
-                  <Text className="text-gray-900 font-gotham-bold text-2xl mb-2 text-center">
-                    {t("chooseRole", "Choose Your Role")}
-                  </Text>
-                  <Text className="text-gray-800 font-brandon text-center px-4">
-                    {language === "ta"
-                      ? "உங்கள் கணக்கைத் தொடர உங்கள் பங்கைத் தேர்ந்தெடுக்கவும்."
-                      : "Select a role to personalize your profile and access your dashboard."}
-                  </Text>
-                </View>
+        <View style={{ backgroundColor: "#ffffff", borderTopLeftRadius: 40, borderTopRightRadius: 40, paddingHorizontal: 32, paddingTop: 40, paddingBottom: 48, shadowColor: "#000", shadowOffset: { width: 0, height: -12 }, shadowOpacity: 0.1, shadowRadius: 32, zIndex: 10 }}>
+          <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 36, textAlign: "center", lineHeight: 42, marginBottom: 16 }}>
+            {t("chooseRole", "Choose Your Path")}
+          </Text> 
+          <Text style={{ color: "#475569", fontFamily: "Brandon-Medium", fontSize: 16, textAlign: "center", lineHeight: 24, marginBottom: 32 }}>
+            {language === "ta"
+              ? "உங்கள் கணக்கைத் தொடர உங்கள் பங்கைத் தேர்ந்தெடுக்கவும்."
+              : "Select a role to personalize your profile and access your dashboard."}
+          </Text>
+          <View style={{ gap: 16, marginBottom: 32 }}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => setRole("employee")}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: role === "employee" ? "#1c1c1c" : "#f1f5f9",
+                borderRadius: 999,
+                padding: 16,
+                borderWidth: role === "employee" ? 0 : 1,
+                borderColor: "#e2e8f0"
+              }}
+            >
+              <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: role === "employee" ? "#333333" : "#ffffff", alignItems: "center", justifyContent: "center" }}>
+                <Users size={24} color={role === "employee" ? "#ffffff" : "#475569"} />
+              </View>
+              <View style={{ marginLeft: 16, flex: 1 }}>
+                <Text style={{ color: role === "employee" ? "#ffffff" : "#000000", fontFamily: "Brandon-Bold", fontSize: 18 }}>
+                  {t("fieldOfficer", "Field Officer")}
+                </Text>
+                <Text style={{ color: role === "employee" ? "rgba(255,255,255,0.7)" : "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>
+                  {language === "ta" ? "வருகைகளை நிர்வகிக்கவும்" : "Manage visits & tasks"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => setRole("farmer")}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: role === "farmer" ? "#1c1c1c" : "#f1f5f9",
+                borderRadius: 999,
+                padding: 16,
+                borderWidth: role === "farmer" ? 0 : 1,
+                borderColor: "#e2e8f0"
+              }}
+            >
+              <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: role === "farmer" ? "#333333" : "#ffffff", alignItems: "center", justifyContent: "center" }}>
+                <Sprout size={24} color={role === "farmer" ? "#ffffff" : "#475569"} />
+              </View>
+              <View style={{ marginLeft: 16, flex: 1 }}>
+                <Text style={{ color: role === "farmer" ? "#ffffff" : "#000000", fontFamily: "Brandon-Bold", fontSize: 18 }}>
+                  {t("farmer", "Farmer")}
+                </Text>
+                <Text style={{ color: role === "farmer" ? "rgba(255,255,255,0.7)" : "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>
+                  {language === "ta" ? "உங்கள் பண்ணையை கண்காணிக்கவும்" : "Track crops & health"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
-                <View className="space-y-3 mb-6 px-4">
-                  {/* Employee Card */}
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => setRole("employee")}
-                    className={`flex-row items-center p-4 rounded-[20px] border-2 mb-3 ${role === "employee"
-                      ? "bg-white/80 border-[#15803d] shadow-sm"
-                      : "bg-orange-200/80 border-orange-400"
-                      }`}
-                  >
-                    <View
-                      className={`p-3 rounded-full ${role === "employee" ? "bg-[#15803d]" : "bg-gray-200/80"}`}
-                    >
-                      <Users
-                        size={24}
-                        color={role === "employee" ? "#fff" : "#4b5563"}
-                      />
-                    </View>
-                    <View className="flex-1 ml-4">
-                      <Text
-                        className={`font-gotham-bold text-lg ${role === "employee" ? "text-[#15803d]" : "text-gray-800"}`}
-                      >
-                        {t("fieldOfficer", "Field Officer")}
-                      </Text>
-                      <Text className="text-gray-800 font-brandon text-xs mt-0.5">
-                        {language === "ta" ? "வருகைகள் மற்றும் வேலைகளை நிர்வகிக்கவும்" : "Manage visits & track activities"}
-                      </Text>
-                    </View>
-                    {role === "employee" && (
-                      <CheckCircle2 size={24} color="#15803d" />
-                    )}
-                  </TouchableOpacity>
+          {/* GET STARTED ACTION */}
+          <TouchableOpacity 
+            onPress={() => {
+              if (role === "employee") {
+                router.replace("/(auth)/login");
+              } else {
+                router.replace("/(auth)/farmer-login");
+              }
+            }}
+            style={{ width: "100%", backgroundColor: "#15803d", borderRadius: 999, paddingVertical: 20, alignItems: "center", shadowColor: "#15803d", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16, elevation: 8 }}
+          >
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18 }}>Get Started</Text>
+          </TouchableOpacity>
 
-                  {/* Farmer Card */}
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => setRole("farmer")}
-                    className={`flex-row items-center p-4 rounded-[20px] border-2 ${role === "farmer"
-                      ? "bg-white/80 border-[#15803d] shadow-sm"
-                      : "bg-orange-200/80 border-orange-400"
-                      }`}
-                  >
-                    <View
-                      className={`p-3 rounded-full ${role === "farmer" ? "bg-[#15803d]" : "bg-gray-200/80"}`}
-                    >
-                      <Leaf
-                        size={24}
-                        color={role === "farmer" ? "#fff" : "#4b5563"}
-                      />
-                    </View>
-                    <View className="flex-1 ml-4">
-                      <Text
-                        className={`font-gotham-bold text-lg ${role === "farmer" ? "text-[#15803d]" : "text-gray-800"}`}
-                      >
-                        {t("farmer", "Farmer")}
-                      </Text>
-                      <Text className="text-gray-600 font-brandon text-xs mt-0.5">
-                        {language === "ta" ? "பண்ணை அறிக்கைகள் மற்றும் முன்னேற்றத்தைக் காண்க" : "View reports & farm progress"}
-                      </Text>
-                    </View>
-                    {role === "farmer" && (
-                      <CheckCircle2 size={24} color="#15803d" />
-                    )}
-                  </TouchableOpacity>
-                </View>
-
-                {/* Continue Button */}
-                <View className="px-4">
-                  <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => {
-                      if (role === "farmer") {
-                        router.push("/(auth)/farmer-login" as any);
-                      } else {
-                        router.push("/(auth)/login" as any);
-                      }
-                    }}
-                    className="w-full bg-[#15803d] py-4 rounded-full items-center shadow-md flex-row justify-center"
-                  >
-                    <Text className="text-white font-gotham-bold text-lg tracking-wide">
-                      {t("continue", "Continue")}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </BlurView>
-            </View>
-          </SafeAreaView>
         </View>
+
+      </SafeAreaView>
+      </View>
       </ImageBackground>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  glassCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
-  },
-});
-

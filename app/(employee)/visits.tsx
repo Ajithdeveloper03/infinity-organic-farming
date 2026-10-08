@@ -1,290 +1,127 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
+  TouchableOpacity,
+  Image,
+  StatusBar,
   ImageBackground,
-  StyleSheet,
-  ActivityIndicator,
-  Linking,
+  StyleSheet
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   ChevronLeft,
+  CalendarDays,
   MapPin,
-  ChevronRight,
-  ListTodo,
-  Phone,
-  Clock,
-  Sparkles,
   CheckCircle2,
+  Navigation,
+  Clock
 } from "lucide-react-native";
-import { getTodayVisits } from "../../data/mockData";
-import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
-import { api } from "../../services/api";
+import { useLanguage } from "../../context/LanguageContext";
 
-export default function VisitsScreen() {
+export default function EmployeeVisitsScreen() {
   const { t, language } = useLanguage();
-  const [visits, setVisits] = useState<any[]>(getTodayVisits());
-  const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<"all" | "pending" | "completed">("all");
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      try {
-        const res = await api.get("/employee/visits");
-        if (res?.status === "success" && res?.visits && res.visits.length > 0) {
-          setVisits(res.visits);
-        }
-      } catch (e) {
-        console.log("Visits fetch notice:", e);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  const completedCount = visits.filter((v) => v.status === "completed").length;
-  const pendingCount = visits.length - completedCount;
-
-  const filteredVisits = visits.filter((v) => {
-    if (activeTab === "pending") return v.status !== "completed";
-    if (activeTab === "completed") return v.status === "completed";
-    return true;
-  });
+  const visits = [
+    { id: 1, type: "INITIAL VISIT", farmer: "Rajesh Kumar", time: "09:00 AM", status: "Completed", image: require("../../assets/images/image1.jpg") },
+    { id: 2, type: "FIELD INSPECTION", farmer: "Muthuvel", time: "11:30 AM", status: "In Progress", image: require("../../assets/images/image2.jpg") },
+    { id: 3, type: "CROP HEALTH", farmer: "Senthil", time: "02:00 PM", status: "Pending", image: require("../../assets/images/image5.jpg") },
+    { id: 4, type: "SOIL TESTING", farmer: "Kuppusamy", time: "04:30 PM", status: "Pending", image: require("../../assets/images/image6.jpg") },
+  ];
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Header - Strictly Transparent Background */}
-        <View
-          style={{ backgroundColor: "transparent" }}
-          className="px-5 pt-3 pb-3 flex-row items-center justify-between z-10"
-        >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 rounded-full bg-white items-center justify-center border border-slate-200 shadow-sm"
-            activeOpacity={0.7}
-          >
-            <ChevronLeft size={22} color="#0f172a" />
-          </TouchableOpacity>
+    <View style={{ flex: 1, backgroundColor: "#062214" }}>
+      <StatusBar barStyle="light-content" />
 
-          <View className="items-center">
-            <Text className="text-lg font-gotham-bold text-slate-900">
-              {t("todaysVisits", "Today's Field Visits")}
-            </Text>
-            <Text className="text-xs text-emerald-700 font-brandon font-bold">
-              {visits.length} {t("scheduled", "Scheduled")} • Delta Zone
-            </Text>
-          </View>
+      {/* DRONE MAP BACKGROUND */}
+      <ImageBackground
+        source={require("../../assets/images/image2.jpg")}
+        style={{ flex: 1 }}
+        resizeMode="cover"
+      >
+        <LinearGradient
+          colors={["rgba(6, 34, 20, 0.7)", "rgba(6, 34, 20, 0.95)", "#062214"]}
+          style={StyleSheet.absoluteFill}
+        />
 
-          <View className="flex-row items-center gap-1">
-            <LanguageTogglePill />
-            {loading && <ActivityIndicator size="small" color="#059669" />}
-          </View>
-        </View>
-
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Hero Banner with DARK Overlay & Enhanced Bright White Text */}
-          <View className="p-5">
-            <View className="rounded-[28px] overflow-hidden shadow-md bg-slate-900">
-              <ImageBackground
-                source={require("../../assets/images/image5.jpg")}
-                className="w-full h-44"
-                resizeMode="cover"
-              >
-                {/* Dark Bottom-to-Top Overlay */}
-                <LinearGradient
-                  colors={[
-                    "transparent",
-                    "rgba(0, 0, 0, 0.5)",
-                    "rgba(10, 15, 25, 0.94)",
-                  ]}
-                  locations={[0, 0.35, 1]}
-                  style={StyleSheet.absoluteFill}
-                />
-
-                <View className="flex-1 p-5 justify-between">
-                  <View className="flex-row items-center bg-emerald-500 px-3 py-1 rounded-full self-start shadow-sm">
-                    <ListTodo size={13} color="#ffffff" />
-                    <Text className="text-white font-gotham-bold text-[11px] ml-1.5 uppercase tracking-wider">
-                      {language === "ta" ? "தினசரி களப் பாதை" : "Daily Route Overview"}
-                    </Text>
-                  </View>
-
-                  <View>
-                    <Text className="text-white font-gotham-bold text-2xl leading-tight">
-                      {completedCount} / {visits.length} {t("completed", "Completed")}
-                    </Text>
-                    <View className="flex-row items-center mt-2">
-                      <View className="bg-white/20 px-3 py-1 rounded-full border border-white/25 mr-2">
-                        <Text className="text-emerald-300 font-gotham-bold text-xs">
-                          ✓ {completedCount} {t("completed", "Done")}
-                        </Text>
-                      </View>
-                      <View className="bg-white/20 px-3 py-1 rounded-full border border-white/25">
-                        <Text className="text-amber-300 font-gotham-bold text-xs">
-                          ⚡ {pendingCount} {t("pending", "Pending")}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </ImageBackground>
+        <SafeAreaView style={{ flex: 1 }}>
+          
+          {/* HEADER */}
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
+            <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace("/(employee)/dashboard")} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)" }}>
+              <ChevronLeft size={24} color="#ffffff" />
+            </TouchableOpacity>
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18 }}>Daily Itinerary</Text>
+              <Text style={{ color: "#4ade80", fontFamily: "Brandon-Medium", fontSize: 12 }}>Route Optimized</Text>
             </View>
+            <TouchableOpacity style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)" }}>
+              <CalendarDays size={20} color="#ffffff" />
+            </TouchableOpacity>
           </View>
 
-          {/* Filter Tabs */}
-          <View className="px-5 mb-4 flex-row justify-between">
-            {(["all", "pending", "completed"] as const).map((tab) => {
-              const isActive = activeTab === tab;
-              const tabText =
-                tab === "all"
-                  ? t("all", "All")
-                  : tab === "pending"
-                  ? t("pending", "Pending")
-                  : t("completed", "Completed");
-              return (
-                <TouchableOpacity
-                  key={tab}
-                  onPress={() => setActiveTab(tab)}
-                  className={`flex-1 mx-1 py-2.5 rounded-full items-center border ${
-                    isActive
-                      ? "bg-emerald-600 border-emerald-600 shadow-sm"
-                      : "bg-white border-slate-200"
-                  }`}
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 32, alignItems: "center", paddingBottom: 160 }}>
+            
+            {/* TIMELINE CONTAINER */}
+            <View style={{ width: "100%", alignItems: "center" }}>
+              
+              {/* Central Timeline Line */}
+              <View style={{ position: "absolute", top: 40, bottom: 40, width: 2, backgroundColor: "rgba(255,255,255,0.1)", left: "50%", marginLeft: -1, zIndex: 0 }} />
+
+              {visits.map((visit) => (
+                <View 
+                  key={visit.id} 
+                  style={{ width: "100%", flexDirection: "row", alignItems: "center", marginVertical: 32, zIndex: 10 }}
                 >
-                  <Text
-                    className={`font-gotham-bold text-xs uppercase tracking-wider ${
-                      isActive ? "text-white" : "text-slate-700"
-                    }`}
-                  >
-                    {tabText}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
-          {/* Concise Visits List - Lesser Content, Clean Layout */}
-          <View className="px-5">
-            {filteredVisits.map((visit, idx) => {
-              const isCompleted = visit.status === "completed";
-              const mediumThemes = [
-                {
-                  bg: "bg-emerald-50/95",
-                  border: "border-emerald-200/90",
-                  timeBg: "bg-emerald-100",
-                  timeBorder: "border-emerald-300",
-                  timeText: "text-emerald-900",
-                  iconColor: "#059669",
-                  actionText: "text-emerald-800",
-                },
-                {
-                  bg: "bg-sky-50/95",
-                  border: "border-sky-200/90",
-                  timeBg: "bg-sky-100",
-                  timeBorder: "border-sky-300",
-                  timeText: "text-sky-900",
-                  iconColor: "#0284c7",
-                  actionText: "text-sky-800",
-                },
-                {
-                  bg: "bg-amber-50/95",
-                  border: "border-amber-200/90",
-                  timeBg: "bg-amber-100",
-                  timeBorder: "border-amber-300",
-                  timeText: "text-amber-900",
-                  iconColor: "#d97706",
-                  actionText: "text-amber-800",
-                },
-                {
-                  bg: "bg-purple-50/95",
-                  border: "border-purple-200/90",
-                  timeBg: "bg-purple-100",
-                  timeBorder: "border-purple-300",
-                  timeText: "text-purple-900",
-                  iconColor: "#7e22ce",
-                  actionText: "text-purple-800",
-                },
-              ];
-              const theme = mediumThemes[idx % mediumThemes.length];
-
-              return (
-                <TouchableOpacity
-                  key={visit.id || idx}
-                  activeOpacity={0.88}
-                  onPress={() =>
-                    router.push(`/(employee)/visit/${visit.id}` as any)
-                  }
-                  className={`${theme.bg} rounded-[24px] p-4 mb-3.5 border ${theme.border} shadow-xs`}
-                >
-                  <View className="flex-row justify-between items-center mb-2.5">
-                    <View className="flex-row items-center">
-                      <View
-                        className={`px-2.5 py-0.5 rounded-md mr-2 border ${theme.timeBg} ${theme.timeBorder}`}
-                      >
-                        <Text
-                          className={`text-[11px] font-gotham-bold ${theme.timeText}`}
-                        >
-                          {visit.time || "10:30 AM"}
-                        </Text>
-                      </View>
-                      <Text className="text-slate-600 font-gotham-medium text-xs">
-                        {isCompleted
-                          ? (language === "ta" ? "முடிந்தது ✓" : "Completed ✓")
-                          : (language === "ta" ? "வரவிருக்கும் வருகை" : "Upcoming Visit")}
-                      </Text>
-                    </View>
-
-                    <TouchableOpacity
-                      onPress={() =>
-                        Linking.openURL(
-                          `tel:${visit.farmer?.phone || "9411111111"}`
-                        )
-                      }
-                      className="w-8 h-8 rounded-full bg-emerald-100/90 items-center justify-center border border-emerald-200"
-                    >
-                      <Phone size={13} color="#059669" />
-                    </TouchableOpacity>
+                  
+                  {/* Left Side (Type & Status) */}
+                  <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 56 }}>
+                    <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Bold", fontSize: 10, letterSpacing: 1, marginBottom: 4 }}>{visit.type}</Text>
+                    <Text style={{ color: visit.status === "Completed" ? "#4ade80" : visit.status === "In Progress" ? "#fbbf24" : "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>
+                      {visit.status}
+                    </Text>
                   </View>
 
-                  <Text className="text-slate-900 font-gotham-bold text-base mb-1">
-                    {visit.farmerName || visit.farmer?.name || "Organic Farm"}
-                  </Text>
+                  {/* Center Circle Image */}
+                  <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: "#062214", alignItems: "center", justifyContent: "center", position: "absolute", left: "50%", marginLeft: -40, zIndex: 10, borderWidth: visit.status === "Completed" ? 2 : 1, borderColor: visit.status === "Completed" ? "#4ade80" : "rgba(255,255,255,0.2)" }}>
+                    <Image source={visit.image} style={{ width: 72, height: 72, borderRadius: 36 }} />
+                  </View>
 
-                  <View className="flex-row items-center justify-between pt-2.5 border-t border-slate-200/70">
-                    <View className="flex-row items-center flex-1 mr-2">
-                      <MapPin size={13} color={theme.iconColor} />
-                      <Text
-                        className="text-slate-700 text-xs ml-1 font-gotham-medium"
-                        numberOfLines={1}
-                      >
-                        {visit.address || visit.farmer?.address || "Thanjavur Ag-Corridor"}
-                      </Text>
-                    </View>
-
-                    <View className="flex-row items-center">
-                      <Text className={`${theme.actionText} font-gotham-bold text-xs mr-1`}>
-                        {t("viewDetails", "View Details")}
-                      </Text>
-                      <ChevronRight size={14} color={theme.iconColor} />
+                  {/* Right Side (Farmer & Time) */}
+                  <View style={{ flex: 1, alignItems: "flex-start", paddingLeft: 56 }}>
+                    <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 20 }}>{visit.time}</Text>
+                    <View style={{ flexDirection: "row", alignItems: "center", marginTop: 4 }}>
+                      <MapPin size={12} color="rgba(255,255,255,0.5)" />
+                      <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 13, marginLeft: 4 }}>{visit.farmer}</Text>
                     </View>
                   </View>
-                </TouchableOpacity>
-              );
-            })}
+                  
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+
+          {/* BOTTOM FLOATING SUMMARY CARD */}
+          <View style={{ position: "absolute", bottom: 24, left: 24, right: 24, backgroundColor: "rgba(255,255,255,0.08)", borderRadius: 32, padding: 24, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)", backdropFilter: "blur(20px)" }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Navigation size={20} color="#4ade80" />
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16, marginLeft: 8 }}>Auto-Routing Active</Text>
+              </View>
+              <View style={{ backgroundColor: "rgba(74,222,128,0.2)", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 999 }}>
+                <Text style={{ color: "#4ade80", fontFamily: "Brandon-Bold", fontSize: 11, letterSpacing: 1 }}>GPS SYNCED</Text>
+              </View>
+            </View>
+            <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Medium", fontSize: 13, lineHeight: 18 }}>
+              Your itinerary has been automatically sorted for the most efficient travel time across all sectors today.
+            </Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+
+        </SafeAreaView>
+      </ImageBackground>
     </View>
   );
 }

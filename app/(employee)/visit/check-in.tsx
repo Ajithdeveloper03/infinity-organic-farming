@@ -79,7 +79,7 @@ export default function CheckInScreen() {
               <ChevronLeft size={22} color="#0f172a" />
             </TouchableOpacity>
 
-            <Text className="text-lg font-gotham-bold text-slate-900">
+            <Text className="text-lg font-brandon-bold text-slate-900">
               Field Arrival Check-In
             </Text>
 
@@ -95,11 +95,11 @@ export default function CheckInScreen() {
                 <MapPin size={36} color="#059669" />
               </View>
 
-              <Text className="text-2xl font-gotham-bold text-slate-900 text-center mb-1">
+              <Text className="text-2xl font-brandon-bold text-slate-900 text-center mb-1">
                 Geofence Verified
               </Text>
 
-              <Text className="text-emerald-700 font-brandon font-bold text-xs uppercase tracking-wider mb-3">
+              <Text className="text-emerald-700 font-brandon-bold text-xs uppercase tracking-wider mb-3">
                 Within 25m of Farm Coordinates
               </Text>
 
@@ -125,7 +125,7 @@ export default function CheckInScreen() {
                 </View>
 
                 <View className="flex-1">
-                  <Text className="text-slate-900 font-gotham-bold text-sm">
+                  <Text className="text-slate-900 font-brandon-bold text-sm">
                     {photoTaken ? "Photo Verified ✓" : "Field Photo Verification"}
                   </Text>
                   <Text className="text-slate-500 font-brandon text-xs">
@@ -155,7 +155,7 @@ export default function CheckInScreen() {
                     justifyContent: "center",
                   }}
                 >
-                  <Text className="text-white font-gotham-bold text-base uppercase tracking-wider mr-2">
+                  <Text className="text-white font-brandon-bold text-base uppercase tracking-wider mr-2">
                     Check In & Start Tracking
                   </Text>
                   <ArrowRight size={18} color="#ffffff" />

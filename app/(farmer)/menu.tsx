@@ -1,149 +1,99 @@
-import { router } from "expo-router";
-
-import {
-  ChevronRight,
-  FileText,
-  HeadphonesIcon,
-  History,
-  Leaf,
-  Lightbulb,
-  LogOut,
-  MessageSquare,
-  Settings,
-  User,
-} from "lucide-react-native";
-
 import React from "react";
-
 import {
-  ImageBackground,
-  ScrollView,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
+import { router } from "expo-router";
+import * as Haptics from "expo-haptics";
+import {
+  X,
+  BarChart2,
+  CheckCircle2,
+} from "lucide-react-native";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function FarmerMenuScreen() {
   const { t, language } = useLanguage();
 
-  const menuItems = [
-    {
-      id: "1",
-      title: t("myProfile", "My Profile"),
-      icon: User,
-      route: "/(farmer)/profile",
-    },
-    {
-      id: "2",
-      title: t("myFarm", "My Farm Details"),
-      icon: Leaf,
-      route: "/(farmer)/farm",
-    },
-    {
-      id: "3",
-      title: t("visitHistory", "Visit History"),
-      icon: History,
-      route: "/(farmer)/history",
-    },
-    {
-      id: "4",
-      title: t("visitReports", "Visit Reports"),
-      icon: FileText,
-      route: "/(farmer)/history",
-    },
-    {
-      id: "5",
-      title: t("farmingTips", "Farming Tips"),
-      icon: Lightbulb,
-      route: "/(farmer)/recommendations",
-    },
-    {
-      id: "6",
-      title: t("docs", "Documents"),
-      icon: FileText,
-      route: "/(farmer)/documents",
-    },
-    {
-      id: "7",
-      title: t("supportFaq", "Support & FAQ"),
-      icon: HeadphonesIcon,
-      route: "/(farmer)/support",
-    },
-    {
-      id: "8",
-      title: t("feedback", "Feedback"),
-      icon: MessageSquare,
-      route: "/(farmer)/support",
-    },
+  const flowSteps = [
+    { id: 1, stage: "PREPARATION", label: "Plowing", time: "Week 1", image: require("../../assets/images/image10.jpg") },
+    { id: 2, stage: "PLANTING", label: "Seeding", time: "Week 2", stat: "12k seeds", image: require("../../assets/images/image14.jpg") },
+    { id: 3, stage: "MAINTENANCE", label: "Fertilizing", time: "Week 4", stat: "Organic", image: require("../../assets/images/image2.jpg") },
+    { id: 4, stage: "HARVEST", label: "Reaping", time: "Week 12", image: require("../../assets/images/image1.jpg") },
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
-      {/* Header - Transparent */}
-      <View style={{ backgroundColor: "transparent" }} className="px-5 pt-3 pb-3 flex-row items-center justify-between z-10">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          className="w-10 h-10 rounded-full bg-white items-center justify-center border border-gray-200 shadow-sm"
-        >
-          <ChevronRight size={20} color="#0f172a" style={{ transform: [{ rotate: "180deg" }] }} />
-        </TouchableOpacity>
-        <Text className="text-gray-900 text-lg font-gotham-bold">{t("menu", "Menu")}</Text>
-        <LanguageTogglePill />
-      </View>
-      <ScrollView
-        className="flex-1"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
-      >
-        <View className="bg-white rounded-2xl mx-5 shadow-sm border border-gray-100 mb-6 overflow-hidden">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <TouchableOpacity
-                key={item.id}
-                onPress={() => {
-                  if (item.route) router.push(item.route as any);
-                }}
-                className="flex-row items-center p-4 border-b border-gray-100"
-              >
-                <Icon size={20} color="#374151" className="mr-4" />
-                <Text className="flex-1 text-gray-900 font-brandon-medium">
-                  {item.title}
-                </Text>
-                <ChevronRight size={20} color="#d1d5db" />
-              </TouchableOpacity>
-            );
-          })}
-          <TouchableOpacity
-            onPress={() => router.replace("/intro")}
-            className="flex-row items-center p-4"
-          >
-            <LogOut size={20} color="#dc2626" className="mr-4" />
-            <Text className="flex-1 text-red-600 font-gotham-bold">{t("logout", "Logout")}</Text>
+    <View style={{ flex: 1, backgroundColor: "#fef08a" }}>
+      <StatusBar barStyle="dark-content" />
+
+      <SafeAreaView style={{ flex: 1 }}>
+        
+        {/* HEADER */}
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
+          <TouchableOpacity onPress={() => router.push("/(farmer)/dashboard")} style={{ padding: 8 }}>
+            <X size={24} color="#000000" />
+          </TouchableOpacity>
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 18 }}>Seasonal Flow</Text>
+            <Text style={{ color: "#4b5563", fontFamily: "Brandon-Medium", fontSize: 12 }}>Your activity drives the yield</Text>
+          </View>
+          <TouchableOpacity style={{ padding: 8 }}>
+            <BarChart2 size={24} color="#000000" />
           </TouchableOpacity>
         </View>
-        {/* Promo Banner */}
-        <View className="px-5 mb-8">
-          <TouchableOpacity className="h-32 rounded-3xl overflow-hidden shadow-sm">
-            <ImageBackground
-              source={{
-                uri: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop",
-              }}
-              className="w-full h-full justify-end p-5"
-            >
-              <View className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-              <Text className="text-white font-gotham-bold text-lg relative z-10">
-                {language === "ta" ? "செழிப்பான வெட்டிவேர்" : "Healthy Vetiver"}
-              </Text>
-              <Text className="text-green-300 text-sm relative z-10">
-                {language === "ta" ? "சிறந்த மண் வளம். சிறந்த எதிர்காலம்." : "Better Soil. Better Future."}
-              </Text>
-            </ImageBackground>
-          </TouchableOpacity>
+
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 40, alignItems: "center" }}>
+          
+          {/* TIMELINE CONTAINER */}
+          <View style={{ width: "100%", alignItems: "center" }}>
+            
+            {/* The vertical line running behind everything */}
+            <View style={{ position: "absolute", top: 40, bottom: 40, width: 2, backgroundColor: "#d1d5db", left: "50%", marginLeft: -1, zIndex: 0 }} />
+
+            {flowSteps.map((step, index) => (
+              <View key={step.id} style={{ width: "100%", flexDirection: "row", alignItems: "center", marginVertical: 32, zIndex: 10 }}>
+                
+                {/* Left Side (Stage & Label) */}
+                <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 60 }}>
+                  <Text style={{ color: "#4b5563", fontFamily: "Brandon-Bold", fontSize: 11, letterSpacing: 1, marginBottom: 4 }}>{step.stage}</Text>
+                  <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 22 }}>{step.label}</Text>
+                </View>
+
+                {/* Center Circle Image */}
+                <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center", position: "absolute", left: "50%", marginLeft: -50, zIndex: 10, shadowColor: "#000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.1, shadowRadius: 16, elevation: 8 }}>
+                  <Image source={step.image} style={{ width: 92, height: 92, borderRadius: 46 }} />
+                </View>
+
+                {/* Right Side (Time & Stat) */}
+                <View style={{ flex: 1, alignItems: "flex-start", paddingLeft: 60 }}>
+                  <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 20 }}>{step.time}</Text>
+                  {step.stat && (
+                    <Text style={{ color: "#4b5563", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 4 }}>{step.stat}</Text>
+                  )}
+                </View>
+                
+              </View>
+            ))}
+
+          </View>
+
+        </ScrollView>
+
+        {/* BOTTOM ADAPTIVE CARD */}
+        <View style={{ marginHorizontal: 32, marginBottom: 120, backgroundColor: "#ffffff", borderRadius: 32, padding: 24, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.05, shadowRadius: 16, elevation: 8 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}>
+            <CheckCircle2 size={16} color="#000000" />
+            <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 13, marginLeft: 6 }}>Auto-adaptive</Text>
+          </View>
+          <Text style={{ color: "#4b5563", fontFamily: "Brandon-Medium", fontSize: 16 }}>Smart scheduling & weather pauses</Text>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+
+      </SafeAreaView>
+    </View>
   );
 }

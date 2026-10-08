@@ -16,7 +16,7 @@ export const Input = forwardRef<TextInput, InputProps>(
 
     return (
       <View className={`mb-4 ${className}`}>
-        {label && <Text className="text-gray-700 font-medium mb-1">{label}</Text>}
+        {label && <Text className="text-gray-700 font-brandon-medium mb-1">{label}</Text>}
         
         <View
           className={`flex-row items-center border rounded-xl bg-white px-3 h-14 ${
@@ -47,7 +47,7 @@ export const Input = forwardRef<TextInput, InputProps>(
           )}
         </View>
 
-        {error && <Text className="text-red-500 text-sm mt-1">{error}</Text>}
+        {error && <Text className="text-red-500 text-sm mt-1 font-brandon">{error}</Text>}
       </View>
     );
   }

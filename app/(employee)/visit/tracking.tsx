@@ -123,7 +123,7 @@ export default function TrackingScreen() {
           <Navigation size={48} color="#15803d" />
           <View className="absolute w-32 h-32 rounded-full border-2 border-green-500/30 animate-ping" />
         </View>
-        <Text className="text-gray-900 font-gotham-bold text-2xl mb-2">Recording Visit Route</Text>
+        <Text className="text-gray-900 font-brandon-bold text-2xl mb-2">Recording Visit Route</Text>
         <Text className="text-gray-500 font-brandon text-center px-10">
           Your location is being recorded in the background. Keep this app running while you complete the visit.
         </Text>
@@ -142,7 +142,7 @@ export default function TrackingScreen() {
                 className="text-gray-900"
               />
             </TouchableOpacity>
-            <Text className="font-gotham-bold text-lg text-gray-900 bg-white/90 px-4 py-1.5 rounded-full shadow-sm">
+            <Text className="font-brandon-bold text-lg text-gray-900 bg-white/90 px-4 py-1.5 rounded-full shadow-sm">
               {" "}
               Live Tracking{" "}
             </Text>
@@ -155,7 +155,7 @@ export default function TrackingScreen() {
                   <Navigation size={24} color="#15803d" />
                 </View>
                 <View className="flex-1">
-                  <Text className="font-gotham-bold text-gray-900 text-base">
+                  <Text className="font-brandon-bold text-gray-900 text-base">
                     {visit.farmer.name}
                   </Text>
                   <Text
@@ -168,7 +168,7 @@ export default function TrackingScreen() {
               </View>
               <View className="bg-orange-100 px-3 py-1.5 rounded-full ml-2 flex-row items-center">
                 <View className="w-2 h-2 rounded-full bg-orange-500 mr-2 animate-ping" />
-                <Text className="text-[#ea580c] font-gotham-bold text-xs">
+                <Text className="text-[#ea580c] font-brandon-bold text-xs">
                   LIVE
                 </Text>
               </View>
@@ -182,16 +182,16 @@ export default function TrackingScreen() {
               <Text className="text-gray-500 text-sm font-brandon mb-1">
                 Tracking Duration
               </Text>
-              <Text className="text-[#15803d] font-gotham-bold text-4xl">
+              <Text className="text-[#15803d] font-brandon-bold text-4xl">
                 {formatDuration(duration)}
               </Text>
             </View>
             <View className="flex-row justify-between px-4 mb-8">
               <View className="items-center w-1/3">
-                <Text className="text-gray-900 font-gotham-bold text-lg">
+                <Text className="text-gray-900 font-brandon-bold text-lg">
                   {displayDistance}
                 </Text>
-                <Text className="text-gray-900 font-gotham-bold text-xs mb-1">
+                <Text className="text-gray-900 font-brandon-bold text-xs mb-1">
                   km
                 </Text>
                 <Text className="text-gray-400 text-xs font-brandon">
@@ -200,10 +200,10 @@ export default function TrackingScreen() {
               </View>
               <View className="w-px h-10 bg-gray-200" />
               <View className="items-center w-1/3">
-                <Text className="text-gray-900 font-gotham-bold text-lg">
+                <Text className="text-gray-900 font-brandon-bold text-lg">
                   {displaySpeed}
                 </Text>
-                <Text className="text-gray-900 font-gotham-bold text-xs mb-1">
+                <Text className="text-gray-900 font-brandon-bold text-xs mb-1">
                   km/h
                 </Text>
                 <Text className="text-gray-400 text-xs font-brandon">
@@ -212,10 +212,10 @@ export default function TrackingScreen() {
               </View>
               <View className="w-px h-10 bg-gray-200" />
               <View className="items-center w-1/3">
-                <Text className="text-gray-900 font-gotham-bold text-lg">
+                <Text className="text-gray-900 font-brandon-bold text-lg">
                   {visit.time.split(" ")[0]}
                 </Text>
-                <Text className="text-gray-900 font-gotham-bold text-xs mb-1">
+                <Text className="text-gray-900 font-brandon-bold text-xs mb-1">
                   {visit.time.split(" ")[1]}
                 </Text>
                 <Text className="text-gray-400 text-xs font-brandon">
@@ -238,7 +238,7 @@ export default function TrackingScreen() {
             <View className="flex-row justify-between items-center mb-6">
               <View className="flex-row items-center">
                 <ShieldAlert size={28} color="#ef4444" className="mr-3" />
-                <Text className="text-gray-900 font-gotham-bold text-xl">
+                <Text className="text-gray-900 font-brandon-bold text-xl">
                   Stop Tracking?
                 </Text>
               </View>
@@ -254,7 +254,7 @@ export default function TrackingScreen() {
               a valid reason or Admin Override PIN.
             </Text>
 
-            <Text className="text-gray-900 font-gotham-bold mb-2 ml-1">
+            <Text className="text-gray-900 font-brandon-bold mb-2 ml-1">
               Reason for stopping early
             </Text>
             <View className="border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 h-24 mb-4">
@@ -269,12 +269,12 @@ export default function TrackingScreen() {
               />
             </View>
 
-            <Text className="text-gray-900 font-gotham-bold mb-2 ml-1">
+            <Text className="text-gray-900 font-brandon-bold mb-2 ml-1">
               Admin Override OTP (Optional)
             </Text>
             <View className="border border-gray-200 rounded-xl px-4 py-4 bg-gray-50 mb-8">
               <TextInput
-                className="text-gray-900 font-gotham-bold"
+                className="text-gray-900 font-brandon-bold"
                 placeholder="Enter 4-digit PIN (1234)"
                 placeholderTextColor="#9ca3af"
                 keyboardType="numeric"

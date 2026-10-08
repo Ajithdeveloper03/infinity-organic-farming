@@ -35,14 +35,14 @@ export default function VisitDetailsScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
         <SafeAreaView style={{ flex: 1 }} className="items-center justify-center px-5">
-          <Text className="text-slate-900 font-gotham-bold text-lg mb-2">
+          <Text className="text-slate-900 font-brandon-bold text-lg mb-2">
             Visit Dossier Not Found
           </Text>
           <TouchableOpacity
             onPress={() => router.back()}
             className="mt-4 bg-emerald-600 px-6 py-3 rounded-full shadow-sm"
           >
-            <Text className="text-white font-gotham-bold">Go Back</Text>
+            <Text className="text-white font-brandon-bold">Go Back</Text>
           </TouchableOpacity>
         </SafeAreaView>
       </View>
@@ -62,10 +62,10 @@ export default function VisitDetailsScreen() {
         <Icon size={18} color={color} />
       </View>
       <View className="flex-1">
-        <Text className="text-slate-400 font-gotham-semibold text-[10px] uppercase tracking-wider">
+        <Text className="text-slate-400 font-brandon-semibold text-[10px] uppercase tracking-wider">
           {label}
         </Text>
-        <Text className="text-white font-gotham-bold text-sm mt-0.5">
+        <Text className="text-white font-brandon-bold text-sm mt-0.5">
           {value}
         </Text>
       </View>
@@ -88,7 +88,7 @@ export default function VisitDetailsScreen() {
             <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
 
-          <Text className="text-lg font-gotham-bold text-slate-900">
+          <Text className="text-lg font-brandon-bold text-slate-900">
             Inspection Dossier
           </Text>
 
@@ -128,20 +128,20 @@ export default function VisitDetailsScreen() {
               <View className="flex-1 p-5 justify-between">
                 <View className="flex-row items-center justify-between">
                   <View className="bg-emerald-500 px-3 py-1 rounded-full">
-                    <Text className="text-white font-gotham-bold text-[11px] uppercase tracking-wider">
+                    <Text className="text-white font-brandon-bold text-[11px] uppercase tracking-wider">
                       {visit.time || "10:30 AM"} Slot
                     </Text>
                   </View>
 
                   <View className="bg-black/60 px-3 py-1 rounded-full border border-white/20">
-                    <Text className="text-white font-gotham-bold text-xs">
+                    <Text className="text-white font-brandon-bold text-xs">
                       {visit.status === "completed" ? "Completed" : "Action Needed"}
                     </Text>
                   </View>
                 </View>
 
                 <View>
-                  <Text className="text-white font-gotham-bold text-2xl leading-tight">
+                  <Text className="text-white font-brandon-bold text-2xl leading-tight">
                     {visit.farmer.name}
                   </Text>
                   <View className="flex-row items-center mt-1">
@@ -160,7 +160,7 @@ export default function VisitDetailsScreen() {
 
           {/* Full Audit Detailed Parameters (Darkish Rich Card) */}
           <View className="bg-slate-900 rounded-[28px] p-5 shadow-md border border-slate-700/60 mb-6">
-            <Text className="text-white font-gotham-bold text-base mb-2">
+            <Text className="text-white font-brandon-bold text-base mb-2">
               Agronomic Parameters
             </Text>
 
@@ -196,10 +196,10 @@ export default function VisitDetailsScreen() {
             />
 
             <View className="pt-4">
-              <Text className="text-slate-400 font-gotham-bold text-[10px] uppercase tracking-wider mb-1">
+              <Text className="text-slate-400 font-brandon-bold text-[10px] uppercase tracking-wider mb-1">
                 Field Instructions & Notes
               </Text>
-              <Text className="text-slate-200 text-xs leading-relaxed font-gotham-medium">
+              <Text className="text-slate-200 text-xs leading-relaxed font-brandon-medium">
                 {visit.remarks ||
                   "Conduct root depth inspection, test soil moisture levels, inspect bio-tonic spray efficacy, and record geo-coordinates."}
               </Text>
@@ -218,7 +218,7 @@ export default function VisitDetailsScreen() {
               }
               className="w-full bg-emerald-600 py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-700/25 flex-row"
             >
-              <Text className="text-white font-gotham-bold text-base uppercase tracking-wider mr-2">
+              <Text className="text-white font-brandon-bold text-base uppercase tracking-wider mr-2">
                 Start Field Check-In Workflow
               </Text>
               <ArrowRight size={18} color="#ffffff" />
@@ -226,7 +226,7 @@ export default function VisitDetailsScreen() {
           ) : (
             <View className="bg-emerald-50 border border-emerald-200 py-4 rounded-2xl flex-row items-center justify-center">
               <CheckCircle2 size={20} color="#059669" className="mr-2" />
-              <Text className="text-emerald-800 font-gotham-bold text-sm uppercase tracking-wider">
+              <Text className="text-emerald-800 font-brandon-bold text-sm uppercase tracking-wider">
                 Audit Completed & Submitted
               </Text>
             </View>

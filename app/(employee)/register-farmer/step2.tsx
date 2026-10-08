@@ -68,7 +68,7 @@ export default function RegisterStep2Screen() {
         >
           <ChevronLeft size={22} color="#0f172a" />
         </TouchableOpacity>
-        <Text className="text-xl font-gotham-bold text-slate-900">
+        <Text className="text-xl font-brandon-bold text-slate-900">
           Verify Your Number
         </Text>
       </View>
@@ -83,7 +83,7 @@ export default function RegisterStep2Screen() {
           <Text className="text-slate-500 font-brandon text-xs text-center">
             Enter the 6-digit code sent to
           </Text>
-          <Text className="text-slate-900 font-gotham-bold text-sm mt-0.5">
+          <Text className="text-slate-900 font-brandon-bold text-sm mt-0.5">
             +91 {mobile}
           </Text>
         </View>
@@ -101,7 +101,7 @@ export default function RegisterStep2Screen() {
                 ref={(ref) => {
                   inputsRef.current[idx] = ref;
                 }}
-                className="text-xl font-gotham-bold text-slate-900 text-center w-full h-full p-0"
+                className="text-xl font-brandon-bold text-slate-900 text-center w-full h-full p-0"
                 keyboardType="number-pad"
                 maxLength={1}
                 value={digit}
@@ -116,7 +116,7 @@ export default function RegisterStep2Screen() {
         <View className="items-center mb-8">
           <Text className="text-slate-500 font-brandon text-xs">
             Resend OTP in{" "}
-            <Text className="text-emerald-700 font-gotham-bold">
+            <Text className="text-emerald-700 font-brandon-bold">
               00:{countdown < 10 ? `0${countdown}` : countdown}
             </Text>
           </Text>
@@ -139,7 +139,7 @@ export default function RegisterStep2Screen() {
           onPress={handleVerify}
           className="w-full bg-[#2f6f36] py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-900/20 flex-row mt-4"
         >
-          <Text className="text-white font-gotham-bold text-base tracking-wide">
+          <Text className="text-white font-brandon-bold text-base tracking-wide">
             Verify & Continue
           </Text>
         </TouchableOpacity>

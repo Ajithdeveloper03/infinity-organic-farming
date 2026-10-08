@@ -54,7 +54,7 @@ export default function RegisterStep3Screen() {
           <ChevronLeft size={22} color="#0f172a" />
         </TouchableOpacity>
         <View>
-          <Text className="text-xl font-gotham-bold text-slate-900">
+          <Text className="text-xl font-brandon-bold text-slate-900">
             Farmer Registration
           </Text>
           <Text className="text-slate-500 font-brandon text-xs">
@@ -75,24 +75,24 @@ export default function RegisterStep3Screen() {
           {/* 4-Step Stepper */}
           <View className="flex-row items-center justify-center my-4 px-4">
             <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-              <Text className="text-white font-gotham-bold text-xs">✓</Text>
+              <Text className="text-white font-brandon-bold text-xs">✓</Text>
             </View>
             <View className="flex-1 h-0.5 bg-[#2f6f36] mx-2" />
             <View className="w-8 h-8 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-              <Text className="text-white font-gotham-bold text-xs">2</Text>
+              <Text className="text-white font-brandon-bold text-xs">2</Text>
             </View>
             <View className="flex-1 h-0.5 bg-slate-200 mx-2" />
             <View className="w-7 h-7 rounded-full bg-white border border-slate-300 items-center justify-center">
-              <Text className="text-slate-400 font-gotham-bold text-xs">3</Text>
+              <Text className="text-slate-400 font-brandon-bold text-xs">3</Text>
             </View>
             <View className="flex-1 h-0.5 bg-slate-200 mx-2" />
             <View className="w-7 h-7 rounded-full bg-white border border-slate-300 items-center justify-center">
-              <Text className="text-slate-400 font-gotham-bold text-xs">4</Text>
+              <Text className="text-slate-400 font-brandon-bold text-xs">4</Text>
             </View>
           </View>
 
           {/* Section Heading */}
-          <Text className="text-slate-900 font-gotham-bold text-base mt-2 mb-4">
+          <Text className="text-slate-900 font-brandon-bold text-base mt-2 mb-4">
             Personal Details
           </Text>
 
@@ -104,7 +104,7 @@ export default function RegisterStep3Screen() {
                 Full Name
               </Text>
               <TextInput
-                className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+                className="text-base font-brandon-bold text-slate-900 p-0 m-0"
                 value={form.fullName}
                 onChangeText={(t) => setForm({ ...form, fullName: t })}
                 placeholder="Full Name"
@@ -118,7 +118,7 @@ export default function RegisterStep3Screen() {
                 Email
               </Text>
               <TextInput
-                className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+                className="text-base font-brandon-bold text-slate-900 p-0 m-0"
                 value={form.email}
                 onChangeText={(t) => setForm({ ...form, email: t })}
                 placeholder="Email Address"
@@ -134,7 +134,7 @@ export default function RegisterStep3Screen() {
                 Mobile Number
               </Text>
               <TextInput
-                className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+                className="text-base font-brandon-bold text-slate-900 p-0 m-0"
                 value={form.mobile}
                 onChangeText={(t) => setForm({ ...form, mobile: t })}
                 placeholder="+91 Mobile Number"
@@ -150,7 +150,7 @@ export default function RegisterStep3Screen() {
                   Village
                 </Text>
                 <TextInput
-                  className="text-sm font-gotham-bold text-slate-900 p-0 m-0"
+                  className="text-sm font-brandon-bold text-slate-900 p-0 m-0"
                   value={form.village}
                   onChangeText={(t) => setForm({ ...form, village: t })}
                 />
@@ -161,7 +161,7 @@ export default function RegisterStep3Screen() {
                   Taluk
                 </Text>
                 <TextInput
-                  className="text-sm font-gotham-bold text-slate-900 p-0 m-0"
+                  className="text-sm font-brandon-bold text-slate-900 p-0 m-0"
                   value={form.taluk}
                   onChangeText={(t) => setForm({ ...form, taluk: t })}
                 />
@@ -175,7 +175,7 @@ export default function RegisterStep3Screen() {
                   District
                 </Text>
                 <TextInput
-                  className="text-sm font-gotham-bold text-slate-900 p-0 m-0"
+                  className="text-sm font-brandon-bold text-slate-900 p-0 m-0"
                   value={form.district}
                   onChangeText={(t) => setForm({ ...form, district: t })}
                 />
@@ -186,7 +186,7 @@ export default function RegisterStep3Screen() {
                   State
                 </Text>
                 <TextInput
-                  className="text-sm font-gotham-bold text-slate-900 p-0 m-0"
+                  className="text-sm font-brandon-bold text-slate-900 p-0 m-0"
                   value={form.state}
                   onChangeText={(t) => setForm({ ...form, state: t })}
                 />
@@ -199,7 +199,7 @@ export default function RegisterStep3Screen() {
                 Pincode
               </Text>
               <TextInput
-                className="text-base font-gotham-bold text-slate-900 p-0 m-0"
+                className="text-base font-brandon-bold text-slate-900 p-0 m-0"
                 value={form.pincode}
                 onChangeText={(t) => setForm({ ...form, pincode: t })}
                 keyboardType="number-pad"
@@ -214,7 +214,7 @@ export default function RegisterStep3Screen() {
             onPress={handleNext}
             className="w-full bg-[#2f6f36] py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-900/20 flex-row"
           >
-            <Text className="text-white font-gotham-bold text-base tracking-wide">
+            <Text className="text-white font-brandon-bold text-base tracking-wide">
               Next
             </Text>
           </TouchableOpacity>

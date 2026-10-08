@@ -96,7 +96,7 @@ export default function FarmerDashboardScreen() {
               <View className="flex-1 justify-center">
                 <View className="flex-row items-center">
                   <Text
-                    className="text-slate-900 font-gotham-bold text-base tracking-tight"
+                    className="text-slate-900 font-brandon-bold text-base tracking-tight"
                     numberOfLines={1}
                   >
                     {language === "ta" ? "குப்புசாமி" : "Kuppusamy"}
@@ -105,7 +105,7 @@ export default function FarmerDashboardScreen() {
                 </View>
                 <View className="flex-row items-center mt-1">
                   <View className="bg-emerald-100/95 border border-emerald-300/80 px-2.5 py-0.5 rounded-full flex-row items-center shadow-xs">
-                    <Text className="text-emerald-950 font-gotham-bold text-[10px] tracking-wide">
+                    <Text className="text-emerald-950 font-brandon-bold text-[10px] tracking-wide">
                       ID: FMR-1002 • {t("farmer", "Farmer")}
                     </Text>
                   </View>
@@ -143,7 +143,7 @@ export default function FarmerDashboardScreen() {
                 }}
               >
                 <Sparkles size={14} color="#a7f3d0" />
-                <Text className="text-white font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
+                <Text className="text-white font-brandon-bold text-xs ml-1.5 uppercase tracking-wider">
                   {t("vetiver", "Vetiver")} • 2.5 {t("acres", "Acres")}
                 </Text>
               </LinearGradient>
@@ -164,7 +164,7 @@ export default function FarmerDashboardScreen() {
                 }}
               >
                 <Package size={14} color="#fef08a" />
-                <Text className="text-white font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
+                <Text className="text-white font-brandon-bold text-xs ml-1.5 uppercase tracking-wider">
                   {t("bioInputClient", "Bio-Input Client")}
                 </Text>
               </LinearGradient>
@@ -207,7 +207,7 @@ export default function FarmerDashboardScreen() {
                     }`}
                   >
                     <Text
-                      className={`font-gotham-bold text-sm ${
+                      className={`font-brandon-bold text-sm ${
                         isCurrent ? "text-white" : "text-slate-700"
                       }`}
                     >
@@ -223,11 +223,11 @@ export default function FarmerDashboardScreen() {
           {(activeTab === "Crops" || activeTab === "All") && (
             <View className="px-5 mb-5">
               <View className="flex-row justify-between items-center mb-3">
-                <Text className="text-lg font-gotham-bold text-slate-900">
+                <Text className="text-lg font-brandon-bold text-slate-900">
                   {t("farmOverview", "Farm Overview")}
                 </Text>
                 <TouchableOpacity onPress={() => router.push("/(farmer)/farm" as any)}>
-                  <Text className="text-[#15803d] font-gotham-bold text-xs uppercase tracking-wider">
+                  <Text className="text-[#15803d] font-brandon-bold text-xs uppercase tracking-wider">
                     {t("viewDetails", "Details")}
                   </Text>
                 </TouchableOpacity>
@@ -250,7 +250,7 @@ export default function FarmerDashboardScreen() {
                   />
                   <View className="absolute bottom-3 left-4 flex-row items-center">
                     <MapPin size={13} color="#a7f3d0" className="mr-1" />
-                    <Text className="text-white font-gotham-semibold text-xs drop-shadow-sm">
+                    <Text className="text-white font-brandon-semibold text-xs drop-shadow-sm">
                       Kuppusamy Organic Estate • Annur
                     </Text>
                   </View>
@@ -259,28 +259,28 @@ export default function FarmerDashboardScreen() {
                 {/* 3-Stat Cluster in multi-color pastel backgrounds */}
                 <View className="p-3.5 flex-row gap-2.5 bg-white">
                   <View className="flex-1 bg-emerald-50/90 border border-emerald-200/80 rounded-2xl p-3 items-center">
-                    <Text className="text-emerald-950 font-gotham-bold text-xl">
+                    <Text className="text-emerald-950 font-brandon-bold text-xl">
                       2.5
                     </Text>
-                    <Text className="text-emerald-800 text-[10px] uppercase font-gotham-bold tracking-widest mt-0.5">
+                    <Text className="text-emerald-800 text-[10px] uppercase font-brandon-bold tracking-widest mt-0.5">
                       {t("acres", "Acres")}
                     </Text>
                   </View>
 
                   <View className="flex-1 bg-sky-50/90 border border-sky-200/80 rounded-2xl p-3 items-center">
-                    <Text className="text-sky-950 font-gotham-bold text-base">
+                    <Text className="text-sky-950 font-brandon-bold text-base">
                       {t("vetiver", "Vetiver")}
                     </Text>
-                    <Text className="text-sky-800 text-[10px] uppercase font-gotham-bold tracking-widest mt-0.5">
+                    <Text className="text-sky-800 text-[10px] uppercase font-brandon-bold tracking-widest mt-0.5">
                       {t("cropType", "Crop Type")}
                     </Text>
                   </View>
 
                   <View className="flex-1 bg-amber-50/90 border border-amber-200/80 rounded-2xl p-3 items-center">
-                    <Text className="text-amber-800 font-gotham-bold text-base">
+                    <Text className="text-amber-800 font-brandon-bold text-base">
                       {t("optimal", "Optimal")}
                     </Text>
-                    <Text className="text-amber-800 text-[10px] uppercase font-gotham-bold tracking-widest mt-0.5">
+                    <Text className="text-amber-800 text-[10px] uppercase font-brandon-bold tracking-widest mt-0.5">
                       {language === "ta" ? "வளம்" : "Health"}
                     </Text>
                   </View>
@@ -293,11 +293,11 @@ export default function FarmerDashboardScreen() {
           {(activeTab === "Fertilizers" || activeTab === "All") && (
             <View className="px-5 mb-5">
               <View className="flex-row justify-between items-center mb-3">
-                <Text className="text-lg font-gotham-bold text-slate-900">
+                <Text className="text-lg font-brandon-bold text-slate-900">
                   {t("recentOrders", "Recent Orders")}
                 </Text>
                 <TouchableOpacity onPress={() => router.push("/(farmer)/orders" as any)}>
-                  <Text className="text-[#15803d] font-gotham-bold text-xs uppercase tracking-wider">
+                  <Text className="text-[#15803d] font-brandon-bold text-xs uppercase tracking-wider">
                     {t("viewAll", "View All")}
                   </Text>
                 </TouchableOpacity>
@@ -313,16 +313,16 @@ export default function FarmerDashboardScreen() {
                     <Droplet size={22} color="#b45309" />
                   </View>
                   <View className="flex-1">
-                    <Text className="text-slate-900 font-gotham-bold text-sm">
+                    <Text className="text-slate-900 font-brandon-bold text-sm">
                       {language === "ta" ? "மண்புழு உரம் (50 கிலோ)" : "Organic Compost (50kg)"}
                     </Text>
-                    <Text className="text-amber-900 font-gotham-medium text-xs mt-0.5">
+                    <Text className="text-amber-900 font-brandon-medium text-xs mt-0.5">
                       {language === "ta" ? "ஆர்டர் #8832 • அனுப்பப்பட்டது" : "Order #8832 • Dispatched"}
                     </Text>
                   </View>
                 </View>
                 <View className="items-end">
-                  <Text className="text-emerald-800 font-gotham-bold text-sm">
+                  <Text className="text-emerald-800 font-brandon-bold text-sm">
                     ₹1,250
                   </Text>
                   <ChevronRight size={16} color="#78350f" className="mt-1" />
@@ -333,7 +333,7 @@ export default function FarmerDashboardScreen() {
 
           {/* Quick Actions (Visits, Reports, Rate FO, Support) */}
           <View className="px-5 mb-5">
-            <Text className="text-lg font-gotham-bold text-slate-900 mb-3.5">
+            <Text className="text-lg font-brandon-bold text-slate-900 mb-3.5">
               {t("quickActions", "Quick Actions")}
             </Text>
             <View className="flex-row justify-between">
@@ -388,7 +388,7 @@ export default function FarmerDashboardScreen() {
                     >
                       <Icon size={25} color={action.color} strokeWidth={1.8} />
                     </View>
-                    <Text className="text-slate-800 text-xs font-gotham-bold text-center">
+                    <Text className="text-slate-800 text-xs font-brandon-bold text-center">
                       {action.label}
                     </Text>
                   </TouchableOpacity>
@@ -415,16 +415,16 @@ export default function FarmerDashboardScreen() {
                 </View>
                 <View className="flex-row items-center justify-between">
                   <View className="flex-1 pr-4">
-                    <Text className="text-white font-gotham-bold text-xl mb-1">
+                    <Text className="text-white font-brandon-bold text-xl mb-1">
                       {language === "ta" ? "பரிந்துரைத்து பரிசு வெல்க" : "Refer & Earn"}
                     </Text>
-                    <Text className="text-white/85 text-xs leading-relaxed mb-3 font-gotham-medium">
+                    <Text className="text-white/85 text-xs leading-relaxed mb-3 font-brandon-medium">
                       {language === "ta"
                         ? "அண்டை விவசாயிகளை இணைத்து பரிசுகளைப் பெறுங்கள்!"
                         : "Invite neighboring farmers and get bonus reward points!"}
                     </Text>
                     <View className="bg-white/20 py-1.5 px-4 rounded-full self-start border border-white/30">
-                      <Text className="text-white font-gotham-bold text-[11px] uppercase tracking-wider">
+                      <Text className="text-white font-brandon-bold text-[11px] uppercase tracking-wider">
                         {language === "ta" ? "பகிர்க" : "Share Invite"}
                       </Text>
                     </View>

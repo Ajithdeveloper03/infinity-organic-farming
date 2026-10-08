@@ -70,7 +70,7 @@ export default function ErrorScreen() {
               <XCircle size={64} color="#ef4444" />
             </View>
           </View>
-          <Text className="text-gray-900 font-gotham-bold text-3xl text-center mb-4 leading-10">
+          <Text className="text-gray-900 font-brandon-bold text-3xl text-center mb-4 leading-10">
             Oops!
           </Text>
           <Text className="text-gray-500 font-brandon text-lg text-center mb-12 px-4 leading-6">
@@ -85,7 +85,7 @@ export default function ErrorScreen() {
             className="w-full bg-[#ef4444] py-4 rounded-xl shadow-md flex-row justify-center items-center"
           >
             <RefreshCw size={20} color="#fff" className="mr-2" />
-            <Text className="text-gray-900 font-gotham-bold text-lg tracking-wide">
+            <Text className="text-gray-900 font-brandon-bold text-lg tracking-wide">
               Try Again
             </Text>
           </TouchableOpacity>

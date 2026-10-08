@@ -24,14 +24,14 @@ export const VisitCard = ({ farmerName, farmLocation, date, time, status, onPres
     >
       <View className="flex-row justify-between items-start mb-3">
         <View>
-          <Text className="text-lg font-bold text-gray-900">{farmerName}</Text>
+          <Text className="text-lg font-brandon-bold text-gray-900">{farmerName}</Text>
           <View className="flex-row items-center mt-1">
             <MapPin size={14} color="#6b7280" />
-            <Text className="text-sm text-gray-500 ml-1">{farmLocation}</Text>
+            <Text className="text-sm text-gray-500 ml-1 font-brandon">{farmLocation}</Text>
           </View>
         </View>
         <View className={`px-2 py-1 rounded-md ${statusColor.split(' ')[0]}`}>
-          <Text className={`text-xs font-medium ${statusColor.split(' ')[1]}`}>
+          <Text className={`text-xs font-brandon-medium ${statusColor.split(' ')[1]}`}>
             {status.toUpperCase()}
           </Text>
         </View>
@@ -41,11 +41,11 @@ export const VisitCard = ({ farmerName, farmLocation, date, time, status, onPres
         <View className="flex-row space-x-4">
           <View className="flex-row items-center">
             <Calendar size={14} color="#6b7280" />
-            <Text className="text-sm text-gray-600 ml-1">{date}</Text>
+            <Text className="text-sm text-gray-600 ml-1 font-brandon">{date}</Text>
           </View>
           <View className="flex-row items-center ml-4">
             <Clock size={14} color="#6b7280" />
-            <Text className="text-sm text-gray-600 ml-1">{time}</Text>
+            <Text className="text-sm text-gray-600 ml-1 font-brandon">{time}</Text>
           </View>
         </View>
         <ChevronRight size={20} color="#9ca3af" />

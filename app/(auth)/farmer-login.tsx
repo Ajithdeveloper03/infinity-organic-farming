@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,249 +8,179 @@ import {
   Platform,
   Image,
   TextInput,
-  Animated,
+  ActivityIndicator,
+  StatusBar,
+  ImageBackground,
+  StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Phone, ArrowLeft, ArrowRight } from "lucide-react-native";
-import { Button } from "../../components/ui/Button";
-import { showToast } from "../../components/ui/ToastMessage";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  Phone,
+  Lock,
+  Eye,
+  EyeOff,
+  ChevronLeft,
+  ArrowRight
+} from "lucide-react-native";
+import { api } from "../../services/api";
 
 export default function FarmerLoginScreen() {
-  const [step, setStep] = useState<1 | 2>(1);
-  const [mobile, setMobile] = useState("8888888888");
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [mobile, setMobile] = useState("9876543210");
+  const [password, setPassword] = useState("Farmer@1234");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const otpInputs = useRef<(TextInput | null)[]>([]);
+  const [error, setError] = useState("");
 
-  const slideAnim = useRef(new Animated.Value(0)).current;
-
-  const handleSendOtp = () => {
-    if (mobile.length < 10) {
-      showToast({
-        title: "Invalid Number",
-        message: "Please enter a valid 10-digit mobile number.",
-        type: "error",
-      });
+  const handleLogin = async () => {
+    if (!mobile.trim()) {
+      setError("Please enter your mobile number");
+      return;
+    }
+    if (!password.trim()) {
+      setError("Please enter your password");
       return;
     }
 
+    setError("");
     setLoading(true);
-    setTimeout(() => {
+
+    try {
+      // DUMMY LOGIN BYPASS
+      if (mobile === "9876543210" || password === "123456" || password === "Farmer@1234") {
+        await AsyncStorage.setItem("token", "dummy-farmer-token-123");
+        await AsyncStorage.setItem("userName", "Farmer Dummy");
+        await AsyncStorage.setItem("userRole", "farmer");
+        await AsyncStorage.setItem("userPhone", mobile);
+
+        router.replace("/(farmer)/dashboard");
+        return;
+      }
+
+      const res = await api.post("/auth/login", { phone: mobile, password });
+      if (res.status === "success" && res.token) {
+        await AsyncStorage.setItem("token", res.token);
+        await AsyncStorage.setItem("userName", res.user?.name || "Farmer");
+        await AsyncStorage.setItem("userRole", "farmer");
+        await AsyncStorage.setItem("userPhone", res.user?.phone || mobile);
+
+        router.replace("/(farmer)/dashboard");
+      }
+    } catch (err: any) {
+      console.log(err);
+      setError(err.message || "Invalid credentials. Please try again.");
+    } finally {
       setLoading(false);
-      setStep(2);
-      showToast({
-        title: "OTP Sent",
-        message: "Simulated OTP is 1234",
-        type: "info",
-        duration: 4000,
-      });
-
-      Animated.timing(slideAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }, 1000);
-  };
-
-  const handleVerifyOtp = () => {
-    const enteredOtp = otp.join("");
-    if (enteredOtp !== "1234") {
-      showToast({
-        title: "Invalid OTP",
-        message: "Please enter the correct OTP (1234).",
-        type: "error",
-      });
-      return;
-    }
-
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      router.replace("/(farmer)/dashboard");
-    }, 500);
-  };
-
-  const handleOtpChange = (text: string, index: number) => {
-    const newOtp = [...otp];
-    newOtp[index] = text;
-    setOtp(newOtp);
-
-    // Auto-advance
-    if (text.length === 1 && index < 3) {
-      otpInputs.current[index + 1]?.focus();
-    }
-    // Auto-verify if last digit
-    if (text.length === 1 && index === 3) {
-      // Small timeout to let state update
-      setTimeout(() => {}, 100);
-    }
-  };
-
-  const handleOtpKeyPress = ({ nativeEvent }: any, index: number) => {
-    if (nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
-      otpInputs.current[index - 1]?.focus();
     }
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          style={{ flex: 1 }}
-        >
-        {/* Header */}
-        <View className="px-6 pt-6 flex-row items-center">
-          <TouchableOpacity
-            onPress={() => (step === 2 ? setStep(1) : router.back())}
-            className="p-2 -ml-2"
-            activeOpacity={0.7}
-          >
-            <ArrowLeft size={24} color="#1f2937" />
-          </TouchableOpacity>
-        </View>
+    <View style={{ flex: 1, backgroundColor: "#062214" }}>
+      <StatusBar barStyle="light-content" />
 
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-        >
-          <View className="flex-1 px-6 bg-white items-center">
-            {/* Logo area */}
-            <View className="items-center mb-8 w-full mt-4">
-              <Image
-                source={require("../../assets/images/logo.png")}
-                style={{ width: 120, height: 120 }}
-                resizeMode="contain"
-              />
-              <Text className="text-[#15803d] text-lg font-gotham-bold mt-2 text-center tracking-widest">
-                INFINITY
-              </Text>
+      {/* FULL-SCREEN IMMERSIVE BACKGROUND */}
+      <ImageBackground 
+        source={require("../../assets/images/image14.jpg")} // Slightly different image for farmer
+        style={StyleSheet.absoluteFill}
+        resizeMode="cover"
+      >
+        <LinearGradient
+          colors={["rgba(0,0,0,0.8)", "rgba(234,88,12,0.5)", "rgba(0,0,0,0.9)"]} // Orange/Earth tint for farmers
+          style={StyleSheet.absoluteFill}
+        />
+
+        <SafeAreaView style={{ flex: 1 }}>
+          <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+            
+            {/* TOP BAR */}
+            <View style={{ flexDirection: "row", paddingHorizontal: 24, paddingTop: 16 }}>
+              <TouchableOpacity onPress={() => router.back()} style={{ padding: 8, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 999, backdropFilter: "blur(10px)" }}>
+                <ChevronLeft size={24} color="#ffffff" />
+              </TouchableOpacity>
             </View>
 
-            {/* Sliding Form Container */}
-            <View className="w-full overflow-hidden" style={{ minHeight: 300 }}>
-              {/* Step 1: Mobile Number */}
-              {step === 1 && (
-                <Animated.View
-                  style={{
-                    opacity: slideAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, 0],
-                    }),
-                    width: "100%",
-                  }}
-                >
-                  <View className="w-full mb-8">
-                    <Text className="text-3xl font-gotham-bold text-gray-900 mb-2 text-center">
-                      Farmer Login
-                    </Text>
-                    <Text className="text-gray-500 font-brandon text-base text-center">
-                      Enter your registered mobile number
-                    </Text>
+            <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center", paddingHorizontal: 24 }}>
+              
+              <View style={{ alignItems: "center", marginBottom: 40 }}>
+                <View style={{ width: 80, height: 80, borderRadius: 24, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.2)", marginBottom: 24 }}>
+                  <Image source={require("../../assets/images/logo.png")} style={{ width: 50, height: 50 }} resizeMode="contain" />
+                </View>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 36, textAlign: "center", letterSpacing: 1 }}>
+                  Farmer Login
+                </Text>
+                <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Medium", fontSize: 16, marginTop: 8 }}>
+                  Access your farm metrics and yield data
+                </Text>
+              </View>
+
+              {/* GLASSMORPHISM FORM CARD */}
+              <View style={{ backgroundColor: "rgba(255,255,255,0.08)", borderRadius: 32, padding: 24, borderWidth: 1, borderColor: "rgba(255,255,255,0.15)", shadowColor: "#000", shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.3, shadowRadius: 24 }}>
+                
+                {error ? (
+                  <View style={{ backgroundColor: "rgba(239,68,68,0.2)", padding: 12, borderRadius: 12, marginBottom: 20, borderWidth: 1, borderColor: "rgba(239,68,68,0.4)" }}>
+                    <Text style={{ color: "#fca5a5", fontFamily: "Brandon-Medium", fontSize: 14, textAlign: "center" }}>{error}</Text>
                   </View>
+                ) : null}
 
-                  <View className="mb-8">
-                    <View className="flex-row items-center border border-gray-200 rounded-xl bg-gray-50 px-4 py-3">
-                      <Phone size={24} color="#6b7280" className="mr-3" />
-                      <Text className="text-gray-900 font-gotham-bold text-base mr-2">
-                        +91
-                      </Text>
-                      <View className="w-px h-6 bg-gray-300 mr-3" />
-                      <TextInput
-                        className="flex-1 text-base font-gotham-bold text-gray-900 p-0 m-0 leading-none"
-                        value={mobile}
-                        onChangeText={setMobile}
-                        placeholder="Mobile Number"
-                        placeholderTextColor="#9ca3af"
-                        keyboardType="phone-pad"
-                        maxLength={10}
-                        autoFocus
-                      />
-                    </View>
+                {/* Mobile Input */}
+                <View style={{ marginBottom: 20 }}>
+                  <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Bold", fontSize: 12, letterSpacing: 1, marginBottom: 8, marginLeft: 4 }}>PHONE NUMBER</Text>
+                  <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "rgba(0,0,0,0.3)", borderRadius: 16, paddingHorizontal: 16, height: 60, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" }}>
+                    <Phone size={20} color="#ea580c" />
+                    <TextInput
+                      style={{ flex: 1, marginLeft: 12, fontFamily: "Brandon-Bold", fontSize: 18, color: "#ffffff" }}
+                      placeholder="Enter mobile number"
+                      placeholderTextColor="rgba(255,255,255,0.3)"
+                      keyboardType="phone-pad"
+                      value={mobile}
+                      onChangeText={setMobile}
+                    />
                   </View>
+                </View>
 
-                  <Button
-                    title="Send OTP"
-                    onPress={handleSendOtp}
-                    loading={loading}
-                    className="bg-[#15803d] py-4 rounded-xl shadow-md w-full"
-                  />
-                </Animated.View>
-              )}
-
-              {/* Step 2: OTP Verification */}
-              {step === 2 && (
-                <Animated.View style={{ opacity: slideAnim, width: "100%" }}>
-                  <View className="w-full mb-8">
-                    <Text className="text-3xl font-gotham-bold text-gray-900 mb-2 text-center">
-                      Verify OTP
-                    </Text>
-                    <Text className="text-gray-500 font-brandon text-base text-center">
-                      We&apos;ve sent a 4-digit code to
-                    </Text>
-                    <Text className="text-[#15803d] font-gotham-bold text-base text-center mt-1">
-                      +91 {mobile}
-                    </Text>
-                  </View>
-
-                  <View className="flex-row justify-center space-x-4 mb-10">
-                    {[0, 1, 2, 3].map((index) => (
-                      <TextInput
-                        key={index}
-                        ref={(ref: any) => {
-                          otpInputs.current[index] = ref;
-                        }}
-                        style={{
-                          width: 56,
-                          height: 56,
-                          borderWidth: 2,
-                          borderRadius: 16,
-                          textAlign: "center",
-                          fontSize: 24,
-                          fontFamily: "Gotham-Bold", // Ensure you use the correct fontFamily string defined in your project
-                          borderColor: otp[index] ? "#15803d" : "#e5e7eb",
-                          backgroundColor: otp[index] ? "#f0fdf4" : "#f9fafb",
-                          color: otp[index] ? "#15803d" : "#111827",
-                        }}
-                        maxLength={1}
-                        keyboardType="number-pad"
-                        value={otp[index]}
-                        onChangeText={(text) => handleOtpChange(text, index)}
-                        onKeyPress={(e) => handleOtpKeyPress(e, index)}
-                        autoFocus={index === 0}
-                      />
-                    ))}
-                  </View>
-
-                  <Button
-                    title="Verify & Proceed"
-                    onPress={handleVerifyOtp}
-                    loading={loading}
-                    className="bg-[#15803d] py-4 rounded-xl shadow-md w-full"
-                  />
-
-                  <View className="flex-row justify-center mt-6">
-                    <Text className="text-gray-500 font-brandon text-sm">
-                      Didn&apos;t receive code?
-                    </Text>
-                    <TouchableOpacity>
-                      <Text className="text-[#ea580c] font-gotham-bold text-sm">
-                        Resend in 30s
-                      </Text>
+                {/* Password Input */}
+                <View style={{ marginBottom: 32 }}>
+                  <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Bold", fontSize: 12, letterSpacing: 1, marginBottom: 8, marginLeft: 4 }}>PASSWORD</Text>
+                  <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "rgba(0,0,0,0.3)", borderRadius: 16, paddingHorizontal: 16, height: 60, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" }}>
+                    <Lock size={20} color="#ea580c" />
+                    <TextInput
+                      style={{ flex: 1, marginLeft: 12, fontFamily: "Brandon-Bold", fontSize: 18, color: "#ffffff" }}
+                      placeholder="Enter password"
+                      placeholderTextColor="rgba(255,255,255,0.3)"
+                      secureTextEntry={!showPassword}
+                      value={password}
+                      onChangeText={setPassword}
+                    />
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 4 }}>
+                      {showPassword ? <EyeOff size={20} color="rgba(255,255,255,0.5)" /> : <Eye size={20} color="rgba(255,255,255,0.5)" />}
                     </TouchableOpacity>
                   </View>
-                </Animated.View>
-              )}
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  </View>
-);
+                </View>
+
+                {/* Login Button */}
+                <TouchableOpacity 
+                  onPress={handleLogin}
+                  disabled={loading}
+                  style={{ backgroundColor: "#ea580c", borderRadius: 16, height: 60, flexDirection: "row", alignItems: "center", justifyContent: "center", shadowColor: "#ea580c", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.4, shadowRadius: 12, elevation: 8 }}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#ffffff" />
+                  ) : (
+                    <>
+                      <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18, marginRight: 8 }}>Sign In</Text>
+                      <ArrowRight size={20} color="#ffffff" />
+                    </>
+                  )}
+                </TouchableOpacity>
+
+              </View>
+              
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </ImageBackground>
+    </View>
+  );
 }

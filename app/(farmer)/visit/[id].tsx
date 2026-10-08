@@ -2,268 +2,100 @@ import React from "react";
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
-  Image,
   ImageBackground,
+  Image,
   StyleSheet,
+  StatusBar,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
+import * as Haptics from "expo-haptics";
 import {
   ChevronLeft,
-  CheckCircle2,
-  Calendar,
-  MapPin,
-  Camera,
-  Star,
-  Download,
-  Sprout,
-  ShieldCheck,
-  BadgeCheck,
+  ZoomIn,
+  ZoomOut,
+  Leaf,
 } from "lucide-react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { showToast } from "../../../components/ui/ToastMessage";
-
-const visitsData: Record<string, any> = {
-  "1": {
-    officer: "Harish",
-    officerRole: "Field Officer • Delta Zone",
-    photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-    date: "May 11, 2026 • 10:30 AM",
-    location: "Vetiver Farm - Block A, Annur",
-    status: "Completed",
-    cropCondition: "Optimal Root Development",
-    notes:
-      "Rhizosphere inspected at multiple cross-sections. Root depth reached 45cm with dense lateral rootlets. Drip cycle functioning normally.",
-    recommendation:
-      "Continue morning drip irrigation. Apply organic bio-tonic for root vigor in 10 days.",
-    photos: [
-      "https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=300&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&auto=format&fit=crop&q=80",
-    ],
-  },
-  "2": {
-    officer: "Hemath",
-    officerRole: "Field Officer • Delta Zone",
-    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-    date: "Apr 26, 2026 • 10:15 AM",
-    location: "Vetiver Farm - Block A, Annur",
-    status: "Completed",
-    cropCondition: "Calibrated Moisture (6.8 pH)",
-    notes:
-      "Drip lateral lines pressure-checked. Moisture penetration uniform across all rows. Soil mineral conductivity verified optimal.",
-    recommendation:
-      "Drip irrigation pattern calibrated. Soil pH verified optimal. No weed competition observed.",
-    photos: [
-      "https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?w=300&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1592982537447-7440770cbfc9?w=300&auto=format&fit=crop&q=80",
-    ],
-  },
-  "3": {
-    officer: "Murugan",
-    officerRole: "Field Officer • Delta Zone",
-    photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
-    date: "Apr 11, 2026 • 11:00 AM",
-    location: "Vetiver Farm - Block B, Annur",
-    status: "Completed",
-    cropCondition: "Baseline Establishment",
-    notes:
-      "Baseline crop count verified. Seedling survival rate is 98.4%. Organic manure quantity successfully allocated.",
-    recommendation:
-      "Organic manure allocation approved and delivered to farm shed. Begin light irrigation cycle.",
-    photos: [
-      "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&auto=format&fit=crop&q=80",
-    ],
-  },
-};
+import { useLanguage } from "../../../context/LanguageContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function FarmerVisitReportScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const visit = visitsData[id as string] || visitsData["1"];
-
-  const handleDownload = () => {
-    showToast({
-      title: "PDF Audit Downloaded",
-      message: `Inspection audit report #${id || "1"} downloaded.`,
-      type: "success",
-    });
-  };
+  const { id } = useLocalSearchParams();
+  const { t, language } = useLanguage();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      {/* Background image subtle overlay */}
+    <View style={{ flex: 1, backgroundColor: "#000" }}>
+      <StatusBar barStyle="light-content" />
+
+      {/* DRONE VIEW BACKGROUND (From Image 1 Right Panel) */}
       <ImageBackground
-        source={require("../../../assets/images/image4.jpg")}
-        style={StyleSheet.absoluteFill}
-        imageStyle={{ opacity: 0.1 }}
+        source={require("../../../assets/images/image1.jpg")}
+        style={{ flex: 1 }}
         resizeMode="cover"
-      />
-
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Header - Transparent */}
-        <View
-          style={{ backgroundColor: "transparent" }}
-          className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10"
-        >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
-            activeOpacity={0.7}
-          >
-            <ChevronLeft size={22} color="#0f172a" />
-          </TouchableOpacity>
-          <Text className="text-slate-900 text-lg font-gotham-bold">
-            Visit Audit Detail
-          </Text>
-          <View className="w-10" />
-        </View>
-
-        <ScrollView
-          className="flex-1"
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 150, paddingTop: 6 }}
-        >
-          {/* Top Landscape Image */}
-          <View className="px-5 mb-5">
-            <View className="h-56 rounded-3xl overflow-hidden shadow-sm border border-emerald-800/20 relative">
-              <Image
-                source={require("../../../assets/images/image2.jpg")}
-                className="w-full h-full"
-                resizeMode="cover"
-              />
-              <LinearGradient
-                colors={["transparent", "rgba(6,44,30,0.88)"]}
-                style={StyleSheet.absoluteFill}
-              />
-              <View className="absolute bottom-4 left-5 right-5 flex-row justify-between items-end">
-                <View className="flex-1 pr-2">
-                  <View className="flex-row items-center mb-1">
-                    <MapPin size={13} color="#a7f3d0" className="mr-1" />
-                    <Text className="text-emerald-300 font-gotham-bold text-xs uppercase tracking-wider">
-                      {visit.location}
-                    </Text>
-                  </View>
-                  <Text className="text-white font-gotham-bold text-xl drop-shadow-sm">
-                    {visit.cropCondition}
-                  </Text>
-                </View>
-                <View className="bg-emerald-500/25 px-3 py-1 rounded-full border border-emerald-400/50 flex-row items-center">
-                  <CheckCircle2 size={12} color="#34d399" className="mr-1" />
-                  <Text className="text-emerald-300 font-gotham-bold text-[10px] uppercase tracking-wider">
-                    {visit.status}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          {/* Inspector Details Card */}
-          <View className="px-5 mb-4">
-            <View className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex-row items-center justify-between">
-              <View className="flex-row items-center flex-1">
-                <View className="w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-500/40 mr-3 shadow-xs">
-                  <Image
-                    source={{ uri: visit.photo }}
-                    className="w-full h-full"
-                    resizeMode="cover"
-                  />
-                </View>
-                <View className="flex-1">
-                  <View className="flex-row items-center">
-                    <Text className="text-slate-900 font-gotham-bold text-base">
-                      {visit.officer}
-                    </Text>
-                    <BadgeCheck size={16} color="#10b981" className="ml-1" />
-                  </View>
-                  <Text className="text-emerald-800 font-gotham-medium text-xs">
-                    {visit.officerRole}
-                  </Text>
-                  <Text className="text-slate-400 font-gotham-medium text-[10px] mt-0.5">
-                    {visit.date}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          {/* Audit Observations */}
-          <View className="px-5 mb-4">
-            <View className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-              <Text className="text-slate-900 font-gotham-bold text-sm mb-2">
-                Field Officer Notes & Observations
-              </Text>
-              <Text className="text-slate-700 font-gotham-medium text-xs leading-relaxed mb-4">
-                {visit.notes}
-              </Text>
-
-              <View className="bg-emerald-50/80 rounded-xl p-3.5 border border-emerald-200/90">
-                <Text className="text-emerald-950 font-gotham-bold text-xs uppercase tracking-wider mb-1">
-                  Prescribed Recommendation
-                </Text>
-                <Text className="text-emerald-800 font-gotham-medium text-xs leading-relaxed">
-                  {visit.recommendation}
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Photos */}
-          <View className="px-5 mb-6">
-            <Text className="text-slate-900 font-gotham-bold text-base mb-3">
-              Inspection Photos ({visit.photos.length})
-            </Text>
-            <View className="flex-row gap-3">
-              {visit.photos.map((uri: string, i: number) => (
-                <View
-                  key={i}
-                  className="flex-1 h-32 rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-100"
-                >
-                  <Image
-                    source={{ uri }}
-                    className="w-full h-full"
-                    resizeMode="cover"
-                  />
-                </View>
-              ))}
-            </View>
-          </View>
-
-          {/* Actions */}
-          <View className="px-5 gap-3">
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => router.push(`/(farmer)/rate/v1` as any)}
-              className="rounded-2xl overflow-hidden shadow-sm"
+      >
+        <SafeAreaView style={{ flex: 1, justifyContent: "space-between", paddingBottom: 24 }}>
+          
+          {/* FLOATING HEADER CONTROLS */}
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
+            <TouchableOpacity 
+              style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(0,0,0,0.5)", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)" }}
+              onPress={() => router.back()}
             >
-              <LinearGradient
-                colors={["#15803d", "#047857"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{ paddingVertical: 15, flexDirection: "row", alignItems: "center", justifyContent: "center" }}
-              >
-                <Star size={18} color="#fff" fill="#fff" className="mr-2" />
-                <Text className="text-white font-gotham-bold text-sm tracking-wide">
-                  Rate Field Officer
-                </Text>
-              </LinearGradient>
+              <ChevronLeft size={24} color="#ffffff" />
             </TouchableOpacity>
 
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={handleDownload}
-              className="bg-white border border-slate-200 py-3.5 rounded-2xl items-center flex-row justify-center shadow-xs"
-            >
-              <Download size={17} color="#15803d" className="mr-2" />
-              <Text className="text-emerald-800 font-gotham-bold text-xs uppercase tracking-wider">
-                Download Full Audit (PDF)
-              </Text>
+            <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "rgba(0,0,0,0.5)", paddingHorizontal: 16, paddingVertical: 8, borderRadius: 999, backdropFilter: "blur(10px)" }}>
+              <Image source={require("../../../assets/images/image2.jpg")} style={{ width: 24, height: 24, borderRadius: 12, marginRight: 8 }} />
+              <View>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 13 }}>North Field</Text>
+                <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 10 }}>Delta Valley</Text>
+              </View>
+            </View>
+            <View style={{ width: 44 }} />
+          </View>
+
+          {/* FLOATING ZOOM CONTROLS (Right Edge) */}
+          <View style={{ position: "absolute", right: 24, top: "25%", gap: 12 }}>
+            <TouchableOpacity style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(0,0,0,0.5)", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)" }}>
+              <ZoomIn size={20} color="#ffffff" />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(0,0,0,0.5)", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)" }}>
+              <ZoomOut size={20} color="#ffffff" />
             </TouchableOpacity>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+
+          {/* FLOATING BOTTOM CARD */}
+          <View style={{ marginHorizontal: 24, backgroundColor: "#ffffff", borderRadius: 32, padding: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 16 }, shadowOpacity: 0.15, shadowRadius: 32, elevation: 12 }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Image source={require("../../../assets/images/image10.jpg")} style={{ width: 40, height: 40, borderRadius: 20, marginRight: 12 }} />
+                <View>
+                  <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 18 }}>Paddy Field A</Text>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 12 }}>Harvest On: Feb 10, 2025</Text>
+                </View>
+              </View>
+              
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Leaf size={16} color="#059669" />
+                <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 14, marginLeft: 6 }}>8200 Kg/ha</Text>
+              </View>
+            </View>
+
+            {/* Inner Image inside the card */}
+            <View style={{ height: 160, borderRadius: 24, overflow: "hidden" }}>
+              <Image source={require("../../../assets/images/image14.jpg")} style={{ width: "100%", height: "100%" }} />
+            </View>
+
+            <TouchableOpacity 
+              style={{ backgroundColor: "#059669", borderRadius: 999, paddingVertical: 16, alignItems: "center", marginTop: 24 }}
+              onPress={() => router.push("/(farmer)/rate/v1" as any)}
+            >
+              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Rate This Visit</Text>
+            </TouchableOpacity>
+          </View>
+
+        </SafeAreaView>
+      </ImageBackground>
     </View>
   );
 }
-
-

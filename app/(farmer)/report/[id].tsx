@@ -124,7 +124,7 @@ export default function FarmerReportDetailScreen() {
             <ChevronLeft size={22} color="#0f172a" />
           </TouchableOpacity>
 
-          <Text className="text-slate-900 text-lg font-gotham-bold">
+          <Text className="text-slate-900 text-lg font-brandon-bold">
             Audit Dossier #{report.id}
           </Text>
 
@@ -158,11 +158,11 @@ export default function FarmerReportDetailScreen() {
                   <View className="flex-1 pr-2">
                     <View className="flex-row items-center mb-1">
                       <Sprout size={15} color="#86efac" className="mr-1.5" />
-                      <Text className="text-emerald-300 font-gotham-bold text-xs uppercase tracking-widest">
+                      <Text className="text-emerald-300 font-brandon-bold text-xs uppercase tracking-widest">
                         {report.block}
                       </Text>
                     </View>
-                    <Text className="text-white font-gotham-bold text-xl drop-shadow-sm">
+                    <Text className="text-white font-brandon-bold text-xl drop-shadow-sm">
                       {report.cropCondition}
                     </Text>
                   </View>
@@ -173,7 +173,7 @@ export default function FarmerReportDetailScreen() {
                     <CheckCircle2 size={12} color={report.statusColor} className="mr-1" />
                     <Text
                       style={{ color: report.statusColor }}
-                      className="text-[10px] font-gotham-bold uppercase tracking-wider"
+                      className="text-[10px] font-brandon-bold uppercase tracking-wider"
                     >
                       {report.status}
                     </Text>
@@ -196,15 +196,15 @@ export default function FarmerReportDetailScreen() {
                 </View>
                 <View className="flex-1">
                   <View className="flex-row items-center">
-                    <Text className="text-slate-900 font-gotham-bold text-base">
+                    <Text className="text-slate-900 font-brandon-bold text-base">
                       {report.officer}
                     </Text>
                     <BadgeCheck size={16} color="#10b981" className="ml-1" />
                   </View>
-                  <Text className="text-emerald-800 font-gotham-medium text-xs">
+                  <Text className="text-emerald-800 font-brandon-medium text-xs">
                     {report.officerRole}
                   </Text>
-                  <Text className="text-slate-400 font-gotham-medium text-[10px] mt-0.5">
+                  <Text className="text-slate-400 font-brandon-medium text-[10px] mt-0.5">
                     Inspected: {report.date}
                   </Text>
                 </View>
@@ -214,33 +214,33 @@ export default function FarmerReportDetailScreen() {
 
           {/* Soil & Agronomy Metric Tiles */}
           <View className="px-5 mb-4">
-            <Text className="text-slate-900 font-gotham-bold text-base mb-3">
+            <Text className="text-slate-900 font-brandon-bold text-base mb-3">
               Field Observations & Biomass
             </Text>
             <View className="flex-row gap-3 mb-3">
               <View className="flex-1 bg-emerald-50/80 border border-emerald-200/90 rounded-2xl p-3.5 items-center">
-                <Text className="text-emerald-950 font-gotham-bold text-lg">
+                <Text className="text-emerald-950 font-brandon-bold text-lg">
                   {report.rootLength.split(" ")[0]} cm
                 </Text>
-                <Text className="text-emerald-800 text-[10px] uppercase font-gotham-bold tracking-widest mt-0.5">
+                <Text className="text-emerald-800 text-[10px] uppercase font-brandon-bold tracking-widest mt-0.5">
                   Root Depth
                 </Text>
               </View>
 
               <View className="flex-1 bg-sky-50/80 border border-sky-200/90 rounded-2xl p-3.5 items-center">
-                <Text className="text-sky-950 font-gotham-bold text-lg">
+                <Text className="text-sky-950 font-brandon-bold text-lg">
                   {report.soilMoisture.split(" ")[0]}
                 </Text>
-                <Text className="text-sky-800 text-[10px] uppercase font-gotham-bold tracking-widest mt-0.5">
+                <Text className="text-sky-800 text-[10px] uppercase font-brandon-bold tracking-widest mt-0.5">
                   Soil Moisture
                 </Text>
               </View>
 
               <View className="flex-1 bg-amber-50/80 border border-amber-200/90 rounded-2xl p-3.5 items-center">
-                <Text className="text-amber-950 font-gotham-bold text-lg">
+                <Text className="text-amber-950 font-brandon-bold text-lg">
                   {report.soilPh.split(" ")[0]}
                 </Text>
-                <Text className="text-amber-800 text-[10px] uppercase font-gotham-bold tracking-widest mt-0.5">
+                <Text className="text-amber-800 text-[10px] uppercase font-brandon-bold tracking-widest mt-0.5">
                   Rhizosphere pH
                 </Text>
               </View>
@@ -250,18 +250,18 @@ export default function FarmerReportDetailScreen() {
           {/* Scientific Agronomy Protocol Card */}
           <View className="px-5 mb-4">
             <View className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-              <Text className="text-emerald-800 font-gotham-bold text-xs uppercase tracking-wider mb-2">
+              <Text className="text-emerald-800 font-brandon-bold text-xs uppercase tracking-wider mb-2">
                 Prescribed Agronomy Protocol
               </Text>
-              <Text className="text-slate-800 font-gotham-medium text-xs leading-relaxed mb-4">
+              <Text className="text-slate-800 font-brandon-medium text-xs leading-relaxed mb-4">
                 {report.recommendation}
               </Text>
 
               <View className="bg-emerald-50/80 rounded-xl p-3 border border-emerald-200/80">
-                <Text className="text-emerald-950 font-gotham-bold text-xs mb-0.5">
+                <Text className="text-emerald-950 font-brandon-bold text-xs mb-0.5">
                   Allocated Organic Inputs:
                 </Text>
-                <Text className="text-emerald-800 font-gotham-medium text-xs">
+                <Text className="text-emerald-800 font-brandon-medium text-xs">
                   {report.fertilizerDosing}
                 </Text>
               </View>
@@ -270,7 +270,7 @@ export default function FarmerReportDetailScreen() {
 
           {/* Inspection Photos Gallery */}
           <View className="px-5 mb-6">
-            <Text className="text-slate-900 font-gotham-bold text-base mb-3">
+            <Text className="text-slate-900 font-brandon-bold text-base mb-3">
               Inspection Photos ({report.photos.length})
             </Text>
             <View className="flex-row gap-3">
@@ -303,7 +303,7 @@ export default function FarmerReportDetailScreen() {
                 style={{ paddingVertical: 15, flexDirection: "row", alignItems: "center", justifyContent: "center" }}
               >
                 <Download size={18} color="#fff" className="mr-2" />
-                <Text className="text-white font-gotham-bold text-sm tracking-wide">
+                <Text className="text-white font-brandon-bold text-sm tracking-wide">
                   Download Official PDF Dossier
                 </Text>
               </LinearGradient>
@@ -315,7 +315,7 @@ export default function FarmerReportDetailScreen() {
               className="bg-white border border-slate-200 py-3.5 rounded-2xl items-center flex-row justify-center shadow-xs"
             >
               <Star size={17} color="#d97706" fill="#f59e0b" className="mr-2" />
-              <Text className="text-slate-800 font-gotham-bold text-xs uppercase tracking-wider">
+              <Text className="text-slate-800 font-brandon-bold text-xs uppercase tracking-wider">
                 Rate Field Officer Experience
               </Text>
             </TouchableOpacity>

@@ -60,7 +60,7 @@ export default function RegisterStep4Screen() {
           <ChevronLeft size={22} color="#0f172a" />
         </TouchableOpacity>
         <View>
-          <Text className="text-xl font-gotham-bold text-slate-900">
+          <Text className="text-xl font-brandon-bold text-slate-900">
             Farmer Registration
           </Text>
           <Text className="text-slate-500 font-brandon text-xs">
@@ -77,24 +77,24 @@ export default function RegisterStep4Screen() {
         {/* 4-Step Stepper */}
         <View className="flex-row items-center justify-center my-4 px-4">
           <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">✓</Text>
+            <Text className="text-white font-brandon-bold text-xs">✓</Text>
           </View>
           <View className="flex-1 h-0.5 bg-[#2f6f36] mx-2" />
           <View className="w-7 h-7 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">✓</Text>
+            <Text className="text-white font-brandon-bold text-xs">✓</Text>
           </View>
           <View className="flex-1 h-0.5 bg-[#2f6f36] mx-2" />
           <View className="w-8 h-8 rounded-full bg-[#2f6f36] items-center justify-center shadow-sm">
-            <Text className="text-white font-gotham-bold text-xs">3</Text>
+            <Text className="text-white font-brandon-bold text-xs">3</Text>
           </View>
           <View className="flex-1 h-0.5 bg-slate-200 mx-2" />
           <View className="w-7 h-7 rounded-full bg-white border border-slate-300 items-center justify-center">
-            <Text className="text-slate-400 font-gotham-bold text-xs">4</Text>
+            <Text className="text-slate-400 font-brandon-bold text-xs">4</Text>
           </View>
         </View>
 
         {/* Section Heading */}
-        <Text className="text-slate-900 font-gotham-bold text-base mt-2 mb-4">
+        <Text className="text-slate-900 font-brandon-bold text-base mt-2 mb-4">
           KYC Verification
         </Text>
 
@@ -105,7 +105,7 @@ export default function RegisterStep4Screen() {
               <FileCheck2 size={20} color="#64748b" />
             </View>
             <View className="flex-1">
-              <Text className="text-slate-900 font-gotham-bold text-xs">
+              <Text className="text-slate-900 font-brandon-bold text-xs">
                 Status Approval by
               </Text>
               <Text className="text-slate-500 font-brandon text-xs">
@@ -116,7 +116,7 @@ export default function RegisterStep4Screen() {
 
           <View className="bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200 flex-row items-center">
             <Clock size={12} color="#d97706" />
-            <Text className="text-amber-700 font-gotham-bold text-[11px] ml-1">
+            <Text className="text-amber-700 font-brandon-bold text-[11px] ml-1">
               Pending
             </Text>
           </View>
@@ -129,7 +129,7 @@ export default function RegisterStep4Screen() {
               <FileCheck2 size={20} color="#64748b" />
             </View>
             <View className="flex-1">
-              <Text className="text-slate-900 font-gotham-bold text-xs">
+              <Text className="text-slate-900 font-brandon-bold text-xs">
                 Aadhar Image
               </Text>
               <Text className="text-slate-400 font-brandon text-[11px]">
@@ -149,14 +149,14 @@ export default function RegisterStep4Screen() {
             {aadharUploaded ? (
               <>
                 <CheckCircle2 size={13} color="#059669" />
-                <Text className="text-emerald-700 font-gotham-bold text-xs ml-1">
+                <Text className="text-emerald-700 font-brandon-bold text-xs ml-1">
                   Uploaded
                 </Text>
               </>
             ) : (
               <>
                 <Upload size={13} color="#64748b" />
-                <Text className="text-slate-700 font-gotham-bold text-xs ml-1">
+                <Text className="text-slate-700 font-brandon-bold text-xs ml-1">
                   Upload
                 </Text>
               </>
@@ -171,7 +171,7 @@ export default function RegisterStep4Screen() {
               <FileCheck2 size={20} color="#64748b" />
             </View>
             <View className="flex-1">
-              <Text className="text-slate-900 font-gotham-bold text-xs">
+              <Text className="text-slate-900 font-brandon-bold text-xs">
                 Farmer Photograph
               </Text>
               <Text className="text-slate-400 font-brandon text-[11px]">
@@ -191,14 +191,14 @@ export default function RegisterStep4Screen() {
             {photoUploaded ? (
               <>
                 <CheckCircle2 size={13} color="#059669" />
-                <Text className="text-emerald-700 font-gotham-bold text-xs ml-1">
+                <Text className="text-emerald-700 font-brandon-bold text-xs ml-1">
                   Uploaded
                 </Text>
               </>
             ) : (
               <>
                 <Upload size={13} color="#64748b" />
-                <Text className="text-slate-700 font-gotham-bold text-xs ml-1">
+                <Text className="text-slate-700 font-brandon-bold text-xs ml-1">
                   Upload
                 </Text>
               </>
@@ -224,7 +224,7 @@ export default function RegisterStep4Screen() {
             onPress={() => router.back()}
             className="flex-1 bg-white border border-[#2f6f36] py-4 rounded-2xl items-center justify-center shadow-sm mr-2"
           >
-            <Text className="text-[#2f6f36] font-gotham-bold text-base tracking-wide">
+            <Text className="text-[#2f6f36] font-brandon-bold text-base tracking-wide">
               Back
             </Text>
           </TouchableOpacity>
@@ -234,7 +234,7 @@ export default function RegisterStep4Screen() {
             onPress={handleNext}
             className="flex-1 bg-[#2f6f36] py-4 rounded-2xl items-center justify-center shadow-md shadow-emerald-900/20 ml-2"
           >
-            <Text className="text-white font-gotham-bold text-base tracking-wide">
+            <Text className="text-white font-brandon-bold text-base tracking-wide">
               Next
             </Text>
           </TouchableOpacity>

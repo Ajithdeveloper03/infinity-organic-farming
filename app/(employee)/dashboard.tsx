@@ -1,795 +1,236 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   Image,
-  ImageBackground,
   StyleSheet,
-  ActivityIndicator,
-  TextInput,
+  StatusBar,
+  ImageBackground,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Bell,
   MapPin,
-  ChevronRight,
   UserPlus,
+  CalendarDays,
+  FileText,
+  ClipboardCheck,
   Users,
-  Clock,
-  Radio,
-  Sparkles,
-  Zap,
-  Play,
-  Plus,
-  QrCode,
-  Award,
-  ChevronDown,
-  FileCheck2,
-  BadgeCheck,
+  CheckCircle2,
+  Navigation,
+  LogOut,
+  Camera,
+  History,
+  ShieldCheck,
+  ArrowRight
 } from "lucide-react-native";
-import {
-  dashboardStats,
-  employeeProfile,
-  getTodayVisits,
-} from "../../data/mockData";
-import { useTracking } from "../../context/TrackingContext";
 import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
-import { api, getAuthUser } from "../../services/api";
 
-export default function DashboardScreen() {
+export default function EmployeeDashboardScreen() {
   const { t, language } = useLanguage();
-  const [employeeName, setEmployeeName] = useState<string>(employeeProfile.name);
-  const [employeeRegion, setEmployeeRegion] = useState<string>("Delta Zone");
-  const [stats, setStats] = useState({
-    totalVisits: dashboardStats.totalVisits,
-    completed: dashboardStats.completed,
-    pending: dashboardStats.pending,
-    totalFarmers: 8,
-  });
-  const [todayVisitsList, setTodayVisitsList] = useState<any[]>(getTodayVisits());
-  const [loading, setLoading] = useState(false);
-  const [clockInTime, setClockInTime] = useState<string>("09:15 AM");
-
-  const { isTracking } = useTracking();
-  const nextVisit = todayVisitsList.find((v) => v.status === "pending") || todayVisitsList[0];
-
-  // Google Pay style Assigned Farmers Circular Avatar List (with online free photos & customer types)
-  const assignedFarmers = [
-    {
-      id: "1",
-      name: "Murugan S",
-      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-      phone: "+91 9411111111",
-      customerType: "both",
-      tag: "Dual",
-    },
-    {
-      id: "2",
-      name: "Chandra K",
-      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
-      phone: "+91 9422222222",
-      customerType: "fertilizer",
-      tag: "Fertilizer",
-    },
-    {
-      id: "3",
-      name: "Swathi M",
-      photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
-      phone: "+91 9433333333",
-      customerType: "crop",
-      tag: "Crop",
-    },
-    {
-      id: "4",
-      name: "Buhanesh",
-      photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80",
-      phone: "+91 9444444444",
-      customerType: "both",
-      tag: "Dual",
-    },
-    {
-      id: "5",
-      name: "Dhanabal",
-      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
-      phone: "+91 9455555555",
-      customerType: "fertilizer",
-      tag: "Fertilizer",
-    },
-    {
-      id: "6",
-      name: "Vijaykumar",
-      photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80",
-      phone: "+91 9466666666",
-      customerType: "crop",
-      tag: "Crop",
-    },
-  ];
+  const [isClockedIn, setIsClockedIn] = useState(false);
+  const [userName, setUserName] = useState("Field Officer");
 
   useEffect(() => {
     (async () => {
-      try {
-        await Location.requestForegroundPermissionsAsync();
-      } catch (e) {
-        console.log("Location permission notice:", e);
-      }
-
-      try {
-        const user = await getAuthUser();
-        const storedName = await AsyncStorage.getItem("userName");
-        const storedRegion = await AsyncStorage.getItem("userRegion");
-        const storedClockIn = await AsyncStorage.getItem("clockInTime");
-        if (user?.name || storedName) {
-          setEmployeeName(user?.name || storedName || "Field Officer");
-        }
-        if (user?.region || storedRegion) {
-          setEmployeeRegion(user?.region || storedRegion || "Delta Zone");
-        }
-        if (storedClockIn) {
-          setClockInTime(storedClockIn);
-        }
-      } catch (e) {
-        console.log("Stored user load error:", e);
-      }
-
-      try {
-        setLoading(true);
-        const res = await api.get("/employee/dashboard");
-        if (res?.status === "success" && res?.data) {
-          const d = res.data;
-          if (d.employee?.name) setEmployeeName(d.employee.name);
-          if (d.employee?.region) setEmployeeRegion(d.employee.region);
-          setStats({
-            totalVisits: d.visits_today || dashboardStats.totalVisits,
-            completed: Math.max(0, (d.visits_today || 3) - (d.pending_visits || 1)),
-            pending: d.pending_visits ?? dashboardStats.pending,
-            totalFarmers: d.total_farmers || 8,
-          });
-          if (d.recent_visits && d.recent_visits.length > 0) {
-            setTodayVisitsList(d.recent_visits);
-          }
-        }
-      } catch (err) {
-        console.log("Live dashboard API sync notice:", err);
-      } finally {
-        setLoading(false);
-      }
+      const status = await AsyncStorage.getItem("isClockedIn");
+      const name = await AsyncStorage.getItem("userName");
+      if (status === "true") setIsClockedIn(true);
+      if (name) setUserName(name);
     })();
   }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 380,
-          overflow: "hidden",
-        }}
-      >
-        <Image
-          source={require("../../assets/images/image10.jpg")}
-          style={{ width: "100%", height: "100%", opacity: 0.95 }}
+      <StatusBar barStyle="light-content" />
+
+      {/* AMBIENT HEADER BACKGROUND */}
+      <View style={{ position: "absolute", top: 0, left: 0, right: 0, height: 340, overflow: "hidden", borderBottomLeftRadius: 40, borderBottomRightRadius: 40 }}>
+        <ImageBackground
+          source={require("../../assets/images/image1.jpg")}
+          style={{ width: "100%", height: "100%" }}
           resizeMode="cover"
-        />
-        
-        <LinearGradient
-          colors={[
-            "rgba(248, 250, 252, 0.05)",
-            "rgba(248, 250, 252, 0.65)",
-            "#f8fafc",
-          ]}
-          locations={[0, 0.65, 1]}
-          style={StyleSheet.absoluteFill}
-        />
+        >
+          <LinearGradient
+            colors={["rgba(15, 23, 42, 0.8)", "rgba(15, 23, 42, 0.95)", "#0f172a"]}
+            style={StyleSheet.absoluteFill}
+          />
+        </ImageBackground>
       </View>
 
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* HEADER - Transparent Background with Employee Name & ID */}
-        <View
-          style={{ backgroundColor: "transparent" }}
-          className="px-5 pt-3 pb-3 z-10"
-        >
-          {/* Top Officer Profile, Name & ID (Replaces Search Bar) */}
-          <View className="flex-row items-center justify-between">
-            <View className="flex-1 mr-3 flex-row items-center">
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(employee)/profile" as any)}
-                className="relative mr-3"
-              >
-                <View className="w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-500/40 bg-emerald-100 shadow-sm items-center justify-center">
-                  <Image
-                    source={{
-                      uri: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-                    }}
-                    className="w-full h-full"
-                    resizeMode="cover"
-                  />
-                </View>
-                <View className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white" />
-              </TouchableOpacity>
-
-              <View className="flex-1 justify-center">
-                <View className="flex-row items-center">
-                  <Text
-                    className="text-slate-900 font-gotham-bold text-base tracking-tight"
-                    numberOfLines={1}
-                  >
-                    {employeeName || employeeProfile.name}
-                  </Text>
-                  <BadgeCheck size={16} color="#059669" className="ml-1.5" />
-                </View>
-                <View className="flex-row items-center mt-1">
-                  <View className="bg-emerald-100/90 border border-emerald-300/70 px-2 py-0.5 rounded-full flex-row items-center">
-                    <Text className="text-emerald-900 font-gotham-bold text-[10px] tracking-wide">
-                      ID: {employeeProfile.id} • {t("fieldOfficer", "Field Officer")}
-                    </Text>
-                  </View>
-                </View>
+      <SafeAreaView style={{ flex: 1 }}>
+        
+        {/* HEADER */}
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity onPress={() => router.push("/(employee)/profile")} style={{ width: 48, height: 48, borderRadius: 24, borderWidth: 2, borderColor: "#38bdf8", overflow: "hidden", marginRight: 12 }}>
+              <Image source={{ uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" }} style={{ width: "100%", height: "100%" }} />
+            </TouchableOpacity>
+            <View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18 }}>{userName}</Text>
+                <ShieldCheck size={16} color="#38bdf8" style={{ marginLeft: 6 }} />
               </View>
-            </View>
-
-            <View className="flex-row items-center">
-              <LanguageTogglePill />
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(employee)/notifications" as any)}
-                className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm ml-2"
-              >
-                <Bell size={18} color="#0f172a" />
-                <View className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white" />
-              </TouchableOpacity>
+              <View style={{ backgroundColor: "rgba(56,189,248,0.2)", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8, alignSelf: "flex-start", marginTop: 4 }}>
+                <Text style={{ color: "#38bdf8", fontFamily: "Brandon-Bold", fontSize: 10, letterSpacing: 1 }}>OFFICER ID: FO-902</Text>
+              </View>
             </View>
           </View>
 
-          {/* JioHotstar Style Dual Glowing Switcher Badges */}
-          <View className="flex-row items-center justify-between mt-3.5">
-            {/* Badge 1: Region / Hotstar style */}
-            <View className="flex-1 mr-2 rounded-full overflow-hidden shadow-md shadow-emerald-600/20">
-              <LinearGradient
-                colors={["#059669", "#047857"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{
-                  paddingVertical: 9,
-                  paddingHorizontal: 14,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 999,
-                }}
-              >
-                <Sparkles size={14} color="#a7f3d0" />
-                <Text className="text-white font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
-                  {employeeRegion}
-                </Text>
-              </LinearGradient>
-            </View>
-
-            {/* Badge 2: Tadka style Live Shift */}
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => router.push("/(employee)/attendance" as any)}
-              className="flex-1 ml-2 rounded-full overflow-hidden shadow-md shadow-orange-600/20"
-            >
-              <LinearGradient
-                colors={["#ea580c", "#dc2626"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{
-                  paddingVertical: 9,
-                  paddingHorizontal: 14,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 999,
-                }}
-              >
-                <Zap size={14} color="#fef08a" />
-                <Text className="text-white font-gotham-bold text-xs ml-1.5 uppercase tracking-wider">
-                  {language === "ta" ? "பணி நேரம்" : "Shift"} {clockInTime}
-                </Text>
-              </LinearGradient>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <LanguageTogglePill />
+            <TouchableOpacity onPress={() => router.push("/(employee)/notifications")} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center", marginLeft: 8 }}>
+              <Bell size={20} color="#ffffff" />
+              <View style={{ position: "absolute", top: 10, right: 10, width: 8, height: 8, borderRadius: 4, backgroundColor: "#ef4444" }} />
             </TouchableOpacity>
           </View>
         </View>
 
-          {/* MAIN SCROLLABLE CONTENT */}
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 160 }}
-            className="flex-1 mt-2"
-          >
-            {/* We wrap the content in a container with extra padding for neatness */}
-            <View className="px-5 space-y-6">
-              {/* JioHotstar Style Featured Spotlight Card (Hero Farmer Visit) */}
-          {nextVisit && (
-            <View className="px-5 mt-4 mb-6">
-              <View className="flex-row items-center justify-between mb-3">
-                <Text className="text-slate-900 font-gotham-bold text-lg">
-                  {t("nextScheduledVisit", "Next Up For You")}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => router.push("/(employee)/visits" as any)}
-                >
-                  <Text className="text-white bg-green-500 px-3 py-2 rounded-full font-gotham-bold text-xs uppercase tracking-wider">
-                    {t("viewAll", "View All")}
-                  </Text>
-                </TouchableOpacity>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 120, paddingTop: 24 }}>
+          
+          {/* DUTY STATUS BOARD */}
+          <View style={{ backgroundColor: "rgba(255,255,255,0.12)", borderRadius: 32, padding: 20, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)", marginBottom: 32 }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <View>
+                <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Medium", fontSize: 12, letterSpacing: 1 }}>CURRENT DUTY STATUS</Text>
+                <Text style={{ color: isClockedIn ? "#4ade80" : "#f87171", fontFamily: "Brandon-Bold", fontSize: 24 }}>{isClockedIn ? "ON DUTY" : "OFF DUTY"}</Text>
               </View>
+              <TouchableOpacity 
+                onPress={() => router.push(isClockedIn ? "/(employee)/attendance/clock-out" : "/(employee)/attendance/clock-in")}
+                style={{ backgroundColor: isClockedIn ? "rgba(239,68,68,0.2)" : "rgba(74,222,128,0.2)", paddingHorizontal: 16, paddingVertical: 10, borderRadius: 999, flexDirection: "row", alignItems: "center" }}
+              >
+                {isClockedIn ? <LogOut size={16} color="#fca5a5" /> : <CheckCircle2 size={16} color="#4ade80" />}
+                <Text style={{ color: isClockedIn ? "#fca5a5" : "#4ade80", fontFamily: "Brandon-Bold", fontSize: 14, marginLeft: 6 }}>
+                  {isClockedIn ? "Clock Out" : "Clock In"}
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-              <View className="rounded-[28px] overflow-hidden shadow-xl border border-slate-200 bg-slate-900">
-                <ImageBackground
-                  source={require("../../assets/images/image5.jpg")}
-                  className="w-full h-72"
-                  resizeMode="cover"
-                >
-                  {/* Mandatory Dark Bottom-to-Top Overlay with Enhanced White Text */}
-                  <LinearGradient
-                    colors={[
-                      "transparent",
-                      "rgba(0, 0, 0, 0.45)",
-                      "rgba(10, 15, 25, 0.94)",
-                    ]}
-                    locations={[0, 0.35, 1]}
-                    style={StyleSheet.absoluteFill}
-                  />
+            <View style={{ flexDirection: "row", backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 20, padding: 16 }}>
+              <View style={{ flex: 1, alignItems: "center", borderRightWidth: 1, borderRightColor: "rgba(255,255,255,0.1)" }}>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 20 }}>12</Text>
+                <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11, marginTop: 4 }}>Assigned</Text>
+              </View>
+              <View style={{ flex: 1, alignItems: "center", borderRightWidth: 1, borderRightColor: "rgba(255,255,255,0.1)" }}>
+                <Text style={{ color: "#4ade80", fontFamily: "Brandon-Bold", fontSize: 20 }}>4</Text>
+                <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11, marginTop: 4 }}>Visited</Text>
+              </View>
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Text style={{ color: "#fca5a5", fontFamily: "Brandon-Bold", fontSize: 20 }}>8</Text>
+                <Text style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Brandon-Medium", fontSize: 11, marginTop: 4 }}>Pending</Text>
+              </View>
+            </View>
+          </View>
 
-                  <View className="flex-1 p-5 justify-between">
-                    {/* Top Pill Tag */}
-                    <View className="flex-row items-center self-start bg-emerald-500 px-3 py-1 rounded-full shadow-sm">
-                      <Sparkles size={12} color="#ffffff" />
-                      <Text className="text-white font-gotham-bold text-[11px] ml-1 uppercase tracking-wider">
-                        {language === "ta" ? "முக்கிய கள வருகை" : "Priority Field Visit"} • {nextVisit.time || "10:30 AM"}
-                      </Text>
-                    </View>
+          {/* QUICK ACTIONS ROW */}
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 32 }}>
+            <TouchableOpacity onPress={() => router.push("/(employee)/register-farmer")} style={{ flex: 1, backgroundColor: "#ffffff", borderRadius: 24, padding: 16, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, elevation: 4, marginRight: 8 }}>
+              <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "#e0f2fe", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+                <UserPlus size={24} color="#0284c7" />
+              </View>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14, textAlign: "center" }}>Register{'\n'}Farmer</Text>
+            </TouchableOpacity>
 
-                    {/* Bottom Details with Enhanced Pure White Text */}
-                    <View>
-                      <Text className="text-white font-gotham-bold text-2xl mb-1 leading-tight">
-                        {nextVisit.farmerName || nextVisit.farmer?.name || "Murugan Organic Farm"}
-                      </Text>
-                      <View className="flex-row items-center mb-2">
-                        <MapPin size={13} color="#34d399" />
-                        <Text className="text-emerald-300 font-gotham font-bold text-xs ml-1">
-                          {nextVisit.address || nextVisit.farmer?.address || "Thanjavur Ag-Corridor"}
-                        </Text>
-                      </View>
+            <TouchableOpacity onPress={() => router.push("/(employee)/my-farmers")} style={{ flex: 1, backgroundColor: "#ffffff", borderRadius: 24, padding: 16, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, elevation: 4, marginHorizontal: 4 }}>
+              <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "#dcfce7", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+                <Users size={24} color="#16a34a" />
+              </View>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14, textAlign: "center" }}>My{'\n'}Farmers</Text>
+            </TouchableOpacity>
 
-                      {/* Action Button on Hero Card */}
-                      <View className="flex-row items-center justify-end mt-2 pt-2 border-t border-white/20">
-                        <TouchableOpacity
-                          activeOpacity={0.85}
-                          onPress={() =>
-                            router.push(`/(employee)/visit/${nextVisit.id}` as any)
-                          }
-                          className="bg-emerald-500 px-6 py-2.5 rounded-full flex-row items-center shadow-md shadow-emerald-700/40"
-                        >
-                          <Play size={16} color="#ffffff" fill="#ffffff" />
-                          <Text className="text-white font-gotham-bold text-sm ml-2">
-                            {t("startVisit", "Start Visit")}
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
+            <TouchableOpacity onPress={() => router.push("/(employee)/reports")} style={{ flex: 1, backgroundColor: "#ffffff", borderRadius: 24, padding: 16, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, elevation: 4, marginLeft: 8 }}>
+              <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "#fef08a", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+                <FileText size={24} color="#ca8a04" />
+              </View>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14, textAlign: "center" }}>Submit{'\n'}Report</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* TODAY'S FIELD VISITS */}
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20 }}>Today's Field Visits</Text>
+            <TouchableOpacity>
+              <Text style={{ color: "#0284c7", fontFamily: "Brandon-Bold", fontSize: 13, textTransform: "uppercase" }}>View Map</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ gap: 16, marginBottom: 32 }}>
+            {/* Visit Item 1 (Pending) */}
+            <View style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 12, elevation: 4 }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 4 }}>
+                    <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18 }}>Ramesh Kumar</Text>
+                    <View style={{ backgroundColor: "#fee2e2", paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, marginLeft: 8 }}>
+                      <Text style={{ color: "#ef4444", fontFamily: "Brandon-Bold", fontSize: 10 }}>HIGH PRIORITY</Text>
                     </View>
                   </View>
-                </ImageBackground>
-              </View>
-            </View>
-          )}
-
-          {/* Google Pay Style 4 Vibrant Action Grid (Light Mode) */}
-          <View className="px-5 mb-6">
-            <Text className="text-slate-900 font-gotham-bold text-lg mb-3">
-              {t("quickActions", "Quick Actions")}
-            </Text>
-
-            <View className="flex-row justify-between mb-3.5">
-              {/* 1. Register Farmer (Vibrant Royal Blue) */}
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() =>
-                  router.push("/(employee)/register-farmer/step1" as any)
-                }
-                className="w-[23%] items-center"
-              >
-                <LinearGradient
-                  colors={["#2563eb", "#1d4ed8"]}
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 20,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    shadowColor: "#2563eb",
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 6,
-                    elevation: 5,
-                  }}
-                >
-                  <UserPlus size={26} color="#ffffff" />
-                </LinearGradient>
-                <Text className="text-slate-900 font-gotham-bold text-xs text-center mt-2">
-                  {language === "ta" ? "விவசாயி\nபதிவு" : "Register\nFarmer"}
-                </Text>
-              </TouchableOpacity>
-
-              {/* 2. Scan & Log Visit (Vibrant Emerald) */}
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(employee)/visits" as any)}
-                className="w-[23%] items-center"
-              >
-                <LinearGradient
-                  colors={["#059669", "#047857"]}
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 20,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    shadowColor: "#059669",
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 6,
-                    elevation: 5,
-                  }}
-                >
-                  <QrCode size={26} color="#ffffff" />
-                </LinearGradient>
-                <Text className="text-slate-900 font-gotham-bold text-xs text-center mt-2">
-                  {language === "ta" ? "வருகை\nபதிவு" : "Log\nVisit"}
-                </Text>
-              </TouchableOpacity>
-
-              {/* 3. Attendance Logs (Vibrant Violet) */}
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(employee)/attendance" as any)}
-                className="w-[23%] items-center"
-              >
-                <LinearGradient
-                  colors={["#7c3aed", "#6d28d9"]}
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 20,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    shadowColor: "#7c3aed",
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 6,
-                    elevation: 5,
-                  }}
-                >
-                  <Clock size={26} color="#ffffff" />
-                </LinearGradient>
-                <Text className="text-slate-900 font-gotham-bold text-xs text-center mt-2">
-                  {language === "ta" ? "பணி\nபதிவு" : "Duty\nLogs"}
-                </Text>
-              </TouchableOpacity>
-
-              {/* 4. Field Reports (Vibrant Amber / Coral) */}
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(employee)/reports" as any)}
-                className="w-[23%] items-center"
-              >
-                <LinearGradient
-                  colors={["#ea580c", "#c2410c"]}
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 20,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    shadowColor: "#ea580c",
-                    shadowOffset: { width: 0, height: 4 },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 6,
-                    elevation: 5,
-                  }}
-                >
-                  <FileCheck2 size={26} color="#ffffff" />
-                </LinearGradient>
-                <Text className="text-slate-900 font-gotham-bold text-xs text-center mt-2">
-                  {language === "ta" ? "கள\nஅறிக்கை" : "Field\nReports"}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Light Multi-Color Shortcut Pill Row */}
-            <View className="flex-row justify-between mt-2">
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(employee)/attendance/clock-in" as any)}
-                className="flex-1 mr-1.5 bg-sky-50/90 p-2.5 rounded-2xl flex-row items-center border border-sky-200 shadow-sm"
-              >
-                <Zap size={16} color="#0284c7" />
-                <Text className="text-sky-900 font-gotham-bold text-xs ml-1.5">
-                  {t("clockIn", "Clock In")}
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(employee)/attendance/clock-out" as any)}
-                className="flex-1 mx-1.5 bg-amber-50/90 p-2.5 rounded-2xl flex-row items-center border border-amber-200 shadow-sm"
-              >
-                <Clock size={16} color="#d97706" />
-                <Text className="text-amber-900 font-gotham-bold text-xs ml-1.5">
-                  {t("clockOut", "Clock Out")}
-                </Text>
-              </TouchableOpacity>
-
-              <View className="flex-1 ml-1.5 bg-emerald-50/90 p-2.5 rounded-2xl flex-row items-center border border-emerald-200 shadow-sm">
-                <Radio size={16} color="#16a34a" />
-                <Text className="text-emerald-900 font-gotham-bold text-xs ml-1.5">
-                  {language === "ta" ? "நேரலை" : "GPS Live"}
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Google Pay Style "People" Section: Assigned Farmers & Clients Circular Avatars (Light Mode) */}
-          <View className="px-5 mb-6">
-            <View className="flex-row justify-between items-center mb-1">
-              <Text className="text-slate-900 font-gotham-bold text-lg">
-                {t("assignedFarmers", "Farmers & Input Clients")}
-              </Text>
-              <TouchableOpacity
-                onPress={() => router.push("/(employee)/my-farmers" as any)}
-              >
-                <Text className="text-emerald-700 font-gotham-bold text-xs uppercase tracking-wider">
-                  {t("directory", "Directory")}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text className="text-slate-500 font-gotham-medium text-xs mb-3">
-              {t("mingleSubtext", "Mingle of Contract Crop Growers & Bio-Fertilizer Buyers")}
-            </Text>
-
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingRight: 20 }}
-            >
-              {assignedFarmers.map((f, fIdx) => {
-                const ringColors = ["#a7f3d0", "#bae6fd", "#fde68a", "#ddd6fe"];
-                const ringBorder = ringColors[fIdx % ringColors.length];
-
-                const tagBg =
-                  f.customerType === "both"
-                    ? "bg-purple-100 border-purple-200 text-purple-800"
-                    : f.customerType === "fertilizer"
-                    ? "bg-amber-100 border-amber-200 text-amber-800"
-                    : "bg-emerald-100 border-emerald-200 text-emerald-800";
-
-                return (
-                  <TouchableOpacity
-                    key={f.id}
-                    activeOpacity={0.8}
-                    onPress={() => router.push("/(employee)/my-farmers" as any)}
-                    className="items-center mr-4"
-                  >
-                    <View
-                      style={{
-                        width: 58,
-                        height: 58,
-                        borderRadius: 29,
-                        overflow: "hidden",
-                        borderWidth: 2.5,
-                        borderColor: ringBorder,
-                        backgroundColor: "#f1f5f9",
-                        shadowColor: "#000",
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.08,
-                        shadowRadius: 4,
-                        elevation: 2,
-                      }}
-                    >
-                      <Image
-                        source={{ uri: f.photo }}
-                        style={{ width: "100%", height: "100%" }}
-                        resizeMode="cover"
-                      />
-                    </View>
-                    <Text
-                      className="text-slate-800 font-gotham-medium text-xs mt-1.5 text-center w-18"
-                      numberOfLines={1}
-                    >
-                      {f.name}
-                    </Text>
-                    <View
-                      className={`px-1.5 py-0.2 rounded-full border mt-0.5 ${
-                        f.customerType === "both"
-                          ? "bg-purple-50 border-purple-200"
-                          : f.customerType === "fertilizer"
-                          ? "bg-amber-50 border-amber-200"
-                          : "bg-emerald-50 border-emerald-200"
-                      }`}
-                    >
-                      <Text
-                        className={`text-[9px] font-gotham-bold ${
-                          f.customerType === "both"
-                            ? "text-purple-700"
-                            : f.customerType === "fertilizer"
-                            ? "text-amber-700"
-                            : "text-emerald-700"
-                        }`}
-                      >
-                        {f.tag}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-
-              {/* More Farmer Button */}
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(employee)/my-farmers" as any)}
-                className="items-center mr-4"
-              >
-                <View
-                  style={{
-                    width: 58,
-                    height: 58,
-                    borderRadius: 29,
-                    backgroundColor: "#f1f5f9",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderWidth: 1,
-                    borderColor: "#cbd5e1",
-                  }}
-                >
-                  <ChevronDown size={22} color="#475569" />
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <MapPin size={14} color="#64748b" />
+                    <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginLeft: 4 }}>Annur North (12km away)</Text>
+                  </View>
                 </View>
-                <Text className="text-slate-700 font-gotham-bold text-xs mt-1.5">
-                  {t("more", "More")}
-                </Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
+                <View style={{ alignItems: "flex-end" }}>
+                  <Text style={{ color: "#0284c7", fontFamily: "Brandon-Bold", fontSize: 14 }}>11:30 AM</Text>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 11 }}>Scheduled</Text>
+                </View>
+              </View>
 
-          {/* JioHotstar Style "Continue Inspection" Today's Route Carousel (Light Mode) */}
-          <View className="px-5 mb-6">
-            <View className="flex-row justify-between items-center mb-3">
-              <Text className="text-slate-900 font-gotham-bold text-lg">
-                {language === "ta" ? "இன்றைய களப் பாதை" : "Today's Field Route"} ({stats.completed}/{stats.totalVisits})
-              </Text>
-              <View className="flex-row items-center bg-emerald-100 px-2.5 py-1 rounded-full border border-emerald-200">
-                <Text className="text-emerald-800 font-gotham-bold text-xs">
-                  {stats.pending} {t("pending", "Pending")}
-                </Text>
+              <View style={{ flexDirection: "row", gap: 12 }}>
+                <TouchableOpacity style={{ flex: 1, backgroundColor: "#f1f5f9", borderRadius: 12, paddingVertical: 12, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                  <Navigation size={16} color="#0f172a" style={{ marginRight: 6 }} />
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>Navigate</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => router.push("/(employee)/visit-checkin")} style={{ flex: 1, backgroundColor: "#10b981", borderRadius: 12, paddingVertical: 12, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                  <Camera size={16} color="#ffffff" style={{ marginRight: 6 }} />
+                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>Check-in</Text>
+                </TouchableOpacity>
               </View>
             </View>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingRight: 20 }}
-            >
-              {todayVisitsList.map((v, i) => {
-                const routeThemes = [
-                  { cardBg: "bg-emerald-50/90", border: "border-emerald-200", text: "text-emerald-800", iconColor: "#059669" },
-                  { cardBg: "bg-sky-50/90", border: "border-sky-200", text: "text-sky-800", iconColor: "#0284c7" },
-                  { cardBg: "bg-amber-50/90", border: "border-amber-200", text: "text-amber-800", iconColor: "#d97706" },
-                  { cardBg: "bg-purple-50/90", border: "border-purple-200", text: "text-purple-800", iconColor: "#7c3aed" },
-                ];
-                const rTheme = routeThemes[i % routeThemes.length];
+            {/* Visit Item 2 (Completed) */}
+            <View style={{ backgroundColor: "#f8fafc", borderRadius: 24, padding: 20, borderWidth: 1, borderColor: "#e2e8f0" }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Bold", fontSize: 18, textDecorationLine: "line-through" }}>Suresh Rajan</Text>
+                  <View style={{ flexDirection: "row", alignItems: "center", marginTop: 4 }}>
+                    <CheckCircle2 size={14} color="#10b981" />
+                    <Text style={{ color: "#10b981", fontFamily: "Brandon-Medium", fontSize: 13, marginLeft: 4 }}>Visited at 09:45 AM</Text>
+                  </View>
+                </View>
+              </View>
 
-                return (
-                  <TouchableOpacity
-                    key={v.id || i}
-                    activeOpacity={0.85}
-                    onPress={() =>
-                      router.push(`/(employee)/visit/${v.id}` as any)
-                    }
-                    className={`w-64 mr-4 rounded-2xl overflow-hidden border ${rTheme.border} ${rTheme.cardBg} shadow-sm`}
-                  >
-                    <ImageBackground
-                      source={
-                        i === 0
-                          ? require("../../assets/images/image1.jpg")
-                          : i === 1
-                            ? require("../../assets/images/image2.jpg")
-                            : require("../../assets/images/image5.jpg")
-                      }
-                      className="w-full h-32"
-                      resizeMode="cover"
-                    >
-                      {/* Bottom to top dark overlay for high contrast white text */}
-                      <LinearGradient
-                        colors={["transparent", "rgba(0, 0, 0, 0.5)", "rgba(10, 15, 25, 0.92)"]}
-                        locations={[0, 0.35, 1]}
-                        style={StyleSheet.absoluteFill}
-                      />
-
-                      <View className="flex-1 p-3 justify-between">
-                        <View className="self-end bg-emerald-500 px-2 py-0.5 rounded-md shadow-sm">
-                          <Text className="text-white font-gotham-bold text-[11px]">
-                            {v.time || "11:00 AM"}
-                          </Text>
-                        </View>
-
-                        <View>
-                          <Text
-                            className="text-white font-gotham-bold text-sm"
-                            numberOfLines={1}
-                          >
-                            {v.farmerName || v.farmer?.name || "Farmer Visit"}
-                          </Text>
-                          <Text
-                            className="text-slate-200 font-gotham-medium text-xs"
-                            numberOfLines={1}
-                          >
-                            {v.address || v.farmer?.address || "Tamil Nadu Field"}
-                          </Text>
-                        </View>
-                      </View>
-                    </ImageBackground>
-
-                    <View className="p-3 flex-row items-center justify-between border-t border-slate-200/60">
-                      <Text className={`${rTheme.text} font-gotham-bold text-xs`}>
-                        {v.status === "completed"
-                          ? (language === "ta" ? "✓ முடிந்தது" : "✓ Completed")
-                          : (language === "ta" ? "ஆய்வைத் தொடங்கு" : "Start Inspection")}
-                      </Text>
-                      <ChevronRight size={16} color={rTheme.iconColor} />
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
-          </View>
-        </ScrollView>
-
-        {/* JioHotstar Style Floating Bottom Pill Dock (Light Mode) */}
-        {/* <View className="absolute bottom-24 left-5 right-5 items-center pointer-events-box-none">
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                borderRadius: 999,
-                backgroundColor: "#ffffff",
-                borderWidth: 1,
-                borderColor: "#e2e8f0",
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 6 },
-                shadowOpacity: 0.15,
-                shadowRadius: 12,
-                elevation: 8,
-              }}
-            >
-              <View className="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2" />
-              <Text className="text-slate-900 font-gotham-bold text-xs uppercase tracking-wider">
-                GPS Live • Shift: Active •
-              </Text>
-              <TouchableOpacity
-                onPress={() => router.push("/(employee)/visits" as any)}
-                className="ml-2 bg-emerald-600 px-3 py-1 rounded-full shadow-sm"
-              >
-                <Text className="text-white font-gotham-bold text-[11px]">
-                  Quick Log
-                </Text>
+              <TouchableOpacity style={{ backgroundColor: "#e2e8f0", borderRadius: 12, paddingVertical: 12, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                <FileText size={16} color="#475569" style={{ marginRight: 6 }} />
+                <Text style={{ color: "#475569", fontFamily: "Brandon-Bold", fontSize: 14 }}>View Report</Text>
               </TouchableOpacity>
             </View>
-          </View> */}
+          </View>
+
+          {/* MORE TOOLS GRID */}
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginBottom: 16 }}>Management Tools</Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+            {[
+              { title: "Task List", icon: ClipboardCheck, color: "#8b5cf6" },
+              { title: "Calendar", icon: CalendarDays, color: "#ec4899" },
+              { title: "History", icon: History, color: "#64748b" },
+              { title: "Advisory", icon: FileText, color: "#14b8a6" },
+            ].map((tool, index) => (
+              <TouchableOpacity key={index} style={{ width: "48%", backgroundColor: "#ffffff", borderRadius: 20, padding: 16, marginBottom: 16, flexDirection: "row", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 }}>
+                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: `${tool.color}15`, alignItems: "center", justifyContent: "center", marginRight: 12 }}>
+                  <tool.icon size={20} color={tool.color} />
+                </View>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14, flex: 1 }}>{tool.title}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+        </ScrollView>
       </SafeAreaView>
     </View>
   );

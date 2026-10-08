@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,18 +6,30 @@ import {
   TouchableOpacity,
   ImageBackground,
   StyleSheet,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+  Image
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   ChevronLeft,
   Calendar,
   FileText,
   Leaf,
   IndianRupee,
+  X,
+  Bell
 } from "lucide-react-native";
+import { useLanguage } from "../../context/LanguageContext";
 
-const notifications = [
+if (Platform.OS === 'android') {
+
+}
+
+const initialNotifications = [
   {
     id: "1",
     title: "Upcoming Visit Reminder",
@@ -65,6 +77,14 @@ const notifications = [
 ];
 
 export default function FarmerNotificationsScreen() {
+  const { t } = useLanguage();
+  const [alerts, setAlerts] = useState(initialNotifications);
+
+  const dismissAlert = (id: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setAlerts((prev) => prev.filter((a) => a.id !== id));
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
       {/* Background image subtle overlay */}
@@ -80,21 +100,16 @@ export default function FarmerNotificationsScreen() {
         <View style={{ backgroundColor: "transparent" }} className="px-5 pt-2 pb-3 flex-row items-center justify-between z-10">
           <View className="flex-row items-center">
             <TouchableOpacity
-              onPress={() => router.back()}
+              onPress={() => router.push("/(farmer)/dashboard")}
               className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm mr-3"
               activeOpacity={0.7}
             >
               <ChevronLeft size={22} color="#0f172a" />
             </TouchableOpacity>
-            <Text className="text-slate-900 text-lg font-gotham-bold">
-              Notifications
+            <Text className="text-slate-900 text-lg font-brandon-bold">
+              {t("notifications", "Notifications")}
             </Text>
           </View>
-          <TouchableOpacity activeOpacity={0.7}>
-            <Text className="text-[#15803d] font-gotham-bold text-xs uppercase tracking-wider">
-              Clear All
-            </Text>
-          </TouchableOpacity>
         </View>
 
         <ScrollView
@@ -103,43 +118,82 @@ export default function FarmerNotificationsScreen() {
           contentContainerStyle={{ paddingBottom: 150, paddingTop: 6 }}
         >
           <View className="px-5">
-            {notifications.map((notif) => {
-              const Icon = notif.icon;
-              return (
-                <View
-                  key={notif.id}
-                  className={`rounded-2xl p-4.5 shadow-sm border mb-4 flex-row items-start ${notif.cardBg} ${notif.cardBorder}`}
-                >
+
+            {/* Featured Hero Notification */}
+            <TouchableOpacity activeOpacity={0.9} className="w-full h-48 rounded-[24px] overflow-hidden mb-6 shadow-sm border border-slate-200 mt-2">
+              <Image 
+                source={require("../../assets/images/image6.jpg")}
+                className="w-full h-full absolute"
+                resizeMode="cover"
+              />
+              <LinearGradient
+                colors={['transparent', 'rgba(0,0,0,0.8)']}
+                style={StyleSheet.absoluteFill}
+              />
+              <View className="absolute bottom-0 left-0 right-0 p-5">
+                <View className="bg-emerald-500 self-start px-3 py-1 rounded-full mb-2">
+                  <Text className="text-white font-brandon-bold text-[10px] uppercase tracking-widest">Market Update</Text>
+                </View>
+                <Text className="text-white font-brandon-bold text-xl mb-1">Vetiver Prices Up 12%</Text>
+                <Text className="text-slate-200 font-brandon-medium text-xs">Good news! The current market demand has increased organic Vetiver prices.</Text>
+              </View>
+            </TouchableOpacity>
+
+            <View className="flex-row items-center justify-between mb-4 mt-2">
+              <Text className="text-slate-800 font-brandon-bold text-lg">Alerts & Messages</Text>
+              {alerts.length > 0 && (
+                <TouchableOpacity onPress={() => {
+                  LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                  setAlerts([]);
+                }}>
+                  <Text className="text-[#15803d] font-brandon-bold text-xs uppercase tracking-wider">
+                    Clear All
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {alerts.length === 0 ? (
+              <View className="items-center justify-center py-10 bg-white/80 rounded-[24px] border border-slate-200 shadow-sm mt-4">
+                <Bell size={48} color="#cbd5e1" className="mb-4" />
+                <Text className="text-slate-500 font-brandon-medium text-base">You're all caught up!</Text>
+              </View>
+            ) : (
+              alerts.map((notif) => {
+                const Icon = notif.icon;
+                return (
                   <View
-                    className={`w-11 h-11 rounded-xl items-center justify-center mr-3.5 mt-0.5 shadow-xs ${notif.iconBg}`}
+                    key={notif.id}
+                    className={`rounded-2xl p-4.5 shadow-sm border mb-4 flex-row items-start relative ${notif.cardBg} ${notif.cardBorder}`}
                   >
-                    <Icon size={20} color={notif.color} />
-                  </View>
-                  <View className="flex-1">
-                    <View className="flex-row justify-between items-start mb-1">
-                      <Text className="text-slate-900 font-gotham-bold text-sm flex-1 pr-2">
-                        {notif.title}
+                    <View
+                      className={`w-11 h-11 rounded-xl items-center justify-center mr-3.5 mt-0.5 shadow-xs ${notif.iconBg}`}
+                    >
+                      <Icon size={20} color={notif.color} />
+                    </View>
+                    <View className="flex-1 pr-6">
+                      <View className="flex-row justify-between items-start mb-1">
+                        <Text className="text-slate-900 font-brandon-bold text-sm flex-1 pr-2">
+                          {notif.title}
+                        </Text>
+                      </View>
+                      <Text className="text-slate-600 font-brandon-medium text-xs leading-relaxed mb-1.5">
+                        {notif.desc}
                       </Text>
-                      <Text className="text-slate-400 font-gotham-medium text-[11px] mt-0.5">
+                      <Text className="text-slate-400 font-brandon-bold text-[10px]">
                         {notif.time}
                       </Text>
                     </View>
-                    <Text className="text-slate-600 font-gotham-medium text-xs leading-relaxed">
-                      {notif.desc}
-                    </Text>
+                    <TouchableOpacity 
+                      className="absolute top-4 right-4 p-1"
+                      onPress={() => dismissAlert(notif.id)}
+                    >
+                      <X size={16} color="#94a3b8" />
+                    </TouchableOpacity>
                   </View>
-                </View>
-              );
-            })}
-
-            <TouchableOpacity
-              activeOpacity={0.8}
-              className="bg-white/90 border border-slate-200 py-3.5 rounded-xl items-center mt-2 shadow-xs"
-            >
-              <Text className="text-slate-700 font-gotham-bold text-xs uppercase tracking-wider">
-                Mark all as read
-              </Text>
-            </TouchableOpacity>
+                );
+              })
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>

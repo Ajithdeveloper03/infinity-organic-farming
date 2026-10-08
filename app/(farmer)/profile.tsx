@@ -1,202 +1,157 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
-  Image,
   ImageBackground,
+  Image,
   StyleSheet,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import * as Haptics from "expo-haptics";
 import {
   ChevronLeft,
-  User,
-  MapPin,
+  Bell,
+  Star,
+  Settings,
+  CircleCheck,
   ShieldCheck,
-  Phone,
-  Mail,
-  FileText,
-  Lock,
-  BadgeCheck,
-  Building2,
-  Layers,
-  Droplets,
+  Trophy,
 } from "lucide-react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function FarmerProfileScreen() {
   const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState<"personal" | "kyc" | "land">("personal");
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      {/* Background image subtle overlay */}
-      <ImageBackground
-        source={require("../../assets/images/image4.jpg")}
-        style={StyleSheet.absoluteFill}
-        imageStyle={{ opacity: 0.12 }}
-        resizeMode="cover"
+    <View style={{ flex: 1, backgroundColor: "#f0fdf4" }}>
+      <StatusBar barStyle="dark-content" />
+
+      {/* TOP ILLUSTRATION / HERO (AgroPulse concept) */}
+      <View style={{ height: 320, width: "100%", backgroundColor: "#e2e8f0" }}>
+        <ImageBackground
+          source={require("../../assets/images/image10.jpg")} // Use a bright farm image
+          style={{ flex: 1 }}
+          resizeMode="cover"
+        >
+          <SafeAreaView>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
+              <TouchableOpacity
+                onPress={() => router.push("/(farmer)/dashboard")}
+                style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.9)", alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 4 }}
+              >
+                <ChevronLeft size={24} color="#0f172a" />
+              </TouchableOpacity>
+              
+              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18, textShadowColor: "rgba(0,0,0,0.5)", textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 }}>
+                {language === "ta" ? "விவசாயி சுயவிவரம்" : "Green Valley Farm"}
+              </Text>
+
+              <TouchableOpacity
+                style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.9)", alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 4 }}
+                onPress={() => router.push("/(farmer)/menu" as any)}
+              >
+                <Settings size={20} color="#0f172a" />
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        </ImageBackground>
+      </View>
+
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 100 }}
+        style={{ marginTop: -40 }} // Overlap the hero
       >
-        <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-          {/* Header - Transparent */}
-          <View style={{ backgroundColor: "transparent" }} className="px-5 pt-3 pb-3 flex-row items-center justify-between z-10">
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm"
-              activeOpacity={0.7}
-            >
-              <ChevronLeft size={22} color="#0f172a" />
-            </TouchableOpacity>
-            <Text className="text-slate-900 text-lg font-gotham-bold">
-              {t("farmerProfile", "Farmer Profile")}
-            </Text>
-            <LanguageTogglePill />
+        
+        {/* GOLD MEMBER CARD */}
+        <View style={{ marginHorizontal: 24, backgroundColor: "#ffffff", borderRadius: 32, padding: 24, shadowColor: "#059669", shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.08, shadowRadius: 24, elevation: 8 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#fef3c7", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999 }}>
+              <Star size={14} color="#d97706" fill="#d97706" />
+              <Text style={{ color: "#d97706", fontFamily: "Brandon-Bold", fontSize: 13, marginLeft: 6 }}>Gold member</Text>
+            </View>
+            <Text style={{ color: "#059669", fontFamily: "Brandon-Bold", fontSize: 13 }}>View Details ⟩</Text>
           </View>
 
-          <ScrollView
-            className="flex-1"
-            contentContainerStyle={{ paddingBottom: 130, paddingTop: 16 }}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Banner and Profile Card */}
-            <View className="bg-white mx-5 rounded-3xl overflow-hidden shadow-sm border border-slate-200">
-              {/* Top Landscape Banner */}
-              <View className="h-32 bg-slate-200 relative">
-                <Image
-                  source={require("../../assets/images/image2.jpg")}
-                  className="w-full h-full"
-                  resizeMode="cover"
-                />
-                <LinearGradient
-                  colors={["transparent", "rgba(0,0,0,0.45)"]}
-                  style={StyleSheet.absoluteFill}
-                />
-              </View>
+          <View style={{ flexDirection: "row", alignItems: "baseline", marginBottom: 12 }}>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 42, letterSpacing: -1 }}>2,490</Text>
+            <Text style={{ color: "#64748b", fontFamily: "Brandon-Bold", fontSize: 18, marginLeft: 6 }}>pts</Text>
+          </View>
+          
+          <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 8 }}>
+            <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 11 }}>250 points to <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold" }}>Platinum Member</Text></Text>
+          </View>
 
-              {/* Profile Picture */}
-              <View className="items-center -mt-12 mb-3">
-                <View className="w-24 h-24 bg-white rounded-full p-1 shadow-md border-2 border-emerald-500/50 overflow-hidden">
-                  <Image
-                    source={{
-                      uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80",
-                    }}
-                    className="w-full h-full rounded-full"
-                    resizeMode="cover"
-                  />
-                </View>
-              </View>
+          {/* Progress Bar */}
+          <View style={{ height: 8, backgroundColor: "#f1f5f9", borderRadius: 4, overflow: "hidden", marginBottom: 24 }}>
+            <View style={{ width: "85%", height: "100%", backgroundColor: "#f97316", borderRadius: 4 }} />
+          </View>
 
-              {/* Quick Details */}
-              <View className="items-center px-6 mb-5">
-                <View className="flex-row items-center">
-                  <Text className="text-slate-900 text-2xl font-gotham-bold mb-0.5">
-                    {language === "ta" ? "குப்புசாமி" : "Kuppusamy"}
-                  </Text>
-                  <BadgeCheck size={18} color="#10b981" className="ml-1.5" />
-                </View>
-                <View className="bg-emerald-100/90 border border-emerald-300/80 px-3 py-1 rounded-full mt-1 mb-1.5">
-                  <Text className="text-emerald-950 font-gotham-bold text-[11px] uppercase tracking-wider">
-                    {language === "ta" ? "சான்றளிக்கப்பட்ட விவசாயி • ID: FM10008" : "Verified Farmer • ID: FM10008"}
-                  </Text>
-                </View>
-                <Text className="text-slate-600 font-gotham-medium text-xs">
-                  {language === "ta" ? "அன்னூர் / சோமனூர், கோவை" : "Annur / Somanur, Coimbatore"}
-                </Text>
+          <View style={{ flexDirection: "row", gap: 12 }}>
+            <TouchableOpacity style={{ flex: 1, paddingVertical: 14, borderRadius: 999, borderWidth: 1.5, borderColor: "#e2e8f0", alignItems: "center" }}>
+              <Text style={{ color: "#475569", fontFamily: "Brandon-Bold", fontSize: 14 }}>How to earn</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flex: 1, paddingVertical: 14, borderRadius: 999, backgroundColor: "#f97316", alignItems: "center", shadowColor: "#f97316", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 }}>
+              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>Redeem Rewards</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* PROFILE IDENTIFICATION CARD */}
+        <View style={{ marginHorizontal: 24, marginTop: 24, backgroundColor: "#ffffff", borderRadius: 32, padding: 24, shadowColor: "#059669", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.04, shadowRadius: 16, elevation: 4 }}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ width: 80, height: 80, borderRadius: 40, overflow: "hidden", borderWidth: 3, borderColor: "#10b981" }}>
+              <Image source={{ uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" }} style={{ width: "100%", height: "100%" }} />
+            </View>
+            <View style={{ marginLeft: 20, flex: 1 }}>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 24, letterSpacing: -0.5 }}>Kuppusamy M.</Text>
+              <View style={{ flexDirection: "row", alignItems: "center", marginTop: 4 }}>
+                <ShieldCheck size={14} color="#10b981" />
+                <Text style={{ color: "#10b981", fontFamily: "Brandon-Medium", fontSize: 12, marginLeft: 4 }}>VERIFIED • IO-FAR-2026</Text>
+              </View>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 8 }}>+91 94111 11111</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* QUICK ACTIONS / ACHIEVEMENTS */}
+        <View style={{ marginHorizontal: 24, marginTop: 32 }}>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginBottom: 16 }}>Achievements</Text>
+          
+          <View style={{ gap: 12 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#ffffff", padding: 16, borderRadius: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2 }}>
+              <View style={{ width: 56, height: 56, borderRadius: 16, backgroundColor: "#fef3c7", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                <Trophy size={28} color="#d97706" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Top Producer 2025</Text>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 2 }}>Achieved highest yield in Delta Zone</Text>
+              </View>
+              <View style={{ backgroundColor: "#fef3c7", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 }}>
+                <Text style={{ color: "#d97706", fontFamily: "Brandon-Bold", fontSize: 11 }}>+500 pts</Text>
               </View>
             </View>
 
-            {/* Tab Switcher */}
-            <View className="flex-row mx-5 mt-5 bg-slate-200/80 p-1 rounded-full">
-              {[
-                { key: "personal", label: t("personal", "Personal") },
-                { key: "kyc", label: t("kycBank", "KYC & Bank") },
-                { key: "land", label: t("landDetails", "Land Details") },
-              ].map((tab) => (
-                <TouchableOpacity
-                  key={tab.key}
-                  onPress={() => setActiveTab(tab.key as any)}
-                  activeOpacity={0.8}
-                  className={`flex-1 py-2.5 items-center rounded-full ${
-                    activeTab === tab.key ? "bg-white shadow-sm" : ""
-                  }`}
-                >
-                  <Text
-                    className={`font-gotham-bold text-xs ${
-                      activeTab === tab.key ? "text-emerald-800" : "text-slate-600"
-                    }`}
-                  >
-                    {tab.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+            <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#ffffff", padding: 16, borderRadius: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2 }}>
+              <View style={{ width: 56, height: 56, borderRadius: 16, backgroundColor: "#dcfce7", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                <CircleCheck size={28} color="#15803d" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>100% Organic Certified</Text>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 2 }}>Maintained zero chemical usage</Text>
+              </View>
+              <View style={{ backgroundColor: "#fef3c7", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 }}>
+                <Text style={{ color: "#d97706", fontFamily: "Brandon-Bold", fontSize: 11 }}>+250 pts</Text>
+              </View>
             </View>
+          </View>
+        </View>
 
-            {/* Dynamic Content */}
-            <View className="mx-5 mt-5 mb-12">
-              {activeTab === "personal" && (
-                <View className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
-                  <View className="bg-sky-50 p-4 rounded-xl mb-4 flex-row items-start border border-sky-200">
-                    <Lock size={18} color="#0284c7" className="mt-0.5 mr-2.5" />
-                    <Text className="flex-1 text-sky-950 font-gotham-medium text-xs leading-5">
-                      {language === "ta"
-                        ? "உங்கள் சுயவிவரம் அதிகாரப்பூர்வமாக சரிபார்க்கப்பட்டது. மாற்றங்களை கோர கள அலுவலரை அணுகவும்."
-                        : "Your profile is officially verified. To request changes, please contact your assigned Field Officer."}
-                    </Text>
-                  </View>
-                  <InfoRow icon={Phone} label={t("contactMobile", "Mobile Number")} value="+91 98765 43210" iconColor="#15803d" iconBg="bg-emerald-50" />
-                  <InfoRow icon={Mail} label={t("email", "Email Address")} value="kuppusamy.farmer@infinityorganics.com" iconColor="#0284c7" iconBg="bg-sky-50" />
-                  <InfoRow icon={MapPin} label={t("village", "Village")} value={language === "ta" ? "சோமனூர்" : "Somanur"} iconColor="#b45309" iconBg="bg-amber-50" />
-                  <InfoRow icon={MapPin} label={language === "ta" ? "வட்டம்" : "Taluk"} value={language === "ta" ? "சூலூர்" : "Sulur"} iconColor="#b45309" iconBg="bg-amber-50" />
-                  <InfoRow icon={MapPin} label={t("district", "District")} value={language === "ta" ? "கோயம்புத்தூர்" : "Coimbatore"} iconColor="#7e22ce" iconBg="bg-purple-50" isLast />
-                </View>
-              )}
-
-              {activeTab === "kyc" && (
-                <View className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
-                  <View className="bg-emerald-50 p-4 rounded-xl mb-4 flex-row items-center border border-emerald-200">
-                    <ShieldCheck size={22} color="#059669" className="mr-2.5" />
-                    <Text className="flex-1 text-emerald-950 font-gotham-bold text-sm">
-                      {language === "ta" ? "KYC சரிபார்க்கப்பட்டது (இயற்கை பிரிவு)" : "KYC Verified & Certified (Organic Division)"}
-                    </Text>
-                  </View>
-                  <InfoRow icon={FileText} label={t("aadhaarNo", "Aadhaar Number")} value="XXXX XXXX 4321" iconColor="#15803d" iconBg="bg-emerald-50" />
-                  <InfoRow icon={FileText} label={t("panNo", "PAN Number")} value="ABCDE1234F" iconColor="#0284c7" iconBg="bg-sky-50" />
-                  <InfoRow icon={Building2} label={t("bankAccount", "Bank Account")} value="State Bank of India" iconColor="#b45309" iconBg="bg-amber-50" />
-                  <InfoRow icon={FileText} label={language === "ta" ? "கணக்கு எண்" : "Account Number"} value="XXXXXXXXXX8901" iconColor="#7e22ce" iconBg="bg-purple-50" isLast />
-                </View>
-              )}
-
-              {activeTab === "land" && (
-                <View className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
-                  <InfoRow icon={Layers} label={t("totalArea", "Total Land Area")} value={language === "ta" ? "2.5 ஏக்கர்" : "2.5 Acres"} iconColor="#15803d" iconBg="bg-emerald-50" />
-                  <InfoRow icon={FileText} label={language === "ta" ? "சர்வே எண்" : "Survey Number"} value="SF 102/3B" iconColor="#0284c7" iconBg="bg-sky-50" />
-                  <InfoRow icon={MapPin} label={t("soilType", "Soil Type")} value={language === "ta" ? "செம்மண் வளம்" : "Red Soil (Semman Mineral)"} iconColor="#b45309" iconBg="bg-amber-50" />
-                  <InfoRow icon={Droplets} label={t("irrigation", "Irrigation Source")} value={language === "ta" ? "ஆழ்துளை & சொட்டு நீர்" : "Borewell & Drip Network"} iconColor="#0284c7" iconBg="bg-sky-50" />
-                  <InfoRow icon={Layers} label={t("primaryCrop", "Primary Crop")} value={language === "ta" ? "வெட்டிவேர்" : "Vetiver (Chrysopogon zizanioides)"} iconColor="#7e22ce" iconBg="bg-purple-50" isLast />
-                </View>
-              )}
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </ImageBackground>
+      </ScrollView>
     </View>
   );
 }
-
-const InfoRow = ({ icon: Icon, label, value, iconColor = "#15803d", iconBg = "bg-emerald-50", isLast = false }: any) => (
-  <View className={`flex-row items-center py-3.5 ${!isLast ? "border-b border-slate-100" : ""}`}>
-    <View className={`w-10 h-10 ${iconBg} rounded-xl items-center justify-center mr-3.5 shadow-xs`}>
-      <Icon size={18} color={iconColor} />
-    </View>
-    <View className="flex-1">
-      <Text className="text-slate-500 text-xs font-gotham-medium mb-0.5">
-        {label}
-      </Text>
-      <Text className="text-slate-900 font-gotham-bold text-sm">{value}</Text>
-    </View>
-  </View>
-);
-
