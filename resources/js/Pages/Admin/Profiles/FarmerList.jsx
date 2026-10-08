@@ -3,19 +3,16 @@ import AdminLayout from '../AdminLayout';
 import { Link, usePage, router } from '@inertiajs/react';
 import { Map, Leaf, ChevronRight, Search, Phone, Plus, Filter, ChevronDown, CheckCircle2, Clock, AlertCircle, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
 const kycBadge = (status) => {
     if (status === 'verified') return 'bg-green-50 text-green-700 border-green-200';
     if (status === 'rejected') return 'bg-red-50 text-red-700 border-red-200';
     return 'bg-amber-50 text-amber-600 border-amber-100';
 };
-
 const kycIcon = (status) => {
     if (status === 'verified') return <CheckCircle2 className="w-3 h-3" />;
     if (status === 'rejected') return <AlertCircle className="w-3 h-3" />;
     return <Clock className="w-3 h-3" />;
 };
-
 export default function FarmerList({ farmers = [], districts = [], filters = {} }) {
     const { t } = useTranslation();
     const { flash } = usePage().props;
@@ -23,24 +20,20 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
     const [district, setDistrict] = useState(filters.district || '');
     const [kyc, setKyc] = useState(filters.kyc || '');
     const [category, setCategory] = useState(filters.category || 'crop');
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
-
+    const [viewMode, setViewMode] = useState('grid'); 
     const handleSearch = (e) => {
         e.preventDefault();
         router.get('/admin/farmers', { search, district, kyc, category }, { preserveState: true, replace: true });
     };
-
     const handleDistrictChange = (d) => {
         const nd = district === d ? '' : d;
         setDistrict(nd);
         router.get('/admin/farmers', { search, district: nd, kyc, category }, { preserveState: true, replace: true });
     };
-
     const handleCategoryChange = (cat) => {
         setCategory(cat);
         router.get('/admin/farmers', { search, district, kyc, category: cat }, { preserveState: true, replace: true });
     };
-
     return (
         <AdminLayout>
             {flash?.success && (
@@ -48,38 +41,35 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                     {flash.success}
                 </div>
             )}
-
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
-                    <h1 className="text-3xl font-heading font-bold text-gray-900">{t('Farmer Directory')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">{farmers.length} {t('verified farm properties and agricultural profiles.')}</p>
+                    <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">{t('Farmer Directory')}</h1>
+                    <p className="text-slate-500 mt-1 font-medium text-sm">{farmers.length} {t('verified farm properties and agricultural profiles.')}</p>
                 </div>
-                <Link href="/admin/farmers/register" className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
+                <Link href="/admin/farmers/register" className="cursor-pointer bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl font-semibold flex items-center transition-all shadow-md shadow-slate-900/10">
                     <Plus className="w-5 h-5 mr-1" /> {t('Register Farmer')}
                 </Link>
             </div>
             <div className="flex space-x-4 mb-6 border-b border-gray-200">
                 <button
                     onClick={() => handleCategoryChange('crop')}
-                    className={`pb-4 px-2 text-sm font-bold transition-colors border-b-2 ${category === 'crop' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+                    className={`pb-4 px-2 text-sm font-semibold transition-colors border-b-2 ${category === 'crop' ? 'border-emerald-600 text-emerald-700' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
                 >
                     {t('Crop Farmers (Vetiver, etc)')}
                 </button>
                 <button
                     onClick={() => handleCategoryChange('fertilizer')}
-                    className={`pb-4 px-2 text-sm font-bold transition-colors border-b-2 ${category === 'fertilizer' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+                    className={`pb-4 px-2 text-sm font-semibold transition-colors border-b-2 ${category === 'fertilizer' ? 'border-emerald-600 text-emerald-700' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
                 >
                     {t('Fertilizer Customers')}
                 </button>
                 <button
                     onClick={() => handleCategoryChange('both')}
-                    className={`pb-4 px-2 text-sm font-bold transition-colors border-b-2 ${category === 'both' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+                    className={`pb-4 px-2 text-sm font-semibold transition-colors border-b-2 ${category === 'both' ? 'border-emerald-600 text-emerald-700' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}`}
                 >
                     {t('Both (Crop & Fertilizer)')}
                 </button>
             </div>
-
-            {/* Filter Bar */}
             <form onSubmit={handleSearch} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:w-96">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -111,7 +101,6 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                         </button>
                     </div>
-
                     <div className="relative">
                         <select
                             value={district}
@@ -170,7 +159,7 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <p className="font-heading font-bold text-sm text-gray-900">{farm.name}</p>
+                                                    <p className="font-heading font-semibold text-sm text-slate-800">{farm.name}</p>
                                                     <p className="text-[10px] font-mono text-gray-500 mt-0.5">{farm.farmer_code}</p>
                                                 </div>
                                             </div>
@@ -179,7 +168,11 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                                             <span className="text-xs font-bold text-slate-700">
                                                 {farm.land_acres || '–'} {t('Acres')}
                                             </span>
-                                            <p className="text-[10px] font-medium text-gray-500 mt-0.5">Vetiver</p>
+                                            <p className="text-[10px] font-medium text-emerald-700 mt-0.5">
+                                                {Array.isArray(farm.crop_types) && farm.crop_types.length > 0
+                                                    ? farm.crop_types.join(', ')
+                                                    : (farm.customer_category === 'fertilizer' ? t('Fertilizer Customers') : 'Vetiver')}
+                                            </p>
                                         </td>
                                         <td className="py-4 px-6">
                                             <span className="text-xs font-medium text-gray-600 flex items-center">
@@ -213,8 +206,13 @@ export default function FarmerList({ farmers = [], districts = [], filters = {} 
                             )}
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
                             
-                            <div className={`absolute top-4 right-4 flex items-center gap-1 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider bg-slate-900/50 backdrop-blur-md text-white shadow-sm border border-white/20`}>
-                                {kycIcon(farm.kyc_status)} {t(farm.kyc_status)}
+                            <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+                                <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider backdrop-blur-md text-white shadow-sm border border-white/20 ${farm.customer_category === 'fertilizer' ? 'bg-amber-600/80' : 'bg-emerald-600/80'}`}>
+                                    {farm.customer_category === 'fertilizer' ? t('Fertilizer Customers') : (Array.isArray(farm.crop_types) && farm.crop_types.length ? farm.crop_types.join(', ') : 'Vetiver')}
+                                </span>
+                                <div className={`flex items-center gap-1 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider bg-slate-900/60 backdrop-blur-md text-white shadow-sm border border-white/20`}>
+                                    {kycIcon(farm.kyc_status)} {t(farm.kyc_status)}
+                                </div>
                             </div>
                             
                             <div className="absolute bottom-5 left-5 right-5 z-10">

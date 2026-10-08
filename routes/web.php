@@ -1,20 +1,22 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AlertsController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EmployeeDirectoryController;
 use App\Http\Controllers\Admin\FarmerController;
-use App\Http\Controllers\Admin\VisitController;
+use App\Http\Controllers\Admin\FarmerDirectoryController;
+use App\Http\Controllers\Admin\GlobalSearchController;
+use App\Http\Controllers\Admin\LiveMonitorController;
+use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\PerformanceController;
 use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\EmployeeDirectoryController;
-use App\Http\Controllers\Admin\FarmerDirectoryController;
-use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\TasksController;
-use App\Http\Controllers\Admin\LiveMonitorController;
+use App\Http\Controllers\Admin\VisitController;
 use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Route;
 
 // Root redirect
-Route::get('/', fn() => redirect('/admin/login'));
+Route::get('/', fn () => redirect('/admin/login'));
 
 Route::prefix('admin')->group(function () {
     // ── Public: Auth ─────────────────────────────────────────────────────────
@@ -27,13 +29,13 @@ Route::prefix('admin')->group(function () {
 
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-        Route::get('/', fn() => redirect('/admin/dashboard'));
+        Route::get('/', fn () => redirect('/admin/dashboard'));
 
         // Alerts
-        Route::get('/alerts', [\App\Http\Controllers\Admin\AlertsController::class, 'index'])->name('alerts.index');
+        Route::get('/alerts', [AlertsController::class, 'index'])->name('alerts.index');
 
         // Global Search
-        Route::get('/search', [\App\Http\Controllers\Admin\GlobalSearchController::class, 'search'])->name('global.search');
+        Route::get('/search', [GlobalSearchController::class, 'search'])->name('global.search');
 
         // Employee Management
         Route::get('/employees', [EmployeeDirectoryController::class, 'index'])->name('employees.index');
@@ -45,7 +47,7 @@ Route::prefix('admin')->group(function () {
 
         // Farmer Management
         Route::get('/farmers', [FarmerDirectoryController::class, 'index'])->name('farmers.index');
-        Route::get('/farmers/register', fn() => inertia('Admin/Profiles/FarmerRegistrationForm'))->name('farmers.register');
+        Route::get('/farmers/register', fn () => inertia('Admin/Profiles/FarmerRegistrationForm'))->name('farmers.register');
         Route::post('/farmers', [FarmerDirectoryController::class, 'store'])->name('farmers.store');
         Route::get('/farmers/{id}', [FarmerDirectoryController::class, 'show'])->name('farmers.show');
 

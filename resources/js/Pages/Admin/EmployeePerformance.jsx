@@ -17,7 +17,7 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
 
     const filteredData = useMemo(() => {
         return employees.filter(e => {
-            const matchSearch = e.name.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchSearch = String(e.name || '').toLowerCase().includes(searchQuery.toLowerCase());
             const matchRegion = regionFilter === 'all' || e.region === regionFilter;
             return matchSearch && matchRegion;
         });
@@ -31,8 +31,8 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
         <AdminLayout>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{t('Performance Analytics')}</h1>
-                    <p className="text-gray-500 mt-1 text-sm">{t('Monthly performance scoring for')} {period}</p>
+                    <h1 className="text-2xl font-heading font-semibold text-slate-800">{t('Performance Analytics')}</h1>
+                    <p className="text-slate-500 mt-1 text-sm font-medium">{t('Monthly performance scoring for')} {period}</p>
                 </div>
                 <button onClick={handleExport} className="flex items-center px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition shadow-sm">
                     <Download className="w-4 h-4 mr-2" /> {t('Export Report')}
@@ -80,7 +80,7 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                     <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm">
                         <div className="flex items-center mb-6">
                             <Trophy className="w-5 h-5 text-gray-400 mr-2" />
-                            <h2 className="text-lg font-bold text-gray-900">{t('Performance Leaderboard')}</h2>
+                            <h2 className="text-base sm:text-lg font-semibold text-slate-800">{t('Performance Leaderboard')}</h2>
                         </div>
                         
                         <div className="overflow-x-auto">
@@ -100,7 +100,7 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                                     {filteredData.map((e, i) => (
                                         <tr key={i} className="hover:bg-gray-50 transition-colors">
                                             <td className="py-4 px-2">
-                                                <div className="font-semibold text-gray-900">{e.name}</div>
+                                                <div className="font-semibold text-slate-800">{e.name}</div>
                                                 <div className="text-xs text-gray-500 mt-0.5">{e.employee_code}</div>
                                             </td>
                                             <td className="py-4 text-center text-gray-600">{e.visits_month} / {e.target_visits}</td>
@@ -121,14 +121,14 @@ export default function EmployeePerformance({ employees = [], period = '' }) {
                     <div className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm h-full">
                         <div className="flex items-center mb-6">
                             <Star className="w-5 h-5 text-gray-400 mr-2" />
-                            <h2 className="text-lg font-bold text-gray-900">{t('Behavior Matrix')}</h2>
+                            <h2 className="text-base sm:text-lg font-semibold text-slate-800">{t('Behavior Matrix')}</h2>
                         </div>
                         
                         <div className="space-y-3">
                             {filteredData.slice(0, 6).map((officer, i) => (
                                 <div key={i} className="bg-gray-50 border border-gray-100 p-4 rounded-xl">
                                     <div className="flex justify-between items-center mb-2">
-                                        <p className="font-semibold text-gray-900 text-sm">{officer.name}</p>
+                                        <p className="font-semibold text-slate-800 text-sm">{officer.name}</p>
                                         <div className="flex items-center bg-white px-2 py-0.5 rounded text-xs border border-gray-200">
                                             <Star className="w-3 h-3 text-amber-400 mr-1 fill-amber-400" />
                                             <span className="font-medium">{officer.avg_rating || 'N/A'}</span>

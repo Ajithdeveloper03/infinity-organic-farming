@@ -33,6 +33,8 @@ export default function FarmerRegistrationForm() {
         irrigation_type: 'Drip',
         soil_type: 'Red Soil',
         expected_plantation_date: '',
+        customer_category: 'crop',
+        crop_types: ['Vetiver'],
     });
 
     const updateForm = (key, value) => {
@@ -78,8 +80,8 @@ export default function FarmerRegistrationForm() {
             
             <div className="max-w-4xl mx-auto">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Farmer Registration Wizard')}</h1>
-                    <p className="text-gray-500 mt-2 font-medium">Onboard new agricultural partners and verify KYC documentation.</p>
+                    <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">{t('Farmer Registration Wizard')}</h1>
+                    <p className="text-slate-500 mt-2 font-medium">Onboard new agricultural partners and verify KYC documentation.</p>
                 </div>
 
                 <div className="bg-white border border-gray-100 rounded-[2rem] p-8 shadow-sm">
@@ -89,7 +91,7 @@ export default function FarmerRegistrationForm() {
                         
                         {/* STEP 1: Personal Information */}
                         <div className={`space-y-6 transition-all duration-500 ${step === 1 ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                            <h3 className="text-xl font-heading font-bold text-gray-900 border-b border-gray-100 pb-3 mb-6">Personal Details & Verification</h3>
+                            <h3 className="text-lg sm:text-xl font-heading font-semibold text-slate-800 border-b border-gray-100 pb-3 mb-6">Personal Details & Verification</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
@@ -113,9 +115,9 @@ export default function FarmerRegistrationForm() {
                             </div>
                         </div>
 
-                        {/* STEP 2: KYC & Address */}
+                        {/* STEP 2: KYC Documents */}
                         <div className={`space-y-6 transition-all duration-500 ${step === 2 ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                            <h3 className="text-xl font-heading font-bold text-gray-900 border-b border-gray-100 pb-3 mb-6">Identity Verification (KYC)</h3>
+                            <h3 className="text-lg sm:text-xl font-heading font-semibold text-slate-800 border-b border-gray-100 pb-3 mb-6">Identity Verification (KYC)</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div className="md:col-span-2">
@@ -160,7 +162,7 @@ export default function FarmerRegistrationForm() {
 
                         {/* STEP 3: Farm Mapping */}
                         <div className={`space-y-6 transition-all duration-500 ${step === 3 ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                            <h3 className="text-xl font-heading font-bold text-gray-900 border-b border-gray-100 pb-3 mb-6">Property & Geolocation</h3>
+                            <h3 className="text-lg sm:text-xl font-heading font-semibold text-slate-800 border-b border-gray-100 pb-3 mb-6">Property & Geolocation</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
@@ -201,9 +203,47 @@ export default function FarmerRegistrationForm() {
 
                         {/* STEP 4: Agriculture Information */}
                         <div className={`space-y-6 transition-all duration-500 ${step === 4 ? 'block opacity-100' : 'hidden opacity-0'}`}>
-                            <h3 className="text-xl font-heading font-bold text-gray-900 border-b border-gray-100 pb-3 mb-6">Agricultural Parameters</h3>
+                            <h3 className="text-lg sm:text-xl font-heading font-semibold text-slate-800 border-b border-gray-100 pb-3 mb-6">Agricultural Parameters</h3>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Customer Classification</label>
+                                    <select
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-semibold focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-sm"
+                                        value={formData.customer_category}
+                                        onChange={e => updateForm('customer_category', e.target.value)}
+                                    >
+                                        <option value="crop">Crop Cultivator (Vetiver, Turmeric, Pepper)</option>
+                                        <option value="fertilizer">Fertilizer Customer (Organic Inputs Buyer)</option>
+                                        <option value="both">Both (Cultivator & Fertilizer Customer)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Primary Crops</label>
+                                    <div className="flex flex-wrap gap-2 pt-1">
+                                        {['Vetiver', 'Turmeric', 'Pepper'].map(crop => {
+                                            const isSelected = formData.crop_types.includes(crop);
+                                            return (
+                                                <button
+                                                    key={crop}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const current = [...formData.crop_types];
+                                                        const next = isSelected ? current.filter(c => c !== crop) : [...current, crop];
+                                                        updateForm('crop_types', next.length ? next : [crop]);
+                                                    }}
+                                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                                                        isSelected
+                                                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300 shadow-xs'
+                                                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                                                    }`}
+                                                >
+                                                    {crop === 'Vetiver' ? 'Vetiver (வெட்டிவேர்)' : crop === 'Turmeric' ? 'Turmeric (மஞ்சள்)' : 'Black Pepper (மிளகு)'}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                                 <div>
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Seed Bags Required</label>
                                     <input type="number" className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all text-sm" placeholder="0" value={formData.seed_bags_required} onChange={e => updateForm('seed_bags_required', e.target.value)} />

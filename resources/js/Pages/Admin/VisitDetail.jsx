@@ -30,20 +30,20 @@ export default function VisitDetail({ visit }) {
                 <div className="border-b border-slate-100 pb-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <div className="flex items-center gap-2 mb-2">
-                            <span className="bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-md">
+                            <span className="bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-semibold uppercase tracking-widest px-3 py-1 rounded-md">
                                 {t('Inspection Report')}
                             </span>
-                            <span className="bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-md flex items-center gap-1">
+                            <span className="bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-semibold uppercase tracking-widest px-3 py-1 rounded-md flex items-center gap-1">
                                 <Calendar className="w-3 h-3" /> {visit.date}
                             </span>
                         </div>
-                        <h1 className="text-3xl font-heading font-extrabold text-slate-900">
+                        <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">
                             {visit.farmer?.user?.name || visit.farmer_name || 'Farmer'} - {t('Farm Assessment')}
                         </h1>
                     </div>
                     <div className="text-left md:text-right">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{t('Inspected By')}</p>
-                        <p className="text-lg font-bold text-slate-800">{visit.employee?.name || 'Officer'}</p>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{t('Inspected By')}</p>
+                        <p className="text-base sm:text-lg font-semibold text-slate-800">{visit.employee?.name || 'Officer'}</p>
                         <p className="text-xs font-medium text-slate-500 mt-1 flex items-center md:justify-end gap-1">
                             <Clock className="w-3 h-3" /> {visit.check_in_time} - {visit.check_out_time}
                         </p>
@@ -52,21 +52,21 @@ export default function VisitDetail({ visit }) {
                 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{t('Farmer Name')}</p>
-                        <p className="font-bold text-slate-800">{visit.farmer?.user?.name || visit.farmer_name || 'Farmer'}</p>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{t('Farmer Name')}</p>
+                        <p className="font-semibold text-slate-800">{visit.farmer?.user?.name || visit.farmer_name || 'Farmer'}</p>
                     </div>
                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{t('Location')}</p>
-                        <p className="font-bold text-slate-800 flex items-center gap-1">
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{t('Location')}</p>
+                        <p className="font-semibold text-slate-800 flex items-center gap-1">
                             <MapPin className="w-4 h-4 text-slate-400" /> {visit.farmer?.village || 'Unknown'}
                         </p>
                     </div>
                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{t('Status')}</p>
-                        <p className="font-bold text-emerald-600">{t('Completed')}</p>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{t('Status')}</p>
+                        <p className="font-semibold text-emerald-600">{t('Completed')}</p>
                     </div>
                     <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{t('Distance')}</p>
+                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1">{t('Distance')}</p>
                         <p className="font-bold text-slate-800">{visit.distance_from_previous_farmer_km} km</p>
                     </div>
                 </div>

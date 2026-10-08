@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\FarmerProfile;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class GlobalSearchController extends Controller
 {
     public function search(Request $request)
     {
         $query = $request->input('q', '');
-        
+
         if (strlen($query) < 2) {
             return response()->json([]);
         }
@@ -21,9 +21,9 @@ class GlobalSearchController extends Controller
 
         // Search Employees
         $employees = User::where('role', 'employee')
-            ->where(function($q) use ($query) {
+            ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('phone', 'like', "%{$query}%");
+                    ->orWhere('phone', 'like', "%{$query}%");
             })
             ->take(5)
             ->get();
@@ -33,26 +33,27 @@ class GlobalSearchController extends Controller
                 'id' => $employee->id,
                 'name' => $employee->name,
                 'type' => 'Employee',
-                'url' => "/admin/employees/{$employee->id}"
+                'url' => "/admin/employees/{$employee->id}",
             ];
         }
 
         // Search Farmers
-        $farmers = FarmerProfile::whereHas('user', function($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('phone', 'like', "%{$query}%");
-            })
+        $farmers = FarmerProfile::whereHas('user', function ($q) use ($query) {
+            $q->where('name', 'like', "%{$query}%")
+                ->orWhere('phone', 'like', "%{$query}%");
+        })
             ->orWhere('farmer_code', 'like', "%{$query}%")
             ->with('user')
             ->take(5)
             ->get();
 
         foreach ($farmers as $farmer) {
+            $farmerId = $farmer->user_id ?? $farmer->id;
             $results[] = [
-                'id' => $farmer->user_id ?? $farmer->id,
+                'id' => $farmerId,
                 'name' => $farmer->user->name ?? 'Unknown Farmer',
                 'type' => 'Farmer',
-                'url' => "/admin/farmers/{$farmer->user_id ?? $farmer->id}"
+                'url' => "/admin/farmers/{$farmerId}",
             ];
         }
 

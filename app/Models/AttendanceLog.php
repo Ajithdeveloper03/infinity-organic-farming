@@ -12,9 +12,9 @@ class AttendanceLog extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'date'                  => 'date',
-        'check_in_timestamp'    => 'datetime',
-        'check_out_timestamp'   => 'datetime',
+        'date' => 'date',
+        'check_in_timestamp' => 'datetime',
+        'check_out_timestamp' => 'datetime',
     ];
 
     public function employee()

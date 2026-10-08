@@ -41,12 +41,12 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
             )}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                 <div>
-                    <h1 className="text-3xl font-heading font-bold text-gray-900">{t('Employee Directory')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">
+                    <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">{t('Employee Directory')}</h1>
+                    <p className="text-slate-500 mt-1 font-medium text-sm">
                         {employees.length} {t('field staff registered')}
                     </p>
                 </div>
-                <Link href="/admin/employees/create" className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold flex items-center transition-all shadow-md shadow-slate-900/10">
+                <Link href="/admin/employees/create" className="cursor-pointer bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl font-semibold flex items-center transition-all shadow-md shadow-slate-900/10">
                     <Plus className="w-5 h-5 mr-1" /> {t('Register Employee')}
                 </Link>
             </div>
@@ -127,7 +127,7 @@ export default function EmployeeList({ employees = [], regions = [], filters = {
                                                     {emp.name[0]}
                                                 </div>
                                                 <div>
-                                                    <p className="font-heading font-bold text-sm text-gray-900">{emp.name}</p>
+                                                    <p className="font-heading font-semibold text-sm text-slate-800">{emp.name}</p>
                                                     <p className="text-[10px] font-mono text-gray-500 mt-0.5">{emp.employee_code}</p>
                                                 </div>
                                             </div>

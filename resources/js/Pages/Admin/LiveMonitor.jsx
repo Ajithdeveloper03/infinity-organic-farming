@@ -142,9 +142,9 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
 
     const filteredEmployees = useMemo(() => {
         return employees.filter(emp => {
-            const matchesSearch = emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                emp.region.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                emp.currentLocation.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesSearch = String(emp.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                String(emp.region || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                String(emp.currentLocation || '').toLowerCase().includes(searchQuery.toLowerCase());
             const matchesStatus = statusFilter === 'all' || emp.status === statusFilter;
             const matchesRegion = regionFilter === 'all' || emp.region === regionFilter;
             return matchesSearch && matchesStatus && matchesRegion;
@@ -215,8 +215,8 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
             <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <div className="flex items-center gap-3 mb-1">
-                        <h1 className="text-3xl font-extrabold text-gray-900">{t('Live Employee Monitor')}</h1>
-                        <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-green-700 text-xs font-bold">
+                        <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">{t('Live Employee Monitor')}</h1>
+                        <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-green-700 text-xs font-semibold">
                             <span className="h-2 w-2 rounded-full bg-slate-800 animate-pulse"></span> LIVE
                         </span>
                     </div>
@@ -248,10 +248,10 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
                     <p className="text-4xl font-extrabold text-gray-900 mt-1">{totalVisits}</p>
                 </div>
                 <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-                    <p className="text-gray-500 text-xs font-bold uppercase tracking-wider">Low Battery Alerts</p>
+                    <p className="text-gray-500 text-xs font-bold uppercase tracking-wider">{t('Active Geofence Pings')}</p>
                     <div className="flex items-end gap-2 mt-1">
-                        <p className="text-4xl font-extrabold text-red-600">{employees.filter(e => e.battery < 20).length}</p>
-                        <Battery className="w-5 h-5 text-red-400 mb-1" />
+                        <p className="text-4xl font-extrabold text-emerald-600">{employees.filter(e => e.isOnline).length}</p>
+                        <Navigation className="w-5 h-5 text-emerald-500 mb-1" />
                     </div>
                 </div>
             </div>
@@ -450,18 +450,18 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
                                     </div>
                                     <div className="mt-3 w-full">
                                         <div className="flex items-center justify-between mb-1">
-                                            <h2 className="text-2xl font-black text-gray-900">{selectedEmployee.name}</h2>
-                                            <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-xl shadow-sm ${getStatusStyle(selectedEmployee.status).badge}`}>
+                                            <h2 className="text-xl sm:text-2xl font-semibold text-slate-800">{selectedEmployee.name}</h2>
+                                            <span className={`text-[10px] font-semibold uppercase tracking-widest px-3 py-1 rounded-xl shadow-sm ${getStatusStyle(selectedEmployee.status).badge}`}>
                                                 {selectedEmployee.status}
                                             </span>
                                         </div>
-                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{selectedEmployee.role} • {selectedEmployee.region}</p>
+                                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{selectedEmployee.role} • {selectedEmployee.region}</p>
                                         
                                         <div className="flex flex-col gap-2 mt-4 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                                            <span className="flex items-center text-xs font-bold text-slate-700">
+                                            <span className="flex items-center text-xs font-medium text-slate-700">
                                                 <MapPin className="w-4 h-4 mr-2 text-emerald-500" /> {selectedEmployee.currentLocation}
                                             </span>
-                                            <span className="flex items-center text-xs font-bold text-slate-700">
+                                            <span className="flex items-center text-xs font-medium text-slate-700">
                                                 <Clock className="w-4 h-4 mr-2 text-blue-500" /> Check-in: {selectedEmployee.checkInTime}
                                             </span>
                                         </div>
@@ -472,8 +472,8 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
                             {/* Progress Bar */}
                             <div className="mt-5 pt-5 border-t border-gray-100">
                                 <div className="flex items-center justify-between mb-2">
-                                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Today's Visit Progress</span>
-                                    <span className="text-sm font-extrabold text-slate-800">{selectedEmployee.visitsDone} / {selectedEmployee.visitsTarget}</span>
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Today's Visit Progress</span>
+                                    <span className="text-sm font-semibold text-slate-800">{selectedEmployee.visitsDone} / {selectedEmployee.visitsTarget}</span>
                                 </div>
                                 <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                                     <div
@@ -492,7 +492,7 @@ export default function LiveMonitor({ employees: propEmployees = [] }) {
                         {/* Activity Timeline */}
                         <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm">
                             <div className="flex items-center justify-between mb-5">
-                                <h3 className="font-extrabold text-gray-900 flex items-center gap-2">
+                                <h3 className="font-semibold text-slate-800 flex items-center gap-2">
                                     <Activity className="w-5 h-5 text-slate-700" /> Today's Activity Log
                                 </h3>
                                 <span className="text-xs font-bold text-gray-400">{new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' })}</span>

@@ -20,7 +20,7 @@ export default function Login() {
             {/* Full Screen Background */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="/images/intro_bg.png"
+                    src="/images/image12.jpg"
                     alt="Agricultural Landscape"
                     className="w-full h-full object-cover opacity-80"
                 />
@@ -32,15 +32,10 @@ export default function Login() {
 
                 {/* Centered Logo */}
                 <div className="flex flex-col items-center mb-10">
-                    <div className="w-32 h-32 bg-white rounded-full border border-border-subtle shadow-xl mb-6 flex items-center justify-center overflow-hidden p-2">
+                    <div className="w-32 h-32 bg-white rounded-full border border-border-subtle shadow-xl mb-4 mt-4 flex items-center justify-center overflow-hidden p-2">
                         <img src="/images/logo.jpg" alt="Infinity Organic Farming" className="w-full h-full object-contain" />
                     </div>
-                    <h1 className="text-4xl font-heading font-extrabold text-brand-green tracking-tight text-center drop-shadow-sm">
-                        INFINITY
-                    </h1>
-                    <p className="text-sm font-bold text-brand-orange uppercase tracking-widest mt-2">
-                        Admin Portal
-                    </p>
+                   
                 </div>
 
                 {/* Elegant Form Card */}

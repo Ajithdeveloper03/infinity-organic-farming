@@ -19,8 +19,8 @@ export default function Settings() {
             <div className="max-w-4xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
-                        <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Settings')}</h1>
-                        <p className="text-gray-500 mt-2 font-medium text-sm">{t('Manage automations, geofencing, and RBAC.')}</p>
+                        <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">{t('Settings')}</h1>
+                        <p className="text-slate-500 mt-2 font-medium text-sm">{t('Manage automations, geofencing, and RBAC.')}</p>
                     </div>
                     <button 
                         onClick={handleSave}

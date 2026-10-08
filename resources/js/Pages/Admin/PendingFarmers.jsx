@@ -19,10 +19,10 @@ export default function PendingFarmers({ farmers = [] }) {
     const filteredFarmers = useMemo(() => {
         return farmers.filter(f => {
             const q = searchQuery.toLowerCase();
-            return f.name.toLowerCase().includes(q) ||
-                   f.phone?.includes(q) ||
-                   (f.district || '').toLowerCase().includes(q) ||
-                   (f.village || '').toLowerCase().includes(q);
+            return String(f.name || '').toLowerCase().includes(q) ||
+                   String(f.phone || '').includes(q) ||
+                   String(f.district || '').toLowerCase().includes(q) ||
+                   String(f.village || '').toLowerCase().includes(q);
         });
     }, [farmers, searchQuery]);
 
@@ -49,8 +49,8 @@ export default function PendingFarmers({ farmers = [] }) {
         <AdminLayout>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{t('Pending Approvals')}</h1>
-                    <p className="text-gray-500 mt-1 text-sm">{t('Review board for new farmer onboarding & location verification.')}</p>
+                    <h1 className="text-2xl font-heading font-semibold text-slate-800">{t('Pending Approvals')}</h1>
+                    <p className="text-slate-500 mt-1 text-sm font-medium">{t('Review board for new farmer onboarding & location verification.')}</p>
                 </div>
                 <div className="bg-orange-50 text-orange-600 px-4 py-2 rounded-lg flex items-center font-bold text-sm">
                     <AlertTriangle className="w-4 h-4 mr-2" />

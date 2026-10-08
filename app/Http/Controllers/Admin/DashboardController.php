@@ -3,30 +3,31 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\FarmerVisit;
 use App\Models\AttendanceLog;
-use App\Models\LocationPoint;
 use App\Models\FarmerProfile;
+use App\Models\FarmerVisit;
+use App\Models\LocationPoint;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $today     = Carbon::today();
+        $today = Carbon::today();
         $weekStart = Carbon::now()->startOfWeek();
 
-        $totalVisits     = FarmerVisit::count();
-        $weeklyVisits    = FarmerVisit::whereDate('created_at', '>=', $weekStart)->count();
-        $totalEmployees  = User::where('role', 'employee')->where('status', 'active')->count();
-        $totalFarmers    = User::where('role', 'farmer')->count();
-        $pendingFarmers  = FarmerProfile::where('approval_status', 'pending')->count()
+        $totalVisits = FarmerVisit::count();
+        $weeklyVisits = FarmerVisit::whereDate('created_at', '>=', $weekStart)->count();
+        $totalEmployees = User::where('role', 'employee')->where('status', 'active')->count();
+        $totalFarmers = User::where('role', 'farmer')->count();
+        $pendingFarmers = FarmerProfile::where('approval_status', 'pending')->count()
                          + User::where('role', 'farmer')->where('status', 'pending_approval')->count();
 
         $activeEmployees = User::where('role', 'employee')
-            ->whereHas('locationPoints', fn($q) => $q->whereDate('created_at', $today))
+            ->whereHas('locationPoints', fn ($q) => $q->whereDate('created_at', $today))
             ->count();
 
         $todayAttendance = AttendanceLog::whereDate('date', $today)->count();
@@ -45,46 +46,46 @@ class DashboardController extends Controller
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get()
-            ->map(fn($v) => [
-                'id'           => $v->id,
-                'employee'     => $v->employee?->name ?? 'Unknown',
-                'farmer'       => $v->farmer?->name ?? 'Unknown',
-                'time'         => Carbon::parse($v->check_in_time)->diffForHumans(),
-                'date'         => Carbon::parse($v->created_at)->format('M d, Y'),
+            ->map(fn ($v) => [
+                'id' => $v->id,
+                'employee' => $v->employee?->name ?? 'Unknown',
+                'farmer' => $v->farmer?->name ?? 'Unknown',
+                'time' => Carbon::parse($v->check_in_time)->diffForHumans(),
+                'date' => Carbon::parse($v->created_at)->format('M d, Y'),
             ]);
 
         $recentFarmers = FarmerProfile::with('user:id,name')
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get()
-            ->map(fn($f) => [
+            ->map(fn ($f) => [
                 'id' => $f->user_id,
                 'name' => $f->user?->name ?? 'Unknown',
                 'farmer_code' => $f->farmer_code,
                 'crop' => $f->crop_types ? implode(', ', $f->crop_types) : 'Vetiver',
                 'acres' => $f->land_size_acres,
-                'photo' => $f->farmer_photo_path ? \Illuminate\Support\Facades\Storage::url($f->farmer_photo_path) : null,
+                'photo' => $f->farmer_photo_path ? Storage::url($f->farmer_photo_path) : null,
                 'status' => $f->approval_status,
-                'date' => $f->created_at->diffForHumans()
+                'date' => $f->created_at->diffForHumans(),
             ]);
-            
+
         $pendingApprovals = FarmerProfile::with('user:id,name')
             ->where('approval_status', 'pending')
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get()
-            ->map(fn($f) => [
+            ->map(fn ($f) => [
                 'id' => $f->user_id,
                 'name' => $f->user?->name ?? 'Unknown',
                 'farmer_code' => $f->farmer_code,
                 'district' => $f->district,
-                'date' => $f->created_at->diffForHumans()
+                'date' => $f->created_at->diffForHumans(),
             ]);
 
         $agriStats = [
             'total_seed_bags' => FarmerProfile::sum('seed_bags_required'),
             'total_investment' => FarmerProfile::sum('planned_investment'),
-            'total_land_acres' => FarmerProfile::sum('land_size_acres')
+            'total_land_acres' => FarmerProfile::sum('land_size_acres'),
         ];
 
         return Inertia::render('Admin/Dashboard', [
@@ -93,13 +94,13 @@ class DashboardController extends Controller
             'recentFarmers' => $recentFarmers,
             'pendingApprovals' => $pendingApprovals,
             'agriStats' => $agriStats,
-            'stats'        => [
-                'totalVisits'     => $totalVisits,
-                'weeklyVisits'    => $weeklyVisits,
+            'stats' => [
+                'totalVisits' => $totalVisits,
+                'weeklyVisits' => $weeklyVisits,
                 'activeEmployees' => $activeEmployees,
-                'totalEmployees'  => $totalEmployees,
-                'totalFarmers'    => $totalFarmers,
-                'pendingFarmers'  => $pendingFarmers,
+                'totalEmployees' => $totalEmployees,
+                'totalFarmers' => $totalFarmers,
+                'pendingFarmers' => $pendingFarmers,
                 'todayAttendance' => $todayAttendance,
             ],
         ]);

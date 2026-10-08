@@ -36,8 +36,8 @@ export default function Alerts({ alerts = [] }) {
         <AdminLayout>
             <div className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Alerts & Notifications')}</h1>
-                    <p className="text-gray-500 mt-1 font-medium text-sm">
+                    <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">{t('Alerts & Notifications')}</h1>
+                    <p className="text-slate-500 mt-1 font-medium text-sm">
                         {t('System logs and emergency alerts history')}
                     </p>
                 </div>
@@ -58,7 +58,7 @@ export default function Alerts({ alerts = [] }) {
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex justify-between items-start mb-1">
-                                        <h3 className="font-bold text-gray-900">{t(alert.title)}</h3>
+                                        <h3 className="font-semibold text-slate-800">{t(alert.title)}</h3>
                                         <span className="text-xs font-medium text-gray-500">{alert.timestamp}</span>
                                     </div>
                                     <p className="text-sm text-gray-700">{t(alert.message)}</p>

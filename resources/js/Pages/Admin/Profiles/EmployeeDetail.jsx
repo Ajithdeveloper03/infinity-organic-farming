@@ -161,8 +161,8 @@ export default function EmployeeDetail({ employee = {}, attendance = [], visitsT
                         </div>
                         
                         <div className="px-6 pb-6 pt-3">
-                            <h1 className="text-2xl font-heading font-extrabold text-gray-900">{employee.name}</h1>
-                            <p className="text-[10px] font-mono font-bold text-slate-700 mt-1 bg-slate-50 px-2 py-0.5 rounded-lg inline-block shadow-sm border border-slate-100">{employee.employee_code || 'N/A'}</p>
+                            <h1 className="text-xl sm:text-2xl font-heading font-semibold text-slate-800">{employee.name}</h1>
+                            <p className="text-[10px] font-mono font-semibold text-slate-700 mt-1 bg-slate-50 px-2 py-0.5 rounded-lg inline-block shadow-sm border border-slate-100">{employee.employee_code || 'N/A'}</p>
                             
                             <div className="mt-6 flex flex-col space-y-3 text-left bg-gray-50 p-5 rounded-2xl border border-gray-100 shadow-inner">
                                 <div className="flex items-center text-sm font-medium text-gray-700">
@@ -258,11 +258,11 @@ export default function EmployeeDetail({ employee = {}, attendance = [], visitsT
                 {/* Ratings and Reviews */}
                 <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm flex flex-col p-6">
                     <div className="flex justify-between items-center mb-6 border-b border-gray-50 pb-4">
-                        <h3 className="text-lg font-bold text-gray-900 flex items-center">
+                        <h3 className="text-base sm:text-lg font-semibold text-slate-800 flex items-center">
                             <Star className="w-5 h-5 text-amber-500 mr-2" /> Farmer Reviews
                         </h3>
                         <div className="flex items-center">
-                            <span className="text-3xl font-black text-gray-900 mr-2">{employee.avg_rating || 'N/A'}</span>
+                            <span className="text-3xl font-bold text-slate-800 mr-2">{employee.avg_rating || 'N/A'}</span>
                             <div className="flex text-amber-400">
                                 {[1,2,3,4,5].map(star => (
                                     <Star key={star} className={`w-4 h-4 ${star <= (employee.avg_rating || 0) ? 'fill-current' : 'text-gray-200 fill-gray-200'}`} />

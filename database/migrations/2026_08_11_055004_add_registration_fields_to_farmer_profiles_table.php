@@ -59,7 +59,7 @@ return new class extends Migration
                 'soil_type',
                 'seed_bags_required',
                 'planned_investment',
-                'farm_photos'
+                'farm_photos',
             ]);
         });
     }

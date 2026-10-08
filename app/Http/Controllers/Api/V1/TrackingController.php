@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\TrackingSession;
-use App\Models\LocationPoint;
 use App\Events\LocationUpdated;
+use App\Http\Controllers\Controller;
+use App\Models\LocationPoint;
+use App\Models\TrackingSession;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class TrackingController extends Controller
 {
@@ -19,7 +20,7 @@ class TrackingController extends Controller
         ]);
 
         // Get employee ID (use first user for testing if unauthenticated)
-        $employeeId = $request->user() ? $request->user()->id : \App\Models\User::first()->id;
+        $employeeId = $request->user() ? $request->user()->id : User::first()->id;
 
         $session = TrackingSession::create([
             'session_id' => $validated['session_id'],
@@ -32,7 +33,7 @@ class TrackingController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'session' => $session
+            'session' => $session,
         ]);
     }
 
@@ -44,7 +45,7 @@ class TrackingController extends Controller
             'longitude' => 'nullable|numeric',
         ]);
 
-        $employeeId = $request->user() ? $request->user()->id : \App\Models\User::first()->id;
+        $employeeId = $request->user() ? $request->user()->id : User::first()->id;
 
         $session = TrackingSession::where('session_id', $validated['session_id'])
             ->where('employee_id', $employeeId)
@@ -59,7 +60,7 @@ class TrackingController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'session' => $session
+            'session' => $session,
         ]);
     }
 
@@ -77,7 +78,7 @@ class TrackingController extends Controller
         ]);
 
         $pointsToInsert = [];
-        $employeeId = $request->user() ? $request->user()->id : \App\Models\User::first()->id;
+        $employeeId = $request->user() ? $request->user()->id : User::first()->id;
 
         // Group points by session_id to minimize queries
         $sessionIds = collect($validated['points'])->pluck('session_id')->unique();
@@ -121,7 +122,7 @@ class TrackingController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'synced_count' => count($pointsToInsert)
+            'synced_count' => count($pointsToInsert),
         ]);
     }
 }

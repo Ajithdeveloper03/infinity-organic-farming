@@ -31,19 +31,19 @@ export default function Payments({ farmer_payments = [], officer_payments = [], 
 
     const filteredFarmerPayments = useMemo(() => {
         return farmer_payments.filter(p => {
-            const matchSearch = p.farmer.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                p.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                p.region.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchStatus = statusFilter === 'all' || p.status === statusFilter.toLowerCase();
+            const matchSearch = String(p.farmer || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                String(p.id || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                String(p.region || '').toLowerCase().includes(searchQuery.toLowerCase());
+            const matchStatus = statusFilter === 'all' || String(p.status || '').toLowerCase() === statusFilter.toLowerCase();
             return matchSearch && matchStatus;
         });
     }, [searchQuery, statusFilter, farmer_payments]);
 
     const filteredOfficerPayments = useMemo(() => {
         return officer_payments.filter(p => {
-            const matchSearch = p.officer.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                p.id.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchStatus = statusFilter === 'all' || p.status === statusFilter.toLowerCase();
+            const matchSearch = String(p.officer || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                String(p.id || '').toLowerCase().includes(searchQuery.toLowerCase());
+            const matchStatus = statusFilter === 'all' || String(p.status || '').toLowerCase() === statusFilter.toLowerCase();
             return matchSearch && matchStatus;
         });
     }, [searchQuery, statusFilter, officer_payments]);
@@ -64,8 +64,8 @@ export default function Payments({ farmer_payments = [], officer_payments = [], 
             
             <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{t('Payments & Financials')}</h1>
-                    <p className="text-gray-500 mt-2 font-medium">Manage and track disbursements for farmers and field officers.</p>
+                    <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">{t('Payments & Financials')}</h1>
+                    <p className="text-slate-500 mt-2 font-medium">Manage and track disbursements for farmers and field officers.</p>
                 </div>
                 <div className="flex items-center space-x-3">
                     <button onClick={handleExport} className="flex items-center px-4 py-2 bg-white border border-gray-200 rounded-xl text-gray-700 font-bold text-sm shadow-sm hover:bg-gray-50 transition-colors">

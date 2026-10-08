@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Events\LocationUpdated;
 use App\Models\User;
+use Illuminate\Console\Command;
 
 class SimulateTracking extends Command
 {
@@ -28,24 +28,26 @@ class SimulateTracking extends Command
     public function handle()
     {
         $employeeId = $this->option('employee');
-        
-        if (!$employeeId) {
+
+        if (! $employeeId) {
             $employee = User::where('role', 'employee')->first();
-            if (!$employee) {
+            if (! $employee) {
                 $this->error('No employee found in the database. Please create one.');
+
                 return;
             }
             $employeeId = $employee->id;
         } else {
             $employee = User::find($employeeId);
-            if (!$employee) {
+            if (! $employee) {
                 $this->error("Employee with ID {$employeeId} not found.");
+
                 return;
             }
         }
 
         $this->info("Simulating tracking for employee: {$employee->name} (ID: {$employee->id})");
-        $this->info("Press Ctrl+C to stop.");
+        $this->info('Press Ctrl+C to stop.');
 
         // Start coordinates (e.g., Coimbatore)
         $lat = 11.0168;
@@ -57,7 +59,7 @@ class SimulateTracking extends Command
             // Move slightly
             $lat += mt_rand(-50, 50) / 100000;
             $lng += mt_rand(-50, 50) / 100000;
-            
+
             // Decrease battery slowly
             if (mt_rand(1, 10) === 1) {
                 $battery = max(1, $battery - 1);

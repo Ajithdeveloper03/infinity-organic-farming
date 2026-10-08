@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Inertia\Inertia;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
@@ -15,21 +16,22 @@ class LoginController extends Controller
         if (Auth::check() && Auth::user()->role === 'admin') {
             return redirect('/admin/dashboard');
         }
+
         return Inertia::render('Auth/Login');
     }
 
     public function store(Request $request)
     {
         $credentials = $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
             // Fallback for demo admin credentials
-            if ($credentials['email'] === 'admin@infinityorganics.com' && 
+            if ($credentials['email'] === 'admin@infinityorganics.com' &&
                 in_array($credentials['password'], ['admin@123', 'Admin@1234', 'Admin@123', 'admin123'])) {
-                $adminUser = \App\Models\User::where('email', 'admin@infinityorganics.com')->first();
+                $adminUser = User::where('email', 'admin@infinityorganics.com')->first();
                 if ($adminUser && $adminUser->role === 'admin') {
                     Auth::login($adminUser, $request->boolean('remember'));
                 } else {
@@ -42,10 +44,12 @@ class LoginController extends Controller
 
         if (Auth::user()->role !== 'admin') {
             Auth::logout();
+
             return back()->withErrors(['email' => 'Access denied. Admin privileges required.']);
         }
 
         $request->session()->regenerate();
+
         return redirect('/admin/dashboard');
     }
 
@@ -54,6 +58,7 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/admin/login');
     }
 }

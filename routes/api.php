@@ -1,14 +1,16 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\AdminController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\EmployeeController;
 use App\Http\Controllers\Api\V1\FarmerController;
-use App\Http\Controllers\Api\V1\TranslationController;
-use App\Http\Controllers\Api\V1\TrackingController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\TrackingController;
+use App\Http\Controllers\Api\V1\TranslationController;
+use App\Http\Middleware\DemoAuthMiddleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,7 @@ Route::prefix('v1')->group(function () {
     // ── Public: Auth ─────────────────────────────────────────────────────────
     Route::post('/auth/send-otp', [AuthController::class, 'sendOtp']);
     Route::post('/auth/login', [AuthController::class, 'login']);
-    
+
     // Translation Route for Mobile App
     Route::get('/translations', [TranslationController::class, 'index']);
 
@@ -29,10 +31,10 @@ Route::prefix('v1')->group(function () {
     // we bypass Sanctum by automatically authenticating the user via the phone number stored in AsyncStorage.
 
     // ── Protected Routes ──
-    Route::middleware([\App\Http\Middleware\DemoAuthMiddleware::class])->group(function () {
+    Route::middleware([DemoAuthMiddleware::class])->group(function () {
 
         // Current user info
-        Route::get('/user', fn(Request $request) => $request->user());
+        Route::get('/user', fn (Request $request) => $request->user());
 
         // Employee endpoints
         Route::prefix('employee')->group(function () {
@@ -60,6 +62,12 @@ Route::prefix('v1')->group(function () {
             Route::post('/visit/{id}/rate', [FarmerController::class, 'rateVisit']);
             Route::get('/orders', [OrderController::class, 'index']);
             Route::get('/products', [ProductController::class, 'index']);
+        });
+
+        // Admin endpoints
+        Route::prefix('admin')->group(function () {
+            Route::get('/farmers/pending', [AdminController::class, 'pending']);
+            Route::post('/farmers/{id}/approve', [AdminController::class, 'approveFarmer']);
         });
     });
 

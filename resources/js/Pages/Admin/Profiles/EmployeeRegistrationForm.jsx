@@ -26,8 +26,8 @@ export default function EmployeeRegistrationForm() {
                             <ChevronLeft className="w-6 h-6 text-gray-600" />
                         </Link>
                         <div>
-                            <h1 className="text-3xl font-heading font-extrabold text-gray-900">Register Employee</h1>
-                            <p className="text-gray-500 mt-1 font-medium text-sm">Add a new team member to the system.</p>
+                            <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">Register Employee</h1>
+                            <p className="text-slate-500 mt-1 font-medium text-sm">Add a new team member to the system.</p>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@ export default function EmployeeRegistrationForm() {
                             
                             {/* Personal Info */}
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                                <h2 className="text-base sm:text-lg font-semibold text-slate-800 mb-4 flex items-center">
                                     <User className="w-5 h-5 mr-2 text-green-600" />
                                     Personal Information
                                 </h2>
@@ -74,7 +74,7 @@ export default function EmployeeRegistrationForm() {
 
                             {/* Operational Info */}
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                                <h2 className="text-base sm:text-lg font-semibold text-slate-800 mb-4 flex items-center">
                                     <Shield className="w-5 h-5 mr-2 text-amber-500" />
                                     Operational Details
                                 </h2>

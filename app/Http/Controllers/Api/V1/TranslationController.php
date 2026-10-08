@@ -26,7 +26,7 @@ class TranslationController extends Controller
                 'Main Menu' => 'முதன்மை மெனு',
                 'Live Monitor' => 'நேரடி கண்காணிப்பு',
                 'Analytics & Visits' => 'பகுப்பாய்வு மற்றும் பார்வைகள்',
-            ]
+            ],
         ]);
     }
 }

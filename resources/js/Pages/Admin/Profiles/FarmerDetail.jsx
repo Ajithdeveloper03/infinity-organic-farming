@@ -43,10 +43,20 @@ export default function FarmerDetail({ farmer = {}, visits = [] }) {
                 </div>
                 
                 <div className="px-6 pb-8 pt-4">
-                    <h1 className="text-3xl font-heading font-extrabold text-gray-900">{farmer.name}'s Farm</h1>
+                    <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">{farmer.name}'s Farm</h1>
                     <p className="text-sm font-medium flex items-center justify-center mt-2 text-slate-500">
                         <Map className="w-4 h-4 mr-1.5 text-slate-400" /> {farmer.village}, {farmer.district}
                     </p>
+                    <div className="flex items-center justify-center gap-2 mt-3 flex-wrap">
+                        <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${farmer.customer_category === 'fertilizer' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'}`}>
+                            {farmer.customer_category === 'fertilizer' ? t('Fertilizer Customers') : t('Crop Farmers (Vetiver, etc)')}
+                        </span>
+                        {Array.isArray(farmer.crop_types) && farmer.crop_types.map((crop, idx) => (
+                            <span key={idx} className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                                {crop}
+                            </span>
+                        ))}
+                    </div>
                 </div>
                 
                 {/* Approval Banner for Pending Farmers */}
@@ -87,7 +97,7 @@ export default function FarmerDetail({ farmer = {}, visits = [] }) {
                 {/* Geolocation Details */}
                 <div className="col-span-1 space-y-8">
                     <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm cursor-pointer hover:shadow-md transition-shadow">
-                        <h3 className="text-sm font-heading font-bold text-gray-900 flex items-center mb-6">
+                        <h3 className="text-sm font-heading font-semibold text-slate-800 flex items-center mb-6">
                             <Navigation className="w-5 h-5 text-slate-700 mr-2" /> Registered Coordinates
                         </h3>
                         <div className="relative h-48 rounded-2xl overflow-hidden mb-6 border border-gray-100 bg-gray-50 flex items-center justify-center">
@@ -97,32 +107,29 @@ export default function FarmerDetail({ farmer = {}, visits = [] }) {
                         </div>
                         <div className="flex justify-between space-x-4">
                             <div className="flex-1 bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
-                                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Latitude</p>
-                                <p className="text-sm font-bold text-gray-900">{farmer.land_latitude || 'N/A'}</p>
+                                <p className="text-[10px] font-semibold text-gray-400 uppercase mb-1">Latitude</p>
+                                <p className="text-sm font-semibold text-slate-800">{farmer.land_latitude || 'N/A'}</p>
                             </div>
                             <div className="flex-1 bg-gray-50 border border-gray-100 rounded-xl p-3 text-center">
-                                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">{t('Longitude')}</p>
-                                <p className="text-sm font-bold text-gray-900">{farmer.land_longitude || 'N/A'}</p>
+                                <p className="text-[10px] font-semibold text-gray-400 uppercase mb-1">{t('Longitude')}</p>
+                                <p className="text-sm font-semibold text-slate-800">{farmer.land_longitude || 'N/A'}</p>
                             </div>
                         </div>
-                        <p className="text-xs font-medium text-gray-500 mt-6 text-center bg-gray-50 p-2 rounded-xl">
-                            {t('Registered by')} <span className="font-bold text-gray-700">{farmer.registered_by}</span> {t('on')} {farmer.joined}
-                        </p>
                     </div>
                     
                     {/* Crop & Fertilizer Requirements */}
                     <div className="bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm hover:shadow-md transition-shadow">
-                        <h3 className="text-sm font-heading font-bold text-gray-900 flex items-center mb-6 border-b border-gray-50 pb-4">
+                        <h3 className="text-sm font-heading font-semibold text-slate-800 flex items-center mb-6 border-b border-gray-50 pb-4">
                             <Leaf className="w-5 h-5 text-emerald-600 mr-2" /> {t('Agricultural Profile')}
                         </h3>
                         <div className="space-y-4">
                             <div className="flex justify-between items-center p-2 rounded-xl hover:bg-gray-50 transition-colors">
-                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Soil Type')}</span>
-                                <span className="text-sm font-bold text-gray-900 capitalize">{farmer.soil_type || 'N/A'}</span>
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Soil Type')}</span>
+                                <span className="text-sm font-semibold text-slate-800 capitalize">{farmer.soil_type || 'N/A'}</span>
                             </div>
                             <div className="flex justify-between items-center p-2 rounded-xl hover:bg-gray-50 transition-colors">
-                                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Irrigation')}</span>
-                                <span className="text-sm font-bold text-gray-900 capitalize">{farmer.irrigation_type || 'N/A'}</span>
+                                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('Irrigation')}</span>
+                                <span className="text-sm font-semibold text-slate-800 capitalize">{farmer.irrigation_type || 'N/A'}</span>
                             </div>
                             <div className="flex justify-between items-center p-2 rounded-xl hover:bg-gray-50 transition-colors">
                                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Seed Bags Required')}</span>

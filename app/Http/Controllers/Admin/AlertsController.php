@@ -1,11 +1,14 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
+
 class AlertsController extends Controller
 {
     public function index()
-    { 
+    {
         $alerts = [
             [
                 'id' => 1,
@@ -30,7 +33,7 @@ class AlertsController extends Controller
                 'message' => 'System booted successfully.',
                 'timestamp' => now()->subHours(2)->toDateTimeString(),
                 'resolved' => true,
-            ]
+            ],
         ];
 
         return Inertia::render('Admin/Alerts', [

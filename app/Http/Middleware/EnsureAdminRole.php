@@ -15,12 +15,13 @@ class EnsureAdminRole
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login')->with('error', 'Please log in to access the admin panel.');
         }
 
         if (Auth::user()->role !== 'admin') {
             Auth::logout();
+
             return redirect()->route('login')->with('error', 'Access denied. Admin privileges required.');
         }
 

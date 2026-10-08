@@ -62,7 +62,7 @@ export default function PendingFarmerDetail({ farmer = {}, visits = [] }) {
                 </div>
                 
                 <div className="px-6 pb-8 pt-4">
-                    <h1 className="text-3xl font-heading font-bold text-gray-900">{farmer.name}'s Farm</h1>
+                    <h1 className="text-2xl sm:text-3xl font-heading font-semibold text-slate-800">{farmer.name}'s Farm</h1>
                     <p className="text-sm font-medium flex items-center justify-center mt-2 text-slate-500">
                         <Map className="w-4 h-4 mr-1.5 text-slate-400" /> {farmer.village}, {farmer.district}
                     </p>
