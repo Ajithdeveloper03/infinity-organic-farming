@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,116 +7,163 @@ import {
   Image,
   StyleSheet,
   StatusBar,
+  Dimensions
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   ChevronLeft,
-  Bell,
-  Minus,
-  Plus,
+  ShoppingCart,
   Star,
+  ShieldCheck,
+  Droplet,
+  Info,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react-native";
-import { useLanguage } from "../../../context/LanguageContext";
 
-export default function FarmerProductDetailScreen() {
+const { width } = Dimensions.get("window");
+
+export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
-  const { t, language } = useLanguage();
+  const insets = useSafeAreaInsets();
+  const [expandedSection, setExpandedSection] = useState("usage");
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#e8f2ec" }}>
+    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
       <StatusBar barStyle="dark-content" />
 
-      {/* HEADER */}
-      <SafeAreaView>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}
-          >
-            <ChevronLeft size={24} color="#000000" />
-          </TouchableOpacity>
-          <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 18 }}>Farm Details</Text>
-          <TouchableOpacity
-            style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}
-          >
-            <Bell size={20} color="#000000" />
-            <View style={{ position: "absolute", top: 12, right: 12, width: 6, height: 6, borderRadius: 3, backgroundColor: "#ef4444" }} />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+      {/* HEADER IMAGE (Massive full-bleed) */}
+      <View style={{ width: "100%", height: 420, backgroundColor: "#ecfdf5" }}>
+        <Image 
+          source={require("../../../assets/images/image10.jpg")}
+          style={{ width: "100%", height: "100%" }}
+          resizeMode="cover"
+        />
+        {/* Top Fade Gradient */}
+        <LinearGradient
+          colors={["rgba(255,255,255,0.9)", "rgba(255,255,255,0)"]}
+          style={{ position: "absolute", top: 0, width: "100%", height: 120 }}
+        />
+        {/* Bottom Fade Gradient */}
+        <LinearGradient
+          colors={["rgba(255,255,255,0)", "rgba(255,255,255,1)"]}
+          style={{ position: "absolute", bottom: 0, width: "100%", height: 100 }}
+        />
         
-        {/* PRODUCT SHOWCASE (360 Carousel style from Image 3) */}
-        <View style={{ alignItems: "center", marginTop: 24, marginBottom: 32 }}>
-          <Image
-            source={require("../../../assets/images/image14.jpg")} // Use a placeholder for the plant
-            style={{ width: 240, height: 240, borderRadius: 120 }}
-            resizeMode="cover"
-          />
-          {/* Floating Platform effect */}
-          <View style={{ width: 200, height: 20, borderRadius: 100, backgroundColor: "rgba(0,0,0,0.05)", transform: [{ scaleY: 0.3 }], marginTop: -10 }} />
+        {/* Navigation Actions */}
+        <SafeAreaView style={{ position: "absolute", top: 0, width: "100%", flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 10 }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 12, elevation: 4 }}>
+            <ChevronLeft size={24} color="#0f172a" />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 12, elevation: 4 }}>
+            <ShoppingCart size={20} color="#0f172a" />
+            <View style={{ position: "absolute", top: 10, right: 10, width: 8, height: 8, borderRadius: 4, backgroundColor: "#10b981" }} />
+          </TouchableOpacity>
+        </SafeAreaView>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 150, paddingTop: 0 }}>
+        
+        {/* TITLE & PRICE */}
+        <View style={{ marginBottom: 24 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+            <View style={{ backgroundColor: "#dcfce7", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 8, marginRight: 12 }}>
+              <Text style={{ color: "#16a34a", fontFamily: "Brandon-Bold", fontSize: 11, letterSpacing: 1 }}>100% ORGANIC</Text>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Star size={14} color="#f59e0b" fill="#f59e0b" />
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14, marginLeft: 4 }}>4.8</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginLeft: 4 }}>(124 reviews)</Text>
+            </View>
+          </View>
           
-          <View style={{ flexDirection: "row", gap: 12, marginTop: 24, paddingHorizontal: 24 }}>
-            {[1,2,3,4].map((item, idx) => (
-              <TouchableOpacity key={item} style={{ width: 64, height: 64, borderRadius: 16, backgroundColor: "#ffffff", padding: 4, borderWidth: idx === 0 ? 2 : 0, borderColor: "#059669", alignItems: "center", justifyContent: "center" }}>
-                 <Image source={require("../../../assets/images/image2.jpg")} style={{ width: "100%", height: "100%", borderRadius: 12 }} />
-              </TouchableOpacity>
-            ))}
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 32, lineHeight: 38, marginBottom: 8 }}>
+            Premium Vetiver{"\n"}Bio-Fertilizer
+          </Text>
+          
+          <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+            <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 28 }}>₹1,200</Text>
+            <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, marginBottom: 6, marginLeft: 4 }}>/ 5 kg bag</Text>
           </View>
         </View>
 
-        {/* BOTTOM SHEET INFO */}
-        <View style={{ flex: 1, backgroundColor: "#ffffff", borderTopLeftRadius: 40, borderTopRightRadius: 40, padding: 32 }}>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-            <View>
-              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 26, letterSpacing: -0.5 }}>Lime Seedlings</Text>
-              <Text style={{ color: "#059669", fontFamily: "Brandon-Bold", fontSize: 13, marginTop: 4 }}>Available in stock</Text>
-              <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}>
-                <Star size={14} color="#d1d5db" fill="#d1d5db" />
-                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginLeft: 6 }}>4.9 (192)</Text>
+        {/* METRICS ROW */}
+        <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 32 }}>
+          <View style={{ flex: 1, backgroundColor: "#f8fafc", borderRadius: 20, padding: 16, alignItems: "center", marginRight: 8, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <ShieldCheck size={24} color="#3b82f6" style={{ marginBottom: 8 }} />
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>ISO Certified</Text>
+          </View>
+          <View style={{ flex: 1, backgroundColor: "#f8fafc", borderRadius: 20, padding: 16, alignItems: "center", marginHorizontal: 4, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <Droplet size={24} color="#0ea5e9" style={{ marginBottom: 8 }} />
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>Water Soluble</Text>
+          </View>
+          <View style={{ flex: 1, backgroundColor: "#f8fafc", borderRadius: 20, padding: 16, alignItems: "center", marginLeft: 8, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <Leaf size={24} color="#10b981" style={{ marginBottom: 8 }} />
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>Soil Safe</Text>
+          </View>
+        </View>
+
+        <Text style={{ color: "#334155", fontFamily: "Brandon-Medium", fontSize: 16, lineHeight: 24, marginBottom: 32 }}>
+          Formulated exclusively for deep-root plants like Vetiver. Enhances root growth by 40% and ensures optimal nutrient absorption during the crucial vegetative state.
+        </Text>
+
+        {/* ACCORDION SECTIONS */}
+        <View style={{ gap: 16 }}>
+          {/* Usage */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, borderWidth: 1, borderColor: expandedSection === "usage" ? "#10b981" : "#f1f5f9", overflow: "hidden", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.02, shadowRadius: 8, elevation: 2 }}>
+            <TouchableOpacity onPress={() => setExpandedSection(expandedSection === "usage" ? "" : "usage")} style={{ flexDirection: "row", alignItems: "center", padding: 20 }}>
+              <Info size={20} color={expandedSection === "usage" ? "#10b981" : "#94a3b8"} style={{ marginRight: 12 }} />
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Application & Usage</Text>
+              {expandedSection === "usage" ? <ChevronUp size={20} color="#94a3b8" /> : <ChevronDown size={20} color="#94a3b8" />}
+            </TouchableOpacity>
+            {expandedSection === "usage" && (
+              <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 15, lineHeight: 22 }}>
+                  Mix 2kg per acre with topsoil or dilute in water for drip irrigation. Apply every 45 days for maximum yield. Do not apply directly to leaves during high sun.
+                </Text>
               </View>
-            </View>
-            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 22 }}>$30<Text style={{ color: "#64748b", fontSize: 14 }}>/pcs</Text></Text>
+            )}
           </View>
 
-          {/* Quantity Selector */}
-          <View style={{ flexDirection: "row", justifyContent: "flex-end", alignItems: "center", marginBottom: 24 }}>
-            <TouchableOpacity style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: "#059669", alignItems: "center", justifyContent: "center" }}>
-              <Minus size={16} color="#ffffff" />
+          {/* Ingredients */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, borderWidth: 1, borderColor: expandedSection === "ingredients" ? "#10b981" : "#f1f5f9", overflow: "hidden", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.02, shadowRadius: 8, elevation: 2 }}>
+            <TouchableOpacity onPress={() => setExpandedSection(expandedSection === "ingredients" ? "" : "ingredients")} style={{ flexDirection: "row", alignItems: "center", padding: 20 }}>
+              <Leaf size={20} color={expandedSection === "ingredients" ? "#10b981" : "#94a3b8"} style={{ marginRight: 12 }} />
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Ingredients</Text>
+              {expandedSection === "ingredients" ? <ChevronUp size={20} color="#94a3b8" /> : <ChevronDown size={20} color="#94a3b8" />}
             </TouchableOpacity>
-            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginHorizontal: 16 }}>1pcs</Text>
-            <TouchableOpacity style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: "#059669", alignItems: "center", justifyContent: "center" }}>
-              <Plus size={16} color="#ffffff" />
-            </TouchableOpacity>
-          </View>
-
-          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 8 }}>Description</Text>
-          <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, lineHeight: 22, marginBottom: 24 }}>
-            Limes are closely related to lemons. They even look similar to them. Lime tree harvest is... <Text style={{ color: "#059669", fontFamily: "Brandon-Bold" }}>Read More</Text>
-          </Text>
-
-          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 16 }}>Related Products</Text>
-          <View style={{ flexDirection: "row", gap: 12 }}>
-            {[1,2,3,4].map((item) => (
-              <View key={item} style={{ flex: 1, height: 80, borderRadius: 16, overflow: "hidden" }}>
-                <Image source={require("../../../assets/images/image10.jpg")} style={{ width: "100%", height: "100%" }} />
+            {expandedSection === "ingredients" && (
+              <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 15, lineHeight: 22 }}>
+                  • 40% Organic Carbon{"\n"}• 2.5% Nitrogen (N){"\n"}• 1.5% Phosphorus (P){"\n"}• Seaweed Extract (Auxins)
+                </Text>
               </View>
-            ))}
+            )}
           </View>
         </View>
 
       </ScrollView>
 
-      {/* STICKY ADD TO CART */}
-      <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "#ffffff", paddingHorizontal: 24, paddingTop: 16, paddingBottom: 32 }}>
-        <TouchableOpacity style={{ backgroundColor: "#059669", borderRadius: 999, paddingVertical: 18, alignItems: "center", flexDirection: "row", justifyContent: "center" }}>
-          <Plus size={20} color="#ffffff" />
-          <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16, marginLeft: 8 }}>Add To Cart</Text>
+      {/* FLOATING ADD TO CART BOTTOM BAR */}
+      <View style={{ position: "absolute", bottom: 0, width: "100%", backgroundColor: "#ffffff", paddingHorizontal: 24, paddingVertical: 20, paddingBottom: Math.max(insets.bottom, 20), borderTopWidth: 1, borderTopColor: "#f1f5f9", flexDirection: "row", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: -10 }, shadowOpacity: 0.05, shadowRadius: 20, elevation: 15 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#f8fafc", borderRadius: 16, borderWidth: 1, borderColor: "#e2e8f0", marginRight: 16 }}>
+          <TouchableOpacity style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 24, lineHeight: 26 }}>-</Text>
+          </TouchableOpacity>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, width: 24, textAlign: "center" }}>1</Text>
+          <TouchableOpacity style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 24, lineHeight: 26 }}>+</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={{ flex: 1, backgroundColor: "#0f172a", borderRadius: 16, height: 56, flexDirection: "row", alignItems: "center", justifyContent: "center", shadowColor: "#0f172a", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16, elevation: 8 }}>
+          <ShoppingCart size={20} color="#ffffff" style={{ marginRight: 8 }} />
+          <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Add to Cart - ₹1,200</Text>
         </TouchableOpacity>
       </View>
+
     </View>
   );
 }

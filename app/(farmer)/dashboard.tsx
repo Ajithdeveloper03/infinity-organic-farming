@@ -1,442 +1,227 @@
-import { router } from "expo-router";
-import React, { useState } from "react";
+import React from "react";
 import {
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
   View,
-  Dimensions,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
   StyleSheet,
+  StatusBar,
+  ImageBackground,
+  Dimensions
 } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 import {
-  Bell,
-  Gift,
-  HeadphonesIcon,
-  History,
-  Leaf,
-  Star,
-  Droplet,
-  ChevronRight,
-  CloudRain,
-  Sun,
-  BadgeCheck,
-  Sparkles,
   MapPin,
-  TrendingUp,
   Sprout,
   Package,
+  TrendingUp,
+  Sun,
+  ShieldAlert,
+  ChevronRight,
+  Bell,
+  HelpCircle
 } from "lucide-react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useLanguage, LanguageTogglePill } from "../../context/LanguageContext";
 
 const { width } = Dimensions.get("window");
 
 export default function FarmerDashboardScreen() {
-  const { t, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState<"All" | "Crops" | "Fertilizers">("All");
+  const insets = useSafeAreaInsets();
 
   return (
     <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
-      {/* Agricultural Hero Background for Top to Main Section with Bottom-to-Top Overlay */}
-      <View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 380,
-          overflow: "hidden",
-        }}
-      >
-        <Image
-          source={require("../../assets/images/image4.jpg")}
-          style={{ width: "100%", height: "100%", opacity: 0.95 }}
-          resizeMode="cover"
-        />
-        {/* Bottom-to-top overlay blending into solid #f8fafc */}
-        <LinearGradient
-          colors={[
-            "rgba(248, 250, 252, 0.45)",
-            "rgba(248, 250, 252, 0.85)",
-            "#f8fafc",
-          ]}
-          locations={[0, 0.65, 1]}
-          style={StyleSheet.absoluteFill}
-        />
-      </View>
+      <StatusBar barStyle="light-content" />
 
-      <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* HEADER - Strictly Transparent Background with Farmer Profile & ID */}
-        <View
-          style={{ backgroundColor: "transparent" }}
-          className="px-5 pt-2 pb-3 z-10"
-        >
-          {/* Top Profile, Name & ID Header */}
-          <View className="flex-row items-center justify-between">
-            <View className="flex-1 mr-3 flex-row items-center">
-              <TouchableOpacity
-                activeOpacity={0.85}
-                onPress={() => router.push("/(farmer)/profile" as any)}
-                className="relative mr-3"
-              >
-                <View className="w-12 h-12 rounded-full overflow-hidden border-2 border-emerald-500/50 bg-emerald-100 shadow-sm items-center justify-center">
-                  <Image
-                    source={{
-                      uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-                    }}
-                    className="w-full h-full"
-                    resizeMode="cover"
-                  />
-                </View>
-                <View className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white" />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
+        
+        {/* HEADER HERO SECTION */}
+        <View style={{ width: "100%", height: 340, borderBottomLeftRadius: 40, borderBottomRightRadius: 40, overflow: "hidden", shadowColor: "#000", shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 10, backgroundColor: "#064e3b" }}>
+          <ImageBackground
+            source={require("../../assets/images/image4.jpg")}
+            style={{ width: "100%", height: "100%" }}
+            resizeMode="cover"
+          >
+            <LinearGradient
+              colors={["rgba(6, 78, 59, 0.9)", "rgba(6, 78, 59, 0.4)", "rgba(0,0,0,0)"]}
+              style={StyleSheet.absoluteFill}
+            />
+            
+            {/* Header Content Top */}
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 24, paddingTop: Math.max(insets.top, 20) + 10 }}>
+              <View>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 26, letterSpacing: 0.5 }}>Good morning,</Text>
+                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 26, letterSpacing: 0.5, marginTop: -4 }}>Muthuvel</Text>
+                <Text style={{ color: "rgba(255,255,255,0.85)", fontFamily: "Brandon-Medium", fontSize: 15, marginTop: 4 }}>You've got a great day ahead.</Text>
+              </View>
+              <TouchableOpacity onPress={() => router.push("/(farmer)/notifications")} style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "rgba(255,255,255,0.2)", alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.3)" }}>
+                <Bell size={22} color="#ffffff" />
+                <View style={{ position: "absolute", top: 12, right: 12, width: 10, height: 10, borderRadius: 5, backgroundColor: "#ef4444", borderWidth: 2, borderColor: "rgba(255,255,255,0.5)" }} />
               </TouchableOpacity>
+            </View>
 
-              <View className="flex-1 justify-center">
-                <View className="flex-row items-center">
-                  <Text
-                    className="text-slate-900 font-brandon-bold text-base tracking-tight"
-                    numberOfLines={1}
-                  >
-                    {language === "ta" ? "குப்புசாமி" : "Kuppusamy"}
-                  </Text>
-                  <BadgeCheck size={16} color="#10b981" className="ml-1.5" />
-                </View>
-                <View className="flex-row items-center mt-1">
-                  <View className="bg-emerald-100/95 border border-emerald-300/80 px-2.5 py-0.5 rounded-full flex-row items-center shadow-xs">
-                    <Text className="text-emerald-950 font-brandon-bold text-[10px] tracking-wide">
-                      ID: FMR-1002 • {t("farmer", "Farmer")}
-                    </Text>
-                  </View>
-                </View>
+            {/* Weather Overlay inside header */}
+            <View style={{ position: "absolute", bottom: 30, left: 24, right: 24, backgroundColor: "rgba(255,255,255,0.9)", borderRadius: 24, padding: 20, flexDirection: "row", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 15, elevation: 8 }}>
+              <View style={{ width: 56, height: 56, borderRadius: 16, backgroundColor: "#fffbeb", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                <Sun size={28} color="#f59e0b" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 22 }}>28°C Clear</Text>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14 }}>Coimbatore South, TN</Text>
               </View>
             </View>
 
-            <View className="flex-row items-center">
-              <LanguageTogglePill />
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => router.push("/(farmer)/notifications" as any)}
-                className="w-10 h-10 rounded-full bg-white/95 items-center justify-center border border-slate-200 shadow-sm ml-2"
-              >
-                <Bell size={18} color="#0f172a" />
-                <View className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border border-white" />
+          </ImageBackground>
+        </View>
+
+        {/* QUICK ACTIONS GRID */}
+        <View style={{ paddingHorizontal: 24, paddingTop: 32, paddingBottom: 16 }}>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 20 }}>Quick Actions</Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+            {[
+              { label: "My Farm", icon: MapPin, route: "/(farmer)/farm", bg: "#fef08a", color: "#ca8a04" },
+              { label: "Crops", icon: Sprout, route: "/(farmer)/crop-health", bg: "#dcfce7", color: "#16a34a" },
+              { label: "Orders", icon: Package, route: "/(farmer)/orders", bg: "#fee2e2", color: "#dc2626" },
+              { label: "Referrals", icon: TrendingUp, route: "/(farmer)/referral", bg: "#e0e7ff", color: "#4f46e5" },
+            ].map((item, idx) => (
+              <TouchableOpacity key={idx} onPress={() => router.push(item.route as any)} style={{ width: "23%", alignItems: "center", marginBottom: 20 }}>
+                <View style={{ width: 64, height: 64, borderRadius: 24, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 10, elevation: 3, marginBottom: 12, borderWidth: 1, borderColor: "#f1f5f9" }}>
+                  <View style={{ width: 44, height: 44, borderRadius: 16, backgroundColor: item.bg, alignItems: "center", justifyContent: "center" }}>
+                    <item.icon size={20} color={item.color} />
+                  </View>
+                </View>
+                <Text style={{ color: "#334155", fontFamily: "Brandon-Bold", fontSize: 12, textAlign: "center" }}>{item.label}</Text>
               </TouchableOpacity>
-            </View>
+            ))}
           </View>
+        </View>
 
-          {/* Quick Dual Switcher Badges (Crop & Fertilizer Mingle) */}
-          <View className="flex-row items-center justify-between mt-3.5">
-            <View className="flex-1 mr-2 rounded-full overflow-hidden shadow-sm">
-              <LinearGradient
-                colors={["#059669", "#047857"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{
-                  paddingVertical: 9,
-                  paddingHorizontal: 14,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 999,
-                }}
-              >
-                <Sparkles size={14} color="#a7f3d0" />
-                <Text className="text-white font-brandon-bold text-xs ml-1.5 uppercase tracking-wider">
-                  {t("vetiver", "Vetiver")} • 2.5 {t("acres", "Acres")}
-                </Text>
-              </LinearGradient>
+        {/* LIVE CROP STATUS (Horizontal Cards) */}
+        <View style={{ paddingHorizontal: 24, marginBottom: 32 }}>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 16 }}>Live Crop Status</Text>
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <View style={{ flex: 1, backgroundColor: "#ffffff", borderRadius: 24, padding: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9" }}>
+              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+                <Sprout size={16} color="#3b82f6" style={{ marginRight: 6 }} />
+                <Text style={{ color: "#3b82f6", fontFamily: "Brandon-Bold", fontSize: 12, textTransform: "uppercase" }}>VETIVER</Text>
+              </View>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16, marginBottom: 12 }}>Sector 1 (2.5 Ac)</Text>
+              <View style={{ backgroundColor: "#dcfce7", paddingHorizontal: 10, paddingVertical: 6, borderRadius: 12, alignSelf: "flex-start" }}>
+                <Text style={{ color: "#16a34a", fontFamily: "Brandon-Bold", fontSize: 11 }}>Optimal • Day 45</Text>
+              </View>
             </View>
 
-            <View className="flex-1 ml-2 rounded-full overflow-hidden shadow-sm">
-              <LinearGradient
-                colors={["#d97706", "#b45309"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{
-                  paddingVertical: 9,
-                  paddingHorizontal: 14,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 999,
-                }}
-              >
-                <Package size={14} color="#fef08a" />
-                <Text className="text-white font-brandon-bold text-xs ml-1.5 uppercase tracking-wider">
-                  {t("bioInputClient", "Bio-Input Client")}
-                </Text>
-              </LinearGradient>
+            <View style={{ flex: 1, backgroundColor: "#ffffff", borderRadius: 24, padding: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9" }}>
+              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
+                <Sun size={16} color="#f59e0b" style={{ marginRight: 6 }} />
+                <Text style={{ color: "#f59e0b", fontFamily: "Brandon-Bold", fontSize: 12, textTransform: "uppercase" }}>BANANA</Text>
+              </View>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16, marginBottom: 12 }}>Sector 2 (1.2 Ac)</Text>
+              <View style={{ backgroundColor: "#fee2e2", paddingHorizontal: 10, paddingVertical: 6, borderRadius: 12, alignSelf: "flex-start" }}>
+                <Text style={{ color: "#dc2626", fontFamily: "Brandon-Bold", fontSize: 11 }}>Needs Water</Text>
+              </View>
             </View>
           </View>
         </View>
 
-        <ScrollView
-          style={{ flex: 1 }}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 190, paddingTop: 20 }}
-        >
-          {/* Active Agronomy & Fertilizer Advisory Card (Medium Brightness & Elegance) */}
-         
-
-          {/* Category Tabs (All / Crops / Fertilizers) */}
-          <View className="mt-5 mb-5 px-5">
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: 10 }}
-            >
-              {(["All", "Crops", "Fertilizers"] as const).map((tab) => {
-                const isCurrent = activeTab === tab;
-                const tabLabel =
-                  tab === "All"
-                    ? t("all", "All")
-                    : tab === "Crops"
-                    ? t("crops", "Crops")
-                    : t("fertilizers", "Fertilizers");
-                return (
-                  <TouchableOpacity
-                    key={tab}
-                    activeOpacity={0.8}
-                    onPress={() => setActiveTab(tab)}
-                    className={`px-6 py-2.5 rounded-full border shadow-sm ${
-                      isCurrent
-                        ? "bg-[#15803d] border-[#15803d]"
-                        : "bg-white/95 border-slate-200"
-                    }`}
-                  >
-                    <Text
-                      className={`font-brandon-bold text-sm ${
-                        isCurrent ? "text-white" : "text-slate-700"
-                      }`}
-                    >
-                      {tabLabel}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
-
-          {/* Farm Overview Card with 3-stat cluster */}
-          {(activeTab === "Crops" || activeTab === "All") && (
-            <View className="px-5 mb-5">
-              <View className="flex-row justify-between items-center mb-3">
-                <Text className="text-lg font-brandon-bold text-slate-900">
-                  {t("farmOverview", "Farm Overview")}
-                </Text>
-                <TouchableOpacity onPress={() => router.push("/(farmer)/farm" as any)}>
-                  <Text className="text-[#15803d] font-brandon-bold text-xs uppercase tracking-wider">
-                    {t("viewDetails", "Details")}
-                  </Text>
-                </TouchableOpacity>
+        {/* FINANCIAL & YIELD OVERVIEW */}
+        <View style={{ paddingHorizontal: 24, marginBottom: 32 }}>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 16 }}>Financial Overview</Text>
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <View>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Expected Harvest Value</Text>
+                <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 24 }}>₹ 1,45,000</Text>
               </View>
-
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={() => router.push("/(farmer)/farm" as any)}
-                className="bg-white rounded-[24px] overflow-hidden shadow-sm border border-slate-200/90"
-              >
-                <View className="h-36 relative">
-                  <Image
-                    source={require("../../assets/images/image2.jpg")}
-                    className="w-full h-full"
-                    resizeMode="cover"
-                  />
-                  <LinearGradient
-                    colors={["transparent", "rgba(0,0,0,0.55)"]}
-                    style={StyleSheet.absoluteFill}
-                  />
-                  <View className="absolute bottom-3 left-4 flex-row items-center">
-                    <MapPin size={13} color="#a7f3d0" className="mr-1" />
-                    <Text className="text-white font-brandon-semibold text-xs drop-shadow-sm">
-                      Kuppusamy Organic Estate • Annur
-                    </Text>
-                  </View>
-                </View>
-
-                {/* 3-Stat Cluster in multi-color pastel backgrounds */}
-                <View className="p-3.5 flex-row gap-2.5 bg-white">
-                  <View className="flex-1 bg-emerald-50/90 border border-emerald-200/80 rounded-2xl p-3 items-center">
-                    <Text className="text-emerald-950 font-brandon-bold text-xl">
-                      2.5
-                    </Text>
-                    <Text className="text-emerald-800 text-[10px] uppercase font-brandon-bold tracking-widest mt-0.5">
-                      {t("acres", "Acres")}
-                    </Text>
-                  </View>
-
-                  <View className="flex-1 bg-sky-50/90 border border-sky-200/80 rounded-2xl p-3 items-center">
-                    <Text className="text-sky-950 font-brandon-bold text-base">
-                      {t("vetiver", "Vetiver")}
-                    </Text>
-                    <Text className="text-sky-800 text-[10px] uppercase font-brandon-bold tracking-widest mt-0.5">
-                      {t("cropType", "Crop Type")}
-                    </Text>
-                  </View>
-
-                  <View className="flex-1 bg-amber-50/90 border border-amber-200/80 rounded-2xl p-3 items-center">
-                    <Text className="text-amber-800 font-brandon-bold text-base">
-                      {t("optimal", "Optimal")}
-                    </Text>
-                    <Text className="text-amber-800 text-[10px] uppercase font-brandon-bold tracking-widest mt-0.5">
-                      {language === "ta" ? "வளம்" : "Health"}
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
-
-          {/* Recent Orders Section */}
-          {(activeTab === "Fertilizers" || activeTab === "All") && (
-            <View className="px-5 mb-5">
-              <View className="flex-row justify-between items-center mb-3">
-                <Text className="text-lg font-brandon-bold text-slate-900">
-                  {t("recentOrders", "Recent Orders")}
-                </Text>
-                <TouchableOpacity onPress={() => router.push("/(farmer)/orders" as any)}>
-                  <Text className="text-[#15803d] font-brandon-bold text-xs uppercase tracking-wider">
-                    {t("viewAll", "View All")}
-                  </Text>
-                </TouchableOpacity>
+              <View style={{ backgroundColor: "#ecfdf5", padding: 12, borderRadius: 16 }}>
+                <TrendingUp size={24} color="#10b981" />
               </View>
-
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={() => router.push("/(farmer)/orders" as any)}
-                className="bg-amber-50/80 rounded-[20px] p-4 border border-amber-200/90 shadow-sm flex-row items-center justify-between"
-              >
-                <View className="flex-row items-center flex-1 pr-2">
-                  <View className="w-12 h-12 bg-amber-100/90 border border-amber-300/80 rounded-2xl items-center justify-center mr-3.5 shadow-xs">
-                    <Droplet size={22} color="#b45309" />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-slate-900 font-brandon-bold text-sm">
-                      {language === "ta" ? "மண்புழு உரம் (50 கிலோ)" : "Organic Compost (50kg)"}
-                    </Text>
-                    <Text className="text-amber-900 font-brandon-medium text-xs mt-0.5">
-                      {language === "ta" ? "ஆர்டர் #8832 • அனுப்பப்பட்டது" : "Order #8832 • Dispatched"}
-                    </Text>
-                  </View>
-                </View>
-                <View className="items-end">
-                  <Text className="text-emerald-800 font-brandon-bold text-sm">
-                    ₹1,250
-                  </Text>
-                  <ChevronRight size={16} color="#78350f" className="mt-1" />
-                </View>
-              </TouchableOpacity>
             </View>
-          )}
-
-          {/* Quick Actions (Visits, Reports, Rate FO, Support) */}
-          <View className="px-5 mb-5">
-            <Text className="text-lg font-brandon-bold text-slate-900 mb-3.5">
-              {t("quickActions", "Quick Actions")}
-            </Text>
-            <View className="flex-row justify-between">
-              {[
-                {
-                  icon: History,
-                  label: t("visits", "Visits"),
-                  route: "/(farmer)/history",
-                  color: "#15803d",
-                  bgColor: "#ecfdf5",
-                  borderColor: "#a7f3d0",
-                },
-                {
-                  icon: Leaf,
-                  label: t("reports", "Reports"),
-                  route: "/(farmer)/recommendations",
-                  color: "#b45309",
-                  bgColor: "#fffbeb",
-                  borderColor: "#fde68a",
-                },
-                {
-                  icon: Star,
-                  label: t("rateOfficer", "Rate FO"),
-                  route: "/(farmer)/rate/v1",
-                  color: "#0369a1",
-                  bgColor: "#f0f9ff",
-                  borderColor: "#bae6fd",
-                },
-                {
-                  icon: HeadphonesIcon,
-                  label: t("support", "Support"),
-                  route: "/(farmer)/support",
-                  color: "#7e22ce",
-                  bgColor: "#faf5ff",
-                  borderColor: "#e9d5ff",
-                },
-              ].map((action, idx) => {
-                const Icon = action.icon;
-                return (
-                  <TouchableOpacity
-                    key={idx}
-                    activeOpacity={0.8}
-                    onPress={() => router.push(action.route as any)}
-                    className="items-center w-[22%]"
-                  >
-                    <View
-                      style={{
-                        backgroundColor: action.bgColor,
-                        borderColor: action.borderColor,
-                      }}
-                      className="w-16 h-16 rounded-[20px] items-center justify-center mb-2 border shadow-sm"
-                    >
-                      <Icon size={25} color={action.color} strokeWidth={1.8} />
-                    </View>
-                    <Text className="text-slate-800 text-xs font-brandon-bold text-center">
-                      {action.label}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
+            <View style={{ height: 1, width: "100%", backgroundColor: "#f1f5f9", marginBottom: 16 }} />
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 12 }}>Previous Payout</Text>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>₹ 42,500</Text>
+              </View>
+              <View>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 12 }}>Pending Advances</Text>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>₹ 0</Text>
+              </View>
             </View>
           </View>
+        </View>
 
-          {/* Refer & Earn Banner */}
-          <View className="px-5 mb-6">
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => router.push("/(farmer)/referral" as any)}
-              className="rounded-[24px] overflow-hidden shadow-sm"
+        {/* COMING UP BANNER */}
+        <View style={{ paddingHorizontal: 24, marginBottom: 32 }}>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 16 }}>Coming Up</Text>
+          <TouchableOpacity onPress={() => router.push("/(farmer)/recommendations")} style={{ width: "100%", height: 160, borderRadius: 24, overflow: "hidden", shadowColor: "#000", shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.1, shadowRadius: 15, elevation: 5 }}>
+            <ImageBackground
+              source={require("../../assets/images/image14.jpg")}
+              style={{ width: "100%", height: "100%", justifyContent: "flex-end" }}
             >
               <LinearGradient
-                colors={["#15803d", "#047857"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ padding: 22, position: "relative", overflow: "hidden" }}
-              >
-                <View style={{ position: "absolute", right: -15, bottom: -15, opacity: 0.15 }}>
-                  <Gift size={120} color="#fff" />
-                </View>
-                <View className="flex-row items-center justify-between">
-                  <View className="flex-1 pr-4">
-                    <Text className="text-white font-brandon-bold text-xl mb-1">
-                      {language === "ta" ? "பரிந்துரைத்து பரிசு வெல்க" : "Refer & Earn"}
-                    </Text>
-                    <Text className="text-white/85 text-xs leading-relaxed mb-3 font-brandon-medium">
-                      {language === "ta"
-                        ? "அண்டை விவசாயிகளை இணைத்து பரிசுகளைப் பெறுங்கள்!"
-                        : "Invite neighboring farmers and get bonus reward points!"}
-                    </Text>
-                    <View className="bg-white/20 py-1.5 px-4 rounded-full self-start border border-white/30">
-                      <Text className="text-white font-brandon-bold text-[11px] uppercase tracking-wider">
-                        {language === "ta" ? "பகிர்க" : "Share Invite"}
-                      </Text>
-                    </View>
+                colors={["transparent", "rgba(0,0,0,0.8)"]}
+                style={{ position: "absolute", bottom: 0, width: "100%", height: "70%" }}
+              />
+              <View style={{ padding: 20, flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" }}>
+                <View style={{ flex: 1, marginRight: 16 }}>
+                  <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}>
+                    <ShieldAlert size={14} color="#fcd34d" style={{ marginRight: 6 }} />
+                    <Text style={{ color: "#fcd34d", fontFamily: "Brandon-Bold", fontSize: 11, letterSpacing: 1 }}>PRIORITY ADVISORY</Text>
                   </View>
-                  <Gift size={44} color="#fff" />
+                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16, lineHeight: 22 }}>Bio-Fertilizer Application Due Tomorrow</Text>
                 </View>
-              </LinearGradient>
+                <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}>
+                  <ChevronRight size={18} color="#0f172a" />
+                </View>
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
+
+        {/* RECENT FARM ACTIVITY */}
+        <View style={{ paddingHorizontal: 24, marginBottom: 16 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18 }}>Recent Activity</Text>
+            <TouchableOpacity onPress={() => router.push("/(farmer)/history")}>
+              <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 14 }}>View Log</Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 20, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9", gap: 16 }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: "#10b981", marginRight: 12 }} />
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Medium", fontSize: 14 }}>Officer Robert completed a routine check.</Text>
+              <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 12 }}>2h ago</Text>
+            </View>
+            <View style={{ height: 1, width: "100%", backgroundColor: "#f1f5f9" }} />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: "#3b82f6", marginRight: 12 }} />
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Medium", fontSize: 14 }}>Order #4921 delivered successfully.</Text>
+              <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 12 }}>Yesterday</Text>
+            </View>
+            <View style={{ height: 1, width: "100%", backgroundColor: "#f1f5f9" }} />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: "#f59e0b", marginRight: 12 }} />
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Medium", fontSize: 14 }}>Weather alert: Heavy rain expected.</Text>
+              <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 12 }}>Oct 7</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* SUPPORT HUB BANNER */}
+        <TouchableOpacity onPress={() => router.push("/(farmer)/support")} style={{ marginHorizontal: 24, marginBottom: 32, backgroundColor: "#0f172a", borderRadius: 24, padding: 20, flexDirection: "row", alignItems: "center", shadowColor: "#0f172a", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16, elevation: 6 }}>
+          <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+            <HelpCircle size={24} color="#ffffff" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16, marginBottom: 4 }}>Need Assistance?</Text>
+            <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 13 }}>Visit the 24/7 Help Center</Text>
+          </View>
+          <ChevronRight size={20} color="#ffffff" />
+        </TouchableOpacity>
+
+      </ScrollView>
     </View>
   );
 }
-

@@ -4,103 +4,155 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Image,
+  StyleSheet,
   StatusBar,
+  ImageBackground,
+  Dimensions
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import * as Haptics from "expo-haptics";
 import {
   ChevronLeft,
-  Bell,
-  ArrowRight,
-  Plus,
+  ShieldCheck,
   FileText,
+  Download,
+  Eye,
+  CheckCircle2,
+  LockKeyhole,
+  FileCheck2
 } from "lucide-react-native";
-import { useLanguage } from "../../context/LanguageContext";
+
+const { width } = Dimensions.get("window");
 
 export default function FarmerDocumentsScreen() {
-  const { t, language } = useLanguage();
-
-  const documents = [
-    { id: 1, date: "May 24 . 5:43pm", title: "Organic Certificate Q2", desc: "Excellent harvest, the grapes have a rich flavor and aroma", image: require("../../assets/images/image10.jpg") },
-    { id: 2, title: "Soil Health Report", date: "May 20 . 2:15pm", desc: "Excellent harvest, the grapes have a rich flavor and aroma", image: require("../../assets/images/image2.jpg") },
-    { id: 3, title: "Yield Prediction", date: "May 18 . 9:00am", desc: "Excellent harvest, the grapes have a rich flavor and aroma", image: require("../../assets/images/image14.jpg") },
-    { id: 4, title: "NOC Document", date: "May 10 . 4:30pm", desc: "Excellent harvest, the grapes have a rich flavor and aroma", image: require("../../assets/images/image1.jpg") },
-  ];
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#e2ebe6" }}>
+    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
       <StatusBar barStyle="dark-content" />
 
-      {/* HEADER */}
-      <SafeAreaView>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16, paddingBottom: 16 }}>
-          <TouchableOpacity onPress={() => router.push("/(farmer)/dashboard")} style={{ padding: 8 }}>
-            <ChevronLeft size={24} color="#000000" />
-          </TouchableOpacity>
-          <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 18 }}>Documents & Notes</Text>
-          <TouchableOpacity style={{ padding: 8 }}>
-            <Bell size={20} color="#000000" />
-            <View style={{ position: "absolute", top: 10, right: 10, width: 6, height: 6, borderRadius: 3, backgroundColor: "#ef4444" }} />
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      {/* SECURE VAULT HEADER */}
+      <View style={{ width: "100%", height: 260, backgroundColor: "#064e3b", borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}>
+        {/* Geometric secure pattern overlay */}
+        <View style={{ position: "absolute", top: -50, right: -50, width: 200, height: 200, borderRadius: 100, backgroundColor: "rgba(255,255,255,0.05)" }} />
+        <View style={{ position: "absolute", bottom: -20, left: -40, width: 150, height: 150, borderRadius: 75, backgroundColor: "rgba(255,255,255,0.05)" }} />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
-        
-        {/* GREEN HERO CARD */}
-        <View style={{ marginHorizontal: 24, backgroundColor: "#065f33", borderRadius: 24, padding: 24, marginBottom: 32, shadowColor: "#065f33", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16, elevation: 8 }}>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <View>
-              <Text style={{ color: "rgba(255,255,255,0.8)", fontFamily: "Brandon-Medium", fontSize: 14, marginBottom: 8 }}>Certifications Status</Text>
-              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 36, letterSpacing: -1 }}>100%</Text>
-              <Text style={{ color: "rgba(255,255,255,0.9)", fontFamily: "Brandon-Medium", fontSize: 16, marginTop: 4 }}>Compliant</Text>
-            </View>
-            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center" }}>
-              <FileText size={32} color="#ffffff" />
-            </View>
-          </View>
-          <Text style={{ color: "rgba(255,255,255,0.9)", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 20 }}>
-            Today is a good day to apply for your annual organic renewal.
-          </Text>
-        </View>
-
-        {/* BOTTOM SHEET FOR NOTES */}
-        <View style={{ flex: 1, backgroundColor: "#ffffff", borderTopLeftRadius: 40, borderTopRightRadius: 40, padding: 32, minHeight: 500 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-            <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 22 }}>Notes</Text>
-            <TouchableOpacity style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: "#f1f5f9", alignItems: "center", justifyContent: "center" }}>
-              <ArrowRight size={16} color="#64748b" />
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 10 }}>
+            <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace("/(farmer)/dashboard")} style={{ padding: 10, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 16 }}>
+              <ChevronLeft size={24} color="#ffffff" />
             </TouchableOpacity>
+            <View style={{ padding: 10, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 16 }}>
+              <LockKeyhole size={20} color="#ffffff" />
+            </View>
           </View>
 
-          {/* TIMELINE LIST */}
-          <View style={{ gap: 24 }}>
-            {documents.map((doc) => (
-              <View key={doc.id} style={{ flexDirection: "row", alignItems: "flex-start" }}>
-                <Image source={doc.image} style={{ width: 72, height: 72, borderRadius: 16, marginRight: 16 }} />
-                <View style={{ flex: 1 }}>
-                  <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 16 }}>{doc.date}</Text>
-                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 4, lineHeight: 20 }}>
-                    {doc.desc}
-                  </Text>
-                </View>
+          <View style={{ paddingHorizontal: 24, marginTop: 24 }}>
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 32, lineHeight: 38 }}>
+              Digital Vault
+            </Text>
+            <View style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}>
+              <ShieldCheck size={16} color="#4ade80" style={{ marginRight: 6 }} />
+              <Text style={{ color: "rgba(255,255,255,0.8)", fontFamily: "Brandon-Medium", fontSize: 15 }}>
+                256-bit encrypted & Govt. Verified
+              </Text>
+            </View>
+          </View>
+        </SafeAreaView>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 150, paddingTop: 24 }}>
+        
+        {/* PRIMARY DOCUMENTS - CAROUSEL */}
+        <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginBottom: 16 }}>Identity & Land</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -24, paddingHorizontal: 24, paddingBottom: 24 }}>
+          
+          {/* Aadhar Card */}
+          <View style={{ width: 260, backgroundColor: "#ffffff", borderRadius: 24, padding: 20, marginRight: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.05, shadowRadius: 16, elevation: 5, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+              <View style={{ width: 48, height: 48, borderRadius: 16, backgroundColor: "#eff6ff", alignItems: "center", justifyContent: "center" }}>
+                <FileText size={24} color="#3b82f6" />
               </View>
-            ))}
+              <View style={{ backgroundColor: "#dcfce7", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, flexDirection: "row", alignItems: "center" }}>
+                <CheckCircle2 size={12} color="#16a34a" style={{ marginRight: 4 }} />
+                <Text style={{ color: "#16a34a", fontFamily: "Brandon-Bold", fontSize: 11 }}>VERIFIED</Text>
+              </View>
+            </View>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 4 }}>Aadhar Card</Text>
+            <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginBottom: 20 }}>XXXX-XXXX-8942</Text>
+            
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <TouchableOpacity style={{ flex: 1, backgroundColor: "#f8fafc", paddingVertical: 10, borderRadius: 12, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                <Eye size={16} color="#0f172a" style={{ marginRight: 6 }} />
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 13 }}>View</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: "#f8fafc", padding: 10, borderRadius: 12, alignItems: "center", justifyContent: "center" }}>
+                <Download size={18} color="#0f172a" />
+              </TouchableOpacity>
+            </View>
           </View>
 
+          {/* Patta Card */}
+          <View style={{ width: 260, backgroundColor: "#ffffff", borderRadius: 24, padding: 20, marginRight: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.05, shadowRadius: 16, elevation: 5, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+              <View style={{ width: 48, height: 48, borderRadius: 16, backgroundColor: "#fffbeb", alignItems: "center", justifyContent: "center" }}>
+                <FileCheck2 size={24} color="#f59e0b" />
+              </View>
+              <View style={{ backgroundColor: "#dcfce7", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, flexDirection: "row", alignItems: "center" }}>
+                <CheckCircle2 size={12} color="#16a34a" style={{ marginRight: 4 }} />
+                <Text style={{ color: "#16a34a", fontFamily: "Brandon-Bold", fontSize: 11 }}>VERIFIED</Text>
+              </View>
+            </View>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 4 }}>Land Chitta / Patta</Text>
+            <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginBottom: 20 }}>Doc No: 4921/2026</Text>
+            
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <TouchableOpacity style={{ flex: 1, backgroundColor: "#f8fafc", paddingVertical: 10, borderRadius: 12, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                <Eye size={16} color="#0f172a" style={{ marginRight: 6 }} />
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 13 }}>View</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: "#f8fafc", padding: 10, borderRadius: 12, alignItems: "center", justifyContent: "center" }}>
+                <Download size={18} color="#0f172a" />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+        </ScrollView>
+
+        {/* ORGANIC CERTIFICATES - VERTICAL LIST */}
+        <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginBottom: 16 }}>Farm Certifications</Text>
+        
+        <View style={{ gap: 16 }}>
+          {/* Cert 1 */}
+          <TouchableOpacity style={{ backgroundColor: "#ffffff", borderRadius: 20, padding: 16, flexDirection: "row", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <View style={{ width: 56, height: 56, borderRadius: 16, backgroundColor: "#ecfdf5", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+              <ShieldCheck size={28} color="#10b981" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16, marginBottom: 2 }}>NPOP Organic Certified</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Valid till: Dec 2027</Text>
+            </View>
+            <TouchableOpacity style={{ backgroundColor: "#f8fafc", padding: 10, borderRadius: 12 }}>
+              <Eye size={20} color="#0f172a" />
+            </TouchableOpacity>
+          </TouchableOpacity>
+
+          {/* Cert 2 */}
+          <TouchableOpacity style={{ backgroundColor: "#ffffff", borderRadius: 20, padding: 16, flexDirection: "row", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <View style={{ width: 56, height: 56, borderRadius: 16, backgroundColor: "#f5f3ff", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+              <FileCheck2 size={28} color="#8b5cf6" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16, marginBottom: 2 }}>Soil Quality Test Report</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Tested: Oct 2026</Text>
+            </View>
+            <TouchableOpacity style={{ backgroundColor: "#f8fafc", padding: 10, borderRadius: 12 }}>
+              <Eye size={20} color="#0f172a" />
+            </TouchableOpacity>
+          </TouchableOpacity>
         </View>
 
       </ScrollView>
-
-      {/* FLOATING ACTION BUTTON */}
-      <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: "#ffffff", paddingHorizontal: 24, paddingTop: 16, paddingBottom: 32 }}>
-        <TouchableOpacity style={{ backgroundColor: "#065f33", borderRadius: 999, paddingVertical: 18, alignItems: "center", flexDirection: "row", justifyContent: "center" }}>
-          <Plus size={20} color="#ffffff" />
-          <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16, marginLeft: 8 }}>Add New Note</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }

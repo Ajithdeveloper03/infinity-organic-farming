@@ -1,98 +1,123 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
+  ScrollView,
   TouchableOpacity,
-  Image,
-  StyleSheet,
+  TextInput,
   StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  Image
 } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import * as Haptics from "expo-haptics";
 import {
-  Star,
-  Leaf,
   ChevronLeft,
+  Star,
   CheckCircle2,
+  ThumbsUp
 } from "lucide-react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { useLanguage } from "../../../context/LanguageContext";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function FarmerRateScreen() {
-  const { t, language } = useLanguage();
+export default function RateOfficerScreen() {
+  const insets = useSafeAreaInsets();
+  const [rating, setRating] = useState(0);
+  const [feedback, setFeedback] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  return (
-    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
-      <StatusBar barStyle="dark-content" />
-
-      {/* HEADER */}
-      <SafeAreaView style={{ zIndex: 10 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <ChevronLeft size={24} color="#000000" />
-          </TouchableOpacity>
+  if (submitted) {
+    return (
+      <View style={{ flex: 1, backgroundColor: "#10b981", alignItems: "center", justifyContent: "center", padding: 24 }}>
+        <StatusBar barStyle="light-content" />
+        <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: "rgba(255,255,255,0.2)", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>
+          <ThumbsUp size={48} color="#ffffff" />
         </View>
-      </SafeAreaView>
-
-      {/* TOP CONTENT (Smart Solutions Concept from Image 1 Left) */}
-      <View style={{ paddingHorizontal: 32, paddingTop: 40 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}>
-          <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#e2e8f0", alignItems: "center", justifyContent: "center", marginRight: 12 }}>
-            <Leaf size={20} color="#059669" />
-          </View>
-          <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 24 }}>Infinity Organics</Text>
-        </View>
-
-        <Text style={{ color: "#059669", fontFamily: "Brandon-Bold", fontSize: 36, lineHeight: 40 }}>
-          Smart <Text style={{ color: "#000000" }}>Solutions</Text>
+        <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 32, textAlign: "center", marginBottom: 12 }}>Thank You!</Text>
+        <Text style={{ color: "rgba(255,255,255,0.8)", fontFamily: "Brandon-Medium", fontSize: 16, textAlign: "center", marginBottom: 40, lineHeight: 24 }}>
+          Your feedback helps us maintain the highest standard of agronomy support.
         </Text>
-        <Text style={{ color: "#059669", fontFamily: "Brandon-Bold", fontSize: 36, lineHeight: 40, marginTop: -4 }}>
-          Modern <Text style={{ color: "#000000" }}>Farmers</Text>
-        </Text>
-
-        <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, marginTop: 16, lineHeight: 22 }}>
-          Empowering farmers with smart tools for better yields and decisions. How was our officer's visit today?
-        </Text>
-      </View>
-
-      {/* RATING CARD */}
-      <View style={{ marginHorizontal: 32, marginTop: 40, backgroundColor: "#ffffff", borderRadius: 32, padding: 32, shadowColor: "#059669", shadowOffset: { width: 0, height: 16 }, shadowOpacity: 0.1, shadowRadius: 32, elevation: 12, zIndex: 10 }}>
-        <Text style={{ color: "#000000", fontFamily: "Brandon-Bold", fontSize: 20, textAlign: "center", marginBottom: 24 }}>Rate Visit Experience</Text>
-        
-        <View style={{ flexDirection: "row", justifyContent: "center", gap: 12, marginBottom: 32 }}>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <TouchableOpacity key={star}>
-              <Star size={32} color={star <= 4 ? "#fbbf24" : "#e2e8f0"} fill={star <= 4 ? "#fbbf24" : "transparent"} />
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <TouchableOpacity 
-          style={{ backgroundColor: "#059669", borderRadius: 999, paddingVertical: 16, alignItems: "center", flexDirection: "row", justifyContent: "center" }}
-          onPress={() => {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            router.push("/(farmer)/dashboard" as any);
-          }}
-        >
-          <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16, marginRight: 8 }}>Submit Feedback</Text>
-          <CheckCircle2 size={18} color="#ffffff" />
+        <TouchableOpacity onPress={() => router.replace("/(farmer)/dashboard")} style={{ backgroundColor: "#ffffff", paddingHorizontal: 32, paddingVertical: 16, borderRadius: 999 }}>
+          <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 16 }}>Back to Dashboard</Text>
         </TouchableOpacity>
       </View>
+    );
+  }
 
-      {/* BOTTOM ILLUSTRATION */}
-      <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "45%" }}>
-        <Image
-          source={require("../../../assets/images/image6.jpg")} // Use tractor image
-          style={{ width: "100%", height: "100%", opacity: 0.9 }}
-          resizeMode="cover"
-        />
-        {/* Fading gradient upwards into white */}
-        <LinearGradient
-          colors={["#ffffff", "rgba(255,255,255,0.7)", "transparent"]}
-          style={{ position: "absolute", top: 0, left: 0, right: 0, height: 100 }}
-        />
-      </View>
-    </View>
+  return (
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      <StatusBar barStyle="dark-content" />
+
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 24, paddingTop: 10, marginBottom: 24 }}>
+          <TouchableOpacity onPress={() => router.back()} style={{ padding: 10, backgroundColor: "#ffffff", borderRadius: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2 }}>
+            <ChevronLeft size={24} color="#0f172a" />
+          </TouchableOpacity>
+        </View>
+
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 40 }}>
+          
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 32, lineHeight: 38, marginBottom: 32 }}>
+            Rate Your{"\n"}Last Visit
+          </Text>
+
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 32, padding: 24, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.03, shadowRadius: 20, elevation: 5, marginBottom: 32, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <Image 
+              source={{ uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" }} 
+              style={{ width: 80, height: 80, borderRadius: 40, marginBottom: 16 }} 
+            />
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginBottom: 4 }}>Robert Walker</Text>
+            <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, marginBottom: 32 }}>Routine Inspection • Oct 2, 2026</Text>
+
+            {/* STAR RATING */}
+            <View style={{ flexDirection: "row", gap: 12, marginBottom: 12 }}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <TouchableOpacity key={star} onPress={() => setRating(star)}>
+                  <Star 
+                    size={40} 
+                    color={star <= rating ? "#f59e0b" : "#e2e8f0"} 
+                    fill={star <= rating ? "#f59e0b" : "transparent"} 
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+            <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 13 }}>
+              {rating === 0 ? "Tap a star to rate" : rating === 5 ? "Excellent service!" : rating > 2 ? "Good service" : "Needs improvement"}
+            </Text>
+          </View>
+
+          {/* FEEDBACK NOTES */}
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 16 }}>Additional Notes</Text>
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9", marginBottom: 32 }}>
+            <TextInput
+              style={{ fontFamily: "Brandon-Medium", fontSize: 16, color: "#0f172a", minHeight: 120, textAlignVertical: "top" }}
+              placeholder="How did the officer help you today? Any suggestions?"
+              placeholderTextColor="#94a3b8"
+              multiline
+              value={feedback}
+              onChangeText={setFeedback}
+            />
+          </View>
+
+          {/* TAGS */}
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 18, marginBottom: 16 }}>What stood out?</Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12, marginBottom: 40 }}>
+            {["Punctual", "Very Knowledgeable", "Friendly", "Solved my issue"].map((tag, idx) => (
+              <TouchableOpacity key={idx} style={{ backgroundColor: "#f8fafc", paddingHorizontal: 16, paddingVertical: 10, borderRadius: 999, borderWidth: 1, borderColor: "#e2e8f0" }}>
+                <Text style={{ color: "#475569", fontFamily: "Brandon-Medium", fontSize: 14 }}>{tag}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <TouchableOpacity 
+            onPress={() => setSubmitted(true)}
+            disabled={rating === 0}
+            style={{ backgroundColor: rating === 0 ? "#cbd5e1" : "#10b981", borderRadius: 20, paddingVertical: 18, alignItems: "center", shadowColor: rating === 0 ? "transparent" : "#10b981", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.3, shadowRadius: 16, elevation: 6 }}
+          >
+            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 16 }}>Submit Rating</Text>
+          </TouchableOpacity>
+
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }

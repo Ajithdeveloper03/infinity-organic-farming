@@ -96,7 +96,11 @@ export default function LoginScreen() {
         resizeMode="cover"
       >
         <LinearGradient
-          colors={["rgba(0,0,0,0.8)", "rgba(121,128,61,0.9)", "rgba(0,0,0,0.9)"]}
+          colors={
+            role === "farmer" 
+              ? ["rgba(255,255,255,0.7)", "rgba(16, 185, 129, 0.4)", "rgba(6, 78, 59, 0.9)"]
+              : ["rgba(0,0,0,0.8)", "rgba(121,128,61,0.9)", "rgba(0,0,0,0.9)"]
+          }
           style={StyleSheet.absoluteFill}
         />
         <SafeAreaView style={{ flex: 1 }}>
@@ -110,7 +114,7 @@ export default function LoginScreen() {
             <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center", paddingHorizontal: 24 }}>
               
               <View style={{ alignItems: "center", marginBottom: 40 }}>
-                <View style={{ width: 180, height: 180, borderRadius: 24, backgroundColor: "rgba(255,255,255,0.8)", alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.6)", marginBottom: 24 }}>
+                <View style={{ width: 180, height: 180, borderRadius: 24, backgroundColor: role === "farmer" ? "#ffffff" : "rgba(255,255,255,0.8)", alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.6)", marginBottom: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 8 }, shadowOpacity: role === "farmer" ? 0.1 : 0, shadowRadius: 16, elevation: role === "farmer" ? 5 : 0 }}>
                   <Image source={require("../../assets/images/logo.png")} style={{ width: 150, height: 150 }} resizeMode="contain" />
                 </View>
                 <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 36, textAlign: "center", letterSpacing: 1 }}>

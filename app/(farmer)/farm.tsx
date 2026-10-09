@@ -1,162 +1,243 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
-  ImageBackground,
   StyleSheet,
   StatusBar,
-  Image
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import {
   ChevronLeft,
-  Droplets,
-  ThermometerSun,
+  MapPin,
+  User,
+  Building2,
+  FileText,
   Leaf,
-  Scan,
-  Activity,
-  Wind,
-  Layers,
-  FlaskConical
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Map
 } from "lucide-react-native";
-import { useLanguage } from "../../context/LanguageContext";
 
-export default function FarmerFarmScreen() {
-  const { t, language } = useLanguage();
+export default function FarmerDetailsScreen() {
+  const [expandedSection, setExpandedSection] = useState("personal");
+
+  const toggleSection = (section: string) => {
+    setExpandedSection(expandedSection === section ? "" : section);
+  };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#062214" }}>
-      <StatusBar barStyle="light-content" />
+    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
+      <StatusBar barStyle="dark-content" />
 
-      {/* FULL-SCREEN IMMERSIVE BACKGROUND */}
-      <ImageBackground
-        source={require("../../assets/images/image2.jpg")}
-        style={{ flex: 1 }}
-        resizeMode="cover"
-      >
-        <LinearGradient
-          colors={["rgba(6, 34, 20, 0.4)", "rgba(6, 34, 20, 0.9)", "#062214", "#062214"]}
-          locations={[0, 0.4, 0.8, 1]}
-          style={StyleSheet.absoluteFill}
-        />
+      <SafeAreaView style={{ flex: 1 }}>
+        
+        {/* HEADER */}
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16, paddingBottom: 24 }}>
+          <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace("/(farmer)/dashboard")} style={{ padding: 8, backgroundColor: "#ffffff", borderRadius: 999, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 }}>
+            <ChevronLeft size={24} color="#0f172a" />
+          </TouchableOpacity>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20 }}>Complete Profile</Text>
+          <View style={{ width: 40 }} />
+        </View>
 
-        <SafeAreaView style={{ flex: 1 }}>
-          {/* HEADER */}
-          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
-            <TouchableOpacity
-              onPress={() => router.push("/(farmer)/dashboard")}
-              style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.15)", alignItems: "center", justifyContent: "center", backdropFilter: "blur(10px)" }}
-            >
-              <ChevronLeft size={24} color="#ffffff" />
-            </TouchableOpacity>
-            
-            <TouchableOpacity
-              style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.15)", alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.3)" }}
-            >
-              <Scan size={20} color="#ffffff" />
-            </TouchableOpacity>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 150 }}>
+          
+          {/* TOP SUMMARY */}
+          <View style={{ alignItems: "center", marginBottom: 32 }}>
+            <View style={{ width: 88, height: 88, borderRadius: 44, backgroundColor: "#ffffff", padding: 4, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 12, elevation: 5, marginBottom: 16 }}>
+              <Image source={{ uri: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80" }} style={{ width: "100%", height: "100%", borderRadius: 40 }} />
+            </View>
+            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 24 }}>Muthuvel</Text>
+            <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#ecfdf5", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 999, marginTop: 8 }}>
+              <CheckCircle2 size={14} color="#10b981" />
+              <Text style={{ color: "#065f46", fontFamily: "Brandon-Bold", fontSize: 12, marginLeft: 6 }}>100% VERIFIED</Text>
+            </View>
           </View>
 
-          <ScrollView 
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 40, paddingBottom: 100 }}
-          >
-            {/* BIG HERO TEXT */}
-            <View style={{ marginBottom: 40 }}>
-              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 48, lineHeight: 52, letterSpacing: -1 }}>
-                {language === "ta" ? "உங்கள்\nதோட்டம்" : "Kuppusamy\nEstate"}
-              </Text>
-              <Text style={{ color: "#a7f3d0", fontFamily: "Brandon-Bold", fontSize: 20, marginTop: 8 }}>
-                {language === "ta" ? "முழுமையான நிலப்பரப்பு பகுப்பாய்வு" : "Comprehensive Land Analysis"}
-              </Text>
-              <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 14, marginTop: 16, lineHeight: 24 }}>
-                {language === "ta" 
-                  ? "உங்கள் 2.5 ஏக்கர் நிலத்தின் முழுமையான தரவுகள். மண் வளம், நீர் மேலாண்மை மற்றும் பயிர் ஆரோக்கியம் ஆகியவற்றை செயற்கை நுண்ணறிவு மூலம் கண்காணிக்கிறோம்." 
-                  : "Deep dive into your 2.5-acre estate. We utilize AI-driven telemetry to monitor soil health, hydration levels, and overall crop vitality in real-time."}
-              </Text>
-            </View>
+          {/* ACCORDION SECTIONS */}
 
-            {/* PRIMARY METRICS GRID */}
-            <View style={{ gap: 16, marginBottom: 32 }}>
-              <View style={{ flexDirection: "row", gap: 16 }}>
-                <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.08)", borderRadius: 24, padding: 20, borderWidth: 1, borderColor: "rgba(255,255,255,0.15)" }}>
-                  <Layers size={24} color="#a7f3d0" style={{ marginBottom: 12 }} />
-                  <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Medium", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>Total Area</Text>
-                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 32, marginTop: 4 }}>2.5 <Text style={{ fontSize: 16, color: "#a7f3d0" }}>ac</Text></Text>
+          {/* 1. Personal & Contact Details */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, marginBottom: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2, borderWidth: 1, borderColor: expandedSection === "personal" ? "#10b981" : "#f1f5f9", overflow: "hidden" }}>
+            <TouchableOpacity onPress={() => toggleSection("personal")} style={{ flexDirection: "row", alignItems: "center", padding: 20 }}>
+              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#f0fdfa", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                <User size={20} color="#0d9488" />
+              </View>
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Personal Information</Text>
+              {expandedSection === "personal" ? <ChevronUp size={20} color="#94a3b8" /> : <ChevronDown size={20} color="#94a3b8" />}
+            </TouchableOpacity>
+            
+            {expandedSection === "personal" && (
+              <View style={{ paddingHorizontal: 20, paddingBottom: 20, paddingTop: 4, borderTopWidth: 1, borderTopColor: "#f1f5f9" }}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 12 }}>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14 }}>Full Name</Text>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>Muthuvel S.</Text>
                 </View>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 12 }}>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14 }}>Phone Number</Text>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>+91 98765 43210</Text>
+                </View>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 12 }}>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14 }}>Aadhar Number</Text>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>XXXX XXXX 8942</Text>
+                </View>
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14 }}>Date of Birth</Text>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>14 Oct 1982</Text>
+                </View>
+              </View>
+            )}
+          </View>
+
+          {/* 2. Address & Geography */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, marginBottom: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2, borderWidth: 1, borderColor: expandedSection === "address" ? "#10b981" : "#f1f5f9", overflow: "hidden" }}>
+            <TouchableOpacity onPress={() => toggleSection("address")} style={{ flexDirection: "row", alignItems: "center", padding: 20 }}>
+              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#fffbeb", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                <MapPin size={20} color="#f59e0b" />
+              </View>
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Address Details</Text>
+              {expandedSection === "address" ? <ChevronUp size={20} color="#94a3b8" /> : <ChevronDown size={20} color="#94a3b8" />}
+            </TouchableOpacity>
+            
+            {expandedSection === "address" && (
+              <View style={{ paddingHorizontal: 20, paddingBottom: 20, paddingTop: 4, borderTopWidth: 1, borderTopColor: "#f1f5f9" }}>
+                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 15, marginBottom: 4 }}>42, Pillaiyar Koil Street</Text>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, marginBottom: 2 }}>Annur North, Coimbatore South</Text>
+                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14, marginBottom: 16 }}>Tamil Nadu - 641653</Text>
                 
-                <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.08)", borderRadius: 24, padding: 20, borderWidth: 1, borderColor: "rgba(255,255,255,0.15)" }}>
-                  <Leaf size={24} color="#4ade80" style={{ marginBottom: 12 }} />
-                  <Text style={{ color: "rgba(255,255,255,0.6)", fontFamily: "Brandon-Medium", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>Active Crop</Text>
-                  <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 24, marginTop: 4, lineHeight: 32 }}>Vetiver</Text>
+                <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#f8fafc", padding: 12, borderRadius: 12 }}>
+                  <Map size={16} color="#0f172a" style={{ marginRight: 8 }} />
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 13 }}>GPS: 11.0168° N, 76.9558° E</Text>
                 </View>
               </View>
-            </View>
+            )}
+          </View>
 
-            {/* DETAILED EXPLANATION SECTION: SOIL HEALTH */}
-            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 24, marginBottom: 16 }}>Soil & Hydration Profile</Text>
+          {/* 3. Bank & Financial */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, marginBottom: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2, borderWidth: 1, borderColor: expandedSection === "bank" ? "#10b981" : "#f1f5f9", overflow: "hidden" }}>
+            <TouchableOpacity onPress={() => toggleSection("bank")} style={{ flexDirection: "row", alignItems: "center", padding: 20 }}>
+              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#eff6ff", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                <Building2 size={20} color="#3b82f6" />
+              </View>
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Bank Information</Text>
+              {expandedSection === "bank" ? <ChevronUp size={20} color="#94a3b8" /> : <ChevronDown size={20} color="#94a3b8" />}
+            </TouchableOpacity>
             
-            <View style={{ backgroundColor: "#ffffff", borderRadius: 32, padding: 24, marginBottom: 32 }}>
-              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
-                <View style={{ width: 80, height: 80, borderRadius: 40, borderWidth: 6, borderColor: "#059669", alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{ color: "#05180d", fontFamily: "Brandon-Bold", fontSize: 22 }}>70%</Text>
+            {expandedSection === "bank" && (
+              <View style={{ paddingHorizontal: 20, paddingBottom: 20, paddingTop: 4, borderTopWidth: 1, borderTopColor: "#f1f5f9" }}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 12 }}>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14 }}>Bank Name</Text>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>State Bank of India</Text>
                 </View>
-                <View style={{ flex: 1, marginLeft: 20 }}>
-                  <Text style={{ color: "#05180d", fontFamily: "Brandon-Bold", fontSize: 20 }}>Optimal Moisture</Text>
-                  <Text style={{ color: "#059669", fontFamily: "Brandon-Medium", fontSize: 14, marginTop: 2 }}>Irrigation not required</Text>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 12 }}>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14 }}>Branch</Text>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>Annur Main Branch</Text>
                 </View>
-              </View>
-
-              <Text style={{ color: "#475569", fontFamily: "Brandon-Medium", fontSize: 14, lineHeight: 22, marginBottom: 24 }}>
-                The volumetric water content (VWC) of your topsoil is currently stable at 70%. The deep-root nature of the Vetiver crop is retaining moisture effectively despite the recent heatwave. We recommend holding off on any manual irrigation for the next 48 hours to prevent root rot and allow natural aeration.
-              </Text>
-
-              <View style={{ flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: "#f1f5f9", paddingTop: 20 }}>
-                <View style={{ alignItems: "center" }}>
-                  <ThermometerSun size={20} color="#ea580c" />
-                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16, marginTop: 8 }}>32°C</Text>
-                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 11 }}>Temp</Text>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 12 }}>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14 }}>Account Number</Text>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>XXXX-XXXX-9902</Text>
                 </View>
-                <View style={{ alignItems: "center" }}>
-                  <FlaskConical size={20} color="#0284c7" />
-                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16, marginTop: 8 }}>6.8</Text>
-                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 11 }}>pH Level</Text>
-                </View>
-                <View style={{ alignItems: "center" }}>
-                  <Wind size={20} color="#0891b2" />
-                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16, marginTop: 8 }}>12 km/h</Text>
-                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 11 }}>Wind</Text>
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                  <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 14 }}>IFSC Code</Text>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 14 }}>SBIN000XXXX</Text>
                 </View>
               </View>
-            </View>
+            )}
+          </View>
 
-            {/* DETAILED EXPLANATION SECTION: VITALITY */}
-            <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 24, marginBottom: 16 }}>Crop Vitality Analysis</Text>
+          {/* 4. Farm & Land Details */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, marginBottom: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2, borderWidth: 1, borderColor: expandedSection === "farm" ? "#10b981" : "#f1f5f9", overflow: "hidden" }}>
+            <TouchableOpacity onPress={() => toggleSection("farm")} style={{ flexDirection: "row", alignItems: "center", padding: 20 }}>
+              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#ecfdf5", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                <Leaf size={20} color="#10b981" />
+              </View>
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Farm & Land Details</Text>
+              {expandedSection === "farm" ? <ChevronUp size={20} color="#94a3b8" /> : <ChevronDown size={20} color="#94a3b8" />}
+            </TouchableOpacity>
             
-            <View style={{ backgroundColor: "rgba(255,255,255,0.08)", borderRadius: 32, padding: 24, borderWidth: 1, borderColor: "rgba(255,255,255,0.15)" }}>
-              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}>
-                <Activity size={24} color="#a7f3d0" />
-                <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18, marginLeft: 12 }}>Growth Phase: Maturation</Text>
+            {expandedSection === "farm" && (
+              <View style={{ paddingHorizontal: 20, paddingBottom: 20, paddingTop: 4, borderTopWidth: 1, borderTopColor: "#f1f5f9" }}>
+                
+                <View style={{ backgroundColor: "#f8fafc", padding: 16, borderRadius: 16, marginBottom: 16 }}>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16, marginBottom: 12 }}>Primary Crop: Vetiver</Text>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
+                    <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Variety</Text>
+                    <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 13 }}>KS-1</Text>
+                  </View>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
+                    <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Acreage</Text>
+                    <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 13 }}>2.5 Acres</Text>
+                  </View>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Certification</Text>
+                    <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 13 }}>100% Organic</Text>
+                  </View>
+                </View>
+
+                <View style={{ backgroundColor: "#f8fafc", padding: 16, borderRadius: 16 }}>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16, marginBottom: 12 }}>Secondary Crop: Banana</Text>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
+                    <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Variety</Text>
+                    <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 13 }}>Grand Naine</Text>
+                  </View>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
+                    <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Acreage</Text>
+                    <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 13 }}>1.2 Acres</Text>
+                  </View>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Certification</Text>
+                    <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 13 }}>100% Organic</Text>
+                  </View>
+                </View>
+
               </View>
-              
-              <Text style={{ color: "rgba(255,255,255,0.7)", fontFamily: "Brandon-Medium", fontSize: 14, lineHeight: 24, marginBottom: 20 }}>
-                Your Vetiver crop has successfully entered the secondary maturation phase. The leaf tensile strength indicates excellent bio-silica absorption. However, slight nitrogen deficiency was detected in the northern sector of the estate. 
-                {"\n\n"}
-                Applying a mild organic bio-compost top-dressing within the next 5 days will ensure the root oils develop maximum aromatic concentration before the scheduled harvest next month.
-              </Text>
+            )}
+          </View>
 
-              <TouchableOpacity onPress={() => router.push("/(farmer)/crop-health")} style={{ backgroundColor: "#ffffff", borderRadius: 16, paddingVertical: 14, alignItems: "center" }}>
-                <Text style={{ color: "#062214", fontFamily: "Brandon-Bold", fontSize: 14 }}>View detailed NPK Charts</Text>
-              </TouchableOpacity>
-            </View>
+          {/* 5. Uploaded Documents */}
+          <View style={{ backgroundColor: "#ffffff", borderRadius: 24, marginBottom: 16, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2, borderWidth: 1, borderColor: expandedSection === "docs" ? "#10b981" : "#f1f5f9", overflow: "hidden" }}>
+            <TouchableOpacity onPress={() => toggleSection("docs")} style={{ flexDirection: "row", alignItems: "center", padding: 20 }}>
+              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: "#fdf4ff", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+                <FileText size={20} color="#d946ef" />
+              </View>
+              <Text style={{ flex: 1, color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Official Documents</Text>
+              {expandedSection === "docs" ? <ChevronUp size={20} color="#94a3b8" /> : <ChevronDown size={20} color="#94a3b8" />}
+            </TouchableOpacity>
+            
+            {expandedSection === "docs" && (
+              <View style={{ paddingHorizontal: 20, paddingBottom: 20, paddingTop: 4, borderTopWidth: 1, borderTopColor: "#f1f5f9" }}>
+                
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Medium", fontSize: 15 }}>Aadhar Card</Text>
+                  <View style={{ backgroundColor: "#ecfdf5", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 8 }}>
+                    <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 12 }}>Verified</Text>
+                  </View>
+                </View>
 
-          </ScrollView>
-        </SafeAreaView>
-      </ImageBackground>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Medium", fontSize: 15 }}>Bank Passbook</Text>
+                  <View style={{ backgroundColor: "#ecfdf5", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 8 }}>
+                    <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 12 }}>Verified</Text>
+                  </View>
+                </View>
+
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                  <Text style={{ color: "#0f172a", fontFamily: "Brandon-Medium", fontSize: 15 }}>Chitta / Patta (Land Docs)</Text>
+                  <View style={{ backgroundColor: "#ecfdf5", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 8 }}>
+                    <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 12 }}>Verified</Text>
+                  </View>
+                </View>
+
+              </View>
+            )}
+          </View>
+
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 }

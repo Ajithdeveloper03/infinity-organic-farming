@@ -4,151 +4,134 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  ImageBackground,
-  Image,
   StyleSheet,
   StatusBar,
+  Image,
+  Dimensions
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import * as Haptics from "expo-haptics";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  ChevronLeft,
-  Bell,
-  Star,
   Settings,
-  CircleCheck,
+  LogOut,
+  MapPin,
+  ChevronRight,
   ShieldCheck,
-  Trophy,
+  Package,
+  Sprout,
+  User,
+  HeartHandshake
 } from "lucide-react-native";
-import { useLanguage } from "../../context/LanguageContext";
 
 export default function FarmerProfileScreen() {
-  const { t, language } = useLanguage();
+  const insets = useSafeAreaInsets();
+
+  const handleLogout = async () => {
+    await AsyncStorage.clear();
+    router.replace("/");
+  };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#f0fdf4" }}>
+    <View style={{ flex: 1, backgroundColor: "#f8fafc" }}>
       <StatusBar barStyle="dark-content" />
 
-      {/* TOP ILLUSTRATION / HERO (AgroPulse concept) */}
-      <View style={{ height: 320, width: "100%", backgroundColor: "#e2e8f0" }}>
-        <ImageBackground
-          source={require("../../assets/images/image10.jpg")} // Use a bright farm image
-          style={{ flex: 1 }}
-          resizeMode="cover"
-        >
-          <SafeAreaView>
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 16 }}>
-              <TouchableOpacity
-                onPress={() => router.push("/(farmer)/dashboard")}
-                style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.9)", alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 4 }}
-              >
-                <ChevronLeft size={24} color="#0f172a" />
-              </TouchableOpacity>
-              
-              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 18, textShadowColor: "rgba(0,0,0,0.5)", textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 4 }}>
-                {language === "ta" ? "விவசாயி சுயவிவரம்" : "Green Valley Farm"}
-              </Text>
+      {/* Decorative Top Banner */}
+      <View style={{ position: "absolute", top: 0, width: "100%", height: 220, backgroundColor: "#ecfdf5", borderBottomLeftRadius: 40, borderBottomRightRadius: 40 }} />
 
-              <TouchableOpacity
-                style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.9)", alignItems: "center", justifyContent: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 4 }}
-                onPress={() => router.push("/(farmer)/menu" as any)}
-              >
-                <Settings size={20} color="#0f172a" />
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
-        </ImageBackground>
-      </View>
-
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100 }}
-        style={{ marginTop: -40 }} // Overlap the hero
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 150, paddingTop: Math.max(insets.top, 20) + 16 }}>
         
-        {/* GOLD MEMBER CARD */}
-        <View style={{ marginHorizontal: 24, backgroundColor: "#ffffff", borderRadius: 32, padding: 24, shadowColor: "#059669", shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.08, shadowRadius: 24, elevation: 8 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-            <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#fef3c7", paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999 }}>
-              <Star size={14} color="#d97706" fill="#d97706" />
-              <Text style={{ color: "#d97706", fontFamily: "Brandon-Bold", fontSize: 13, marginLeft: 6 }}>Gold member</Text>
-            </View>
-            <Text style={{ color: "#059669", fontFamily: "Brandon-Bold", fontSize: 13 }}>View Details ⟩</Text>
-          </View>
-
-          <View style={{ flexDirection: "row", alignItems: "baseline", marginBottom: 12 }}>
-            <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 42, letterSpacing: -1 }}>2,490</Text>
-            <Text style={{ color: "#64748b", fontFamily: "Brandon-Bold", fontSize: 18, marginLeft: 6 }}>pts</Text>
-          </View>
-          
-          <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 8 }}>
-            <Text style={{ color: "#94a3b8", fontFamily: "Brandon-Medium", fontSize: 11 }}>250 points to <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold" }}>Platinum Member</Text></Text>
-          </View>
-
-          {/* Progress Bar */}
-          <View style={{ height: 8, backgroundColor: "#f1f5f9", borderRadius: 4, overflow: "hidden", marginBottom: 24 }}>
-            <View style={{ width: "85%", height: "100%", backgroundColor: "#f97316", borderRadius: 4 }} />
-          </View>
-
-          <View style={{ flexDirection: "row", gap: 12 }}>
-            <TouchableOpacity style={{ flex: 1, paddingVertical: 14, borderRadius: 999, borderWidth: 1.5, borderColor: "#e2e8f0", alignItems: "center" }}>
-              <Text style={{ color: "#475569", fontFamily: "Brandon-Bold", fontSize: 14 }}>How to earn</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flex: 1, paddingVertical: 14, borderRadius: 999, backgroundColor: "#f97316", alignItems: "center", shadowColor: "#f97316", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 4 }}>
-              <Text style={{ color: "#ffffff", fontFamily: "Brandon-Bold", fontSize: 14 }}>Redeem Rewards</Text>
-            </TouchableOpacity>
-          </View>
+        {/* HEADER ACTIONS */}
+        <View style={{ flexDirection: "row", justifyContent: "flex-end", paddingHorizontal: 24, marginBottom: 20 }}>
+          <TouchableOpacity style={{ padding: 10, backgroundColor: "#ffffff", borderRadius: 999, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 }}>
+            <Settings size={22} color="#0f172a" />
+          </TouchableOpacity>
         </View>
 
-        {/* PROFILE IDENTIFICATION CARD */}
-        <View style={{ marginHorizontal: 24, marginTop: 24, backgroundColor: "#ffffff", borderRadius: 32, padding: 24, shadowColor: "#059669", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.04, shadowRadius: 16, elevation: 4 }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View style={{ width: 80, height: 80, borderRadius: 40, overflow: "hidden", borderWidth: 3, borderColor: "#10b981" }}>
-              <Image source={{ uri: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" }} style={{ width: "100%", height: "100%" }} />
+        {/* PROFILE CARD */}
+        <View style={{ alignItems: "center", marginBottom: 32 }}>
+          <View style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: "#ffffff", padding: 4, shadowColor: "#10b981", shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.2, shadowRadius: 16, elevation: 8, marginBottom: 16 }}>
+            <Image source={{ uri: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80" }} style={{ width: "100%", height: "100%", borderRadius: 56 }} />
+            <View style={{ position: "absolute", bottom: 0, right: 4, backgroundColor: "#10b981", borderRadius: 12, padding: 4, borderWidth: 2, borderColor: "#ffffff" }}>
+              <ShieldCheck size={16} color="#ffffff" />
             </View>
-            <View style={{ marginLeft: 20, flex: 1 }}>
-              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 24, letterSpacing: -0.5 }}>Kuppusamy M.</Text>
-              <View style={{ flexDirection: "row", alignItems: "center", marginTop: 4 }}>
-                <ShieldCheck size={14} color="#10b981" />
-                <Text style={{ color: "#10b981", fontFamily: "Brandon-Medium", fontSize: 12, marginLeft: 4 }}>VERIFIED • IO-FAR-2026</Text>
-              </View>
-              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 8 }}>+91 94111 11111</Text>
+          </View>
+          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 26, marginBottom: 4 }}>Muthuvel S.</Text>
+          <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 15, marginBottom: 16 }}>+91 98765 43210</Text>
+          
+          <View style={{ flexDirection: "row", gap: 32 }}>
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20 }}>3.7</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 12 }}>Acres</Text>
+            </View>
+            <View style={{ width: 1, height: "100%", backgroundColor: "#e2e8f0" }} />
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20 }}>2</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 12 }}>Crops</Text>
+            </View>
+            <View style={{ width: 1, height: "100%", backgroundColor: "#e2e8f0" }} />
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ color: "#10b981", fontFamily: "Brandon-Bold", fontSize: 20 }}>100%</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 12 }}>Organic</Text>
             </View>
           </View>
         </View>
 
-        {/* QUICK ACTIONS / ACHIEVEMENTS */}
-        <View style={{ marginHorizontal: 24, marginTop: 32 }}>
-          <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 20, marginBottom: 16 }}>Achievements</Text>
+        {/* MENU LIST */}
+        <View style={{ paddingHorizontal: 24, gap: 16, marginBottom: 32 }}>
           
-          <View style={{ gap: 12 }}>
-            <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#ffffff", padding: 16, borderRadius: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2 }}>
-              <View style={{ width: 56, height: 56, borderRadius: 16, backgroundColor: "#fef3c7", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
-                <Trophy size={28} color="#d97706" />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Top Producer 2025</Text>
-                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 2 }}>Achieved highest yield in Delta Zone</Text>
-              </View>
-              <View style={{ backgroundColor: "#fef3c7", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 }}>
-                <Text style={{ color: "#d97706", fontFamily: "Brandon-Bold", fontSize: 11 }}>+500 pts</Text>
-              </View>
+          <TouchableOpacity onPress={() => router.push("/(farmer)/farm")} style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 20, flexDirection: "row", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <View style={{ width: 44, height: 44, borderRadius: 16, backgroundColor: "#ecfdf5", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+              <MapPin size={22} color="#10b981" />
             </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Farm & Land Details</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>View acreage, location, GPS</Text>
+            </View>
+            <ChevronRight size={20} color="#cbd5e1" />
+          </TouchableOpacity>
 
-            <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: "#ffffff", padding: 16, borderRadius: 24, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 2 }}>
-              <View style={{ width: 56, height: 56, borderRadius: 16, backgroundColor: "#dcfce7", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
-                <CircleCheck size={28} color="#15803d" />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>100% Organic Certified</Text>
-                <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13, marginTop: 2 }}>Maintained zero chemical usage</Text>
-              </View>
-              <View style={{ backgroundColor: "#fef3c7", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 }}>
-                <Text style={{ color: "#d97706", fontFamily: "Brandon-Bold", fontSize: 11 }}>+250 pts</Text>
-              </View>
+          <TouchableOpacity onPress={() => router.push("/(farmer)/orders")} style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 20, flexDirection: "row", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <View style={{ width: 44, height: 44, borderRadius: 16, backgroundColor: "#eff6ff", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+              <Package size={22} color="#3b82f6" />
             </View>
-          </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Purchase History</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Track your orders</Text>
+            </View>
+            <ChevronRight size={20} color="#cbd5e1" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.push("/(farmer)/officer")} style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 20, flexDirection: "row", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <View style={{ width: 44, height: 44, borderRadius: 16, backgroundColor: "#fef2f2", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+              <User size={22} color="#ef4444" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>My Field Officer</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>Contact Robert Walker</Text>
+            </View>
+            <ChevronRight size={20} color="#cbd5e1" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.push("/(farmer)/support")} style={{ backgroundColor: "#ffffff", borderRadius: 24, padding: 20, flexDirection: "row", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.03, shadowRadius: 10, elevation: 2, borderWidth: 1, borderColor: "#f1f5f9" }}>
+            <View style={{ width: 44, height: 44, borderRadius: 16, backgroundColor: "#fffbeb", alignItems: "center", justifyContent: "center", marginRight: 16 }}>
+              <HeartHandshake size={22} color="#f59e0b" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "#0f172a", fontFamily: "Brandon-Bold", fontSize: 16 }}>Help & Support</Text>
+              <Text style={{ color: "#64748b", fontFamily: "Brandon-Medium", fontSize: 13 }}>FAQs, Chat, Contact</Text>
+            </View>
+            <ChevronRight size={20} color="#cbd5e1" />
+          </TouchableOpacity>
+
+        </View>
+
+        {/* LOGOUT BUTTON */}
+        <View style={{ paddingHorizontal: 24 }}>
+          <TouchableOpacity onPress={handleLogout} style={{ backgroundColor: "#fef2f2", borderRadius: 20, padding: 16, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+            <LogOut size={20} color="#ef4444" style={{ marginRight: 8 }} />
+            <Text style={{ color: "#ef4444", fontFamily: "Brandon-Bold", fontSize: 16 }}>Log Out</Text>
+          </TouchableOpacity>
         </View>
 
       </ScrollView>

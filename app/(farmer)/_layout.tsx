@@ -1,5 +1,6 @@
 import React from "react";
-
+import { Tabs, router } from "expo-router";
+import { Home, Package, Sprout, PhoneCall, User } from "lucide-react-native";
 import {
   Text,
   TouchableOpacity,
@@ -7,56 +8,37 @@ import {
   StyleSheet,
   useColorScheme,
 } from "react-native";
-
-import { Tabs } from "expo-router";
-
-import { CalendarDays, Home, User, FileText } from "lucide-react-native";
-
 import { BlurView } from "expo-blur";
 import { useLanguage } from "../../context/LanguageContext";
+import { LanguageProvider } from "../../context/LanguageContext";
 
 function CustomTabBar({ state, descriptors, navigation }: any) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
   const { t } = useLanguage();
-
   const visibleRoutes = state.routes.filter(
     (route: any) =>
-      ["dashboard", "documents", "farm", "profile"].includes(route.name)
+      ["dashboard", "orders", "crop-health", "officer", "profile"].includes(route.name)
   );
 
   const routeTitleMap: Record<string, string> = {
-    dashboard: t("home", "Home"),
-    documents: t("docs", "Docs"),
-    farm: t("myFarm", "My Farm"),
-    profile: t("profile", "Profile"),
+    dashboard: "Home",
+    orders: "Orders",
+    "crop-health": "Crops",
+    officer: "Officer",
+    profile: "Profile",
   };
 
   return (
     <View style={styles.container}>
       <BlurView
-        intensity={80}
+        intensity={90}
         tint="light"
         style={styles.blurView}
-        className="border border-gray-200"
       >
         {visibleRoutes.map((route: any, index: number) => {
           const { options } = descriptors[route.key];
-
-          const label =
-            routeTitleMap[route.name] ||
-            (options.tabBarLabel !== undefined
-              ? typeof options.tabBarLabel === "string"
-                ? t(options.tabBarLabel)
-                : options.tabBarLabel
-              : options.title !== undefined
-                ? t(options.title)
-                : route.name);
-
-          const isFocused =
-            state.index ===
-            state.routes.findIndex((r: any) => r.key === route.key);
-
+          const label = routeTitleMap[route.name] || route.name;
+          const isFocused = state.index === state.routes.findIndex((r: any) => r.key === route.key);
+          
           const onPress = () => {
             const event = navigation.emit({
               type: "tabPress",
@@ -69,42 +51,37 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
           };
 
           const getIcon = () => {
-            const activeColor = "#059669";
-            const inactiveColor = "#ffffff";
-
+            const activeColor = "#10b981"; // Emerald Green
+            const inactiveColor = "#94a3b8"; // Slate gray
             const color = isFocused ? activeColor : inactiveColor;
+            
             switch (route.name) {
               case "dashboard":
-                return <Home size={22} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
-              case "documents":
-                return <FileText size={22} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
-              case "farm":
-                return <CalendarDays size={22} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
+                return <Home size={24} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
+              case "orders":
+                return <Package size={24} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
+              case "crop-health":
+                return <Sprout size={24} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
+              case "officer":
+                return <PhoneCall size={24} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
               case "profile":
-                return <User size={22} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
+                return <User size={24} color={color} strokeWidth={isFocused ? 2.5 : 2} />;
               default:
                 return null;
             }
           };
-          
+
           return (
             <TouchableOpacity
               key={route.key}
               accessibilityRole="button"
-              accessibilityState={isFocused ? { selected: true } : {}}
               onPress={onPress}
-              className="flex-1 items-center justify-center h-full"
+              style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 4 }}
             >
-              <View style={{
-                width: 48,
-                height: 48,
-                borderRadius: 24,
-                backgroundColor: isFocused ? "#ffffff" : "transparent",
-                alignItems: "center",
-                justifyContent: "center",
-              }}>
-                {getIcon()}
-              </View>
+              {getIcon()}
+              <Text style={{ fontSize: 10, marginTop: 4, fontFamily: isFocused ? "Brandon-Bold" : "Brandon-Medium", color: isFocused ? "#065f46" : "#64748b" }}>
+                {label}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -113,114 +90,56 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
   );
 }
 
+export default function FarmerLayout() {
+  return (
+    <LanguageProvider>
+      <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
+        <Tabs tabBar={(props) => <CustomTabBar {...props} />} screenOptions={{ headerShown: false }}>
+          <Tabs.Screen name="dashboard" />
+          <Tabs.Screen name="orders" />
+          <Tabs.Screen name="crop-health" />
+          <Tabs.Screen name="officer" />
+          <Tabs.Screen name="profile" />
+          
+          {/* Hidden screens (accessible via standard routing) */}
+          <Tabs.Screen name="farm" options={{ href: null }} />
+          <Tabs.Screen name="documents" options={{ href: null }} />
+          <Tabs.Screen name="history" options={{ href: null }} />
+          <Tabs.Screen name="menu" options={{ href: null }} />
+          <Tabs.Screen name="notifications" options={{ href: null }} />
+          <Tabs.Screen name="recommendations" options={{ href: null }} />
+          <Tabs.Screen name="referral" options={{ href: null }} />
+          <Tabs.Screen name="support" options={{ href: null }} />
+          <Tabs.Screen name="product/[id]" options={{ href: null }} />
+          <Tabs.Screen name="rate" options={{ href: null }} />
+          <Tabs.Screen name="report" options={{ href: null }} />
+          <Tabs.Screen name="visit" options={{ href: null }} />
+        </Tabs>
+      </View>
+    </LanguageProvider>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
     bottom: 24,
-    left: 20,
-    right: 20,
-    borderRadius: 40,
+    left: 24,
+    right: 24,
+    height: 72,
+    borderRadius: 36,
     overflow: "hidden",
-    shadowColor: "#059669",
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.2,
-    shadowRadius: 24,
-    elevation: 20,
-    backgroundColor: "transparent",
+    shadowColor: "#10b981",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.8)",
   },
   blurView: {
+    flex: 1,
     flexDirection: "row",
-    height: 76,
-    paddingHorizontal: 8,
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.4)",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   },
 });
-
-export default function FarmerLayout() {
-  return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-      }}
-        tabBar={(props) => <CustomTabBar {...props} />}
-      >
-        <Tabs.Screen
-          name="dashboard"
-          options={{
-            title: "Home",
-          }}
-        />
-        <Tabs.Screen
-          name="documents"
-          options={{
-            title: "Docs",
-          }}
-        />
-        <Tabs.Screen
-          name="farm"
-          options={{
-            title: "Farm",
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: "Profile",
-          }}
-        />
-        {/* Hidden Screens */}
-        <Tabs.Screen
-          name="visit"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="rate"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="report"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="menu"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="history"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="notifications"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="recommendations"
-          options={{
-            href: null,
-          }}
-        />
-        <Tabs.Screen
-          name="support"
-          options={{
-            href: null,
-          }}
-        />
-      </Tabs>
-  );
-}
